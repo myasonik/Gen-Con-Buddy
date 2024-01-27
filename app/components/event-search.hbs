@@ -1,0 +1,157 @@
+{{!-- template-lint-disable no-nested-interactive --}}
+
+<fieldset>
+  <label for="search">Search</label>
+  <Input id="search" @type="search" @value={{this.filter}} />
+
+  <details open>
+    <summary>Filters</summary>
+    <ul>
+      <li>
+        <Generic::Input
+          @label="Event Type"
+          @options={{this.EVENT_TYPES}}
+          @type={{this.eventType}}
+          @onChange={{fn (mut this.eventType)}}
+        />
+      </li>
+      <li><Generic::Input @label="Title" @value={{this.title}} /></li>
+      <li><Generic::Input @label="Group" @value={{this.group}} /></li>
+      <li><Generic::Input @label="Short Desc" @value={{this.sDesc}} /></li>
+      <li><Generic::Input @label="Long Desc" @value={{this.lDesc}} /></li>
+      <li><Generic::Input @label="System" @value={{this.system}} /></li>
+      <li><Generic::Input @label="Edition" @value={{this.edition}} /></li>
+      <li>
+        <Generic::Input
+          @label="Min Players"
+          @type="range"
+          @minValue={{this.minPlayersMin}}
+          @maxValue={{this.minPlayersMax}}
+        />
+      </li>
+      <li>
+        <Generic::Input
+          @label="Max Players"
+          @type="range"
+          @minValue={{this.maxPlayersMin}}
+          @maxValue={{this.maxPlayersMax}}
+        />
+      </li>
+      <li>
+        <Generic::Input
+          @label="Age Required"
+          @options={{this.AGE_GROUPS}}
+          @type={{this.ageReq}}
+          @onChange={{fn (mut this.ageReq)}}
+        />
+      </li>
+      <li>
+        <Generic::Input
+          @label="Experience Required"
+          @options={{this.EXP}}
+          @type={{this.exp}}
+          @onChange={{fn (mut this.exp)}}
+        />
+      </li>
+      <li><Generic::Input @label="Materials" @value={{this.materials}} @boolChange={{fn (mut this.materials)}} /></li>
+      <li>
+        <Generic::Input
+          @label="Start Date"
+          @type="date-range"
+          @startValue={{this.startStart}}
+          @endValue={{this.startEnd}}
+        />
+      </li>
+      <li>
+        <Generic::Input
+          @label="Duration"
+          @type="range"
+          @minValue={{this.durationMin}}
+          @maxValue={{this.durationMax}}
+        />
+      </li>
+      <li>
+        <Generic::Input
+          @label="End Date"
+          @type="date-range"
+          @startValue={{this.endStart}}
+          @endValue={{this.endEnd}}
+        />
+      </li>
+      <li><Generic::Input @label="Game Masters" @value={{this.gameMasters}} /></li>
+      <li><Generic::Input @label="Website" @value={{this.website}} /></li>
+      <li><Generic::Input @label="Email" @value={{this.email}} /></li>
+      <li><Generic::Input @label="Tournament" @value={{this.tournament}} @boolChange={{fn (mut this.tournament)}} /></li>
+      <li>
+        <Generic::Input
+          @label="Round"
+          @type="range"
+          @minValue={{this.roundMin}}
+          @maxValue={{this.roundMax}}
+        />
+      </li>
+      <li>
+        <Generic::Input
+          @label="Total Rounds"
+          @type="range"
+          @minValue={{this.totalRoundsMin}}
+          @maxValue={{this.totalRoundsMax}}
+        />
+      </li>
+      <li>
+        <Generic::Input
+          @label="Minimum Play Time"
+          @type="range"
+          @minValue={{this.minTimeMin}}
+          @maxValue={{this.minTimeMax}}
+        />
+      </li>
+      <li>
+        <Generic::Input
+          @label="Registration"
+          @options={{this.REGISTRATION}}
+          @type={{this.registration}}
+          @onChange={{fn (mut this.registration)}}
+        />
+      </li>
+      <li>
+        <Generic::Input
+          @label="Cost"
+          @type="range"
+          @minValue={{this.costMin}}
+          @maxValue={{this.costMax}}
+        />
+      </li>
+      <li><Generic::Input @label="Location" @value={{this.location}} /></li>
+      <li><Generic::Input @label="Room" @value={{this.room}} /></li>
+      <li><Generic::Input @label="Table" @value={{this.table}} /></li>
+      {{!-- TODO Cateogry is weird because the enum includes an empty string
+      <li>
+        <Generic::Input
+          @label="Special Category"
+          @options={{this.CATEGORY}}
+          @type={{this.category}}
+          @onChange={{fn (mut this.category)}}
+        />
+      </li> --}}
+      <li>
+        <Generic::Input
+          @label="Available"
+          @type="range"
+          @minValue={{this.availableMin}}
+          @maxValue={{this.availableMax}}
+        />
+      </li>
+      <li>
+        <Generic::Input
+          @label="Last Modified"
+          @type="date-range"
+          @startValue={{this.lastModifiedStart}}
+          @endValue={{this.lastModifiedEnd}}
+        />
+      </li>
+    </ul>
+  </details>
+
+  <button type="button" {{on 'click' this.search}}>Search</button>
+</fieldset>

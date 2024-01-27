@@ -1,9 +1,9 @@
-import Application from 'gencon-buddy/app';
-import config from 'gencon-buddy/config/environment';
-import * as QUnit from 'qunit';
 import { setApplication } from '@ember/test-helpers';
-import { setup } from 'qunit-dom';
 import { start } from 'ember-qunit';
+import Application from 'gen-con-buddy/app';
+import config from 'gen-con-buddy/config/environment';
+import * as QUnit from 'qunit';
+import { setup } from 'qunit-dom';
 
 setApplication(Application.create(config.APP));
 

@@ -2,7 +2,7 @@
 
 module.exports = function (environment) {
   const ENV = {
-    modulePrefix: 'gencon-buddy',
+    modulePrefix: 'gen-con-buddy',
     environment,
     rootURL: '/',
     locationType: 'history',

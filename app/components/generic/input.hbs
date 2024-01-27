@@ -1,0 +1,85 @@
+{{#let (unique-id) as |id|}}
+  {{#if this.isRange}}
+    <label for={{concat id '-min'}}>{{@label}} Min</label>
+    <Input
+      id={{concat id '-min'}}
+      @type="number"
+      @value={{@minValue}}
+    />
+
+    <label for={{concat id '-max'}}>{{@label}} Max</label>
+    <Input
+      id={{concat id '-max'}}
+      @type="number"
+      @value={{@maxValue}}
+    />
+  {{else if this.isDateRange}}
+    <label for={{concat id '-min'}}>{{@label}} Start</label>
+    <Input
+      id={{concat id '-min'}}
+      @type="datetime-local"
+      @value={{@startValue}}
+      min="2024-07-31T00:00"
+      max="2024-08-04T23:59"
+      step="300"
+    />
+
+    <label for={{concat id '-max'}}>{{@label}} End</label>
+    <Input
+      id={{concat id '-max'}}
+      @type="datetime-local"
+      @value={{@endValue}}
+      min="2024-07-31T00:00"
+      max="2024-08-04T23:59"
+      step="300"
+    />
+  {{else if this.isBool}}
+    <fieldset>
+      <legend>{{@label}}</legend>
+      <label for={{concat id '-true'}}>Yes</label>
+      <input
+        id={{concat id '-true'}}
+        type="radio"
+        value="yes"
+        checked={{eq @value "yes"}}
+        name={{@label}}
+        {{on "change" this.boolHandler}}
+      />
+
+      <label for={{concat id '-false'}}>No</label>
+      <input
+        id={{concat id '-false'}}
+        type="radio"
+        value="no"
+        name={{@label}}
+        checked={{eq @value "no"}}
+        {{on "change" this.boolHandler}}
+      />
+    </fieldset>
+  {{else}}
+    <label for={{id}}>{{@label}}</label>
+
+    {{#if this.isCheckbox}}
+      <Input
+        id={{id}}
+        @type="checkbox"
+        @checked={{@checked}}
+      />
+    {{else if this.isEnum}}
+      <select id={{id}} {{on "change" this.enumHandler}}>
+        <option></option>
+        {{#each-in @options as |key val|}}
+          <option selected={{eq key @type}} value={{key}}>
+            {{val}}
+          </option>
+        {{/each-in}}
+      </select>
+    {{else}}
+      <Input
+        id={{id}}
+        @type="input"
+        @value={{@value}}
+      />
+    {{/if}}
+  {{/if}}
+{{/let}}
