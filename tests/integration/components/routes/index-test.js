@@ -10,15 +10,15 @@ module('Integration | Component | routes/index', function (hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`<Routes::Index />`);
+    await render(hbs`<Routes />`);
 
     assert.dom().hasText('');
 
     // Template block usage:
     await render(hbs`
-      <Routes::Index>
+      <Routes>
         template block text
-      </Routes::Index>
+      </Routes>
     `);
 
     assert.dom().hasText('template block text');

@@ -1,11 +1,16 @@
 {{!-- template-lint-disable no-nested-interactive --}}
 
 <fieldset>
-  <label for="search">Search</label>
-  <Input id="search" @type="search" @value={{this.filter}} />
+  <Generic::Input @label="Search" type="search" @value={{this.filter}} />
+  <Generic::Input
+    @label="Event Type"
+    @options={{this.EVENT_TYPES}}
+    @type={{this.eventType}}
+    @onChange={{fn (mut this.eventType)}}
+  />
 
-  <details open>
-    <summary>Filters</summary>
+  <details>
+    <summary>Advanced filters</summary>
     <ul>
       <li>
         <Generic::Input

@@ -147,4 +147,8 @@ export default class EventSearchComponent extends Component {
 
     this.router.transitionTo('search', { queryParams });
   }
+
+  onEnter(event) {
+    console.log(event);
+  }
 }
