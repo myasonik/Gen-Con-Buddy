@@ -36,14 +36,13 @@ export default Factory.extend({
   },
 
   // Event Type
-  type() {
+  eventType() {
     return returnRandVal(EVENT_TYPES);
   },
 
   // Game ID
-  // NOTE: original is called id
-  gencon_id() {
-    const type = this.type.split(' - ')[0];
+  gameId() {
+    const type = this.eventType.split(' - ')[0];
     const uuid = string.alphanumeric({
       length: { min: 5, max: 15 },
     });
@@ -197,9 +196,7 @@ export default Factory.extend({
 
   // Special Category
   category() {
-    const val = returnRandVal(CATEGORY);
-
-    return val === 'None' ? '' : val;
+    return returnRandVal(CATEGORY);
   },
 
   // Tickets Available

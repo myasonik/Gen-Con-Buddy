@@ -1,0 +1,9 @@
+.event-search__search > input {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.5em;
+}
+
+.adv-filters {
+  margin: 1em 0;
+}

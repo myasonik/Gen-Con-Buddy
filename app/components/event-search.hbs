@@ -1,25 +1,27 @@
 {{!-- template-lint-disable no-nested-interactive --}}
 
-<fieldset>
-  <Generic::Input @label="Search" type="search" @value={{this.filter}} />
+<fieldset class="event-search">
+  <Generic::Input @label="Search" type="search" @value={{this.filter}} @class="event-search__search" />
   <Generic::Input
     @label="Event Type"
     @options={{this.EVENT_TYPES}}
-    @type={{this.eventType}}
+    @opt={{this.eventType}}
     @onChange={{fn (mut this.eventType)}}
   />
+  {{!-- <fieldset>
+    <legend>Days</legend>
+    <ul>
+      <li><Generic::Input @label="Wed" @checked={{}} /></li>
+      <li><Generic::Input @label="Thu" @checked={{}} /></li>
+      <li><Generic::Input @label="Fri" @checked={{}} /></li>
+      <li><Generic::Input @label="Sat" @checked={{}} /></li>
+      <li><Generic::Input @label="Sun" @checked={{}} /></li>
+    </ul>
+  </fieldset> --}}
 
-  <details>
+  <details class="adv-filters">
     <summary>Advanced filters</summary>
     <ul>
-      <li>
-        <Generic::Input
-          @label="Event Type"
-          @options={{this.EVENT_TYPES}}
-          @type={{this.eventType}}
-          @onChange={{fn (mut this.eventType)}}
-        />
-      </li>
       <li><Generic::Input @label="Title" @value={{this.title}} /></li>
       <li><Generic::Input @label="Group" @value={{this.group}} /></li>
       <li><Generic::Input @label="Short Desc" @value={{this.sDesc}} /></li>
@@ -46,7 +48,7 @@
         <Generic::Input
           @label="Age Required"
           @options={{this.AGE_GROUPS}}
-          @type={{this.ageReq}}
+          @opt={{this.ageReq}}
           @onChange={{fn (mut this.ageReq)}}
         />
       </li>
@@ -54,7 +56,7 @@
         <Generic::Input
           @label="Experience Required"
           @options={{this.EXP}}
-          @type={{this.exp}}
+          @opt={{this.exp}}
           @onChange={{fn (mut this.exp)}}
         />
       </li>
@@ -115,7 +117,7 @@
         <Generic::Input
           @label="Registration"
           @options={{this.REGISTRATION}}
-          @type={{this.registration}}
+          @opt={{this.registration}}
           @onChange={{fn (mut this.registration)}}
         />
       </li>
@@ -130,7 +132,6 @@
       <li><Generic::Input @label="Location" @value={{this.location}} /></li>
       <li><Generic::Input @label="Room" @value={{this.room}} /></li>
       <li><Generic::Input @label="Table" @value={{this.table}} /></li>
-      {{!-- TODO Cateogry is weird because the enum includes an empty string
       <li>
         <Generic::Input
           @label="Special Category"
@@ -138,7 +139,7 @@
           @type={{this.category}}
           @onChange={{fn (mut this.category)}}
         />
-      </li> --}}
+      </li>
       <li>
         <Generic::Input
           @label="Available"

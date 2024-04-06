@@ -3,12 +3,12 @@ import Model, { attr } from '@ember-data/model';
 export default class EventModel extends Model {
   @attr('number') year;
   @attr('number') order;
-  @attr('string') gencon_id;
+  @attr('string') gameId;
   @attr('string') group;
   @attr('string') title;
   @attr('string') sDesc;
   @attr('string') lDesc;
-  @attr('string') type;
+  @attr('string') eventType;
   @attr('string') system;
   @attr('string') edition;
   @attr('number') minPlayers;

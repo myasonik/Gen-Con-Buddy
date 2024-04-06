@@ -1,0 +1,8 @@
+<button id={{this.buttonId}} type="button" aria-expanded={{this.expanded}} aria-controls={{this.id}} popovertarget={{this.id}}>
+  {{@label}}
+</button>
+<div id={{this.id}} role="group" aria-labelledby={{this.buttonId}} tabindex={{0}} popover>
+  {{#each-in @options as |key val|}}
+    {{key}} {{val}}
+  {{/each-in}}
+</div>

@@ -4,112 +4,113 @@
   <summary id="customizeTable">Customize table</summary>
   <fieldset aria-labelledby="customizeTable">
     <ul>
-      <li><Generic::Input @label="Title" @checked={{this.showTitle}} /></li>
-      <li><Generic::Input @label="Type" @checked={{this.showType}} /></li>
-      <li><Generic::Input @label="Group" @checked={{this.showGroup}} /></li>
-      <li><Generic::Input @label="Short Desc" @checked={{this.showSDesc}} /></li>
-      <li><Generic::Input @label="Long Desc" @checked={{this.showLDesc}} /></li>
-      <li><Generic::Input @label="System" @checked={{this.showSystem}} /></li>
-      <li><Generic::Input @label="Edition" @checked={{this.showEdition}} /></li>
-      <li><Generic::Input @label="Min Players" @checked={{this.showMinPlayers}} /></li>
-      <li><Generic::Input @label="Max Players" @checked={{this.showMaxPlayers}} /></li>
-      <li><Generic::Input @label="Age Req" @checked={{this.showAgeReq}} /></li>
-      <li><Generic::Input @label="Exp Req" @checked={{this.showExp}} /></li>
-      <li><Generic::Input @label="Materials" @checked={{this.showMaterials}} /></li>
-      <li><Generic::Input @label="Day" @checked={{this.showDay}} /></li>
-      <li><Generic::Input @label="Start" @checked={{this.showStart}} /></li>
-      <li><Generic::Input @label="Duration" @checked={{this.showDuration}} /></li>
-      <li><Generic::Input @label="End" @checked={{this.showEnd}} /></li>
-      <li><Generic::Input @label="GMs" @checked={{this.showGameMasters}} /></li>
-      <li><Generic::Input @label="Website" @checked={{this.showWebsite}} /></li>
-      <li><Generic::Input @label="Email" @checked={{this.showEmail}} /></li>
-      <li><Generic::Input @label="Tournament" @checked={{this.showTournament}} /></li>
-      <li><Generic::Input @label="Round" @checked={{this.showRound}} /></li>
-      <li><Generic::Input @label="Total Rounds" @checked={{this.showTotalRounds}} /></li>
-      <li><Generic::Input @label="Min Time" @checked={{this.showMinTime}} /></li>
-      <li><Generic::Input @label="Registration" @checked={{this.showRegistration}} /></li>
-      <li><Generic::Input @label="Cost" @checked={{this.showCost}} /></li>
-      <li><Generic::Input @label="Location" @checked={{this.showLocation}} /></li>
-      <li><Generic::Input @label="Room" @checked={{this.showRoom}} /></li>
-      <li><Generic::Input @label="Table" @checked={{this.showTable}} /></li>
-      <li><Generic::Input @label="Special Category" @checked={{this.showCategory}} /></li>
-      <li><Generic::Input @label="Available" @checked={{this.showAvailable}} /></li>
-      <li><Generic::Input @label="Last Modified" @checked={{this.showLastModified}} /></li>
+      <li><Generic::Input @label="Title" @checked={{this.tableState.showTitle}} @onChange={{fn this.toggle 'showTitle'}} /></li>
+      <li><Generic::Input @label="Type" @checked={{this.tableState.showType}} @onChange={{fn this.toggle 'showType'}} /></li>
+      <li><Generic::Input @label="Group" @checked={{this.tableState.showGroup}} @onChange={{fn this.toggle 'showGroup'}} /></li>
+      <li><Generic::Input @label="Short Desc" @checked={{this.tableState.showSDesc}} @onChange={{fn this.toggle 'showSDesc'}} /></li>
+      <li><Generic::Input @label="Long Desc" @checked={{this.tableState.showLDesc}} @onChange={{fn this.toggle 'showLDesc'}} /></li>
+      <li><Generic::Input @label="System" @checked={{this.tableState.showSystem}} @onChange={{fn this.toggle 'showSystem'}} /></li>
+      <li><Generic::Input @label="Edition" @checked={{this.tableState.showEdition}} @onChange={{fn this.toggle 'showEdition'}} /></li>
+      <li><Generic::Input @label="Min Players" @checked={{this.tableState.showMinPlayers}} @onChange={{fn this.toggle 'showMinPlayers'}} /></li>
+      <li><Generic::Input @label="Max Players" @checked={{this.tableState.showMaxPlayers}} @onChange={{fn this.toggle 'showMaxPlayers'}} /></li>
+      <li><Generic::Input @label="Age Req" @checked={{this.tableState.showAgeReq}} @onChange={{fn this.toggle 'showAgeReq'}} /></li>
+      <li><Generic::Input @label="Exp Req" @checked={{this.tableState.showExp}} @onChange={{fn this.toggle 'showExp'}} /></li>
+      <li><Generic::Input @label="Materials" @checked={{this.tableState.showMaterials}} @onChange={{fn this.toggle 'showMaterials'}} /></li>
+      <li><Generic::Input @label="Day" @checked={{this.tableState.showDay}} @onChange={{fn this.toggle 'showDay'}} /></li>
+      <li><Generic::Input @label="Start" @checked={{this.tableState.showStart}} @onChange={{fn this.toggle 'showStart'}} /></li>
+      <li><Generic::Input @label="Duration" @checked={{this.tableState.showDuration}} @onChange={{fn this.toggle 'showDuration'}} /></li>
+      <li><Generic::Input @label="End" @checked={{this.tableState.showEnd}} @onChange={{fn this.toggle 'showEnd'}} /></li>
+      <li><Generic::Input @label="GMs" @checked={{this.tableState.showGameMasters}} @onChange={{fn this.toggle 'showGameMasters'}} /></li>
+      <li><Generic::Input @label="Website" @checked={{this.tableState.showWebsite}} @onChange={{fn this.toggle 'showWebsite'}} /></li>
+      <li><Generic::Input @label="Email" @checked={{this.tableState.showEmail}} @onChange={{fn this.toggle 'showEmail'}} /></li>
+      <li><Generic::Input @label="Tournament" @checked={{this.tableState.showTournament}} @onChange={{fn this.toggle 'showTournament'}} /></li>
+      <li><Generic::Input @label="Round" @checked={{this.tableState.showRound}} @onChange={{fn this.toggle 'showRound'}} /></li>
+      <li><Generic::Input @label="Total Rounds" @checked={{this.tableState.showTotalRounds}} @onChange={{fn this.toggle 'showTotalRounds'}} /></li>
+      <li><Generic::Input @label="Min Time" @checked={{this.tableState.showMinTime}} @onChange={{fn this.toggle 'showMinTime'}} /></li>
+      <li><Generic::Input @label="Registration" @checked={{this.tableState.showRegistration}} @onChange={{fn this.toggle 'showRegistration'}} /></li>
+      <li><Generic::Input @label="Cost" @checked={{this.tableState.showCost}} @onChange={{fn this.toggle 'showCost'}} /></li>
+      <li><Generic::Input @label="Location" @checked={{this.tableState.showLocation}} @onChange={{fn this.toggle 'showLocation'}} /></li>
+      <li><Generic::Input @label="Room" @checked={{this.tableState.showRoom}} @onChange={{fn this.toggle 'showRoom'}} /></li>
+      <li><Generic::Input @label="Table" @checked={{this.tableState.showTable}} @onChange={{fn this.toggle 'showTable'}} /></li>
+      <li><Generic::Input @label="Special Category" @checked={{this.tableState.showCategory}} @onChange={{fn this.toggle 'showCategory'}} /></li>
+      <li><Generic::Input @label="Available" @checked={{this.tableState.showAvailable}} @onChange={{fn this.toggle 'showAvailable'}} /></li>
+      <li><Generic::Input @label="Last Modified" @checked={{this.tableState.showLastModified}} @onChange={{fn this.toggle 'showLastModified'}} /></li>
     </ul>
   </fieldset>
 </details>
 
 {{#if @data.length}}
   <table>
+    <caption>{{@data.length}} search results</caption>
     <thead>
       <tr>
-        {{#if this.showTitle}}<th>Title</th>{{/if}}
-        {{#if this.showType}}<th>Type</th>{{/if}}
-        {{#if this.showGroup}}<th>Group</th>{{/if}}
-        {{#if this.showSDesc}}<th>Short Desc</th>{{/if}}
-        {{#if this.showLDesc}}<th>Long Desc</th>{{/if}}
-        {{#if this.showSystem}}<th>System</th>{{/if}}
-        {{#if this.showEdition}}<th>Edition</th>{{/if}}
-        {{#if this.showMinPlayers}}<th>Min Players</th>{{/if}}
-        {{#if this.showMaxPlayers}}<th>Max Players</th>{{/if}}
-        {{#if this.showAgeReq}}<th>Age Req</th>{{/if}}
-        {{#if this.showExp}}<th>Exp Req</th>{{/if}}
-        {{#if this.showMaterials}}<th>Materials</th>{{/if}}
-        {{#if this.showDay}}<th>Day</th>{{/if}}
-        {{#if this.showStart}}<th>Start</th>{{/if}}
-        {{#if this.showDuration}}<th>Duration</th>{{/if}}
-        {{#if this.showEnd}}<th>End</th>{{/if}}
-        {{#if this.showGameMasters}}<th>GMs</th>{{/if}}
-        {{#if this.showWebsite}}<th>Website</th>{{/if}}
-        {{#if this.showEmail}}<th>Email</th>{{/if}}
-        {{#if this.showTournament}}<th>Tournament</th>{{/if}}
-        {{#if this.showRound}}<th>Round</th>{{/if}}
-        {{#if this.showTotalRounds}}<th>Total Rounds</th>{{/if}}
-        {{#if this.showMinTime}}<th>Min Time</th>{{/if}}
-        {{#if this.showRegistration}}<th>Registration</th>{{/if}}
-        {{#if this.showCost}}<th>Cost</th>{{/if}}
-        {{#if this.showLocation}}<th>Location</th>{{/if}}
-        {{#if this.showRoom}}<th>Room</th>{{/if}}
-        {{#if this.showTable}}<th>Table</th>{{/if}}
-        {{#if this.showCategory}}<th>Special Category</th>{{/if}}
-        {{#if this.showAvailable}}<th>Tickets Available</th>{{/if}}
-        {{#if this.showLastModified}}<th>Last Modified</th>{{/if}}
+        {{#if this.tableState.showTitle}}<th>Title</th>{{/if}}
+        {{#if this.tableState.showType}}<th>Type</th>{{/if}}
+        {{#if this.tableState.showGroup}}<th>Group</th>{{/if}}
+        {{#if this.tableState.showSDesc}}<th>Short Desc</th>{{/if}}
+        {{#if this.tableState.showLDesc}}<th>Long Desc</th>{{/if}}
+        {{#if this.tableState.showSystem}}<th>System</th>{{/if}}
+        {{#if this.tableState.showEdition}}<th>Edition</th>{{/if}}
+        {{#if this.tableState.showMinPlayers}}<th>Min Players</th>{{/if}}
+        {{#if this.tableState.showMaxPlayers}}<th>Max Players</th>{{/if}}
+        {{#if this.tableState.showAgeReq}}<th>Age Req</th>{{/if}}
+        {{#if this.tableState.showExp}}<th>Exp Req</th>{{/if}}
+        {{#if this.tableState.showMaterials}}<th>Materials</th>{{/if}}
+        {{#if this.tableState.showDay}}<th>Day</th>{{/if}}
+        {{#if this.tableState.showStart}}<th>Start</th>{{/if}}
+        {{#if this.tableState.showDuration}}<th>Duration</th>{{/if}}
+        {{#if this.tableState.showEnd}}<th>End</th>{{/if}}
+        {{#if this.tableState.showGameMasters}}<th>GMs</th>{{/if}}
+        {{#if this.tableState.showWebsite}}<th>Website</th>{{/if}}
+        {{#if this.tableState.showEmail}}<th>Email</th>{{/if}}
+        {{#if this.tableState.showTournament}}<th>Tournament</th>{{/if}}
+        {{#if this.tableState.showRound}}<th>Round</th>{{/if}}
+        {{#if this.tableState.showTotalRounds}}<th>Total Rounds</th>{{/if}}
+        {{#if this.tableState.showMinTime}}<th>Min Time</th>{{/if}}
+        {{#if this.tableState.showRegistration}}<th>Registration</th>{{/if}}
+        {{#if this.tableState.showCost}}<th>Cost</th>{{/if}}
+        {{#if this.tableState.showLocation}}<th>Location</th>{{/if}}
+        {{#if this.tableState.showRoom}}<th>Room</th>{{/if}}
+        {{#if this.tableState.showTable}}<th>Table</th>{{/if}}
+        {{#if this.tableState.showCategory}}<th>Special Category</th>{{/if}}
+        {{#if this.tableState.showAvailable}}<th>Tickets Available</th>{{/if}}
+        {{#if this.tableState.showLastModified}}<th>Last Modified</th>{{/if}}
       </tr>
     </thead>
     <tbody>
       {{#each @data as |event|}}
         <tr>
-          {{#if this.showTitle}}<td>{{event.title}}</td>{{/if}}
-          {{#if this.showType}}<td>{{event.type}}</td>{{/if}}
-          {{#if this.showGroup}}<td>{{event.group}}</td>{{/if}}
-          {{#if this.showSDesc}}<td>{{event.sDesc}}</td>{{/if}}
-          {{#if this.showLDesc}}<td>{{event.lDesc}}</td>{{/if}}
-          {{#if this.showSystem}}<td>{{event.system}}</td>{{/if}}
-          {{#if this.showEdition}}<td>{{event.edition}}</td>{{/if}}
-          {{#if this.showMinPlayers}}<td>{{event.minPlayers}}</td>{{/if}}
-          {{#if this.showMaxPlayers}}<td>{{event.maxPlayers}}</td>{{/if}}
-          {{#if this.showAgeReq}}<td>{{event.ageReq}}</td>{{/if}}
-          {{#if this.showExp}}<td>{{event.exp}}</td>{{/if}}
-          {{#if this.showMaterials}}<td>{{event.materials}}</td>{{/if}}
-          {{#if this.showDay}}<td>{{this.day event.start}}</td>{{/if}}
-          {{#if this.showStart}}<td>{{this.time event.start}}</td>{{/if}}
-          {{#if this.showDuration}}<td>{{event.duration}}</td>{{/if}}
-          {{#if this.showEnd}}<td>{{this.time event.end}}</td>{{/if}}
-          {{#if this.showGameMasters}}<td>{{event.gameMasters}}</td>{{/if}}
-          {{#if this.showWebsite}}<td>{{event.website}}</td>{{/if}}
-          {{#if this.showEmail}}<td>{{event.email}}</td>{{/if}}
-          {{#if this.showTournament}}<td>{{event.tournament}}</td>{{/if}}
-          {{#if this.showRound}}<td>{{event.round}}</td>{{/if}}
-          {{#if this.showTotalRounds}}<td>{{event.totalRounds}}</td>{{/if}}
-          {{#if this.showMinTime}}<td>{{event.minTime}}</td>{{/if}}
-          {{#if this.showRegistration}}<td>{{event.registration}}</td>{{/if}}
-          {{#if this.showCost}}<td>{{event.cost}}</td>{{/if}}
-          {{#if this.showLocation}}<td>{{event.location}}</td>{{/if}}
-          {{#if this.showRoom}}<td>{{event.room}}</td>{{/if}}
-          {{#if this.showTable}}<td>{{event.table}}</td>{{/if}}
-          {{#if this.showCategory}}<td>{{event.category}}</td>{{/if}}
-          {{#if this.showAvailable}}<td>{{event.available}}</td>{{/if}}
-          {{#if this.showLastModified}}<td>{{this.lastMod event.lastModified}}</td>{{/if}}
+          {{#if this.tableState.showTitle}}<td><LinkTo @route="event" @model={{event}}>{{event.title}}</LinkTo></td>{{/if}}
+          {{#if this.tableState.showType}}<td>{{event.eventType}}</td>{{/if}}
+          {{#if this.tableState.showGroup}}<td>{{event.group}}</td>{{/if}}
+          {{#if this.tableState.showSDesc}}<td>{{event.sDesc}}</td>{{/if}}
+          {{#if this.tableState.showLDesc}}<td>{{event.lDesc}}</td>{{/if}}
+          {{#if this.tableState.showSystem}}<td>{{event.system}}</td>{{/if}}
+          {{#if this.tableState.showEdition}}<td>{{event.edition}}</td>{{/if}}
+          {{#if this.tableState.showMinPlayers}}<td>{{event.minPlayers}}</td>{{/if}}
+          {{#if this.tableState.showMaxPlayers}}<td>{{event.maxPlayers}}</td>{{/if}}
+          {{#if this.tableState.showAgeReq}}<td>{{event.ageReq}}</td>{{/if}}
+          {{#if this.tableState.showExp}}<td>{{event.exp}}</td>{{/if}}
+          {{#if this.tableState.showMaterials}}<td>{{event.materials}}</td>{{/if}}
+          {{#if this.tableState.showDay}}<td>{{this.day event.start}}</td>{{/if}}
+          {{#if this.tableState.showStart}}<td>{{this.time event.start}}</td>{{/if}}
+          {{#if this.tableState.showDuration}}<td>{{event.duration}}</td>{{/if}}
+          {{#if this.tableState.showEnd}}<td>{{this.time event.end}}</td>{{/if}}
+          {{#if this.tableState.showGameMasters}}<td>{{event.gameMasters}}</td>{{/if}}
+          {{#if this.tableState.showWebsite}}<td>{{event.website}}</td>{{/if}}
+          {{#if this.tableState.showEmail}}<td>{{event.email}}</td>{{/if}}
+          {{#if this.tableState.showTournament}}<td>{{event.tournament}}</td>{{/if}}
+          {{#if this.tableState.showRound}}<td>{{event.round}}</td>{{/if}}
+          {{#if this.tableState.showTotalRounds}}<td>{{event.totalRounds}}</td>{{/if}}
+          {{#if this.tableState.showMinTime}}<td>{{event.minTime}}</td>{{/if}}
+          {{#if this.tableState.showRegistration}}<td>{{event.registration}}</td>{{/if}}
+          {{#if this.tableState.showCost}}<td>{{event.cost}}</td>{{/if}}
+          {{#if this.tableState.showLocation}}<td>{{event.location}}</td>{{/if}}
+          {{#if this.tableState.showRoom}}<td>{{event.room}}</td>{{/if}}
+          {{#if this.tableState.showTable}}<td>{{event.table}}</td>{{/if}}
+          {{#if this.tableState.showCategory}}<td>{{event.category}}</td>{{/if}}
+          {{#if this.tableState.showAvailable}}<td>{{event.available}}</td>{{/if}}
+          {{#if this.tableState.showLastModified}}<td>{{this.lastMod event.lastModified}}</td>{{/if}}
         </tr>
       {{/each}}
     </tbody>

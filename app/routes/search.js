@@ -8,7 +8,7 @@ export default class SearchRoute extends Route {
     filter: { refreshModel: true },
 
     title: { refreshModel: true },
-    eventType: { refreshModel: true }, // NOTE: using eventType because type is a reserved word
+    eventType: { refreshModel: true },
     group: { refreshModel: true },
     sDesc: { refreshModel: true },
     lDesc: { refreshModel: true },
@@ -19,7 +19,6 @@ export default class SearchRoute extends Route {
     ageReq: { refreshModel: true },
     exp: { refreshModel: true },
     materials: { refreshModel: true },
-    // day: { refreshModel: true }, // haven't thought this through; not on the model
     start: { refreshModel: true },
     duration: { refreshModel: true },
     end: { refreshModel: true },

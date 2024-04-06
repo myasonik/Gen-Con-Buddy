@@ -1,11 +1,20 @@
 'use strict';
 
 module.exports = function (environment) {
+  const mirage = process.env.mirage === 'false' ? false : true;
+  console.log({
+    process: process.env.mirage,
+    mirage,
+  });
+
   const ENV = {
     modulePrefix: 'gen-con-buddy',
     environment,
     rootURL: '/',
     locationType: 'history',
+    'ember-local-storage': {
+      namespace: 'gcb',
+    },
     EmberENV: {
       EXTEND_PROTOTYPES: false,
       FEATURES: {
@@ -15,8 +24,9 @@ module.exports = function (environment) {
     },
 
     APP: {
-      // Here you can pass flags/options to your application instance
-      // when it is created
+      API_URL: mirage
+        ? ''
+        : 'https://pacific-plains-10689-8ac0e606559a.herokuapp.com',
     },
   };
 
@@ -26,6 +36,9 @@ module.exports = function (environment) {
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
+    ENV['ember-cli-mirage'] = {
+      enabled: mirage,
+    };
   }
 
   if (environment === 'test') {
@@ -42,7 +55,7 @@ module.exports = function (environment) {
 
   if (environment === 'production') {
     ENV['ember-cli-mirage'] = {
-      enabled: process.env.mirage,
+      enabled: mirage,
     };
   }
 
