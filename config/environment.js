@@ -1,11 +1,11 @@
 'use strict';
 
 module.exports = function (environment) {
-  const mirage = process.env.mirage === 'false' ? false : true;
-  console.log({
-    process: process.env.mirage,
-    mirage,
-  });
+  let mirage = process.env.mirage === 'false' ? false : true;
+
+  if (environment === 'production') {
+    mirage = process.env.mirage === 'true' ? true : false;
+  }
 
   const ENV = {
     modulePrefix: 'gen-con-buddy',
