@@ -26,7 +26,7 @@ export default function (config) {
 }
 
 function routes() {
-  this.get('/search', ({ events }, { queryParams }) => {
+  this.get('events/search', ({ events }, { queryParams }) => {
     return events.all().filter((event) => {
       let filterEvent = true;
       const propIncluded = (prop, eventProp = prop) => {
@@ -143,5 +143,5 @@ function routes() {
     });
   });
 
-  this.get('/:id');
+  this.get('/events/:id');
 }

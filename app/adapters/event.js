@@ -6,8 +6,9 @@ export default class EventAdapter extends ApplicationAdapter {
 
   urlForQuery(query, modelName) {
     if (modelName === 'event') {
-      return `${this.host}/search`;
+      return `${this.host}/${this.namespace}/events/search`;
     }
+
     return super.urlForQuery(...arguments);
   }
 }
