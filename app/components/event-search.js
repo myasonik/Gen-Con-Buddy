@@ -33,42 +33,46 @@ export default class EventSearchComponent extends Component {
   @tracked qp = this.router.currentRoute.queryParams;
   @tracked filter = this.qp.filter;
   @tracked eventType = this.find(EVENT_TYPES, 'eventType');
+  @tracked gameId = this.qp.gameId;
   @tracked group = this.qp.group;
-  @tracked sDesc = this.qp.sDesc;
-  @tracked lDesc = this.qp.lDesc;
-  @tracked system = this.qp.system;
-  @tracked edition = this.qp.edition;
+  @tracked shortDescription = this.qp.shortDescription;
+  @tracked longDescription = this.qp.longDescription;
+  @tracked gameSystem = this.qp.gameSystem;
+  @tracked rulesEdition = this.qp.rulesEdition;
   @tracked minPlayersMin = this.range('minPlayers', 0);
   @tracked minPlayersMax = this.range('minPlayers', 1);
   @tracked maxPlayersMin = this.range('maxPlayers', 0);
   @tracked maxPlayersMax = this.range('maxPlayers', 1);
-  @tracked ageReq = this.find(AGE_GROUPS, 'ageReq');
-  @tracked exp = this.find(EXP, 'exp');
-  @tracked materials = this.qp.materials;
-  @tracked startStart = this.range('start', 0);
-  @tracked startEnd = this.range('start', 1);
+  @tracked ageRequired = this.find(AGE_GROUPS, 'ageRequired');
+  @tracked experienceRequired = this.find(EXP, 'experienceRequired');
+  @tracked materialsProvided = this.qp.materialsProvided;
+  @tracked startDateTimeStart = this.range('startDateTime', 0);
+  @tracked startDateTimeEnd = this.range('startDateTime', 1);
   @tracked durationMin = this.range('duration', 0);
   @tracked durationMax = this.range('duration', 1);
-  @tracked endStart = this.range('end', 0);
-  @tracked endEnd = this.range('end', 1);
-  @tracked gameMasters = this.qp.gameMasters;
+  @tracked endDateTimeStart = this.range('endDateTime', 0);
+  @tracked endDateTimeEnd = this.range('endDateTime', 1);
+  @tracked gmNames = this.qp.gmNames;
   @tracked website = this.qp.website;
   @tracked email = this.qp.email;
   @tracked tournament = this.qp.tournament;
-  @tracked roundMin = this.range('round', 0);
-  @tracked roundMax = this.range('round', 1);
+  @tracked roundMin = this.range('roundNumber', 0);
+  @tracked roundMax = this.range('roundNumber', 1);
   @tracked totalRoundsMin = this.range('totalRounds', 0);
   @tracked totalRoundsMax = this.range('totalRounds', 1);
-  @tracked minTimeMin = this.range('minTime', 0);
-  @tracked minTimeMax = this.range('minTime', 1);
-  @tracked registration = this.find(REGISTRATION, 'registration');
+  @tracked minimumPlayTimeMin = this.range('minimumPlayTime', 0);
+  @tracked minimumPlayTimeMax = this.range('minimumPlayTime', 1);
+  @tracked attendeeRegistration = this.find(
+    REGISTRATION,
+    'attendeeRegistration',
+  );
   @tracked cost = this.qp.cost;
   @tracked location = this.qp.location;
-  @tracked room = this.qp.room;
-  @tracked table = this.qp.table;
-  @tracked category = this.find(CATEGORY, 'category'); // TODO
-  @tracked availableMin = this.range('available', 0);
-  @tracked availableMax = this.range('available', 1);
+  @tracked roomName = this.qp.roomName;
+  @tracked tableNumber = this.qp.tableNumber;
+  @tracked specialCategory = this.find(CATEGORY, 'specialCategory'); // TODO
+  @tracked availableMin = this.range('ticketsAvailable', 0);
+  @tracked availableMax = this.range('ticketsAvailable', 1);
   @tracked lastModifiedStart = this.range('lastModified', 0);
   @tracked lastModifiedEnd = this.range('lastModified', 1);
 
@@ -83,8 +87,8 @@ export default class EventSearchComponent extends Component {
         return;
       }
 
-      // if (prop === 'category') {
-      //   queryParams.category = val === 'none' ? '' : val;
+      // if (prop === 'specialCategory') {
+      //   queryParams.specialCategory = val === 'none' ? '' : val;
       //   return;
       // }
 
@@ -98,7 +102,7 @@ export default class EventSearchComponent extends Component {
       if (undefOrEmpty(min) && undefOrEmpty(max)) {
         queryParams[prop] = DEFAULT_VALUE;
       } else {
-        queryParams[prop] = `${min || ''},${max || ''}`;
+        queryParams[prop] = `[${min || ''},${max || ''}]`;
       }
     };
 
@@ -109,40 +113,41 @@ export default class EventSearchComponent extends Component {
       if (undefOrEmpty(start) && undefOrEmpty(end)) {
         queryParams[prop] = DEFAULT_VALUE;
       } else {
-        queryParams[prop] = `${start || ''},${end || ''}`;
+        queryParams[prop] = `[${start || ''},${end || ''}]`;
       }
     };
 
     setQP('filter');
+    setQP('gameId');
     setQP('title');
     setQP('eventType');
     setQP('group');
-    setQP('sDesc');
-    setQP('lDesc');
-    setQP('system');
-    setQP('edition');
+    setQP('shortDescription');
+    setQP('longDescription');
+    setQP('gameSystem');
+    setQP('rulesEdition');
     setRangeQP('minPlayers');
     setRangeQP('maxPlayers');
-    setQP('ageReq');
-    setQP('exp');
-    setQP('materials');
-    setDateRangeQP('start');
+    setQP('ageRequired');
+    setQP('experienceRequired');
+    setQP('materialsProvided');
+    setDateRangeQP('startDateTime');
     setRangeQP('duration');
-    setDateRangeQP('end');
-    setQP('gameMasters');
+    setDateRangeQP('endDateTime');
+    setQP('gmNames');
     setQP('website');
     setQP('email');
     setQP('tournament');
-    setRangeQP('round');
+    setRangeQP('roundNumber');
     setRangeQP('totalRounds');
-    setRangeQP('minTime');
-    setQP('registration');
+    setRangeQP('minimumPlayTime');
+    setQP('attendeeRegistration');
     setRangeQP('cost');
     setQP('location');
-    setQP('room');
-    setQP('table');
-    setQP('category');
-    setRangeQP('available');
+    setQP('roomName');
+    setQP('tableNumber');
+    setQP('specialCategory');
+    setRangeQP('ticketsAvailable');
     setDateRangeQP('lastModified');
 
     this.router.transitionTo('search', { queryParams });

@@ -22,12 +22,13 @@
   <details class="adv-filters">
     <summary>Advanced filters</summary>
     <ul>
+      <li><Generic::Input @label="Game ID" @value={{this.gameId}} /></li>
       <li><Generic::Input @label="Title" @value={{this.title}} /></li>
       <li><Generic::Input @label="Group" @value={{this.group}} /></li>
-      <li><Generic::Input @label="Short Desc" @value={{this.sDesc}} /></li>
-      <li><Generic::Input @label="Long Desc" @value={{this.lDesc}} /></li>
-      <li><Generic::Input @label="System" @value={{this.system}} /></li>
-      <li><Generic::Input @label="Edition" @value={{this.edition}} /></li>
+      <li><Generic::Input @label="Short Desc" @value={{this.shortDescription}} /></li>
+      <li><Generic::Input @label="Long Desc" @value={{this.longDescription}} /></li>
+      <li><Generic::Input @label="Game System" @value={{this.gameSystem}} /></li>
+      <li><Generic::Input @label="Rules Edition" @value={{this.rulesEdition}} /></li>
       <li>
         <Generic::Input
           @label="Min Players"
@@ -48,25 +49,25 @@
         <Generic::Input
           @label="Age Required"
           @options={{this.AGE_GROUPS}}
-          @opt={{this.ageReq}}
-          @onChange={{fn (mut this.ageReq)}}
+          @opt={{this.ageRequired}}
+          @onChange={{fn (mut this.ageRequired)}}
         />
       </li>
       <li>
         <Generic::Input
           @label="Experience Required"
           @options={{this.EXP}}
-          @opt={{this.exp}}
-          @onChange={{fn (mut this.exp)}}
+          @opt={{this.experienceRequired}}
+          @onChange={{fn (mut this.experienceRequired)}}
         />
       </li>
-      <li><Generic::Input @label="Materials" @value={{this.materials}} @boolChange={{fn (mut this.materials)}} /></li>
+      <li><Generic::Input @label="Materials Provided" @value={{this.materialsProvided}} @boolChange={{fn (mut this.materialsProvided)}} /></li>
       <li>
         <Generic::Input
           @label="Start Date"
           @type="date-range"
-          @startValue={{this.startStart}}
-          @endValue={{this.startEnd}}
+          @startValue={{this.startDateTimeStart}}
+          @endValue={{this.startDateTimeEnd}}
         />
       </li>
       <li>
@@ -81,20 +82,20 @@
         <Generic::Input
           @label="End Date"
           @type="date-range"
-          @startValue={{this.endStart}}
-          @endValue={{this.endEnd}}
+          @startValue={{this.endDateTimeStart}}
+          @endValue={{this.endDateTimeEnd}}
         />
       </li>
-      <li><Generic::Input @label="Game Masters" @value={{this.gameMasters}} /></li>
+      <li><Generic::Input @label="Game Masters" @value={{this.gmNames}} /></li>
       <li><Generic::Input @label="Website" @value={{this.website}} /></li>
       <li><Generic::Input @label="Email" @value={{this.email}} /></li>
       <li><Generic::Input @label="Tournament" @value={{this.tournament}} @boolChange={{fn (mut this.tournament)}} /></li>
       <li>
         <Generic::Input
-          @label="Round"
+          @label="Round Number"
           @type="range"
-          @minValue={{this.roundMin}}
-          @maxValue={{this.roundMax}}
+          @minValue={{this.roundNumberMin}}
+          @maxValue={{this.roundNumberMax}}
         />
       </li>
       <li>
@@ -109,16 +110,16 @@
         <Generic::Input
           @label="Minimum Play Time"
           @type="range"
-          @minValue={{this.minTimeMin}}
-          @maxValue={{this.minTimeMax}}
+          @minValue={{this.minimumPlayTimeMin}}
+          @maxValue={{this.minimumPlayTimeMax}}
         />
       </li>
       <li>
         <Generic::Input
-          @label="Registration"
+          @label="Attendee Registration"
           @options={{this.REGISTRATION}}
-          @opt={{this.registration}}
-          @onChange={{fn (mut this.registration)}}
+          @opt={{this.attendeeRegistration}}
+          @onChange={{fn (mut this.attendeeRegistration)}}
         />
       </li>
       <li>
@@ -130,22 +131,22 @@
         />
       </li>
       <li><Generic::Input @label="Location" @value={{this.location}} /></li>
-      <li><Generic::Input @label="Room" @value={{this.room}} /></li>
-      <li><Generic::Input @label="Table" @value={{this.table}} /></li>
+      <li><Generic::Input @label="Room Name" @value={{this.roomName}} /></li>
+      <li><Generic::Input @label="Table" @value={{this.tableNumber}} /></li>
       <li>
         <Generic::Input
           @label="Special Category"
           @options={{this.CATEGORY}}
-          @type={{this.category}}
-          @onChange={{fn (mut this.category)}}
+          @type={{this.specialCategory}}
+          @onChange={{fn (mut this.specialCategory)}}
         />
       </li>
       <li>
         <Generic::Input
-          @label="Available"
+          @label="Tickets Available"
           @type="range"
-          @minValue={{this.availableMin}}
-          @maxValue={{this.availableMax}}
+          @minValue={{this.ticketsAvailableMin}}
+          @maxValue={{this.ticketsAvailableMax}}
         />
       </li>
       <li>

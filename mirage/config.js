@@ -40,7 +40,7 @@ function routes() {
       const propType = (options, prop, eventProp = prop) => {
         const val = queryParams[prop];
 
-        // if (prop === 'category' && val === '' && event[eventProp] === '') {
+        // if (prop === 'specialCategory' && val === '' && event[eventProp] === '') {
         //   filterEvent = false;
         //   return;
         // }
@@ -101,42 +101,43 @@ function routes() {
         queryParams.filter &&
         !(
           event.title.includes(queryParams.filter) ||
-          event.sDesc.includes(queryParams.filter) ||
-          event.lDesc.includes(queryParams.filter)
+          event.shortDescription.includes(queryParams.filter) ||
+          event.longDescription.includes(queryParams.filter)
         )
       ) {
         filterEvent = false;
       }
 
+      propIncluded('gameId');
       propIncluded('title');
       propType(EVENT_TYPES, 'eventType');
       propIncluded('group');
-      propIncluded('sDesc');
-      propIncluded('lDesc');
-      propIncluded('system');
-      propIncluded('edition');
+      propIncluded('shortDescription');
+      propIncluded('longDescription');
+      propIncluded('gameSystem');
+      propIncluded('rulesEdition');
       propInRange('minPlayers');
       propInRange('maxPlayers');
-      propType(AGE_GROUPS, 'ageReq');
-      propType(EXP, 'exp');
-      propIs('materials');
+      propType(AGE_GROUPS, 'ageRequired');
+      propType(EXP, 'experienceRequired');
+      propIs('materialsProvided');
       propInDateRange('start');
       propInRange('duration');
-      propInDateRange('end');
-      propIncluded('gameMasters');
+      propInDateRange('endDateTime');
+      propIncluded('gmNames');
       propIncluded('website');
       propIncluded('email');
       propIs('tournament');
-      propInRange('round');
+      propInRange('roundNumber');
       propInRange('totalRounds');
-      propInRange('minTime');
-      propType(REGISTRATION, 'registration');
+      propInRange('minimumPlayTime');
+      propType(REGISTRATION, 'attendeeRegistration');
       propInRange('cost');
       propIncluded('location');
-      propIncluded('room');
-      propIncluded('table');
-      propType(CATEGORY, 'category');
-      propInRange('available');
+      propIncluded('roomName');
+      propIncluded('tableNumber');
+      propType(CATEGORY, 'specialCategory');
+      propInRange('ticketsAvailable');
       propInDateRange('lastModified');
 
       if (filterEvent) return event;

@@ -20,8 +20,10 @@
         id={{concat id '-min'}}
         @type="datetime-local"
         @value={{@startValue}}
-        min="2024-07-31T00:00"
-        max="2024-08-04T23:59"
+        {{!-- min="2024-07-31T00:00" --}}
+        min="2021-09-15T00:00"
+        {{!-- max="2024-08-04T23:59" --}}
+        max="2021-09-19T23:59"
         step="300"
       />
 
@@ -30,8 +32,10 @@
         id={{concat id '-max'}}
         @type="datetime-local"
         @value={{@endValue}}
-        min="2024-07-31T00:00"
-        max="2024-08-04T23:59"
+        {{!-- min="2024-07-31T00:00" --}}
+        min="2024-09-15T00:00"
+        {{!-- max="2024-08-04T23:59" --}}
+        max="2024-09-019T23:59"
         step="300"
       />
     {{else if this.isBool}}

@@ -9,7 +9,11 @@ export default class SearchTableComponent extends Component {
   @storageFor('table-state') tableState;
 
   day = (date) => format(date, 'EEEE');
-  time = (date) => format(date, 'HH:mm');
+  time = (date) => {
+    if (date) return format(date, 'HH:mm');
+
+    return '';
+  };
   lastMod = (date) => format(date, 'MMM dd HH:mm');
 
   @action

@@ -2,6 +2,10 @@
   <caption>Event data</caption>
   <tbody>
     <tr>
+      <th scope="row">Game ID</th>
+      <td>{{@data.gameId}}</td>
+    </tr>
+    <tr>
       <th scope="row">Title</th>
       <td>{{@data.title}}</td>
     </tr>
@@ -15,19 +19,19 @@
     </tr>
     <tr>
       <th scope="row">Short Desc</th>
-      <td>{{@data.sDesc}}</td>
+      <td>{{@data.shortDescription}}</td>
     </tr>
     <tr>
       <th scope="row">Long Desc</th>
-      <td>{{@data.lDesc}}</td>
+      <td>{{@data.longDescription}}</td>
     </tr>
     <tr>
-      <th scope="row">System</th>
-      <td>{{@data.system}}</td>
+      <th scope="row">Game System</th>
+      <td>{{@data.gameSystem}}</td>
     </tr>
     <tr>
-      <th scope="row">Edition</th>
-      <td>{{@data.edition}}</td>
+      <th scope="row">Rules Edition</th>
+      <td>{{@data.rulesEdition}}</td>
     </tr>
     <tr>
       <th scope="row">Min Players</th>
@@ -38,24 +42,24 @@
       <td>{{@data.maxPlayers}}</td>
     </tr>
     <tr>
-      <th scope="row">Age Req</th>
-      <td>{{@data.ageReq}}</td>
+      <th scope="row">Age Required</th>
+      <td>{{@data.ageRequired}}</td>
     </tr>
     <tr>
-      <th scope="row">Exp Req</th>
-      <td>{{@data.exp}}</td>
+      <th scope="row">Experience Required</th>
+      <td>{{@data.experienceRequired}}</td>
     </tr>
     <tr>
-      <th scope="row">Materials</th>
-      <td>{{@data.materials}}</td>
+      <th scope="row">Materials Provided</th>
+      <td>{{@data.materialsProvided}}</td>
     </tr>
     <tr>
       <th scope="row">Day</th>
-      <td>{{this.day @data.start}}</td>
+      <td>{{this.day @data.startDateTime}}</td>
     </tr>
     <tr>
       <th scope="row">Start</th>
-      <td>{{this.time @data.start}}</td>
+      <td>{{this.time @data.startDateTime}}</td>
     </tr>
     <tr>
       <th scope="row">Duration</th>
@@ -63,11 +67,11 @@
     </tr>
     <tr>
       <th scope="row">End</th>
-      <td>{{this.time @data.end}}</td>
+      <td>{{this.time @data.endDateTime}}</td>
     </tr>
     <tr>
       <th scope="row">GMs</th>
-      <td>{{@data.gameMasters}}</td>
+      <td>{{@data.gmNames}}</td>
     </tr>
     <tr>
       <th scope="row">Website</th>
@@ -82,8 +86,8 @@
       <td>{{@data.tournament}}</td>
     </tr>
     <tr>
-      <th scope="row">Round</th>
-      <td>{{@data.round}}</td>
+      <th scope="row">Round Number</th>
+      <td>{{@data.roundNumber}}</td>
     </tr>
     <tr>
       <th scope="row">Total Rounds</th>
@@ -91,11 +95,11 @@
     </tr>
     <tr>
       <th scope="row">Min Time</th>
-      <td>{{@data.minTime}}</td>
+      <td>{{@data.minimumPlayTime}}</td>
     </tr>
     <tr>
-      <th scope="row">Registration</th>
-      <td>{{@data.registration}}</td>
+      <th scope="row">Attendee Registration</th>
+      <td>{{@data.attendeeRegistration}}</td>
     </tr>
     <tr>
       <th scope="row">Cost</th>
@@ -106,20 +110,20 @@
       <td>{{@data.location}}</td>
     </tr>
     <tr>
-      <th scope="row">Room</th>
-      <td>{{@data.room}}</td>
+      <th scope="row">Room Name</th>
+      <td>{{@data.roomName}}</td>
     </tr>
     <tr>
       <th scope="row">Table</th>
-      <td>{{@data.table}}</td>
+      <td>{{@data.tableNumber}}</td>
     </tr>
     <tr>
       <th scope="row">Special Category</th>
-      <td>{{@data.category}}</td>
+      <td>{{@data.specialCategory}}</td>
     </tr>
     <tr>
       <th scope="row">Tickets Available</th>
-      <td>{{@data.available}}</td>
+      <td>{{@data.ticketsAvailable}}</td>
     </tr>
     <tr>
       <th scope="row">Last Modified</th>

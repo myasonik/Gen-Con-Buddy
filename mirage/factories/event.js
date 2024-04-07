@@ -60,22 +60,22 @@ export default Factory.extend({
   },
 
   // Short Description
-  sDesc() {
+  shortDescription() {
     return lorem.sentences({ min: 1, max: 3 });
   },
 
   // Long Description
-  lDesc() {
+  longDescription() {
     return lorem.sentences({ min: 3, max: 5 });
   },
 
   // Game System
-  system() {
+  gameSystem() {
     return lorem.sentences({ max: 3 });
   },
 
   // Rules Edition
-  edition() {
+  rulesEdition() {
     return lorem.sentences({ max: 3 });
   },
 
@@ -90,22 +90,22 @@ export default Factory.extend({
   },
 
   // Age Required
-  ageReq() {
+  ageRequired() {
     return returnRandVal(AGE_GROUPS);
   },
 
   // Experience Required
-  exp() {
+  experienceRequired() {
     return returnRandVal(EXP);
   },
 
   // Materials Provided: Yes / No
-  materials() {
+  materialsProvided() {
     return datatype.boolean() ? 'Yes' : 'No';
   },
 
   // Start Date & Time
-  start() {
+  startDateTime() {
     const from = toDate(setHours(thu, 8));
     const to = toDate(setMinutes(setHours(addDays(thu, 3), 17), 30));
 
@@ -115,19 +115,20 @@ export default Factory.extend({
   // Fractional hours to the half hour
   duration() {
     const end = setHours(addDays(thu, 4), 18);
-    const diffInHalfHours = (differenceInMinutes(end, this.start) / 60) * 2;
+    const diffInHalfHours =
+      (differenceInMinutes(end, this.startDateTime) / 60) * 2;
 
     return number.int({ max: diffInHalfHours }) / 2;
   },
 
   // End Date & Time
-  end() {
+  endDateTime() {
     const durationInMinutes = this.duration * 60;
-    return addMinutes(this.start, durationInMinutes);
+    return addMinutes(this.startDateTime, durationInMinutes);
   },
 
   // GM Names
-  gameMasters() {
+  gmNames() {
     const length = number.int({ max: 10 });
     return Array.from({ length }, () => person.fullName()).join(', ');
   },
@@ -148,7 +149,7 @@ export default Factory.extend({
   },
 
   // Round Number
-  round() {
+  roundNumber() {
     // only tournaments get a round greater than 1
     if (!this.tournament) return 0;
 
@@ -160,17 +161,17 @@ export default Factory.extend({
     // only tournaments get a round greater than 1
     if (!this.tournament) return 0;
 
-    return number.int({ min: this.round, max: 5 });
+    return number.int({ min: this.roundNumber, max: 5 });
   },
 
   // Minimum Play Time
-  minTime() {
+  minimumPlayTime() {
     // real data might not always match; just being lazy for mock data
     return this.duration;
   },
 
   // Attendee Registration?
-  registration() {
+  attendeeRegistration() {
     return returnRandVal(REGISTRATION);
   },
 
@@ -185,22 +186,22 @@ export default Factory.extend({
   },
 
   // Room Name
-  room() {
+  roomName() {
     return lorem.words({ min: 1, max: 10 });
   },
 
   // Table Number
-  table() {
+  tableNumber() {
     return lorem.words({ min: 1, max: 10 });
   },
 
   // Special Category
-  category() {
+  specialCategory() {
     return returnRandVal(CATEGORY);
   },
 
   // Tickets Available
-  available() {
+  ticketsAvailable() {
     return number.int({ min: -1000, max: 1000 });
   },
 
