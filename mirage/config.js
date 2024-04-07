@@ -26,6 +26,8 @@ export default function (config) {
 }
 
 function routes() {
+  this.namespace = 'api';
+
   this.get('events/search', ({ events }, { queryParams }) => {
     return events.all().filter((event) => {
       let filterEvent = true;
