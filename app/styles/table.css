@@ -1,0 +1,56 @@
+.table {
+  border: 1px solid #b8d8be;
+  border-radius: 0.25em;
+  margin-top: 1em;
+  overflow: hidden;
+}
+
+.table__nav {
+  display: flex;
+  background-color: #d2e7d6;
+  justify-content: space-between;
+  padding: 1em;
+}
+
+.table__scroll {
+  overflow-x: auto;
+}
+
+.table__table {
+  border-collapse: collapse;
+}
+
+.table__table--search th {
+  border-bottom: 1px solid #b8d8be;
+  vertical-align: bottom;
+}
+
+.table__table--event th {
+  text-align: right;
+}
+
+.table tr:nth-child(2n) {
+  background-color: #e8f4ea;
+}
+
+.table :is(td, th) {
+  border-left: 1px solid #b8d8be;
+  border-right: 1px solid #b8d8be;
+  padding: 1em;
+}
+
+.table :is(td, th):first-child {
+  border-left: none;
+}
+
+.table :is(td, th):last-child {
+  border-right: none;
+}
+
+.table__num-cell {
+  text-align: right;
+}
+
+.table__num-cell--cost::before {
+  content: "$";
+}

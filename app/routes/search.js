@@ -1,10 +1,22 @@
 import Route from '@ember/routing/route';
 import { service } from '@ember/service';
+import { storageFor } from 'ember-local-storage';
+import { SEARCH_TABLE_STATE_VERSION } from 'gen-con-buddy/utils/enums';
 
 export default class SearchRoute extends Route {
   @service store;
+  @storageFor('table-state') tableState;
+
+  constructor() {
+    super(...arguments);
+
+    if (this.tableState.get('version') !== SEARCH_TABLE_STATE_VERSION) {
+      this.tableState.reset();
+    }
+  }
 
   queryParams = {
+    limit: { refreshModel: true },
     filter: { refreshModel: true },
 
     gameId: { refreshModel: true },

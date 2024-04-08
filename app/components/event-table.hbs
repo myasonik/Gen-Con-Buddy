@@ -1,133 +1,134 @@
-<table>
-  <caption>Event data</caption>
-  <tbody>
-    <tr>
-      <th scope="row">Game ID</th>
-      <td>{{@data.gameId}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Title</th>
-      <td>{{@data.title}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Type</th>
-      <td>{{@data.eventType}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Group</th>
-      <td>{{@data.group}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Short Desc</th>
-      <td>{{@data.shortDescription}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Long Desc</th>
-      <td>{{@data.longDescription}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Game System</th>
-      <td>{{@data.gameSystem}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Rules Edition</th>
-      <td>{{@data.rulesEdition}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Min Players</th>
-      <td>{{@data.minPlayers}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Max Players</th>
-      <td>{{@data.maxPlayers}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Age Required</th>
-      <td>{{@data.ageRequired}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Experience Required</th>
-      <td>{{@data.experienceRequired}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Materials Provided</th>
-      <td>{{@data.materialsProvided}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Day</th>
-      <td>{{this.day @data.startDateTime}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Start</th>
-      <td>{{this.time @data.startDateTime}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Duration</th>
-      <td>{{@data.duration}}</td>
-    </tr>
-    <tr>
-      <th scope="row">End</th>
-      <td>{{this.time @data.endDateTime}}</td>
-    </tr>
-    <tr>
-      <th scope="row">GMs</th>
-      <td>{{@data.gmNames}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Website</th>
-      <td>{{@data.website}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Email</th>
-      <td>{{@data.email}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Tournament</th>
-      <td>{{@data.tournament}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Round Number</th>
-      <td>{{@data.roundNumber}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Total Rounds</th>
-      <td>{{@data.totalRounds}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Min Time</th>
-      <td>{{@data.minimumPlayTime}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Attendee Registration</th>
-      <td>{{@data.attendeeRegistration}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Cost</th>
-      <td>{{@data.cost}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Location</th>
-      <td>{{@data.location}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Room Name</th>
-      <td>{{@data.roomName}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Table</th>
-      <td>{{@data.tableNumber}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Special Category</th>
-      <td>{{@data.specialCategory}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Tickets Available</th>
-      <td>{{@data.ticketsAvailable}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Last Modified</th>
-      <td>{{this.lastMod @data.lastModified}}</td>
-    </tr>
-  </tbody>
-</table>
+<div class="table">
+  <table class="table__table table__table--event">
+    <tbody>
+      <tr>
+        <th scope="row">Game ID</th>
+        <td>{{@data.gameId}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Title</th>
+        <td>{{@data.title}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Type</th>
+        <td>{{@data.eventType}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Group</th>
+        <td>{{@data.group}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Short Desc</th>
+        <td>{{@data.shortDescription}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Long Desc</th>
+        <td>{{@data.longDescription}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Game System</th>
+        <td>{{@data.gameSystem}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Rules Edition</th>
+        <td>{{@data.rulesEdition}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Min Players</th>
+        <td>{{@data.minPlayers}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Max Players</th>
+        <td>{{@data.maxPlayers}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Age Required</th>
+        <td>{{@data.ageRequired}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Experience Required</th>
+        <td>{{@data.experienceRequired}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Materials Provided</th>
+        <td>{{@data.materialsProvided}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Day</th>
+        <td>{{this.day @data.startDateTime}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Start</th>
+        <td>{{this.time @data.startDateTime}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Duration</th>
+        <td>{{@data.duration}}</td>
+      </tr>
+      <tr>
+        <th scope="row">End</th>
+        <td>{{this.time @data.endDateTime}}</td>
+      </tr>
+      <tr>
+        <th scope="row">GMs</th>
+        <td>{{@data.gmNames}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Website</th>
+        <td>{{@data.website}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Email</th>
+        <td>{{@data.email}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Tournament</th>
+        <td>{{@data.tournament}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Round Number</th>
+        <td>{{@data.roundNumber}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Total Rounds</th>
+        <td>{{@data.totalRounds}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Min Time</th>
+        <td>{{@data.minimumPlayTime}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Attendee Registration</th>
+        <td>{{@data.attendeeRegistration}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Cost</th>
+        <td>{{@data.cost}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Location</th>
+        <td>{{@data.location}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Room Name</th>
+        <td>{{@data.roomName}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Table</th>
+        <td>{{@data.tableNumber}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Special Category</th>
+        <td>{{@data.specialCategory}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Tickets Available</th>
+        <td>{{@data.ticketsAvailable}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Last Modified</th>
+        <td>{{this.lastMod @data.lastModified}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

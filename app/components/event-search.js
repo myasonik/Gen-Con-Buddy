@@ -31,6 +31,7 @@ export default class EventSearchComponent extends Component {
   @service router;
 
   @tracked qp = this.router.currentRoute.queryParams;
+  @tracked limit = this.qp.limit;
   @tracked filter = this.qp.filter;
   @tracked eventType = this.find(EVENT_TYPES, 'eventType');
   @tracked gameId = this.qp.gameId;
@@ -78,7 +79,10 @@ export default class EventSearchComponent extends Component {
 
   @action
   search() {
-    const queryParams = {};
+    const queryParams = {
+      limit: 1000,
+    };
+
     const setQP = (prop) => {
       const val = this[prop];
 
@@ -86,11 +90,6 @@ export default class EventSearchComponent extends Component {
         queryParams[prop] = DEFAULT_VALUE;
         return;
       }
-
-      // if (prop === 'specialCategory') {
-      //   queryParams.specialCategory = val === 'none' ? '' : val;
-      //   return;
-      // }
 
       queryParams[prop] = val;
     };
@@ -113,10 +112,14 @@ export default class EventSearchComponent extends Component {
       if (undefOrEmpty(start) && undefOrEmpty(end)) {
         queryParams[prop] = DEFAULT_VALUE;
       } else {
-        queryParams[prop] = `[${start || ''},${end || ''}]`;
+        const formattedStart = start ? `${start}:00Z` : '';
+        const formattedEnd = end ? `${end}:00Z` : '';
+
+        queryParams[prop] = `[${formattedStart},${formattedEnd}]`;
       }
     };
 
+    setQP('limit');
     setQP('filter');
     setQP('gameId');
     setQP('title');
@@ -149,6 +152,8 @@ export default class EventSearchComponent extends Component {
     setQP('specialCategory');
     setRangeQP('ticketsAvailable');
     setDateRangeQP('lastModified');
+
+    queryParams.limit = 500;
 
     this.router.transitionTo('search', { queryParams });
   }

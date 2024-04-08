@@ -1,17 +1,19 @@
 import StorageObject from 'ember-local-storage/local/object';
+import { SEARCH_TABLE_STATE_VERSION } from 'gen-con-buddy/utils/enums';
 
 const Storage = StorageObject.extend();
 
 Storage.reopenClass({
   initialState() {
     return {
-      showGameId: true,
+      version: SEARCH_TABLE_STATE_VERSION,
+      showGameId: false,
       showTitle: true,
       showType: false,
       showGroup: false,
       showShortDescription: true,
-      showLongDescription: true,
-      showSystem: false,
+      showLongDescription: false,
+      showGameSystem: false,
       showRulesEdition: false,
       showMinPlayers: true,
       showMaxPlayers: true,
@@ -20,7 +22,7 @@ Storage.reopenClass({
       showMaterialsProvided: false,
       showDay: true,
       showStartDateTime: true,
-      showDuration: true,
+      showDuration: false,
       showEndDateTime: true,
       showGMNames: false,
       showWebsite: false,
@@ -33,9 +35,9 @@ Storage.reopenClass({
       showCost: false,
       showLocation: false,
       showRoomName: false,
-      showTable: false,
+      showTableNumber: false,
       showCategory: false,
-      showTicketsAvailable: false,
+      showTicketsAvailable: true,
       showLastModified: false,
     };
   },

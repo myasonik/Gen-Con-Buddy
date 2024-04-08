@@ -46,4 +46,6 @@ const CATEGORY = {
   premier: 'Premier Event',
 };
 
+const SEARCH_TABLE_STATE_VERSION = 0;
+
 export { AGE_GROUPS, CATEGORY, EST, EVENT_TYPES, EXP, REGISTRATION };
