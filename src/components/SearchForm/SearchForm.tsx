@@ -2,6 +2,26 @@ import { useForm } from 'react-hook-form'
 import { EVENT_TYPES, AGE_GROUPS, EXP, REGISTRATION, CATEGORY } from '../../utils/enums'
 import type { SearchFormValues } from '../../utils/types'
 
+const EMPTY_VALUES: SearchFormValues = {
+  filter: '', gameId: '', title: '', eventType: '', group: '',
+  shortDescription: '', longDescription: '', gameSystem: '', rulesEdition: '',
+  minPlayersMin: '', minPlayersMax: '', maxPlayersMin: '', maxPlayersMax: '',
+  ageRequired: '', experienceRequired: '',
+  materialsProvided: undefined,
+  startDateTimeStart: '', startDateTimeEnd: '',
+  durationMin: '', durationMax: '',
+  endDateTimeStart: '', endDateTimeEnd: '',
+  gmNames: '', website: '', email: '',
+  tournament: undefined,
+  roundNumberMin: '', roundNumberMax: '', totalRoundsMin: '', totalRoundsMax: '',
+  minimumPlayTimeMin: '', minimumPlayTimeMax: '',
+  attendeeRegistration: '',
+  costMin: '', costMax: '',
+  location: '', roomName: '', tableNumber: '', specialCategory: '',
+  ticketsAvailableMin: '', ticketsAvailableMax: '',
+  lastModifiedStart: '', lastModifiedEnd: '',
+}
+
 interface SearchFormProps {
   defaultValues: SearchFormValues
   onSearch: (values: SearchFormValues) => void
@@ -179,7 +199,7 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
       </details>
 
       <button type="submit">Search</button>
-      <button type="button" onClick={() => reset({ filter: '', title: '', gameId: '', location: '', group: '', shortDescription: '', longDescription: '', gameSystem: '', rulesEdition: '', ageRequired: '', experienceRequired: '', gmNames: '', website: '', email: '', attendeeRegistration: '', costMin: '', costMax: '', roomName: '', tableNumber: '', specialCategory: '', eventType: '' })}>Reset</button>
+      <button type="button" onClick={() => reset(EMPTY_VALUES)}>Reset</button>
     </form>
   )
 }
