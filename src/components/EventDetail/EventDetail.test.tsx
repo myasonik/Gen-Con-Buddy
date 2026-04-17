@@ -110,6 +110,6 @@ test('fetches using the provided gameId as a query param', async () => {
     }),
   )
   renderEventDetail('BGM24000099')
-  await screen.findByRole('term')
+  await screen.findAllByRole('term')
   expect(capturedUrl).toContain('gameId=BGM24000099')
 })

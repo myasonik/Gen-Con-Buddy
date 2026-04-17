@@ -22,42 +22,39 @@ export function EventDetail({ gameId }: EventDetailProps) {
     <article>
       <h1>{a.title}</h1>
       <dl>
-        <dt>{a.gameId}</dt>
-        <dd>{a.eventType} &mdash; {a.group}</dd>
+        <dt>Game ID</dt><dd>{a.gameId}</dd>
+        <dt>Type</dt><dd>{a.eventType}</dd>
+        <dt>Group</dt><dd>{a.group}</dd>
+        <dt>Short Description</dt><dd>{a.shortDescription}</dd>
+        <dt>Long Description</dt><dd>{a.longDescription}</dd>
+        <dt>Game System</dt><dd>{a.gameSystem}</dd>
+        <dt>Rules Edition</dt><dd>{a.rulesEdition}</dd>
+        <dt>Min Players</dt><dd>{a.minPlayers}</dd>
+        <dt>Max Players</dt><dd>{a.maxPlayers}</dd>
+        <dt>Age Required</dt><dd>{a.ageRequired}</dd>
+        <dt>Experience Required</dt><dd>{a.experienceRequired}</dd>
+        <dt>Materials Provided</dt><dd>{a.materialsProvided}</dd>
+        <dt>Day</dt><dd>{format(new Date(a.startDateTime), 'EEEE')}</dd>
+        <dt>Start</dt><dd>{format(new Date(a.startDateTime), 'HH:mm')}</dd>
+        <dt>Duration</dt><dd>{a.duration} hours</dd>
+        <dt>End</dt><dd>{format(new Date(a.endDateTime), 'HH:mm')}</dd>
+        <dt>GMs</dt><dd>{a.gmNames}</dd>
+        <dt>Website</dt><dd>{a.website || '—'}</dd>
+        <dt>Email</dt><dd>{a.email || '—'}</dd>
+        <dt>Tournament</dt><dd>{a.tournament}</dd>
+        <dt>Round</dt><dd>{a.roundNumber} of {a.totalRounds}</dd>
+        <dt>Min Play Time</dt><dd>{a.minimumPlayTime} hours</dd>
+        <dt>Attendee Registration</dt><dd>{a.attendeeRegistration}</dd>
+        <dt>Cost</dt><dd>${a.cost.toFixed(2)}</dd>
+        <dt>Location</dt><dd>{a.location}</dd>
+        <dt>Room</dt><dd>{a.roomName}</dd>
+        <dt>Table</dt><dd>{a.tableNumber}</dd>
+        <dt>Special Category</dt><dd>{a.specialCategory}</dd>
+        <dt>Tickets Available</dt><dd>{a.ticketsAvailable}</dd>
+        <dt>Rules Complexity</dt><dd>{a.rulesComplexity}</dd>
+        <dt>Prize</dt><dd>{a.prize || '—'}</dd>
+        <dt>Last Modified</dt><dd>{format(new Date(a.lastModified), 'yyyy-MM-dd')}</dd>
       </dl>
-      <table>
-        <tbody>
-          <tr><th>Short Description</th><td>{a.shortDescription}</td></tr>
-          <tr><th>Long Description</th><td>{a.longDescription}</td></tr>
-          <tr><th>Game System</th><td>{a.gameSystem}</td></tr>
-          <tr><th>Rules Edition</th><td>{a.rulesEdition}</td></tr>
-          <tr><th>Min Players</th><td>{a.minPlayers}</td></tr>
-          <tr><th>Max Players</th><td>{a.maxPlayers}</td></tr>
-          <tr><th>Age Required</th><td>{a.ageRequired}</td></tr>
-          <tr><th>Experience Required</th><td>{a.experienceRequired}</td></tr>
-          <tr><th>Materials Provided</th><td>{a.materialsProvided}</td></tr>
-          <tr><th>Day</th><td>{format(new Date(a.startDateTime), 'EEEE')}</td></tr>
-          <tr><th>Start</th><td>{format(new Date(a.startDateTime), 'HH:mm')}</td></tr>
-          <tr><th>Duration</th><td>{a.duration} hours</td></tr>
-          <tr><th>End</th><td>{format(new Date(a.endDateTime), 'HH:mm')}</td></tr>
-          <tr><th>GMs</th><td>{a.gmNames}</td></tr>
-          <tr><th>Website</th><td>{a.website || '—'}</td></tr>
-          <tr><th>Email</th><td>{a.email || '—'}</td></tr>
-          <tr><th>Tournament</th><td>{a.tournament}</td></tr>
-          <tr><th>Round</th><td>{a.roundNumber} of {a.totalRounds}</td></tr>
-          <tr><th>Min Play Time</th><td>{a.minimumPlayTime} hours</td></tr>
-          <tr><th>Attendee Registration</th><td>{a.attendeeRegistration}</td></tr>
-          <tr><th>Cost</th><td>${a.cost.toFixed(2)}</td></tr>
-          <tr><th>Location</th><td>{a.location}</td></tr>
-          <tr><th>Room</th><td>{a.roomName}</td></tr>
-          <tr><th>Table</th><td>{a.tableNumber}</td></tr>
-          <tr><th>Special Category</th><td>{a.specialCategory}</td></tr>
-          <tr><th>Tickets Available</th><td>{a.ticketsAvailable}</td></tr>
-          <tr><th>Rules Complexity</th><td>{a.rulesComplexity}</td></tr>
-          <tr><th>Prize</th><td>{a.prize || '—'}</td></tr>
-          <tr><th>Last Modified</th><td>{format(new Date(a.lastModified), 'yyyy-MM-dd')}</td></tr>
-        </tbody>
-      </table>
     </article>
   )
 }
