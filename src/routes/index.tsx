@@ -1,5 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import type { SearchParams } from '../utils/types'
+import { SearchForm } from '../components/SearchForm/SearchForm'
+import { SearchResults } from '../components/SearchResults/SearchResults'
+import { buildSearchParams, parseSearchParams } from '../utils/searchParams'
+import type { SearchFormValues, SearchParams } from '../utils/types'
 
 export const Route = createFileRoute('/')({
   validateSearch: (search: Record<string, unknown>): SearchParams => {
@@ -43,5 +46,22 @@ export const Route = createFileRoute('/')({
       lastModified: str('lastModified'),
     }
   },
-  component: () => <main><p>Search coming soon.</p></main>,
+  component: SearchPage,
 })
+
+function SearchPage() {
+  const navigate = Route.useNavigate()
+  const search = Route.useSearch()
+
+  const handleSearch = (values: SearchFormValues) => {
+    void navigate({ search: buildSearchParams(values) })
+  }
+
+  return (
+    <main>
+      <h1>Gen Con Buddy</h1>
+      <SearchForm defaultValues={parseSearchParams(search)} onSearch={handleSearch} />
+      <SearchResults searchParams={search} />
+    </main>
+  )
+}
