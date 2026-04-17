@@ -28,9 +28,9 @@ function renderEventDetail(gameId: string) {
   )
 }
 
-test('shows loading state while fetching', () => {
+test('shows loading state while fetching', async () => {
   renderEventDetail('RPG24000001')
-  expect(screen.getByText('Loading...')).toBeInTheDocument()
+  expect(await screen.findByText('Loading...')).toBeInTheDocument()
 })
 
 test('renders event title and gameId after load', async () => {
