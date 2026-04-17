@@ -1,0 +1,35 @@
+{
+  "name": "gen-con-buddy",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.74.4",
+    "@tanstack/react-router": "^1.114.0",
+    "date-fns": "^3.6.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.55.0"
+  },
+  "devDependencies": {
+    "@tanstack/router-plugin": "^1.114.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.0",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^25.0.1",
+    "msw": "^2.7.3",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.14",
+    "vitest": "^2.1.9"
+  }
+}
