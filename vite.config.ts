@@ -4,6 +4,11 @@ import react from '@vitejs/plugin-react'
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 
 export default defineConfig({
+  server: {
+    proxy: {
+      '/api': 'http://localhost:8080',
+    },
+  },
   plugins: [
     TanStackRouterVite({
       routeFileIgnorePattern: '\\.test\\.tsx?$',
