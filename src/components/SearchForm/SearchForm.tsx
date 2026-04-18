@@ -54,6 +54,16 @@ const EMPTY_VALUES: SearchFormValues = {
   ticketsAvailableMax: "",
   lastModifiedStart: "",
   lastModifiedEnd: "",
+  days: "",
+};
+
+const DAY_KEYS = ["wed", "thu", "fri", "sat", "sun"] as const;
+const DAY_LABELS: Record<string, string> = {
+  wed: "Wed",
+  thu: "Thu",
+  fri: "Fri",
+  sat: "Sat",
+  sun: "Sun",
 };
 
 interface SearchFormProps {
@@ -62,9 +72,21 @@ interface SearchFormProps {
 }
 
 export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
-  const { register, handleSubmit, reset } = useForm<SearchFormValues>({
-    defaultValues,
-  });
+  const { register, handleSubmit, reset, watch, setValue } =
+    useForm<SearchFormValues>({ defaultValues });
+
+  const days = watch("days") ?? "";
+  const selectedDays = new Set(days ? days.split(",") : []);
+
+  const handleDayChange = (key: string, checked: boolean) => {
+    const next = new Set(selectedDays);
+    if (checked) {
+      next.add(key);
+    } else {
+      next.delete(key);
+    }
+    setValue("days", DAY_KEYS.filter((d) => next.has(d)).join(","));
+  };
 
   return (
     <form onSubmit={handleSubmit(onSearch)}>
@@ -84,6 +106,20 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
             ))}
           </select>
         </label>
+        <fieldset>
+          <legend>Days</legend>
+          {DAY_KEYS.map((key) => (
+            <label key={key}>
+              <input
+                type="checkbox"
+                aria-label={DAY_LABELS[key]}
+                checked={selectedDays.has(key)}
+                onChange={(e) => handleDayChange(key, e.target.checked)}
+              />
+              {DAY_LABELS[key]}
+            </label>
+          ))}
+        </fieldset>
       </div>
 
       <details>
