@@ -112,7 +112,6 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
             <label key={key}>
               <input
                 type="checkbox"
-                aria-label={DAY_LABELS[key]}
                 checked={selectedDays.has(key)}
                 onChange={(e) => handleDayChange(key, e.target.checked)}
               />
