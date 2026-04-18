@@ -12,11 +12,13 @@ async function renderSearchPage(initialEntry = '/') {
   const router = createRouter({ routeTree, history })
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   await router.load()
-  render(
-    <QueryClientProvider client={client}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>,
-  )
+  await act(async () => {
+    render(
+      <QueryClientProvider client={client}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>,
+    )
+  })
   return router
 }
 
