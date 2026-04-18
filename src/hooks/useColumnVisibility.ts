@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 const STORAGE_KEY = 'gen-con-buddy-columns'
-const VERSION = 0
+const VERSION = 1
 
 const DEFAULTS: Record<string, boolean> = {
   gameId: false,
@@ -17,6 +17,8 @@ const DEFAULTS: Record<string, boolean> = {
   ageRequired: false,
   experienceRequired: false,
   materialsProvided: false,
+  materialsRequired: false,
+  materialsRequiredDetails: false,
   day: true,
   startDateTime: true,
   duration: false,
@@ -67,5 +69,9 @@ export function useColumnVisibility() {
     setVisibility((prev) => ({ ...prev, [column]: !prev[column] }))
   }
 
-  return { visibility, toggle }
+  const reset = () => {
+    setVisibility({ ...DEFAULTS })
+  }
+
+  return { visibility, toggle, reset }
 }

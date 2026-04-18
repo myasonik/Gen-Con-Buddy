@@ -19,6 +19,8 @@ test('returns correct defaults on first use', () => {
   expect(result.current.visibility.ticketsAvailable).toBe(true)
   expect(result.current.visibility.gameId).toBe(false)
   expect(result.current.visibility.longDescription).toBe(false)
+  expect(result.current.visibility.materialsRequired).toBe(false)
+  expect(result.current.visibility.materialsRequiredDetails).toBe(false)
 })
 
 test('toggle flips a column from true to false', () => {
@@ -58,4 +60,23 @@ test('resets to defaults when stored data is malformed', () => {
 
   const { result } = renderHook(() => useColumnVisibility())
   expect(result.current.visibility.title).toBe(true)
+})
+
+test('reset restores all columns to defaults after toggling', () => {
+  const { result } = renderHook(() => useColumnVisibility())
+
+  act(() => {
+    result.current.toggle('title')      // title: true → false
+    result.current.toggle('gameId')     // gameId: false → true
+  })
+
+  expect(result.current.visibility.title).toBe(false)
+  expect(result.current.visibility.gameId).toBe(true)
+
+  act(() => {
+    result.current.reset()
+  })
+
+  expect(result.current.visibility.title).toBe(true)
+  expect(result.current.visibility.gameId).toBe(false)
 })
