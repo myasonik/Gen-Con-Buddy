@@ -306,6 +306,12 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
           </li>
           <li>
             End Date:
+            {startDateDisabled && (
+              <Toggletip
+                label="Why are End Date fields disabled?"
+                message="Clear the day checkboxes above to use custom End Date fields."
+              />
+            )}
             <label>
               from{" "}
               <input type="datetime-local" disabled={startDateDisabled} {...register("endDateTimeStart")} />

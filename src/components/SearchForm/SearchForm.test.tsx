@@ -159,6 +159,11 @@ test('toggletip appears next to start date fields when they are disabled', () =>
   expect(screen.getByRole('button', { name: /why.*start date/i })).toBeInTheDocument()
 })
 
+test('toggletip appears next to end date fields when they are disabled', () => {
+  render(<SearchForm defaultValues={{ days: 'thu' }} onSearch={noop} />)
+  expect(screen.getByRole('button', { name: /why.*end date/i })).toBeInTheDocument()
+})
+
 test('toggletip message for disabled day checkboxes explains to clear start date', async () => {
   const user = userEvent.setup()
   render(<SearchForm defaultValues={{ startDateTimeStart: '2024-08-01T10:00' }} onSearch={noop} />)
