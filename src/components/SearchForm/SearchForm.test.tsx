@@ -61,3 +61,14 @@ test('Reset button clears all form fields', async () => {
   expect(screen.getByRole('textbox', { name: 'Title' })).toHaveValue('')
   expect(screen.getByRole('textbox', { name: 'Search' })).toHaveValue('')
 })
+
+test('picks up new defaultValues when re-mounted with a new key', () => {
+  const { rerender } = render(
+    <SearchForm key="a" defaultValues={{ eventType: 'BGM' }} onSearch={noop} />
+  )
+  expect(screen.getByRole('combobox', { name: 'Event Type' })).toHaveValue('BGM')
+
+  rerender(<SearchForm key="b" defaultValues={{ eventType: 'RPG' }} onSearch={noop} />)
+
+  expect(screen.getByRole('combobox', { name: 'Event Type' })).toHaveValue('RPG')
+})
