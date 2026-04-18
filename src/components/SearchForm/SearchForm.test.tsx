@@ -122,3 +122,51 @@ test('Reset button clears day checkboxes', async () => {
 
   expect(screen.getByRole('checkbox', { name: 'Thu' })).not.toBeChecked()
 })
+
+test('day checkboxes are disabled when startDateTimeStart has a value', () => {
+  render(<SearchForm defaultValues={{ startDateTimeStart: '2024-08-01T10:00' }} onSearch={noop} />)
+  for (const day of DAYS) {
+    expect(screen.getByRole('checkbox', { name: day })).toBeDisabled()
+  }
+})
+
+test('day checkboxes are disabled when startDateTimeEnd has a value', () => {
+  render(<SearchForm defaultValues={{ startDateTimeEnd: '2024-08-01T14:00' }} onSearch={noop} />)
+  for (const day of DAYS) {
+    expect(screen.getByRole('checkbox', { name: day })).toBeDisabled()
+  }
+})
+
+test('start date inputs are disabled when any day is checked', () => {
+  const { container } = render(<SearchForm defaultValues={{ days: 'thu' }} onSearch={noop} />)
+  expect(container.querySelector<HTMLInputElement>('input[name="startDateTimeStart"]')).toBeDisabled()
+  expect(container.querySelector<HTMLInputElement>('input[name="startDateTimeEnd"]')).toBeDisabled()
+})
+
+test('toggletip appears next to day checkboxes when they are disabled', () => {
+  render(<SearchForm defaultValues={{ startDateTimeStart: '2024-08-01T10:00' }} onSearch={noop} />)
+  expect(screen.getByRole('button', { name: /why.*day/i })).toBeInTheDocument()
+})
+
+test('toggletip appears next to start date fields when they are disabled', () => {
+  render(<SearchForm defaultValues={{ days: 'thu' }} onSearch={noop} />)
+  expect(screen.getByRole('button', { name: /why.*start date/i })).toBeInTheDocument()
+})
+
+test('toggletip message for disabled day checkboxes explains to clear start date', async () => {
+  const user = userEvent.setup()
+  render(<SearchForm defaultValues={{ startDateTimeStart: '2024-08-01T10:00' }} onSearch={noop} />)
+
+  await user.click(screen.getByRole('button', { name: /why.*day/i }))
+
+  expect(screen.getByRole('tooltip')).toHaveTextContent(/clear the start date fields/i)
+})
+
+test('toggletip message for disabled start date explains to clear day checkboxes', async () => {
+  const user = userEvent.setup()
+  render(<SearchForm defaultValues={{ days: 'thu' }} onSearch={noop} />)
+
+  await user.click(screen.getByRole('button', { name: /why.*start date/i }))
+
+  expect(screen.getByRole('tooltip')).toHaveTextContent(/clear the day checkboxes/i)
+})

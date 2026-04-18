@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   AGE_GROUPS,
@@ -66,6 +67,26 @@ const DAY_LABELS: Record<string, string> = {
   sun: "Sun",
 };
 
+function Toggletip({ label, message }: { label: string; message: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <span style={{ position: "relative", display: "inline-block" }}>
+      <button
+        type="button"
+        aria-label={label}
+        onClick={() => setOpen((o) => !o)}
+      >
+        ?
+      </button>
+      {open && (
+        <span role="tooltip" style={{ position: "absolute", zIndex: 1 }}>
+          {message}
+        </span>
+      )}
+    </span>
+  );
+}
+
 interface SearchFormProps {
   defaultValues: SearchFormValues;
   onSearch: (values: SearchFormValues) => void;
@@ -77,6 +98,13 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
 
   const days = watch("days") ?? "";
   const selectedDays = new Set(days ? days.split(",") : []);
+
+  const startDateTimeStart = watch("startDateTimeStart") ?? "";
+  const startDateTimeEnd = watch("startDateTimeEnd") ?? "";
+  const startDateActive = !!(startDateTimeStart || startDateTimeEnd);
+  const daysActive = selectedDays.size > 0;
+  const daysDisabled = startDateActive;
+  const startDateDisabled = daysActive;
 
   const handleDayChange = (key: string, checked: boolean) => {
     const next = new Set(selectedDays);
@@ -108,11 +136,18 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
         </label>
         <fieldset>
           <legend>Days</legend>
+          {daysDisabled && (
+            <Toggletip
+              label="Why are day filters disabled?"
+              message="Clear the Start Date fields in Advanced Filters to use day checkboxes."
+            />
+          )}
           {DAY_KEYS.map((key) => (
             <label key={key}>
               <input
                 type="checkbox"
                 checked={selectedDays.has(key)}
+                disabled={daysDisabled}
                 onChange={(e) => handleDayChange(key, e.target.checked)}
               />
               {DAY_LABELS[key]}
@@ -227,16 +262,27 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
           </li>
           <li>
             Start Date:
+            {startDateDisabled && (
+              <Toggletip
+                label="Why are Start Date fields disabled?"
+                message="Clear the day checkboxes above to use custom Start Date fields."
+              />
+            )}
             <label>
               from{" "}
               <input
                 type="datetime-local"
+                disabled={startDateDisabled}
                 {...register("startDateTimeStart")}
               />
             </label>
             <label>
               to{" "}
-              <input type="datetime-local" {...register("startDateTimeEnd")} />
+              <input
+                type="datetime-local"
+                disabled={startDateDisabled}
+                {...register("startDateTimeEnd")}
+              />
             </label>
           </li>
           <li>
