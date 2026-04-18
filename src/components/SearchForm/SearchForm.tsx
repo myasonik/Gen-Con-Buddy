@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   AGE_GROUPS,
@@ -69,6 +69,16 @@ const DAY_LABELS: Record<string, string> = {
 
 function Toggletip({ label, message }: { label: string; message: string }) {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [open]);
+
   return (
     <span style={{ position: "relative", display: "inline-block" }}>
       <button
