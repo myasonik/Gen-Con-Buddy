@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "start": "concurrently -n api,web -c cyan,green \"sh -c 'cd ../Gen-Con-Buddy-API && set -a && source .env && ./bin/gcb api'\" \"vite\"",
+    "start:prod": "VITE_API_URL=https://web-production-e0d43.up.railway.app vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run",
@@ -26,6 +28,7 @@
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.2.1",
     "jsdom": "^25.0.1",
     "msw": "^2.7.3",
     "typescript": "^5.6.3",

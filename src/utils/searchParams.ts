@@ -1,7 +1,7 @@
 import type { SearchFormValues, SearchParams } from './types'
 
 export function buildSearchParams(values: SearchFormValues): SearchParams {
-  const params: SearchParams = { limit: 500 }
+  const params: SearchParams = {}
 
   const set = (key: keyof SearchParams, val: string | number | undefined | boolean) => {
     if (val === undefined || val === '' || val === false) return
@@ -41,14 +41,16 @@ export function buildSearchParams(values: SearchFormValues): SearchParams {
   setRange('maxPlayers', values.maxPlayersMin, values.maxPlayersMax)
   set('ageRequired', values.ageRequired)
   set('experienceRequired', values.experienceRequired)
-  if (values.materialsProvided === true) params.materialsProvided = 'true'
+  set('materialsProvided', values.materialsProvided)
+  set('materialsRequired', values.materialsRequired)
+  set('materialsRequiredDetails', values.materialsRequiredDetails)
   setDateRange('startDateTime', values.startDateTimeStart, values.startDateTimeEnd)
   setRange('duration', values.durationMin, values.durationMax)
   setDateRange('endDateTime', values.endDateTimeStart, values.endDateTimeEnd)
   set('gmNames', values.gmNames)
   set('website', values.website)
   set('email', values.email)
-  if (values.tournament === true) params.tournament = 'true'
+  set('tournament', values.tournament)
   setRange('roundNumber', values.roundNumberMin, values.roundNumberMax)
   setRange('totalRounds', values.totalRoundsMin, values.totalRoundsMax)
   setRange('minimumPlayTime', values.minimumPlayTimeMin, values.minimumPlayTimeMax)
@@ -110,7 +112,9 @@ export function parseSearchParams(params: SearchParams): SearchFormValues {
     maxPlayersMax: params.maxPlayers ? maxPlayers.max : undefined,
     ageRequired: params.ageRequired,
     experienceRequired: params.experienceRequired,
-    materialsProvided: params.materialsProvided === 'true' ? true : undefined,
+    materialsProvided: params.materialsProvided,
+    materialsRequired: params.materialsRequired,
+    materialsRequiredDetails: params.materialsRequiredDetails,
     startDateTimeStart: params.startDateTime ? startDateTime.start : undefined,
     startDateTimeEnd: params.startDateTime ? startDateTime.end : undefined,
     durationMin: params.duration ? duration.min : undefined,
@@ -120,7 +124,7 @@ export function parseSearchParams(params: SearchParams): SearchFormValues {
     gmNames: params.gmNames,
     website: params.website,
     email: params.email,
-    tournament: params.tournament === 'true' ? true : undefined,
+    tournament: params.tournament,
     roundNumberMin: params.roundNumber ? roundNumber.min : undefined,
     roundNumberMax: params.roundNumber ? roundNumber.max : undefined,
     totalRoundsMin: params.totalRounds ? totalRounds.min : undefined,

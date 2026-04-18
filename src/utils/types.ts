@@ -75,6 +75,8 @@ export interface SearchParams {
   ageRequired?: string
   experienceRequired?: string
   materialsProvided?: string
+  materialsRequired?: string
+  materialsRequiredDetails?: string
   startDateTime?: string
   duration?: string
   endDateTime?: string
@@ -112,7 +114,9 @@ export interface SearchFormValues {
   maxPlayersMax?: string
   ageRequired?: string
   experienceRequired?: string
-  materialsProvided?: boolean
+  materialsProvided?: string
+  materialsRequired?: string
+  materialsRequiredDetails?: string
   startDateTimeStart?: string
   startDateTimeEnd?: string
   durationMin?: string
@@ -122,7 +126,7 @@ export interface SearchFormValues {
   gmNames?: string
   website?: string
   email?: string
-  tournament?: boolean
+  tournament?: string
   roundNumberMin?: string
   roundNumberMax?: string
   totalRoundsMin?: string

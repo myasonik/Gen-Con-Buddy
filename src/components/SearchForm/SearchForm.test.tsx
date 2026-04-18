@@ -22,6 +22,8 @@ test('renders advanced filter fields inside a disclosure', () => {
   expect(screen.getByRole('textbox', { name: 'Title' })).toBeInTheDocument()
   expect(screen.getByRole('textbox', { name: 'Game ID' })).toBeInTheDocument()
   expect(screen.getByRole('textbox', { name: 'Location' })).toBeInTheDocument()
+  expect(screen.getByRole('textbox', { name: 'Materials Required' })).toBeInTheDocument()
+  expect(screen.getByRole('textbox', { name: 'Materials Required Details' })).toBeInTheDocument()
 })
 
 test('populates fields from defaultValues', () => {
