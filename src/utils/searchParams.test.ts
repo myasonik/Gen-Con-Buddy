@@ -200,4 +200,18 @@ describe('parseSearchParams', () => {
     const parsed = parseSearchParams(params)
     expect(parsed.days).toBe('fri,sat')
   })
+
+  it('does not populate startDateTimeStart/End when days is present (single day)', () => {
+    const params = buildSearchParams({ days: 'thu' })
+    const parsed = parseSearchParams(params)
+    expect(parsed.startDateTimeStart).toBeUndefined()
+    expect(parsed.startDateTimeEnd).toBeUndefined()
+  })
+
+  it('does not populate startDateTimeStart/End when days is present (multiple days)', () => {
+    const params = buildSearchParams({ days: 'wed,sun' })
+    const parsed = parseSearchParams(params)
+    expect(parsed.startDateTimeStart).toBeUndefined()
+    expect(parsed.startDateTimeEnd).toBeUndefined()
+  })
 })
