@@ -161,5 +161,6 @@ export function parseSearchParams(params: SearchParams): SearchFormValues {
     ticketsAvailableMax: params.ticketsAvailable ? ticketsAvailable.max : undefined,
     lastModifiedStart: params.lastModified ? lastModified.start : undefined,
     lastModifiedEnd: params.lastModified ? lastModified.end : undefined,
+    days: params.days,
   }
 }

@@ -183,4 +183,14 @@ describe('parseSearchParams', () => {
     const result = parseSearchParams({ materialsRequiredDetails: 'Bring dice' })
     expect(result.materialsRequiredDetails).toBe('Bring dice')
   })
+
+  it('round-trips days directly from URL params', () => {
+    const result = parseSearchParams({ days: 'thu,sat' })
+    expect(result.days).toBe('thu,sat')
+  })
+
+  it('returns undefined days when not in URL params', () => {
+    const result = parseSearchParams({})
+    expect(result.days).toBeUndefined()
+  })
 })
