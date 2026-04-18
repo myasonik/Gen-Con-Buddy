@@ -117,3 +117,21 @@ test('event title link points to the event detail route', async () => {
   const link = await screen.findByRole('link', { name: 'Dragon Hunt' })
   expect(link).toHaveAttribute('href', '/event/RPG24000042')
 })
+
+test('reset button restores default column visibility', async () => {
+  const user = userEvent.setup()
+  renderSearchResults()
+  await screen.findAllByRole('row')
+
+  // gameId is hidden by default — toggle it on
+  const checkbox = screen.getByRole('checkbox', { name: 'Game ID' })
+  await user.click(checkbox)
+  expect(screen.getByRole('columnheader', { name: 'Game ID' })).toBeInTheDocument()
+
+  // click reset — gameId should disappear again
+  await user.click(screen.getByRole('button', { name: 'Reset to defaults' }))
+  expect(screen.queryByRole('columnheader', { name: 'Game ID' })).not.toBeInTheDocument()
+
+  // title (default-visible) should still be present
+  expect(screen.getByRole('columnheader', { name: 'Title' })).toBeInTheDocument()
+})

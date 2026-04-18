@@ -23,6 +23,8 @@ const COLUMNS = [
   { key: 'ageRequired', label: 'Age Required' },
   { key: 'experienceRequired', label: 'Experience Required' },
   { key: 'materialsProvided', label: 'Materials Provided' },
+  { key: 'materialsRequired', label: 'Materials Required' },
+  { key: 'materialsRequiredDetails', label: 'Materials Required Details' },
   { key: 'day', label: 'Day' },
   { key: 'startDateTime', label: 'Start' },
   { key: 'duration', label: 'Duration' },
@@ -65,6 +67,8 @@ function EventCell({ col, event }: { col: ColumnKey; event: Event }) {
     case 'ageRequired': return <td>{a.ageRequired}</td>
     case 'experienceRequired': return <td>{a.experienceRequired}</td>
     case 'materialsProvided': return <td>{a.materialsProvided}</td>
+    case 'materialsRequired': return <td>{a.materialsRequired}</td>
+    case 'materialsRequiredDetails': return <td>{a.materialsRequiredDetails}</td>
     case 'day': return <td>{format(new Date(a.startDateTime), 'EEEE')}</td>
     case 'startDateTime': return <td>{format(new Date(a.startDateTime), 'HH:mm')}</td>
     case 'duration': return <td>{a.duration}</td>
@@ -88,7 +92,7 @@ function EventCell({ col, event }: { col: ColumnKey; event: Event }) {
 }
 
 export function SearchResults({ searchParams }: SearchResultsProps) {
-  const { visibility, toggle } = useColumnVisibility()
+  const { visibility, toggle, reset } = useColumnVisibility()
   const { data, isLoading, isError } = useQuery({
     queryKey: ['events', searchParams],
     queryFn: () => fetchEvents(searchParams),
@@ -115,6 +119,7 @@ export function SearchResults({ searchParams }: SearchResultsProps) {
               </li>
             ))}
           </ul>
+          <button type="button" onClick={reset}>Reset to defaults</button>
         </fieldset>
       </details>
 
