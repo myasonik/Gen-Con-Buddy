@@ -95,6 +95,7 @@ export interface SearchParams {
   specialCategory?: string
   ticketsAvailable?: string
   lastModified?: string
+  days?: string
 }
 
 /** React Hook Form values — ranges split into min/max fields. */
@@ -144,4 +145,5 @@ export interface SearchFormValues {
   ticketsAvailableMax?: string
   lastModifiedStart?: string
   lastModifiedEnd?: string
+  days?: string
 }
