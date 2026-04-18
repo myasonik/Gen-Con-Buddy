@@ -135,3 +135,15 @@ test('reset button restores default column visibility', async () => {
   // title (default-visible) should still be present
   expect(screen.getByRole('columnheader', { name: 'Title' })).toBeInTheDocument()
 })
+
+test('materialsRequired column is hidden by default', async () => {
+  renderSearchResults()
+  await screen.findAllByRole('row')
+  expect(screen.queryByRole('columnheader', { name: 'Materials Required' })).not.toBeInTheDocument()
+})
+
+test('materialsRequiredDetails column is hidden by default', async () => {
+  renderSearchResults()
+  await screen.findAllByRole('row')
+  expect(screen.queryByRole('columnheader', { name: 'Materials Required Details' })).not.toBeInTheDocument()
+})
