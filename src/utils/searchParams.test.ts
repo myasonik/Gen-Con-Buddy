@@ -58,6 +58,47 @@ describe('buildSearchParams', () => {
     const result = buildSearchParams({ tournament: '' })
     expect(result).not.toHaveProperty('tournament')
   })
+
+  it('translates a single day to a startDateTime range', () => {
+    const result = buildSearchParams({ days: 'thu' })
+    expect(result.startDateTime).toBe('[2024-08-01T00:00:00-04:00,2024-08-02T00:00:00-04:00]')
+    expect(result).not.toHaveProperty('days')
+  })
+
+  it('translates two non-contiguous days to a comma-separated multi-range startDateTime', () => {
+    const result = buildSearchParams({ days: 'wed,sun' })
+    expect(result.startDateTime).toBe(
+      '[2024-07-31T00:00:00-04:00,2024-08-01T00:00:00-04:00],[2024-08-04T00:00:00-04:00,2024-08-05T00:00:00-04:00]'
+    )
+    expect(result).not.toHaveProperty('days')
+  })
+
+  it('translates all five days to five ranges', () => {
+    const result = buildSearchParams({ days: 'wed,thu,fri,sat,sun' })
+    expect(result.startDateTime).toBe(
+      '[2024-07-31T00:00:00-04:00,2024-08-01T00:00:00-04:00],' +
+      '[2024-08-01T00:00:00-04:00,2024-08-02T00:00:00-04:00],' +
+      '[2024-08-02T00:00:00-04:00,2024-08-03T00:00:00-04:00],' +
+      '[2024-08-03T00:00:00-04:00,2024-08-04T00:00:00-04:00],' +
+      '[2024-08-04T00:00:00-04:00,2024-08-05T00:00:00-04:00]'
+    )
+  })
+
+  it('does not set startDateTime when days is empty', () => {
+    const result = buildSearchParams({ days: '' })
+    expect(result).not.toHaveProperty('startDateTime')
+    expect(result).not.toHaveProperty('days')
+  })
+
+  it('uses explicit startDateTime fields when days is not set', () => {
+    const result = buildSearchParams({ startDateTimeStart: '2024-08-01T10:00', startDateTimeEnd: '' })
+    expect(result.startDateTime).toBe('[2024-08-01T10:00:00Z,]')
+  })
+
+  it('days takes priority over explicit startDateTime fields when both are set', () => {
+    const result = buildSearchParams({ days: 'fri', startDateTimeStart: '2024-08-01T10:00', startDateTimeEnd: '2024-08-01T14:00' })
+    expect(result.startDateTime).toBe('[2024-08-02T00:00:00-04:00,2024-08-03T00:00:00-04:00]')
+  })
 })
 
 describe('parseSearchParams', () => {

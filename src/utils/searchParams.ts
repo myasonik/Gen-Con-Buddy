@@ -1,5 +1,13 @@
 import type { SearchFormValues, SearchParams } from './types'
 
+const DAY_DATES: Record<string, { start: string; end: string }> = {
+  wed: { start: '2024-07-31T00:00:00-04:00', end: '2024-08-01T00:00:00-04:00' },
+  thu: { start: '2024-08-01T00:00:00-04:00', end: '2024-08-02T00:00:00-04:00' },
+  fri: { start: '2024-08-02T00:00:00-04:00', end: '2024-08-03T00:00:00-04:00' },
+  sat: { start: '2024-08-03T00:00:00-04:00', end: '2024-08-04T00:00:00-04:00' },
+  sun: { start: '2024-08-04T00:00:00-04:00', end: '2024-08-05T00:00:00-04:00' },
+}
+
 export function buildSearchParams(values: SearchFormValues): SearchParams {
   const params: SearchParams = {}
 
@@ -44,7 +52,18 @@ export function buildSearchParams(values: SearchFormValues): SearchParams {
   set('materialsProvided', values.materialsProvided)
   set('materialsRequired', values.materialsRequired)
   set('materialsRequiredDetails', values.materialsRequiredDetails)
-  setDateRange('startDateTime', values.startDateTimeStart, values.startDateTimeEnd)
+  if (values.days) {
+    const ranges = values.days
+      .split(',')
+      .filter(d => DAY_DATES[d])
+      .map(d => `[${DAY_DATES[d].start},${DAY_DATES[d].end}]`)
+      .join(',')
+    if (ranges) {
+      ;(params as Record<string, unknown>)['startDateTime'] = ranges
+    }
+  } else {
+    setDateRange('startDateTime', values.startDateTimeStart, values.startDateTimeEnd)
+  }
   setRange('duration', values.durationMin, values.durationMax)
   setDateRange('endDateTime', values.endDateTimeStart, values.endDateTimeEnd)
   set('gmNames', values.gmNames)
