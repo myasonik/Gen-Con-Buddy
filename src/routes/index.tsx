@@ -60,7 +60,7 @@ function SearchPage() {
   return (
     <main>
       <h1>Gen Con Buddy</h1>
-      <SearchForm defaultValues={parseSearchParams(search)} onSearch={handleSearch} />
+      <SearchForm key={JSON.stringify(search)} defaultValues={parseSearchParams(search)} onSearch={handleSearch} />
       <SearchResults searchParams={search} />
     </main>
   )
