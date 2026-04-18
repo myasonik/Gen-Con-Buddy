@@ -308,10 +308,10 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
             End Date:
             <label>
               from{" "}
-              <input type="datetime-local" {...register("endDateTimeStart")} />
+              <input type="datetime-local" disabled={startDateDisabled} {...register("endDateTimeStart")} />
             </label>
             <label>
-              to <input type="datetime-local" {...register("endDateTimeEnd")} />
+              to <input type="datetime-local" disabled={startDateDisabled} {...register("endDateTimeEnd")} />
             </label>
           </li>
           <li>

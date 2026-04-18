@@ -143,6 +143,12 @@ test('start date inputs are disabled when any day is checked', () => {
   expect(container.querySelector<HTMLInputElement>('input[name="startDateTimeEnd"]')).toBeDisabled()
 })
 
+test('end date inputs are disabled when any day is checked', () => {
+  const { container } = render(<SearchForm defaultValues={{ days: 'thu' }} onSearch={noop} />)
+  expect(container.querySelector<HTMLInputElement>('input[name="endDateTimeStart"]')).toBeDisabled()
+  expect(container.querySelector<HTMLInputElement>('input[name="endDateTimeEnd"]')).toBeDisabled()
+})
+
 test('toggletip appears next to day checkboxes when they are disabled', () => {
   render(<SearchForm defaultValues={{ startDateTimeStart: '2024-08-01T10:00' }} onSearch={noop} />)
   expect(screen.getByRole('button', { name: /why.*day/i })).toBeInTheDocument()
