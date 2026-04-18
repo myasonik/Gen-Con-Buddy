@@ -60,6 +60,7 @@ export function buildSearchParams(values: SearchFormValues): SearchParams {
       .join(',')
     if (ranges) {
       ;(params as Record<string, unknown>)['startDateTime'] = ranges
+      params.days = values.days
     }
   } else {
     setDateRange('startDateTime', values.startDateTimeStart, values.startDateTimeEnd)

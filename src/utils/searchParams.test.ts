@@ -62,7 +62,7 @@ describe('buildSearchParams', () => {
   it('translates a single day to a startDateTime range', () => {
     const result = buildSearchParams({ days: 'thu' })
     expect(result.startDateTime).toBe('[2024-08-01T00:00:00-04:00,2024-08-02T00:00:00-04:00]')
-    expect(result).not.toHaveProperty('days')
+    expect(result.days).toBe('thu')
   })
 
   it('translates two non-contiguous days to a comma-separated multi-range startDateTime', () => {
@@ -70,7 +70,7 @@ describe('buildSearchParams', () => {
     expect(result.startDateTime).toBe(
       '[2024-07-31T00:00:00-04:00,2024-08-01T00:00:00-04:00],[2024-08-04T00:00:00-04:00,2024-08-05T00:00:00-04:00]'
     )
-    expect(result).not.toHaveProperty('days')
+    expect(result.days).toBe('wed,sun')
   })
 
   it('translates all five days to five ranges', () => {
@@ -98,6 +98,7 @@ describe('buildSearchParams', () => {
   it('days takes priority over explicit startDateTime fields when both are set', () => {
     const result = buildSearchParams({ days: 'fri', startDateTimeStart: '2024-08-01T10:00', startDateTimeEnd: '2024-08-01T14:00' })
     expect(result.startDateTime).toBe('[2024-08-02T00:00:00-04:00,2024-08-03T00:00:00-04:00]')
+    expect(result.days).toBe('fri')
   })
 })
 
@@ -192,5 +193,11 @@ describe('parseSearchParams', () => {
   it('returns undefined days when not in URL params', () => {
     const result = parseSearchParams({})
     expect(result.days).toBeUndefined()
+  })
+
+  it('round-trips days through buildSearchParams then parseSearchParams', () => {
+    const params = buildSearchParams({ days: 'fri,sat' })
+    const parsed = parseSearchParams(params)
+    expect(parsed.days).toBe('fri,sat')
   })
 })
