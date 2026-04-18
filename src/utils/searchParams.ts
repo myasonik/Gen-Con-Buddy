@@ -8,6 +8,15 @@ const DAY_DATES: Record<string, { start: string; end: string }> = {
   sun: { start: '2024-08-04T00:00:00-04:00', end: '2024-08-05T00:00:00-04:00' },
 }
 
+export function daysToStartDateTime(days: string): string | undefined {
+  const ranges = days
+    .split(',')
+    .filter(d => DAY_DATES[d])
+    .map(d => `[${DAY_DATES[d].start},${DAY_DATES[d].end}]`)
+    .join(',')
+  return ranges || undefined
+}
+
 export function buildSearchParams(values: SearchFormValues): SearchParams {
   const params: SearchParams = {}
 
@@ -53,15 +62,7 @@ export function buildSearchParams(values: SearchFormValues): SearchParams {
   set('materialsRequired', values.materialsRequired)
   set('materialsRequiredDetails', values.materialsRequiredDetails)
   if (values.days) {
-    const ranges = values.days
-      .split(',')
-      .filter(d => DAY_DATES[d])
-      .map(d => `[${DAY_DATES[d].start},${DAY_DATES[d].end}]`)
-      .join(',')
-    if (ranges) {
-      ;(params as Record<string, unknown>)['startDateTime'] = ranges
-      params.days = values.days
-    }
+    params.days = values.days
   } else {
     setDateRange('startDateTime', values.startDateTimeStart, values.startDateTimeEnd)
   }
