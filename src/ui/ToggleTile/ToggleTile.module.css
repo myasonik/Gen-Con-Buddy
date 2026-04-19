@@ -33,12 +33,18 @@
   cursor: not-allowed;
 }
 
-.selected {
+.tile[data-pressed] {
   background: var(--color-bark);
   color: var(--color-parchment);
 }
 
-.selected:hover {
+.tile[data-pressed]:hover {
   background: var(--color-bark-light);
   color: var(--color-ink);
+}
+
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }

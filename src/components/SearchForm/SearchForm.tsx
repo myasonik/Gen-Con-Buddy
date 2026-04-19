@@ -9,7 +9,7 @@ import {
 import type { SearchFormValues } from "../../utils/types";
 import { Button } from "../../ui/Button/Button";
 import { Toggletip } from "../../ui/Toggletip/Toggletip";
-import { ToggleTile } from "../../ui/ToggleTile/ToggleTile";
+import { ToggleTile, ToggleTileGroup } from "../../ui/ToggleTile/ToggleTile";
 import styles from "./SearchForm.module.css";
 
 const EMPTY_VALUES: SearchFormValues = {
@@ -80,24 +80,13 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
     useForm<SearchFormValues>({ defaultValues });
 
   const days = watch("days") ?? "";
-  const selectedDays = new Set(days ? days.split(",") : []);
 
   const startDateTimeStart = watch("startDateTimeStart") ?? "";
   const startDateTimeEnd = watch("startDateTimeEnd") ?? "";
   const startDateActive = !!(startDateTimeStart || startDateTimeEnd);
-  const daysActive = selectedDays.size > 0;
+  const daysActive = !!(days && days.length > 0);
   const daysDisabled = startDateActive;
   const startDateDisabled = daysActive;
-
-  const handleDayChange = (key: string, checked: boolean) => {
-    const next = new Set(selectedDays);
-    if (checked) {
-      next.add(key);
-    } else {
-      next.delete(key);
-    }
-    setValue("days", DAY_KEYS.filter((d) => next.has(d)).join(","));
-  };
 
   return (
     <form onSubmit={handleSubmit(onSearch)} className={styles.form}>
@@ -135,18 +124,20 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
               message="Clear the Start Date fields in Time filters to use day checkboxes."
             />
           )}
-          <div className={styles.dayTiles}>
+          <ToggleTileGroup
+            value={days ? days.split(",") : []}
+            onValueChange={(v) =>
+              setValue("days", DAY_KEYS.filter((d) => v.includes(d)).join(","))
+            }
+            disabled={daysDisabled}
+            className={styles.dayTiles}
+          >
             {DAY_KEYS.map((key) => (
-              <ToggleTile
-                key={key}
-                selected={selectedDays.has(key)}
-                disabled={daysDisabled}
-                onClick={() => handleDayChange(key, !selectedDays.has(key))}
-              >
+              <ToggleTile key={key} value={key}>
                 {DAY_LABELS[key]}
               </ToggleTile>
             ))}
-          </div>
+          </ToggleTileGroup>
         </fieldset>
 
         {/* TIME */}
