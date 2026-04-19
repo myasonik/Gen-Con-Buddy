@@ -12,6 +12,7 @@ export const Route = createFileRoute('/')({
       typeof search[k] === 'number' ? (search[k] as number) : undefined
     return {
       limit: num('limit'),
+      page: num('page'),
       filter: str('filter'),
       gameId: str('gameId'),
       title: str('title'),

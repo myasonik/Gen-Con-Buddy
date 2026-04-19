@@ -61,6 +61,7 @@ export interface EventSearchResponse {
 /** URL search params — map directly to API query params. Ranges encoded as "[min,max]". */
 export interface SearchParams {
   limit?: number
+  page?: number
   filter?: string
   gameId?: string
   title?: string
