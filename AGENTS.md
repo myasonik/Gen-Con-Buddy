@@ -6,7 +6,7 @@ Always use subagents without asking. Never prompt the user to confirm whether su
 
 ## Philosophy
 
-Use semantic HTML elements. Use the `src/ui/` component library for shared UI primitives. No external UI component libraries. All styling via CSS Modules; global tokens in `src/styles/tokens.css`; reset/utilities in `src/styles/global.css`.
+Use semantic HTML elements. Use the `src/ui/` component library for shared UI primitives. No external _styled_ UI component libraries. Headless accessibility primitives (`@base-ui/react`) are allowed for interactive overlays and controls where the a11y cost of hand-rolling is high (popover, toggle, dialog). All styling via CSS Modules; global tokens in `src/styles/tokens.css`; reset/utilities in `src/styles/global.css`.
 
 Use well-maintained open source libraries for substantial problems (auth, data fetching, routing, forms). Don't hand-roll what the ecosystem solves well.
 
