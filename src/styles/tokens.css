@@ -1,0 +1,60 @@
+/* ─── Design Tokens ──────────────────────────────────────────────────────── */
+:root {
+  /* Colors */
+  --color-parchment: #f5e6c8;
+  --color-parchment-light: #fff9ee;
+  --color-bark: #8b4513;
+  --color-bark-dark: #5c3317;
+  --color-bark-light: #d4a76a;
+  --color-ink: #3b1e0a;
+  --color-gold: #c9a84c;
+
+  /* Typography */
+  --font-pixel: "Press Start 2P", monospace;
+  --font-data: "Courier Prime", monospace;
+
+  /* Type scale — Press Start 2P only; all sizes must be multiples of 8px */
+  --text-display: 18px; /* page title */
+  --text-heading: 16px; /* section headings, fieldset legends */
+  --text-label: 16px; /* button labels, column headers, field labels */
+  --text-badge: 8px; /* 8px — tiny incidental labels only: Game ID tag, sort direction arrows */
+  --text-icon: 48px; /* large decorative icons (PixelState die, status icons) */
+
+  /* Data font sizes */
+  --text-body: 16px; /* standard data text (Courier Prime body) */
+  --text-small: 14px; /* secondary data text (ranges, summaries) */
+
+  /* Spacing — 8px grid */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+
+  /* Sizes */
+  --size-sidebar: 280px;
+  --size-detail-max: 800px;
+
+  /* Shadow / Pixel Border System */
+  --shadow-panel: 4px 4px 0 var(--color-bark-dark);
+  --shadow-panel-inset: inset 0 0 0 2px var(--color-bark);
+  --shadow-button: 3px 3px 0 var(--color-bark-dark);
+  --shadow-button-active: 1px 1px 0 var(--color-bark-dark);
+  --shadow-table-inset: inset 0 0 0 3px var(--color-bark);
+
+  /* Motion */
+  --motion-press: 30ms linear;
+  --motion-hover: 80ms ease;
+  --motion-expand: 150ms ease-out;
+
+  /* Z-index scale */
+  --z-content: 1;
+  --z-sticky: 10;
+  --z-header: 20;
+  --z-popover: 30;
+  --z-modal: 40;
+  --z-grain: 50;
+
+  /* interpolate-size: allow <details> height: auto transitions */
+  interpolate-size: allow-keywords;
+}

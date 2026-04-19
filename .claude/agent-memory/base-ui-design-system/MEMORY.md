@@ -1,0 +1,2 @@
+- [AGENTS.md vs pixel-art spec tension](project_agents_md_constraint_tension.md) — "no CSS" rule contradicts approved redesign; update `AGENTS.md` in the same commit as `src/index.css`.
+- [Parchment & Pixel design direction](project_pixel_art_design_direction.md) — Press Start 2P sizes must be multiples of 8; gold is an accent only (not text/border/fill on light bg); pixel borders live in tokens.

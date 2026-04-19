@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   AGE_GROUPS,
@@ -8,6 +7,10 @@ import {
   REGISTRATION,
 } from "../../utils/enums";
 import type { SearchFormValues } from "../../utils/types";
+import { Button } from "../../ui/Button/Button";
+import { Toggletip } from "../../ui/Toggletip/Toggletip";
+import { ToggleTile } from "../../ui/ToggleTile/ToggleTile";
+import styles from "./SearchForm.module.css";
 
 const EMPTY_VALUES: SearchFormValues = {
   filter: "",
@@ -67,36 +70,6 @@ const DAY_LABELS: Record<string, string> = {
   sun: "Sun",
 };
 
-function Toggletip({ label, message }: { label: string; message: string }) {
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [open]);
-
-  return (
-    <span style={{ position: "relative", display: "inline-block" }}>
-      <button
-        type="button"
-        aria-label={label}
-        onClick={() => setOpen((o) => !o)}
-      >
-        ?
-      </button>
-      {open && (
-        <span role="tooltip" style={{ position: "absolute", zIndex: 1 }}>
-          {message}
-        </span>
-      )}
-    </span>
-  );
-}
-
 interface SearchFormProps {
   defaultValues: SearchFormValues;
   onSearch: (values: SearchFormValues) => void;
@@ -127,150 +100,59 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSearch)}>
-      <div>
-        <label>
-          Search
-          <input type="text" {...register("filter")} />
-        </label>
-        <label>
-          Event Type
-          <select {...register("eventType")}>
-            <option value="">Any</option>
-            {Object.entries(EVENT_TYPES).map(([k, v]) => (
-              <option key={k} value={k}>
-                {v}
-              </option>
-            ))}
-          </select>
-        </label>
-        <fieldset>
-          <legend>Days</legend>
+    <form onSubmit={handleSubmit(onSearch)} className={styles.form}>
+      <div className={styles.filterScroll}>
+        {/* SEARCH */}
+        <fieldset className={styles.fieldset}>
+          <legend className={styles.legend}>SEARCH</legend>
+          <label className={styles.label}>
+            Search
+            <input
+              type="text"
+              className={styles.input}
+              {...register("filter")}
+            />
+          </label>
+          <label className={styles.label}>
+            Event Type
+            <select className={styles.select} {...register("eventType")}>
+              <option value="">Any</option>
+              {Object.entries(EVENT_TYPES).map(([k, v]) => (
+                <option key={k} value={k}>
+                  {v}
+                </option>
+              ))}
+            </select>
+          </label>
+        </fieldset>
+
+        {/* DAYS */}
+        <fieldset className={styles.fieldset}>
+          <legend className={styles.legend}>DAYS</legend>
           {daysDisabled && (
             <Toggletip
               label="Why are day filters disabled?"
-              message="Clear the Start Date fields in Advanced Filters to use day checkboxes."
+              message="Clear the Start Date fields in Time filters to use day checkboxes."
             />
           )}
-          {DAY_KEYS.map((key) => (
-            <label key={key}>
-              <input
-                type="checkbox"
-                checked={selectedDays.has(key)}
+          <div className={styles.dayTiles}>
+            {DAY_KEYS.map((key) => (
+              <ToggleTile
+                key={key}
+                selected={selectedDays.has(key)}
                 disabled={daysDisabled}
-                onChange={(e) => handleDayChange(key, e.target.checked)}
-              />
-              {DAY_LABELS[key]}
-            </label>
-          ))}
+                onClick={() => handleDayChange(key, !selectedDays.has(key))}
+              >
+                {DAY_LABELS[key]}
+              </ToggleTile>
+            ))}
+          </div>
         </fieldset>
-      </div>
 
-      <details>
-        <summary>Advanced filters</summary>
-        <ul>
-          <li>
-            <label>
-              Game ID <input type="text" {...register("gameId")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Title <input type="text" {...register("title")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Group <input type="text" {...register("group")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Short Description{" "}
-              <input type="text" {...register("shortDescription")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Long Description{" "}
-              <input type="text" {...register("longDescription")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Game System <input type="text" {...register("gameSystem")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Rules Edition <input type="text" {...register("rulesEdition")} />
-            </label>
-          </li>
-          <li>
-            Min Players:
-            <label>
-              from{" "}
-              <input type="number" min="0" {...register("minPlayersMin")} />
-            </label>
-            <label>
-              to <input type="number" min="0" {...register("minPlayersMax")} />
-            </label>
-          </li>
-          <li>
-            Max Players:
-            <label>
-              from{" "}
-              <input type="number" min="0" {...register("maxPlayersMin")} />
-            </label>
-            <label>
-              to <input type="number" min="0" {...register("maxPlayersMax")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Age Required
-              <select {...register("ageRequired")}>
-                <option value="">Any</option>
-                {Object.entries(AGE_GROUPS).map(([k, v]) => (
-                  <option key={k} value={k}>
-                    {v}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </li>
-          <li>
-            <label>
-              Experience Required
-              <select {...register("experienceRequired")}>
-                <option value="">Any</option>
-                {Object.entries(EXP).map(([k, v]) => (
-                  <option key={k} value={k}>
-                    {v}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </li>
-          <li>
-            <label>
-              Materials Provided{" "}
-              <input type="text" {...register("materialsProvided")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Materials Required{" "}
-              <input type="text" {...register("materialsRequired")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Materials Required Details{" "}
-              <input type="text" {...register("materialsRequiredDetails")} />
-            </label>
-          </li>
-          <li>
+        {/* TIME */}
+        <fieldset className={styles.fieldset}>
+          <legend className={styles.legend}>TIME</legend>
+          <div className={styles.rangeGroup}>
             Start Date:
             {startDateDisabled && (
               <Toggletip
@@ -278,45 +160,49 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
                 message="Clear the day checkboxes above to use custom Start Date fields."
               />
             )}
-            <label>
-              from{" "}
+            <label className={styles.label}>
+              from
               <input
                 type="datetime-local"
+                className={styles.input}
                 disabled={startDateDisabled}
                 {...register("startDateTimeStart")}
               />
             </label>
-            <label>
-              to{" "}
+            <label className={styles.label}>
+              to
               <input
                 type="datetime-local"
+                className={styles.input}
                 disabled={startDateDisabled}
                 {...register("startDateTimeEnd")}
               />
             </label>
-          </li>
-          <li>
+          </div>
+          <div className={styles.rangeGroup}>
             Duration (hours):
-            <label>
-              from{" "}
+            <label className={styles.label}>
+              from
               <input
                 type="number"
                 min="0"
                 step="0.5"
+                className={styles.input}
                 {...register("durationMin")}
               />
             </label>
-            <label>
-              to{" "}
+            <label className={styles.label}>
+              to
               <input
                 type="number"
                 min="0"
                 step="0.5"
+                className={styles.input}
                 {...register("durationMax")}
               />
             </label>
-          </li>
-          <li>
+          </div>
+          <div className={styles.rangeGroup}>
             End Date:
             {startDateDisabled && (
               <Toggletip
@@ -324,169 +210,408 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
                 message="Clear the day checkboxes above to use custom End Date fields."
               />
             )}
-            <label>
-              from{" "}
+            <label className={styles.label}>
+              from
               <input
                 type="datetime-local"
+                className={styles.input}
                 disabled={startDateDisabled}
                 {...register("endDateTimeStart")}
               />
             </label>
-            <label>
-              to{" "}
+            <label className={styles.label}>
+              to
               <input
                 type="datetime-local"
+                className={styles.input}
                 disabled={startDateDisabled}
                 {...register("endDateTimeEnd")}
               />
             </label>
-          </li>
-          <li>
-            <label>
-              Game Masters <input type="text" {...register("gmNames")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Website <input type="text" {...register("website")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Email <input type="text" {...register("email")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Tournament <input type="text" {...register("tournament")} />
-            </label>
-          </li>
-          <li>
-            Round Number:
-            <label>
-              from{" "}
-              <input type="number" min="0" {...register("roundNumberMin")} />
-            </label>
-            <label>
-              to <input type="number" min="0" {...register("roundNumberMax")} />
-            </label>
-          </li>
-          <li>
-            Total Rounds:
-            <label>
-              from{" "}
-              <input type="number" min="0" {...register("totalRoundsMin")} />
-            </label>
-            <label>
-              to <input type="number" min="0" {...register("totalRoundsMax")} />
-            </label>
-          </li>
-          <li>
-            Minimum Play Time:
-            <label>
+          </div>
+        </fieldset>
+
+        {/* PLAYERS */}
+        <fieldset className={styles.fieldset}>
+          <legend className={styles.legend}>PLAYERS</legend>
+          <div className={styles.rangeGroup}>
+            Min Players:
+            <label className={styles.label}>
               from{" "}
               <input
                 type="number"
                 min="0"
-                {...register("minimumPlayTimeMin")}
+                className={styles.input}
+                {...register("minPlayersMin")}
               />
             </label>
-            <label>
+            <label className={styles.label}>
               to{" "}
               <input
                 type="number"
                 min="0"
-                {...register("minimumPlayTimeMax")}
+                className={styles.input}
+                {...register("minPlayersMax")}
               />
             </label>
-          </li>
-          <li>
-            <label>
-              Attendee Registration
-              <select {...register("attendeeRegistration")}>
-                <option value="">Any</option>
-                {Object.entries(REGISTRATION).map(([k, v]) => (
-                  <option key={k} value={k}>
-                    {v}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </li>
-          <li>
-            Cost:
-            <label>
-              from <input type="number" min="0" {...register("costMin")} />
-            </label>
-            <label>
-              to <input type="number" min="0" {...register("costMax")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Location <input type="text" {...register("location")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Room Name <input type="text" {...register("roomName")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Table <input type="text" {...register("tableNumber")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Special Category
-              <select {...register("specialCategory")}>
-                <option value="">Any</option>
-                {Object.entries(CATEGORY).map(([k, v]) => (
-                  <option key={k} value={k}>
-                    {v}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </li>
-          <li>
-            Tickets Available:
-            <label>
+          </div>
+          <div className={styles.rangeGroup}>
+            Max Players:
+            <label className={styles.label}>
               from{" "}
               <input
                 type="number"
                 min="0"
+                className={styles.input}
+                {...register("maxPlayersMin")}
+              />
+            </label>
+            <label className={styles.label}>
+              to{" "}
+              <input
+                type="number"
+                min="0"
+                className={styles.input}
+                {...register("maxPlayersMax")}
+              />
+            </label>
+          </div>
+          <label className={styles.label}>
+            Age Required
+            <select className={styles.select} {...register("ageRequired")}>
+              <option value="">Any</option>
+              {Object.entries(AGE_GROUPS).map(([k, v]) => (
+                <option key={k} value={k}>
+                  {v}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className={styles.label}>
+            Experience Required
+            <select
+              className={styles.select}
+              {...register("experienceRequired")}
+            >
+              <option value="">Any</option>
+              {Object.entries(EXP).map(([k, v]) => (
+                <option key={k} value={k}>
+                  {v}
+                </option>
+              ))}
+            </select>
+          </label>
+        </fieldset>
+
+        {/* LOGISTICS */}
+        <fieldset className={styles.fieldset}>
+          <legend className={styles.legend}>LOGISTICS</legend>
+          <label className={styles.label}>
+            Location{" "}
+            <input
+              type="text"
+              className={styles.input}
+              {...register("location")}
+            />
+          </label>
+          <label className={styles.label}>
+            Room Name{" "}
+            <input
+              type="text"
+              className={styles.input}
+              {...register("roomName")}
+            />
+          </label>
+          <label className={styles.label}>
+            Table{" "}
+            <input
+              type="text"
+              className={styles.input}
+              {...register("tableNumber")}
+            />
+          </label>
+          <div className={styles.rangeGroup}>
+            Cost:
+            <label className={styles.label}>
+              from{" "}
+              <input
+                type="number"
+                min="0"
+                className={styles.input}
+                {...register("costMin")}
+              />
+            </label>
+            <label className={styles.label}>
+              to{" "}
+              <input
+                type="number"
+                min="0"
+                className={styles.input}
+                {...register("costMax")}
+              />
+            </label>
+          </div>
+          <div className={styles.rangeGroup}>
+            Tickets Available:
+            <label className={styles.label}>
+              from{" "}
+              <input
+                type="number"
+                min="0"
+                className={styles.input}
                 {...register("ticketsAvailableMin")}
               />
             </label>
-            <label>
+            <label className={styles.label}>
               to{" "}
               <input
                 type="number"
                 min="0"
+                className={styles.input}
                 {...register("ticketsAvailableMax")}
               />
             </label>
-          </li>
-          <li>
-            Last Modified:
-            <label>
-              from{" "}
-              <input type="datetime-local" {...register("lastModifiedStart")} />
-            </label>
-            <label>
-              to{" "}
-              <input type="datetime-local" {...register("lastModifiedEnd")} />
-            </label>
-          </li>
-        </ul>
-      </details>
+          </div>
+          <label className={styles.label}>
+            Attendee Registration
+            <select
+              className={styles.select}
+              {...register("attendeeRegistration")}
+            >
+              <option value="">Any</option>
+              {Object.entries(REGISTRATION).map(([k, v]) => (
+                <option key={k} value={k}>
+                  {v}
+                </option>
+              ))}
+            </select>
+          </label>
+        </fieldset>
 
-      <button type="submit">Search</button>
-      <button type="button" onClick={() => reset(EMPTY_VALUES)}>
-        Reset
-      </button>
+        {/* DETAILS */}
+        <fieldset className={styles.fieldset}>
+          <legend className={styles.legend}>DETAILS</legend>
+          <label className={styles.label}>
+            Game ID{" "}
+            <input
+              type="text"
+              className={styles.input}
+              {...register("gameId")}
+            />
+          </label>
+          <label className={styles.label}>
+            Title{" "}
+            <input
+              type="text"
+              className={styles.input}
+              {...register("title")}
+            />
+          </label>
+          <label className={styles.label}>
+            Group{" "}
+            <input
+              type="text"
+              className={styles.input}
+              {...register("group")}
+            />
+          </label>
+          <label className={styles.label}>
+            Short Description{" "}
+            <input
+              type="text"
+              className={styles.input}
+              {...register("shortDescription")}
+            />
+          </label>
+          <label className={styles.label}>
+            Long Description{" "}
+            <input
+              type="text"
+              className={styles.input}
+              {...register("longDescription")}
+            />
+          </label>
+          <label className={styles.label}>
+            Game System{" "}
+            <input
+              type="text"
+              className={styles.input}
+              {...register("gameSystem")}
+            />
+          </label>
+          <label className={styles.label}>
+            Rules Edition{" "}
+            <input
+              type="text"
+              className={styles.input}
+              {...register("rulesEdition")}
+            />
+          </label>
+          <label className={styles.label}>
+            Materials Provided{" "}
+            <input
+              type="text"
+              className={styles.input}
+              {...register("materialsProvided")}
+            />
+          </label>
+          <label className={styles.label}>
+            Materials Required{" "}
+            <input
+              type="text"
+              className={styles.input}
+              {...register("materialsRequired")}
+            />
+          </label>
+          <label className={styles.label}>
+            Materials Required Details{" "}
+            <input
+              type="text"
+              className={styles.input}
+              {...register("materialsRequiredDetails")}
+            />
+          </label>
+          <label className={styles.label}>
+            Game Masters{" "}
+            <input
+              type="text"
+              className={styles.input}
+              {...register("gmNames")}
+            />
+          </label>
+          <label className={styles.label}>
+            Website{" "}
+            <input
+              type="text"
+              className={styles.input}
+              {...register("website")}
+            />
+          </label>
+          <label className={styles.label}>
+            Email{" "}
+            <input
+              type="text"
+              className={styles.input}
+              {...register("email")}
+            />
+          </label>
+          <label className={styles.label}>
+            Tournament{" "}
+            <input
+              type="text"
+              className={styles.input}
+              {...register("tournament")}
+            />
+          </label>
+          <div className={styles.rangeGroup}>
+            Round Number:
+            <label className={styles.label}>
+              from{" "}
+              <input
+                type="number"
+                min="0"
+                className={styles.input}
+                {...register("roundNumberMin")}
+              />
+            </label>
+            <label className={styles.label}>
+              to{" "}
+              <input
+                type="number"
+                min="0"
+                className={styles.input}
+                {...register("roundNumberMax")}
+              />
+            </label>
+          </div>
+          <div className={styles.rangeGroup}>
+            Total Rounds:
+            <label className={styles.label}>
+              from{" "}
+              <input
+                type="number"
+                min="0"
+                className={styles.input}
+                {...register("totalRoundsMin")}
+              />
+            </label>
+            <label className={styles.label}>
+              to{" "}
+              <input
+                type="number"
+                min="0"
+                className={styles.input}
+                {...register("totalRoundsMax")}
+              />
+            </label>
+          </div>
+          <div className={styles.rangeGroup}>
+            Minimum Play Time:
+            <label className={styles.label}>
+              from{" "}
+              <input
+                type="number"
+                min="0"
+                className={styles.input}
+                {...register("minimumPlayTimeMin")}
+              />
+            </label>
+            <label className={styles.label}>
+              to{" "}
+              <input
+                type="number"
+                min="0"
+                className={styles.input}
+                {...register("minimumPlayTimeMax")}
+              />
+            </label>
+          </div>
+          <label className={styles.label}>
+            Special Category
+            <select className={styles.select} {...register("specialCategory")}>
+              <option value="">Any</option>
+              {Object.entries(CATEGORY).map(([k, v]) => (
+                <option key={k} value={k}>
+                  {v}
+                </option>
+              ))}
+            </select>
+          </label>
+          <div className={styles.rangeGroup}>
+            Last Modified:
+            <label className={styles.label}>
+              from{" "}
+              <input
+                type="datetime-local"
+                className={styles.input}
+                {...register("lastModifiedStart")}
+              />
+            </label>
+            <label className={styles.label}>
+              to{" "}
+              <input
+                type="datetime-local"
+                className={styles.input}
+                {...register("lastModifiedEnd")}
+              />
+            </label>
+          </div>
+        </fieldset>
+      </div>
+      {/* end filterScroll */}
+
+      <div className={styles.buttonBar}>
+        <Button type="submit" variant="primary" className={styles.actionButton}>
+          ▶ Search
+        </Button>
+        <Button
+          variant="secondary"
+          className={styles.actionButton}
+          onClick={() => reset(EMPTY_VALUES)}
+        >
+          ↺ Reset
+        </Button>
+      </div>
     </form>
   );
 }

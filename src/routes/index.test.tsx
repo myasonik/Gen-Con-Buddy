@@ -80,7 +80,7 @@ test("submitting a new search resets page to 1", async () => {
   await screen.findAllByRole("navigation", { name: "Pagination" });
   latestUrl = null;
   // Submit the search form (clicking Search button resets page)
-  await user.click(screen.getByRole("button", { name: "Search" }));
+  await user.click(screen.getByRole("button", { name: "▶ Search" }));
   await screen.findAllByRole("navigation", { name: "Pagination" });
   expect(latestUrl!.searchParams.has("page")).toBe(false);
 });
@@ -106,7 +106,7 @@ test("navigating to page 2 sends page=1 to API (0-indexed)", async () => {
   latestUrl = null;
   // click Next on the first pagination nav
   const navs = screen.getAllByRole("navigation", { name: "Pagination" });
-  await user.click(within(navs[0]).getByRole("button", { name: "Next" }));
+  await user.click(within(navs[0]).getByRole("button", { name: "Next ▶" }));
   // wait for re-render after navigation
   await screen.findAllByRole("navigation", { name: "Pagination" });
   expect(latestUrl!.searchParams.get("page")).toBe("1");
@@ -141,6 +141,12 @@ test("clicking a sort column header updates the URL with sort param and resets p
   expect(latestUrl!.searchParams.get("sort")).toBe("startDateTime.asc");
 });
 
+test("renders a banner landmark with the app title", async () => {
+  await renderSearchPage("/");
+  expect(screen.getByRole("banner")).toBeInTheDocument();
+  expect(screen.getByRole("banner")).toHaveTextContent("GEN CON BUDDY");
+});
+
 test("navigating back to page 1 omits page from URL and API call", async () => {
   const user = userEvent.setup();
   let latestUrl: URL | null = null;
@@ -160,7 +166,25 @@ test("navigating back to page 1 omits page from URL and API call", async () => {
   await screen.findAllByRole("navigation", { name: "Pagination" });
   latestUrl = null;
   const navs = screen.getAllByRole("navigation", { name: "Pagination" });
-  await user.click(within(navs[0]).getByRole("button", { name: "Previous" }));
+  await user.click(within(navs[0]).getByRole("button", { name: "◀ Previous" }));
   await screen.findAllByRole("navigation", { name: "Pagination" });
   expect(latestUrl!.searchParams.has("page")).toBe(false);
+});
+
+test("renders SEARCH fieldset in search form", async () => {
+  await renderSearchPage("/");
+  expect(screen.getByRole("group", { name: "SEARCH" })).toBeInTheDocument();
+});
+
+test("renders DAYS fieldset in search form", async () => {
+  await renderSearchPage("/");
+  expect(screen.getByRole("group", { name: "DAYS" })).toBeInTheDocument();
+});
+
+test("day tiles are toggle buttons with aria-pressed", async () => {
+  await renderSearchPage("/");
+  expect(screen.getByRole("button", { name: "Wed" })).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  );
 });

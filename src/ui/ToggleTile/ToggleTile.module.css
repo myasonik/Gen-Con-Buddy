@@ -1,0 +1,44 @@
+.tile {
+  display: inline-block;
+  font-family: var(--font-pixel);
+  font-size: var(--text-label);
+  color: var(--color-bark);
+  border: 2px solid var(--color-bark);
+  background: transparent;
+  padding: var(--space-1) var(--space-2);
+  cursor: pointer;
+  user-select: none;
+  box-shadow: var(--shadow-button);
+  transition:
+    box-shadow var(--motion-press),
+    transform var(--motion-press);
+}
+
+.tile:hover {
+  background: var(--color-parchment-light);
+}
+
+.tile:active {
+  box-shadow: var(--shadow-button-active);
+  transform: translate(2px, 2px);
+}
+
+.tile:focus-visible {
+  outline: 2px solid var(--color-bark-dark);
+  outline-offset: 2px;
+}
+
+.tile:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.selected {
+  background: var(--color-bark);
+  color: var(--color-parchment);
+}
+
+.selected:hover {
+  background: var(--color-bark-light);
+  color: var(--color-ink);
+}

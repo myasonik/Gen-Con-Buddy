@@ -1,0 +1,25 @@
+.badge {
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  border: 2px solid var(--color-bark);
+  font-family: var(--font-data);
+  font-size: var(--text-small);
+}
+
+.filled {
+  background: var(--color-bark);
+  color: var(--color-parchment);
+}
+
+.outline {
+  background: transparent;
+  color: var(--color-bark);
+}
+
+.boolYes {
+  color: var(--color-bark);
+}
+
+.boolNo {
+  color: var(--color-bark-light);
+}

@@ -1,0 +1,40 @@
+.button {
+  display: inline-block;
+  border-radius: 0;
+  font-family: var(--font-pixel);
+  font-size: var(--text-label);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  box-shadow: var(--shadow-button);
+  border: 2px solid var(--color-bark);
+  text-decoration: none;
+  transition:
+    box-shadow var(--motion-press),
+    transform var(--motion-press);
+  line-height: 1;
+}
+
+.button:active {
+  box-shadow: var(--shadow-button-active);
+  transform: translate(2px, 2px);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-bark-dark);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.primary {
+  background: var(--color-bark);
+  color: var(--color-parchment);
+}
+
+.secondary {
+  background: transparent;
+  color: var(--color-bark);
+}

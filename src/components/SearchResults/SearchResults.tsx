@@ -1,3 +1,9 @@
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+} from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
@@ -6,6 +12,15 @@ import { fetchEvents } from "../../utils/api";
 import { Pagination } from "../Pagination/Pagination";
 import { announce } from "../../lib/announce";
 import type { SearchParams, Event } from "../../utils/types";
+import { PixelState } from "../../ui/PixelState/PixelState";
+import styles from "./SearchResults.module.css";
+
+// Extend TanStack Table's ColumnMeta to include our sortField
+declare module "@tanstack/react-table" {
+  interface ColumnMeta<TData, TValue> {
+    sortField?: string;
+  }
+}
 
 interface SearchResultsProps {
   searchParams: SearchParams;
@@ -13,162 +28,236 @@ interface SearchResultsProps {
   onSort: (sort: string | undefined) => void;
 }
 
-const COLUMNS = [
-  { key: "gameId", label: "Game ID", sortField: "gameId" },
-  { key: "title", label: "Title", sortField: "title" },
-  { key: "eventType", label: "Type", sortField: "eventType" },
-  { key: "group", label: "Group", sortField: "group" },
+const COLUMNS: ColumnDef<Event>[] = [
   {
-    key: "shortDescription",
-    label: "Short Description",
-    sortField: "shortDescription",
+    id: "gameId",
+    header: "Game ID",
+    meta: { sortField: "gameId" },
+    cell: ({ row }) => {
+      const { gameId } = row.original.attributes;
+      return (
+        <Link to="/event/$id" params={{ id: gameId }}>
+          {gameId}
+        </Link>
+      );
+    },
   },
   {
-    key: "longDescription",
-    label: "Long Description",
-    sortField: "longDescription",
-  },
-  { key: "gameSystem", label: "Game System", sortField: "gameSystem" },
-  { key: "rulesEdition", label: "Rules Edition", sortField: "rulesEdition" },
-  { key: "minPlayers", label: "Min Players", sortField: "minPlayers" },
-  { key: "maxPlayers", label: "Max Players", sortField: "maxPlayers" },
-  { key: "ageRequired", label: "Age Required", sortField: "ageRequired" },
-  {
-    key: "experienceRequired",
-    label: "Experience Required",
-    sortField: "experienceRequired",
+    id: "title",
+    header: "Title",
+    meta: { sortField: "title" },
+    cell: ({ row }) => {
+      const { gameId, title } = row.original.attributes;
+      return (
+        <Link to="/event/$id" params={{ id: gameId }}>
+          {title}
+        </Link>
+      );
+    },
   },
   {
-    key: "materialsProvided",
-    label: "Materials Provided",
-    sortField: "materialsProvided",
+    id: "eventType",
+    header: "Type",
+    meta: { sortField: "eventType" },
+    cell: ({ row }) => <>{row.original.attributes.eventType}</>,
   },
   {
-    key: "materialsRequired",
-    label: "Materials Required",
-    sortField: "materialsRequired",
+    id: "group",
+    header: "Group",
+    meta: { sortField: "group" },
+    cell: ({ row }) => <>{row.original.attributes.group}</>,
   },
   {
-    key: "materialsRequiredDetails",
-    label: "Materials Required Details",
-    sortField: "materialsRequiredDetails",
-  },
-  { key: "day", label: "Day", sortField: "startDateTime" },
-  { key: "startDateTime", label: "Start", sortField: "startDateTime" },
-  { key: "duration", label: "Duration", sortField: "duration" },
-  { key: "endDateTime", label: "End", sortField: "endDateTime" },
-  { key: "gmNames", label: "GMs", sortField: "gmNames" },
-  { key: "website", label: "Website", sortField: "website" },
-  { key: "email", label: "Email", sortField: "email" },
-  { key: "tournament", label: "Tournament", sortField: "tournament" },
-  { key: "roundNumber", label: "Round Number", sortField: "roundNumber" },
-  { key: "totalRounds", label: "Total Rounds", sortField: "totalRounds" },
-  { key: "minimumPlayTime", label: "Min Time", sortField: "minimumPlayTime" },
-  {
-    key: "attendeeRegistration",
-    label: "Attendee Registration",
-    sortField: "attendeeRegistration",
-  },
-  { key: "cost", label: "Cost", sortField: "cost" },
-  { key: "location", label: "Location", sortField: "location" },
-  { key: "roomName", label: "Room", sortField: "roomName" },
-  { key: "tableNumber", label: "Table Number", sortField: "tableNumber" },
-  {
-    key: "specialCategory",
-    label: "Special Category",
-    sortField: "specialCategory",
+    id: "shortDescription",
+    header: "Short Description",
+    meta: { sortField: "shortDescription" },
+    cell: ({ row }) => <>{row.original.attributes.shortDescription}</>,
   },
   {
-    key: "ticketsAvailable",
-    label: "Tickets Available",
-    sortField: "ticketsAvailable",
+    id: "longDescription",
+    header: "Long Description",
+    meta: { sortField: "longDescription" },
+    cell: ({ row }) => <>{row.original.attributes.longDescription}</>,
   },
-  { key: "lastModified", label: "Last Modified", sortField: "lastModified" },
-] as const;
-
-type ColumnKey = (typeof COLUMNS)[number]["key"];
-
-function EventCell({ col, event }: { col: ColumnKey; event: Event }) {
-  const {
-    attributes: a,
-    attributes: { gameId },
-  } = event;
-  const link = (text: React.ReactNode) => (
-    <Link to="/event/$id" params={{ id: gameId }}>
-      {text}
-    </Link>
-  );
-  switch (col) {
-    case "gameId":
-      return <td>{link(a.gameId)}</td>;
-    case "title":
-      return <td>{link(a.title)}</td>;
-    case "eventType":
-      return <td>{a.eventType}</td>;
-    case "group":
-      return <td>{a.group}</td>;
-    case "shortDescription":
-      return <td>{a.shortDescription}</td>;
-    case "longDescription":
-      return <td>{a.longDescription}</td>;
-    case "gameSystem":
-      return <td>{a.gameSystem}</td>;
-    case "rulesEdition":
-      return <td>{a.rulesEdition}</td>;
-    case "minPlayers":
-      return <td>{a.minPlayers}</td>;
-    case "maxPlayers":
-      return <td>{a.maxPlayers}</td>;
-    case "ageRequired":
-      return <td>{a.ageRequired}</td>;
-    case "experienceRequired":
-      return <td>{a.experienceRequired}</td>;
-    case "materialsProvided":
-      return <td>{a.materialsProvided}</td>;
-    case "materialsRequired":
-      return <td>{a.materialsRequired}</td>;
-    case "materialsRequiredDetails":
-      return <td>{a.materialsRequiredDetails}</td>;
-    case "day":
-      return <td>{format(new Date(a.startDateTime), "EEEE")}</td>;
-    case "startDateTime":
-      return <td>{format(new Date(a.startDateTime), "HH:mm")}</td>;
-    case "duration":
-      return <td>{a.duration}</td>;
-    case "endDateTime":
-      return <td>{format(new Date(a.endDateTime), "HH:mm")}</td>;
-    case "gmNames":
-      return <td>{a.gmNames}</td>;
-    case "website":
-      return <td>{a.website}</td>;
-    case "email":
-      return <td>{a.email}</td>;
-    case "tournament":
-      return <td>{a.tournament}</td>;
-    case "roundNumber":
-      return <td>{a.roundNumber}</td>;
-    case "totalRounds":
-      return <td>{a.totalRounds}</td>;
-    case "minimumPlayTime":
-      return <td>{a.minimumPlayTime}</td>;
-    case "attendeeRegistration":
-      return <td>{a.attendeeRegistration}</td>;
-    case "cost":
-      return <td>${a.cost.toFixed(2)}</td>;
-    case "location":
-      return <td>{a.location}</td>;
-    case "roomName":
-      return <td>{a.roomName}</td>;
-    case "tableNumber":
-      return <td>{a.tableNumber}</td>;
-    case "specialCategory":
-      return <td>{a.specialCategory}</td>;
-    case "ticketsAvailable":
-      return <td>{a.ticketsAvailable}</td>;
-    case "lastModified":
-      return <td>{format(new Date(a.lastModified), "yyyy-MM-dd")}</td>;
-  }
-}
+  {
+    id: "gameSystem",
+    header: "Game System",
+    meta: { sortField: "gameSystem" },
+    cell: ({ row }) => <>{row.original.attributes.gameSystem}</>,
+  },
+  {
+    id: "rulesEdition",
+    header: "Rules Edition",
+    meta: { sortField: "rulesEdition" },
+    cell: ({ row }) => <>{row.original.attributes.rulesEdition}</>,
+  },
+  {
+    id: "minPlayers",
+    header: "Min Players",
+    meta: { sortField: "minPlayers" },
+    cell: ({ row }) => <>{row.original.attributes.minPlayers}</>,
+  },
+  {
+    id: "maxPlayers",
+    header: "Max Players",
+    meta: { sortField: "maxPlayers" },
+    cell: ({ row }) => <>{row.original.attributes.maxPlayers}</>,
+  },
+  {
+    id: "ageRequired",
+    header: "Age Required",
+    meta: { sortField: "ageRequired" },
+    cell: ({ row }) => <>{row.original.attributes.ageRequired}</>,
+  },
+  {
+    id: "experienceRequired",
+    header: "Experience Required",
+    meta: { sortField: "experienceRequired" },
+    cell: ({ row }) => <>{row.original.attributes.experienceRequired}</>,
+  },
+  {
+    id: "materialsProvided",
+    header: "Materials Provided",
+    meta: { sortField: "materialsProvided" },
+    cell: ({ row }) => <>{row.original.attributes.materialsProvided}</>,
+  },
+  {
+    id: "materialsRequired",
+    header: "Materials Required",
+    meta: { sortField: "materialsRequired" },
+    cell: ({ row }) => <>{row.original.attributes.materialsRequired}</>,
+  },
+  {
+    id: "materialsRequiredDetails",
+    header: "Materials Required Details",
+    meta: { sortField: "materialsRequiredDetails" },
+    cell: ({ row }) => <>{row.original.attributes.materialsRequiredDetails}</>,
+  },
+  {
+    id: "day",
+    header: "Day",
+    meta: { sortField: "startDateTime" },
+    cell: ({ row }) => (
+      <>{format(new Date(row.original.attributes.startDateTime), "EEEE")}</>
+    ),
+  },
+  {
+    id: "startDateTime",
+    header: "Start",
+    meta: { sortField: "startDateTime" },
+    cell: ({ row }) => (
+      <>{format(new Date(row.original.attributes.startDateTime), "HH:mm")}</>
+    ),
+  },
+  {
+    id: "duration",
+    header: "Duration",
+    meta: { sortField: "duration" },
+    cell: ({ row }) => <>{row.original.attributes.duration}</>,
+  },
+  {
+    id: "endDateTime",
+    header: "End",
+    meta: { sortField: "endDateTime" },
+    cell: ({ row }) => (
+      <>{format(new Date(row.original.attributes.endDateTime), "HH:mm")}</>
+    ),
+  },
+  {
+    id: "gmNames",
+    header: "GMs",
+    meta: { sortField: "gmNames" },
+    cell: ({ row }) => <>{row.original.attributes.gmNames}</>,
+  },
+  {
+    id: "website",
+    header: "Website",
+    meta: { sortField: "website" },
+    cell: ({ row }) => <>{row.original.attributes.website}</>,
+  },
+  {
+    id: "email",
+    header: "Email",
+    meta: { sortField: "email" },
+    cell: ({ row }) => <>{row.original.attributes.email}</>,
+  },
+  {
+    id: "tournament",
+    header: "Tournament",
+    meta: { sortField: "tournament" },
+    cell: ({ row }) => <>{row.original.attributes.tournament}</>,
+  },
+  {
+    id: "roundNumber",
+    header: "Round Number",
+    meta: { sortField: "roundNumber" },
+    cell: ({ row }) => <>{row.original.attributes.roundNumber}</>,
+  },
+  {
+    id: "totalRounds",
+    header: "Total Rounds",
+    meta: { sortField: "totalRounds" },
+    cell: ({ row }) => <>{row.original.attributes.totalRounds}</>,
+  },
+  {
+    id: "minimumPlayTime",
+    header: "Min Time",
+    meta: { sortField: "minimumPlayTime" },
+    cell: ({ row }) => <>{row.original.attributes.minimumPlayTime}</>,
+  },
+  {
+    id: "attendeeRegistration",
+    header: "Attendee Registration",
+    meta: { sortField: "attendeeRegistration" },
+    cell: ({ row }) => <>{row.original.attributes.attendeeRegistration}</>,
+  },
+  {
+    id: "cost",
+    header: "Cost",
+    meta: { sortField: "cost" },
+    cell: ({ row }) => <>${row.original.attributes.cost.toFixed(2)}</>,
+  },
+  {
+    id: "location",
+    header: "Location",
+    meta: { sortField: "location" },
+    cell: ({ row }) => <>{row.original.attributes.location}</>,
+  },
+  {
+    id: "roomName",
+    header: "Room",
+    meta: { sortField: "roomName" },
+    cell: ({ row }) => <>{row.original.attributes.roomName}</>,
+  },
+  {
+    id: "tableNumber",
+    header: "Table Number",
+    meta: { sortField: "tableNumber" },
+    cell: ({ row }) => <>{row.original.attributes.tableNumber}</>,
+  },
+  {
+    id: "specialCategory",
+    header: "Special Category",
+    meta: { sortField: "specialCategory" },
+    cell: ({ row }) => <>{row.original.attributes.specialCategory}</>,
+  },
+  {
+    id: "ticketsAvailable",
+    header: "Tickets Available",
+    meta: { sortField: "ticketsAvailable" },
+    cell: ({ row }) => <>{row.original.attributes.ticketsAvailable}</>,
+  },
+  {
+    id: "lastModified",
+    header: "Last Modified",
+    meta: { sortField: "lastModified" },
+    cell: ({ row }) => (
+      <>
+        {format(new Date(row.original.attributes.lastModified), "yyyy-MM-dd")}
+      </>
+    ),
+  },
+];
 
 export function SearchResults({
   searchParams,
@@ -206,7 +295,16 @@ export function SearchResults({
     }
   };
 
-  const visibleColumns = COLUMNS.filter((col) => visibility[col.key]);
+  const table = useReactTable({
+    data: data?.data ?? [],
+    columns: COLUMNS,
+    state: {
+      columnVisibility: visibility,
+    },
+    manualSorting: true,
+    manualPagination: true,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   const pagination =
     data && data.data.length > 0 ? (
@@ -220,19 +318,19 @@ export function SearchResults({
 
   return (
     <section>
-      <details>
+      <details className={styles.visibilityPanel}>
         <summary>Customize columns</summary>
         <fieldset>
           <ul>
             {COLUMNS.map((col) => (
-              <li key={col.key}>
+              <li key={col.id}>
                 <label>
                   <input
                     type="checkbox"
-                    checked={!!visibility[col.key]}
-                    onChange={() => toggle(col.key)}
+                    checked={!!visibility[col.id!]}
+                    onChange={() => toggle(col.id!)}
                   />
-                  {col.label}
+                  {col.header as string}
                 </label>
               </li>
             ))}
@@ -243,58 +341,89 @@ export function SearchResults({
         </fieldset>
       </details>
 
-      {isLoading && <p>Loading...</p>}
-      {isError && <p>Error loading events.</p>}
-      {data && data.data.length === 0 && <p>No events found.</p>}
+      {isLoading && <PixelState variant="loading" text="LOADING QUESTS..." />}
+      {isError && (
+        <PixelState
+          variant="error"
+          text="QUEST FAILED"
+          subtext="Unable to load events. Please try again."
+        />
+      )}
+      {data && data.data.length === 0 && (
+        <PixelState
+          variant="empty"
+          text="NO QUESTS FOUND"
+          subtext="Try broadening your search."
+        />
+      )}
       {data && data.data.length > 0 && (
         <>
           {pagination}
-          <table>
-            <thead>
-              <tr>
-                {visibleColumns.map((col) => {
-                  const isActive = activeSortField === col.sortField;
-                  let ariaSort: "ascending" | "descending" | "none" = "none";
-                  if (isActive) {
-                    ariaSort =
-                      activeSortDir === "asc" ? "ascending" : "descending";
-                  }
-                  return (
-                    <th
-                      key={col.key}
-                      aria-sort={ariaSort}
-                      scope="col"
-                      aria-label={col.label}
-                    >
-                      <button
-                        type="button"
-                        aria-label={`Sort by ${col.label}`}
-                        onClick={() =>
-                          handleSortClick(col.sortField, col.label)
-                        }
-                      >
-                        {col.label}
-                        {isActive && (
-                          <span aria-hidden="true">
-                            {activeSortDir === "asc" ? " ▲" : " ▼"}
-                          </span>
+          <div className={styles.tableWrapper}>
+            <table>
+              <thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
+                      const sortField = header.column.columnDef.meta?.sortField;
+                      const label = header.column.columnDef.header as string;
+                      const isActive =
+                        !!sortField && activeSortField === sortField;
+                      let ariaSort: "ascending" | "descending" | "none" =
+                        "none";
+                      if (isActive) {
+                        ariaSort =
+                          activeSortDir === "asc" ? "ascending" : "descending";
+                      }
+                      return (
+                        <th
+                          key={header.id}
+                          aria-sort={ariaSort}
+                          scope="col"
+                          aria-label={label}
+                        >
+                          <button
+                            type="button"
+                            aria-label={`Sort by ${label}`}
+                            onClick={() =>
+                              sortField && handleSortClick(sortField, label)
+                            }
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                            {isActive && (
+                              <span
+                                aria-hidden="true"
+                                className={styles.sortIndicator}
+                              >
+                                {activeSortDir === "asc" ? " ▲" : " ▼"}
+                              </span>
+                            )}
+                          </button>
+                        </th>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </thead>
+              <tbody>
+                {table.getRowModel().rows.map((row) => (
+                  <tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <td key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
                         )}
-                      </button>
-                    </th>
-                  );
-                })}
-              </tr>
-            </thead>
-            <tbody>
-              {data.data.map((event) => (
-                <tr key={event.id}>
-                  {visibleColumns.map((col) => (
-                    <EventCell key={col.key} col={col.key} event={event} />
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           {pagination}
         </>
       )}

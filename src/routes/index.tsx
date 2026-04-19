@@ -3,6 +3,7 @@ import { SearchForm } from "../components/SearchForm/SearchForm";
 import { SearchResults } from "../components/SearchResults/SearchResults";
 import { buildSearchParams, parseSearchParams } from "../utils/searchParams";
 import type { SearchFormValues, SearchParams } from "../utils/types";
+import styles from "./index.module.css";
 
 export const Route = createFileRoute("/")({
   validateSearch: (search: Record<string, unknown>): SearchParams => {
@@ -83,18 +84,21 @@ function SearchPage() {
   };
 
   return (
-    <main>
-      <h1>Gen Con Buddy</h1>
-      <SearchForm
-        key={JSON.stringify(search)}
-        defaultValues={parseSearchParams(search)}
-        onSearch={handleSearch}
-      />
-      <SearchResults
-        searchParams={search}
-        onNavigate={handleNavigate}
-        onSort={handleSort}
-      />
+    <main className={styles.shell}>
+      <div className={styles.sidebar}>
+        <SearchForm
+          key={JSON.stringify(search)}
+          defaultValues={parseSearchParams(search)}
+          onSearch={handleSearch}
+        />
+      </div>
+      <div className={styles.results}>
+        <SearchResults
+          searchParams={search}
+          onNavigate={handleNavigate}
+          onSort={handleSort}
+        />
+      </div>
     </main>
   );
 }

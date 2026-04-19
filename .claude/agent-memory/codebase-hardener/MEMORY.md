@@ -1,0 +1,3 @@
+- [Custom no-inline-live-regions rule is safety-critical](project_critical_rule_no_inline_live_regions.md) — must stay enforced as error, has known edge-case gaps worth documenting
+- [Quantify lint coverage loss on config changes](feedback_lint_coverage_regressions.md) — stash old config, run both against bad code, report the delta
+- [Verify tool config files are at their auto-discovery filename](feedback_verify_config_filenames.md) — use --print-config, check for silently-ignored files

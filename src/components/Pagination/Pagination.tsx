@@ -1,35 +1,10 @@
-import { useState, useEffect } from "react";
+import clsx from "clsx";
+import { Button } from "../../ui/Button/Button";
+import { Toggletip } from "../../ui/Toggletip/Toggletip";
+import styles from "./Pagination.module.css";
 
 const PAGE_SIZE_OPTIONS = [100, 500, 1000] as const;
 const BACKEND_MAX_RESULTS = 10_000;
-
-function Toggletip({ label, message }: { label: string; message: string }) {
-  const [open, setOpen] = useState(false);
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [open]);
-  return (
-    <span style={{ position: "relative", display: "inline-block" }}>
-      <button
-        type="button"
-        aria-label={label}
-        onClick={() => setOpen((o) => !o)}
-      >
-        ?
-      </button>
-      {open && (
-        <span role="tooltip" style={{ position: "absolute", zIndex: 1 }}>
-          {message}
-        </span>
-      )}
-    </span>
-  );
-}
 
 function getPageNumbers(page: number, totalPages: number): (number | "...")[] {
   if (totalPages <= 7)
@@ -64,60 +39,71 @@ export function Pagination({
   const pageNumbers = getPageNumbers(page, totalPages);
 
   return (
-    <nav aria-label="Pagination">
-      <button
-        type="button"
-        onClick={() => onNavigate(page - 1, limit)}
-        disabled={page === 1}
-      >
-        Previous
-      </button>
-      <span>
-        Page {page} of {totalPages}
-      </span>
-      {isTruncated && (
-        <Toggletip
-          label="Why are some pages unavailable?"
-          message={`Results are capped at ${BACKEND_MAX_RESULTS.toLocaleString()} events. Narrow your search to see more.`}
-        />
-      )}
-      {pageNumbers.map((p, i) =>
-        p === "..." ? (
-          <span key={`ellipsis-${i}`} aria-hidden>
-            …
-          </span>
-        ) : (
-          <button
-            key={p}
-            type="button"
-            onClick={() => onNavigate(p, limit)}
-            aria-current={p === page ? "page" : undefined}
-            disabled={p === page}
-          >
-            {p}
-          </button>
-        ),
-      )}
-      <button
-        type="button"
-        onClick={() => onNavigate(page + 1, limit)}
-        disabled={page === totalPages}
-      >
-        Next
-      </button>
-      <label>
-        Per page
-        <select
-          value={limit}
-          onChange={(e) => onNavigate(1, Number(e.target.value))}
+    <nav aria-label="Pagination" className={styles.nav}>
+      <div className={styles.controls}>
+        <Button
+          variant="secondary"
+          className={styles.navButton}
+          onClick={() => onNavigate(page - 1, limit)}
+          disabled={page === 1}
         >
-          {PAGE_SIZE_OPTIONS.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          ))}
-        </select>
-      </label>
+          ◀ Previous
+        </Button>
+        <span className={styles.pageLabel}>
+          Page {page} of {totalPages}
+        </span>
+        {isTruncated && (
+          <Toggletip
+            label="Why are some pages unavailable?"
+            message={`Results are capped at ${BACKEND_MAX_RESULTS.toLocaleString()} events. Narrow your search to see more.`}
+          />
+        )}
+        {pageNumbers.map((p, i) =>
+          p === "..." ? (
+            <span key={`ellipsis-${i}`} aria-hidden className={styles.ellipsis}>
+              …
+            </span>
+          ) : (
+            <Button
+              key={p}
+              variant="secondary"
+              className={clsx(styles.pageButton, {
+                [styles.activePage]: p === page,
+              })}
+              onClick={() => onNavigate(p, limit)}
+              aria-current={p === page ? "page" : undefined}
+              disabled={p === page}
+            >
+              {p}
+            </Button>
+          ),
+        )}
+        <Button
+          variant="secondary"
+          className={styles.navButton}
+          onClick={() => onNavigate(page + 1, limit)}
+          disabled={page === totalPages}
+        >
+          Next ▶
+        </Button>
+      </div>
+      <div className={styles.summary}>
+        {total.toLocaleString()} events • {limit} per page
+        <label className={styles.perPageLabel}>
+          Per page
+          <select
+            value={limit}
+            onChange={(e) => onNavigate(1, Number(e.target.value))}
+            className={styles.perPageSelect}
+          >
+            {PAGE_SIZE_OPTIONS.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
     </nav>
   );
 }

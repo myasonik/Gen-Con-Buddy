@@ -6,7 +6,7 @@ Always use subagents without asking. Never prompt the user to confirm whether su
 
 ## Philosophy
 
-Plain HTML only — no styles, no CSS, no UI libraries. Use semantic elements.
+Use semantic HTML elements. Use the `src/ui/` component library for shared UI primitives. No external UI component libraries. All styling via CSS Modules; global tokens in `src/styles/tokens.css`; reset/utilities in `src/styles/global.css`.
 
 Use well-maintained open source libraries for substantial problems (auth, data fetching, routing, forms). Don't hand-roll what the ecosystem solves well.
 

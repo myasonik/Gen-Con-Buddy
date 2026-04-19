@@ -61,7 +61,7 @@ function renderSearchResults(
 
 test("shows loading state while fetching", async () => {
   renderSearchResults();
-  expect(await screen.findByText("Loading...")).toBeInTheDocument();
+  expect(await screen.findByText("LOADING QUESTS...")).toBeInTheDocument();
 });
 
 test("renders a table row for each event", async () => {
@@ -84,7 +84,7 @@ test("renders empty state when no events are returned", async () => {
     }),
   );
   renderSearchResults();
-  expect(await screen.findByText("No events found.")).toBeInTheDocument();
+  expect(await screen.findByText("NO QUESTS FOUND")).toBeInTheDocument();
 });
 
 test("title column is visible by default and shows event title", async () => {
@@ -288,7 +288,7 @@ test("does not render pagination when no events found", async () => {
     }),
   );
   renderSearchResults();
-  await screen.findByText("No events found.");
+  await screen.findByText("NO QUESTS FOUND");
   expect(
     screen.queryByRole("navigation", { name: "Pagination" }),
   ).not.toBeInTheDocument();
@@ -311,7 +311,7 @@ test("calls onNavigate when Next is clicked", async () => {
   renderSearchResults({ page: 1 }, onNavigate);
   // wait for both pagination navs to render
   await screen.findAllByRole("navigation", { name: "Pagination" });
-  await user.click(screen.getAllByRole("button", { name: "Next" })[0]);
+  await user.click(screen.getAllByRole("button", { name: "Next ▶" })[0]);
   expect(onNavigate).toHaveBeenCalledWith(2, 100);
 });
 
