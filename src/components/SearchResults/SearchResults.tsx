@@ -9,43 +9,44 @@ import type { SearchParams, Event } from '../../utils/types'
 interface SearchResultsProps {
   searchParams: SearchParams
   onNavigate: (page: number, limit: number) => void
+  onSort: (sort: string | undefined) => void
 }
 
 const COLUMNS = [
-  { key: 'gameId', label: 'Game ID' },
-  { key: 'title', label: 'Title' },
-  { key: 'eventType', label: 'Type' },
-  { key: 'group', label: 'Group' },
-  { key: 'shortDescription', label: 'Short Description' },
-  { key: 'longDescription', label: 'Long Description' },
-  { key: 'gameSystem', label: 'Game System' },
-  { key: 'rulesEdition', label: 'Rules Edition' },
-  { key: 'minPlayers', label: 'Min Players' },
-  { key: 'maxPlayers', label: 'Max Players' },
-  { key: 'ageRequired', label: 'Age Required' },
-  { key: 'experienceRequired', label: 'Experience Required' },
-  { key: 'materialsProvided', label: 'Materials Provided' },
-  { key: 'materialsRequired', label: 'Materials Required' },
-  { key: 'materialsRequiredDetails', label: 'Materials Required Details' },
-  { key: 'day', label: 'Day' },
-  { key: 'startDateTime', label: 'Start' },
-  { key: 'duration', label: 'Duration' },
-  { key: 'endDateTime', label: 'End' },
-  { key: 'gmNames', label: 'GMs' },
-  { key: 'website', label: 'Website' },
-  { key: 'email', label: 'Email' },
-  { key: 'tournament', label: 'Tournament' },
-  { key: 'roundNumber', label: 'Round Number' },
-  { key: 'totalRounds', label: 'Total Rounds' },
-  { key: 'minimumPlayTime', label: 'Min Time' },
-  { key: 'attendeeRegistration', label: 'Attendee Registration' },
-  { key: 'cost', label: 'Cost' },
-  { key: 'location', label: 'Location' },
-  { key: 'roomName', label: 'Room' },
-  { key: 'tableNumber', label: 'Table Number' },
-  { key: 'specialCategory', label: 'Special Category' },
-  { key: 'ticketsAvailable', label: 'Tickets Available' },
-  { key: 'lastModified', label: 'Last Modified' },
+  { key: 'gameId', label: 'Game ID', sortField: 'gameId' },
+  { key: 'title', label: 'Title', sortField: 'title' },
+  { key: 'eventType', label: 'Type', sortField: 'eventType' },
+  { key: 'group', label: 'Group', sortField: 'group' },
+  { key: 'shortDescription', label: 'Short Description', sortField: 'shortDescription' },
+  { key: 'longDescription', label: 'Long Description', sortField: 'longDescription' },
+  { key: 'gameSystem', label: 'Game System', sortField: 'gameSystem' },
+  { key: 'rulesEdition', label: 'Rules Edition', sortField: 'rulesEdition' },
+  { key: 'minPlayers', label: 'Min Players', sortField: 'minPlayers' },
+  { key: 'maxPlayers', label: 'Max Players', sortField: 'maxPlayers' },
+  { key: 'ageRequired', label: 'Age Required', sortField: 'ageRequired' },
+  { key: 'experienceRequired', label: 'Experience Required', sortField: 'experienceRequired' },
+  { key: 'materialsProvided', label: 'Materials Provided', sortField: 'materialsProvided' },
+  { key: 'materialsRequired', label: 'Materials Required', sortField: 'materialsRequired' },
+  { key: 'materialsRequiredDetails', label: 'Materials Required Details', sortField: 'materialsRequiredDetails' },
+  { key: 'day', label: 'Day', sortField: 'startDateTime' },
+  { key: 'startDateTime', label: 'Start', sortField: 'startDateTime' },
+  { key: 'duration', label: 'Duration', sortField: 'duration' },
+  { key: 'endDateTime', label: 'End', sortField: 'endDateTime' },
+  { key: 'gmNames', label: 'GMs', sortField: 'gmNames' },
+  { key: 'website', label: 'Website', sortField: 'website' },
+  { key: 'email', label: 'Email', sortField: 'email' },
+  { key: 'tournament', label: 'Tournament', sortField: 'tournament' },
+  { key: 'roundNumber', label: 'Round Number', sortField: 'roundNumber' },
+  { key: 'totalRounds', label: 'Total Rounds', sortField: 'totalRounds' },
+  { key: 'minimumPlayTime', label: 'Min Time', sortField: 'minimumPlayTime' },
+  { key: 'attendeeRegistration', label: 'Attendee Registration', sortField: 'attendeeRegistration' },
+  { key: 'cost', label: 'Cost', sortField: 'cost' },
+  { key: 'location', label: 'Location', sortField: 'location' },
+  { key: 'roomName', label: 'Room', sortField: 'roomName' },
+  { key: 'tableNumber', label: 'Table Number', sortField: 'tableNumber' },
+  { key: 'specialCategory', label: 'Special Category', sortField: 'specialCategory' },
+  { key: 'ticketsAvailable', label: 'Tickets Available', sortField: 'ticketsAvailable' },
+  { key: 'lastModified', label: 'Last Modified', sortField: 'lastModified' },
 ] as const
 
 type ColumnKey = (typeof COLUMNS)[number]['key']
@@ -93,7 +94,7 @@ function EventCell({ col, event }: { col: ColumnKey; event: Event }) {
   }
 }
 
-export function SearchResults({ searchParams, onNavigate }: SearchResultsProps) {
+export function SearchResults({ searchParams, onNavigate, onSort }: SearchResultsProps) {
   const { visibility, toggle, reset } = useColumnVisibility()
   const page = searchParams.page ?? 1
   const limit = searchParams.limit ?? 100
@@ -101,6 +102,20 @@ export function SearchResults({ searchParams, onNavigate }: SearchResultsProps) 
     queryKey: ['events', searchParams],
     queryFn: () => fetchEvents(searchParams),
   })
+
+  const [activeSortField, activeSortDir] = searchParams.sort
+    ? searchParams.sort.split('.')
+    : [undefined, undefined]
+
+  const handleSortClick = (sortField: string) => {
+    if (activeSortField !== sortField) {
+      onSort(`${sortField}.asc`)
+    } else if (activeSortDir === 'asc') {
+      onSort(`${sortField}.desc`)
+    } else {
+      onSort(undefined)
+    }
+  }
 
   const visibleColumns = COLUMNS.filter((col) => visibility[col.key])
 
@@ -145,9 +160,30 @@ export function SearchResults({ searchParams, onNavigate }: SearchResultsProps) 
           <table>
             <thead>
               <tr>
-                {visibleColumns.map((col) => (
-                  <th key={col.key}>{col.label}</th>
-                ))}
+                {visibleColumns.map((col) => {
+                  const isActive = activeSortField === col.sortField
+                  const ariaSort = isActive
+                    ? activeSortDir === 'asc'
+                      ? ('ascending' as const)
+                      : ('descending' as const)
+                    : ('none' as const)
+                  return (
+                    <th key={col.key} aria-sort={ariaSort} scope="col" aria-label={col.label}>
+                      <button
+                        type="button"
+                        aria-label={`Sort by ${col.label}`}
+                        onClick={() => handleSortClick(col.sortField)}
+                      >
+                        {col.label}
+                        {isActive && (
+                          <span aria-hidden="true">
+                            {activeSortDir === 'asc' ? ' ▲' : ' ▼'}
+                          </span>
+                        )}
+                      </button>
+                    </th>
+                  )
+                })}
               </tr>
             </thead>
             <tbody>

@@ -19,9 +19,15 @@ beforeEach(() => {
   localStorage.clear()
 })
 
-function renderSearchResults(searchParams: SearchParams = {}, onNavigate = vi.fn()) {
+function renderSearchResults(
+  searchParams: SearchParams = {},
+  onNavigate = vi.fn(),
+  onSort = vi.fn(),
+) {
   const rootRoute = createRootRoute({
-    component: () => <SearchResults searchParams={searchParams} onNavigate={onNavigate} />,
+    component: () => (
+      <SearchResults searchParams={searchParams} onNavigate={onNavigate} onSort={onSort} />
+    ),
   })
   const eventRoute = createRoute({
     getParentRoute: () => rootRoute,
@@ -274,4 +280,93 @@ test('calls onNavigate when Next is clicked', async () => {
   await screen.findAllByRole('navigation', { name: 'Pagination' })
   await user.click(screen.getAllByRole('button', { name: 'Next' })[0])
   expect(onNavigate).toHaveBeenCalledWith(2, 100)
+})
+
+test('sends sort param to API when provided in searchParams', async () => {
+  let capturedUrl: URL | null = null
+  server.use(
+    http.get('/api/events/search', ({ request }) => {
+      capturedUrl = new URL(request.url)
+      const response: EventSearchResponse = {
+        data: [makeEvent()],
+        meta: { total: 1 },
+        links: { self: '' },
+        error: null,
+      }
+      return HttpResponse.json(response)
+    }),
+  )
+  renderSearchResults({ sort: 'startDateTime.asc' })
+  await screen.findAllByRole('row')
+  expect(capturedUrl!.searchParams.get('sort')).toBe('startDateTime.asc')
+})
+
+test('omits sort param from API when not in searchParams', async () => {
+  let capturedUrl: URL | null = null
+  server.use(
+    http.get('/api/events/search', ({ request }) => {
+      capturedUrl = new URL(request.url)
+      const response: EventSearchResponse = {
+        data: [makeEvent()],
+        meta: { total: 1 },
+        links: { self: '' },
+        error: null,
+      }
+      return HttpResponse.json(response)
+    }),
+  )
+  renderSearchResults({})
+  await screen.findAllByRole('row')
+  expect(capturedUrl!.searchParams.has('sort')).toBe(false)
+})
+
+test('unsorted sortable column has aria-sort="none"', async () => {
+  renderSearchResults({})
+  const th = await screen.findByRole('columnheader', { name: 'Title' })
+  expect(th).toHaveAttribute('aria-sort', 'none')
+})
+
+test('active ascending column has aria-sort="ascending"', async () => {
+  renderSearchResults({ sort: 'title.asc' })
+  const th = await screen.findByRole('columnheader', { name: 'Title' })
+  expect(th).toHaveAttribute('aria-sort', 'ascending')
+})
+
+test('active descending column has aria-sort="descending"', async () => {
+  renderSearchResults({ sort: 'title.desc' })
+  const th = await screen.findByRole('columnheader', { name: 'Title' })
+  expect(th).toHaveAttribute('aria-sort', 'descending')
+})
+
+test('clicking unsorted column calls onSort with field.asc', async () => {
+  const user = userEvent.setup()
+  const onSort = vi.fn()
+  renderSearchResults({}, vi.fn(), onSort)
+  await screen.findAllByRole('row')
+  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
+  expect(onSort).toHaveBeenCalledWith('title.asc')
+})
+
+test('clicking ascending column calls onSort with field.desc', async () => {
+  const user = userEvent.setup()
+  const onSort = vi.fn()
+  renderSearchResults({ sort: 'title.asc' }, vi.fn(), onSort)
+  await screen.findAllByRole('row')
+  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
+  expect(onSort).toHaveBeenCalledWith('title.desc')
+})
+
+test('clicking descending column calls onSort with undefined (clears sort)', async () => {
+  const user = userEvent.setup()
+  const onSort = vi.fn()
+  renderSearchResults({ sort: 'title.desc' }, vi.fn(), onSort)
+  await screen.findAllByRole('row')
+  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
+  expect(onSort).toHaveBeenCalledWith(undefined)
+})
+
+test('day column has aria-sort="ascending" when sorted by startDateTime ascending', async () => {
+  renderSearchResults({ sort: 'startDateTime.asc' })
+  const th = await screen.findByRole('columnheader', { name: 'Day' })
+  expect(th).toHaveAttribute('aria-sort', 'ascending')
 })
