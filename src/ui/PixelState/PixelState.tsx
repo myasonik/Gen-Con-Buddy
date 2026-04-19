@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { announce } from "../../lib/announce";
+import { MeepleFlat } from "../icons/MeepleFlat";
 import styles from "./PixelState.module.css";
 
 interface PixelStateProps {
@@ -21,14 +22,18 @@ export function PixelState({ variant, text, subtext }: PixelStateProps) {
         </div>
       )}
       {variant === "empty" && (
-        <div className={styles.die} aria-hidden="true">
-          ⚄
-        </div>
+        <MeepleFlat
+          className={styles.icon}
+          aria-hidden="true"
+          data-testid="empty-icon"
+        />
       )}
       {variant === "error" && (
-        <div className={styles.die} aria-hidden="true">
-          ✗
-        </div>
+        <MeepleFlat
+          className={[styles.icon, styles.iconError].join(" ")}
+          aria-hidden="true"
+          data-testid="error-icon"
+        />
       )}
       <p className={styles.text}>{text}</p>
       {subtext && <p className={styles.subtext}>{subtext}</p>}

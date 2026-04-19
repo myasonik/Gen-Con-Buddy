@@ -34,7 +34,7 @@ describe("PixelState", () => {
     expect(screen.queryByText("⚄")).not.toBeInTheDocument();
   });
 
-  it("renders die icon and text for empty variant", () => {
+  it("renders meeple icon and text for empty variant", () => {
     render(
       <PixelState
         variant="empty"
@@ -44,7 +44,9 @@ describe("PixelState", () => {
     );
     expect(screen.getByText("NO QUESTS FOUND")).toBeInTheDocument();
     expect(screen.getByText("Try broadening your search.")).toBeInTheDocument();
-    expect(screen.getByText("⚄")).toBeInTheDocument();
+    expect(
+      document.querySelector('[data-testid="empty-icon"]'),
+    ).toBeInTheDocument();
   });
 
   it("renders error text and subtext for error variant", () => {
@@ -106,5 +108,18 @@ describe("PixelState", () => {
       );
     });
     cleanup();
+  });
+
+  it("renders an SVG for the empty variant", () => {
+    render(<PixelState variant="empty" text="No results" />);
+    const svg = document.querySelector('[data-testid="empty-icon"]');
+    expect(svg).toBeInTheDocument();
+  });
+
+  it("renders an SVG for the error variant", () => {
+    render(<PixelState variant="error" text="Error" />);
+    expect(
+      document.querySelector('[data-testid="error-icon"]'),
+    ).toBeInTheDocument();
   });
 });
