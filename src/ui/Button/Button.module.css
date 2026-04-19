@@ -11,7 +11,8 @@
   text-decoration: none;
   transition:
     box-shadow var(--motion-press),
-    opacity var(--motion-hover);
+    opacity var(--motion-hover),
+    background var(--motion-hover);
   line-height: 1;
   letter-spacing: 0.03em;
 }
