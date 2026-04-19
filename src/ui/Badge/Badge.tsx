@@ -29,7 +29,7 @@ export function Badge({ children, variant = "filled", className }: BadgeProps) {
   );
 }
 
-interface ConceptBadgeProps {
+export interface ConceptBadgeProps {
   concept: "eventType" | "day" | "experience";
   value: string;
   children?: React.ReactNode;
