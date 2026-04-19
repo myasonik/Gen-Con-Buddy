@@ -13,6 +13,10 @@ import { Pagination } from "../Pagination/Pagination";
 import { announce } from "../../lib/announce";
 import type { SearchParams, Event } from "../../utils/types";
 import { PixelState } from "../../ui/PixelState/PixelState";
+import { ConceptBadge } from "../../ui/Badge/Badge";
+import { Pawn } from "../../ui/icons/Pawn";
+import { DAY_COLORS } from "../../utils/conceptColors";
+import { EXP } from "../../utils/enums";
 import styles from "./SearchResults.module.css";
 
 // Extend TanStack Table's ColumnMeta to include our sortField
@@ -29,6 +33,11 @@ interface SearchResultsProps {
 }
 
 const COLUMNS: ColumnDef<Event>[] = [
+  {
+    id: "dayStripe",
+    header: () => null,
+    cell: () => null, // rendered specially in the row loop
+  },
   {
     id: "gameId",
     header: "Game ID",
@@ -59,7 +68,12 @@ const COLUMNS: ColumnDef<Event>[] = [
     id: "eventType",
     header: "Type",
     meta: { sortField: "eventType" },
-    cell: ({ row }) => <>{row.original.attributes.eventType}</>,
+    cell: ({ row }) => (
+      <ConceptBadge
+        concept="eventType"
+        value={row.original.attributes.eventType}
+      />
+    ),
   },
   {
     id: "group",
@@ -95,13 +109,29 @@ const COLUMNS: ColumnDef<Event>[] = [
     id: "minPlayers",
     header: "Min Players",
     meta: { sortField: "minPlayers" },
-    cell: ({ row }) => <>{row.original.attributes.minPlayers}</>,
+    cell: ({ row }) => (
+      <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+        <Pawn
+          aria-hidden="true"
+          style={{ width: 10, height: 12, color: "var(--color-bark-light)" }}
+        />
+        {row.original.attributes.minPlayers}
+      </span>
+    ),
   },
   {
     id: "maxPlayers",
     header: "Max Players",
     meta: { sortField: "maxPlayers" },
-    cell: ({ row }) => <>{row.original.attributes.maxPlayers}</>,
+    cell: ({ row }) => (
+      <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+        <Pawn
+          aria-hidden="true"
+          style={{ width: 10, height: 12, color: "var(--color-bark-light)" }}
+        />
+        {row.original.attributes.maxPlayers}
+      </span>
+    ),
   },
   {
     id: "ageRequired",
@@ -113,7 +143,14 @@ const COLUMNS: ColumnDef<Event>[] = [
     id: "experienceRequired",
     header: "Experience Required",
     meta: { sortField: "experienceRequired" },
-    cell: ({ row }) => <>{row.original.attributes.experienceRequired}</>,
+    cell: ({ row }) => {
+      const raw = row.original.attributes.experienceRequired;
+      return (
+        <ConceptBadge concept="experience" value={raw}>
+          {EXP[raw] ?? raw}
+        </ConceptBadge>
+      );
+    },
   },
   {
     id: "materialsProvided",
@@ -137,9 +174,13 @@ const COLUMNS: ColumnDef<Event>[] = [
     id: "day",
     header: "Day",
     meta: { sortField: "startDateTime" },
-    cell: ({ row }) => (
-      <>{format(new Date(row.original.attributes.startDateTime), "EEEE")}</>
-    ),
+    cell: ({ row }) => {
+      const dayName = format(
+        new Date(row.original.attributes.startDateTime),
+        "EEEE",
+      );
+      return <ConceptBadge concept="day" value={dayName} />;
+    },
   },
   {
     id: "startDateTime",
@@ -322,7 +363,7 @@ export function SearchResults({
         <summary>Customize columns</summary>
         <fieldset>
           <ul>
-            {COLUMNS.map((col) => (
+            {COLUMNS.filter((col) => col.id !== "dayStripe").map((col) => (
               <li key={col.id}>
                 <label>
                   <input
@@ -365,6 +406,15 @@ export function SearchResults({
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => {
+                      if (header.column.id === "dayStripe") {
+                        return (
+                          <th
+                            key={header.id}
+                            className={styles.dayStripe}
+                            aria-hidden="true"
+                          />
+                        );
+                      }
                       const sortField = header.column.columnDef.meta?.sortField;
                       const label = header.column.columnDef.header as string;
                       const isActive =
@@ -409,18 +459,42 @@ export function SearchResults({
                 ))}
               </thead>
               <tbody>
-                {table.getRowModel().rows.map((row) => (
-                  <tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
+                {table.getRowModel().rows.map((row) => {
+                  const dayName = format(
+                    new Date(row.original.attributes.startDateTime),
+                    "EEEE",
+                  );
+                  const dayColors = DAY_COLORS[dayName];
+                  return (
+                    <tr key={row.id}>
+                      {row.getVisibleCells().map((cell) => {
+                        if (cell.column.id === "dayStripe") {
+                          return (
+                            <td
+                              key={cell.id}
+                              className={styles.dayStripe}
+                              style={
+                                dayColors
+                                  ? { background: dayColors.color }
+                                  : undefined
+                              }
+                              aria-hidden="true"
+                              data-testid="day-stripe"
+                            />
+                          );
+                        }
+                        return (
+                          <td key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

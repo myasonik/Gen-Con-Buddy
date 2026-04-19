@@ -7,20 +7,30 @@
   width: 100%;
   border-collapse: collapse;
   font-family: var(--font-data);
-  box-shadow: var(--shadow-table-inset);
+  border: 2px solid var(--color-bark);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: var(--shadow-panel);
 }
 
 .tableWrapper table thead {
   background: var(--color-bark);
-  color: var(--color-parchment);
+  border-bottom: 3px solid var(--color-gold);
 }
 
 .tableWrapper table thead th {
-  font-family: var(--font-pixel);
+  font-family: var(--font-display);
   font-size: var(--text-label);
+  font-style: italic;
+  color: var(--color-parchment);
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--color-bark-light);
+  border-right: 1px solid var(--color-bark-dark);
   text-align: left;
+  white-space: nowrap;
+}
+
+.tableWrapper table thead th:last-child {
+  border-right: none;
 }
 
 .tableWrapper table thead th button {
@@ -29,6 +39,7 @@
   color: inherit;
   font-family: inherit;
   font-size: inherit;
+  font-style: inherit;
   cursor: pointer;
   padding: 0;
   text-align: left;
@@ -37,10 +48,6 @@
 
 .tableWrapper table thead th button:hover {
   opacity: 0.8;
-}
-
-.tableWrapper table thead th button span {
-  color: var(--color-gold);
 }
 
 .tableWrapper table tbody tr:nth-child(odd) {
@@ -56,15 +63,29 @@
 }
 
 .tableWrapper table tbody tr:hover {
-  background: var(--color-bark-light);
+  background: color-mix(in srgb, var(--color-bark-light) 30%, var(--color-parchment-light));
 }
 
 .tableWrapper table td {
-  border: 1px solid var(--color-bark-light);
+  border-right: 1px solid var(--color-bark-light);
+  border-bottom: 1px solid var(--color-bark-light);
   padding: var(--space-1) var(--space-3);
   font-family: var(--font-data);
   font-size: var(--text-small);
   color: var(--color-ink);
+}
+
+.tableWrapper table td:last-child {
+  border-right: none;
+}
+
+/* Day stripe — narrow colored left cell */
+.dayStripe {
+  width: 6px;
+  min-width: 6px;
+  max-width: 6px;
+  padding: 0 !important;
+  border: none !important;
 }
 
 /* Column visibility panel */
@@ -73,12 +94,14 @@
 }
 
 .visibilityPanel summary {
-  font-family: var(--font-pixel);
+  font-family: var(--font-display);
   font-size: var(--text-label);
+  font-style: italic;
   color: var(--color-bark);
   cursor: pointer;
-  padding: var(--space-2);
+  padding: var(--space-2) var(--space-3);
   border: 2px solid var(--color-bark);
+  border-radius: 4px;
   display: inline-block;
   margin-bottom: var(--space-2);
 }
