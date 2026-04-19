@@ -45,7 +45,6 @@ export function EventDetail({ gameId }: EventDetailProps) {
     <article className={styles.article}>
       <Button
         render={<Link to="/" />}
-        nativeButton={false}
         variant="secondary"
         className={styles.backLink}
       >

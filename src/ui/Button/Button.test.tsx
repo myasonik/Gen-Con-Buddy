@@ -67,22 +67,16 @@ describe("Button", () => {
 
 describe("Button render prop", () => {
   it("renders as a link when given a Link render element", async () => {
-    await renderWithRouter(
-      <Button render={<Link to="/" />} nativeButton={false}>
-        Back
-      </Button>,
-    );
-    expect(screen.getByRole("button", { name: "Back" })).toBeInTheDocument();
+    await renderWithRouter(<Button render={<Link to="/" />}>Back</Button>);
+    expect(screen.getByRole("link", { name: "Back" })).toBeInTheDocument();
   });
 
   it("navigates to the given route via render prop", async () => {
     await renderWithRouter(
-      <Button render={<Link to="/" />} nativeButton={false}>
-        Back to results
-      </Button>,
+      <Button render={<Link to="/" />}>Back to results</Button>,
     );
     expect(
-      screen.getByRole("button", { name: "Back to results" }),
+      screen.getByRole("link", { name: "Back to results" }),
     ).toHaveAttribute("href", "/");
   });
 });
