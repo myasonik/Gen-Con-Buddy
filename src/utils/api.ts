@@ -11,6 +11,16 @@ export async function fetchEvents(params: SearchParams): Promise<EventSearchResp
   Object.entries(params).forEach(([key, value]) => {
     if (value === undefined || value === '') return
     if (key === 'days') return
+    if (key === 'page') {
+      // URL uses 1-indexed; API uses 0-indexed. Omit when page=1 (API default is 0).
+      if ((value as number) > 1) url.searchParams.set('page', String((value as number) - 1))
+      return
+    }
+    if (key === 'limit') {
+      // Omit when 100 (API default).
+      if ((value as number) !== 100) url.searchParams.set('limit', String(value))
+      return
+    }
     if (key === 'eventType' && typeof value === 'string') {
       url.searchParams.set(key, EVENT_TYPES[value] ?? value)
     } else {

@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { vi } from 'vitest'
 import {
   createRootRoute,
   createRoute,
@@ -18,9 +19,9 @@ beforeEach(() => {
   localStorage.clear()
 })
 
-function renderSearchResults(searchParams: SearchParams = {}) {
+function renderSearchResults(searchParams: SearchParams = {}, onNavigate = vi.fn()) {
   const rootRoute = createRootRoute({
-    component: () => <SearchResults searchParams={searchParams} />,
+    component: () => <SearchResults searchParams={searchParams} onNavigate={onNavigate} />,
   })
   const eventRoute = createRoute({
     getParentRoute: () => rootRoute,
@@ -146,4 +147,80 @@ test('materialsRequiredDetails column is hidden by default', async () => {
   renderSearchResults()
   await screen.findAllByRole('row')
   expect(screen.queryByRole('columnheader', { name: 'Materials Required Details' })).not.toBeInTheDocument()
+})
+
+test('sends page as 0-indexed when page > 1', async () => {
+  let capturedUrl: URL | null = null
+  server.use(
+    http.get('/api/events/search', ({ request }) => {
+      capturedUrl = new URL(request.url)
+      const response: EventSearchResponse = {
+        data: [makeEvent()],
+        meta: { total: 1 },
+        links: { self: '' },
+        error: null,
+      }
+      return HttpResponse.json(response)
+    }),
+  )
+  renderSearchResults({ page: 2 })
+  await screen.findAllByRole('row')
+  expect(capturedUrl!.searchParams.get('page')).toBe('1')
+})
+
+test('omits page param when page is 1', async () => {
+  let capturedUrl: URL | null = null
+  server.use(
+    http.get('/api/events/search', ({ request }) => {
+      capturedUrl = new URL(request.url)
+      const response: EventSearchResponse = {
+        data: [makeEvent()],
+        meta: { total: 1 },
+        links: { self: '' },
+        error: null,
+      }
+      return HttpResponse.json(response)
+    }),
+  )
+  renderSearchResults({ page: 1 })
+  await screen.findAllByRole('row')
+  expect(capturedUrl!.searchParams.has('page')).toBe(false)
+})
+
+test('omits limit param when limit is 100', async () => {
+  let capturedUrl: URL | null = null
+  server.use(
+    http.get('/api/events/search', ({ request }) => {
+      capturedUrl = new URL(request.url)
+      const response: EventSearchResponse = {
+        data: [makeEvent()],
+        meta: { total: 1 },
+        links: { self: '' },
+        error: null,
+      }
+      return HttpResponse.json(response)
+    }),
+  )
+  renderSearchResults({ limit: 100 })
+  await screen.findAllByRole('row')
+  expect(capturedUrl!.searchParams.has('limit')).toBe(false)
+})
+
+test('sends limit param when limit is not 100', async () => {
+  let capturedUrl: URL | null = null
+  server.use(
+    http.get('/api/events/search', ({ request }) => {
+      capturedUrl = new URL(request.url)
+      const response: EventSearchResponse = {
+        data: [makeEvent()],
+        meta: { total: 1 },
+        links: { self: '' },
+        error: null,
+      }
+      return HttpResponse.json(response)
+    }),
+  )
+  renderSearchResults({ limit: 500 })
+  await screen.findAllByRole('row')
+  expect(capturedUrl!.searchParams.get('limit')).toBe('500')
 })
