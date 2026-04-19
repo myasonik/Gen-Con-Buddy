@@ -35,12 +35,12 @@ export function BoolBadge({ value, className }: BoolBadgeProps) {
   // Gen Con API returns "Yes"/"No" strings; true/false booleans also accepted
   return (
     <span
-      aria-label={isYes ? "yes" : "no"}
       className={[isYes ? styles.boolYes : styles.boolNo, className]
         .filter(Boolean)
         .join(" ")}
     >
-      {isYes ? "✓" : "—"}
+      <span aria-hidden="true">{isYes ? "✓" : "—"}</span>
+      <span className="sr-only">{isYes ? "yes" : "no"}</span>
     </span>
   );
 }

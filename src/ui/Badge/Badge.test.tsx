@@ -58,4 +58,14 @@ describe("BoolBadge", () => {
     render(<BoolBadge value="" />);
     expect(screen.getByText("—")).toBeInTheDocument();
   });
+
+  it("shows sr-only 'yes' for true", () => {
+    render(<BoolBadge value={true} />);
+    expect(screen.getByText("yes")).toBeInTheDocument();
+  });
+
+  it("shows sr-only 'no' for false", () => {
+    render(<BoolBadge value={false} />);
+    expect(screen.getByText("no")).toBeInTheDocument();
+  });
 });
