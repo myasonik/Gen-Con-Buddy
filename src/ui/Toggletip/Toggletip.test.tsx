@@ -17,15 +17,13 @@ describe("Toggletip", () => {
 
   it("does not show tooltip initially", () => {
     render(<Toggletip label="Why?" message="Because" />);
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+    expect(screen.queryByText("Because")).not.toBeInTheDocument();
   });
 
   it("shows tooltip content when button is clicked", async () => {
     render(<Toggletip label="Why?" message="Clear the day checkboxes" />);
     await userEvent.click(screen.getByRole("button", { name: "Why?" }));
-    expect(screen.getByRole("tooltip")).toHaveTextContent(
-      "Clear the day checkboxes",
-    );
+    expect(screen.getByText("Clear the day checkboxes")).toBeInTheDocument();
   });
 
   it("hides tooltip when button is clicked a second time", async () => {
@@ -33,14 +31,14 @@ describe("Toggletip", () => {
     const btn = screen.getByRole("button", { name: "Why?" });
     await userEvent.click(btn);
     await userEvent.click(btn);
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+    expect(screen.queryByText("Because")).not.toBeInTheDocument();
   });
 
   it("hides tooltip on Escape key", async () => {
     render(<Toggletip label="Why?" message="Because" />);
     await userEvent.click(screen.getByRole("button", { name: "Why?" }));
     await userEvent.keyboard("{Escape}");
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+    expect(screen.queryByText("Because")).not.toBeInTheDocument();
   });
 
   it("hides tooltip when clicking outside", async () => {
@@ -51,9 +49,9 @@ describe("Toggletip", () => {
       </div>,
     );
     await userEvent.click(screen.getByRole("button", { name: "Why?" }));
-    expect(screen.getByRole("tooltip")).toBeInTheDocument();
+    expect(screen.getByText("Because")).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Outside" }));
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+    expect(screen.queryByText("Because")).not.toBeInTheDocument();
   });
 
   it("sets aria-expanded on trigger when open", async () => {

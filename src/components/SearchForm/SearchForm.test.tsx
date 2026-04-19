@@ -241,9 +241,7 @@ test("toggletip message for disabled day checkboxes explains to clear start date
 
   await user.click(screen.getByRole("button", { name: /why.*day/i }));
 
-  expect(screen.getByRole("tooltip")).toHaveTextContent(
-    /clear the start date fields/i,
-  );
+  expect(screen.getByText(/clear the start date fields/i)).toBeInTheDocument();
 });
 
 test("toggletip message for disabled start date explains to clear day checkboxes", async () => {
@@ -252,9 +250,7 @@ test("toggletip message for disabled start date explains to clear day checkboxes
 
   await user.click(screen.getByRole("button", { name: /why.*start date/i }));
 
-  expect(screen.getByRole("tooltip")).toHaveTextContent(
-    /clear the day checkboxes/i,
-  );
+  expect(screen.getByText(/clear the day checkboxes/i)).toBeInTheDocument();
 });
 
 test("duration inputs use 0.5-hour steps to match real event data", () => {

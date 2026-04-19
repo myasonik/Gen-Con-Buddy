@@ -19,10 +19,14 @@ export const ToggleTile = React.forwardRef<HTMLButtonElement, ToggleTileProps>(
 
 export interface ToggleTileGroupProps extends ToggleGroup.Props {}
 
-export function ToggleTileGroup({ className, ...props }: ToggleTileGroupProps) {
+export function ToggleTileGroup({
+  className,
+  multiple = true,
+  ...props
+}: ToggleTileGroupProps) {
   return (
     <ToggleGroup
-      multiple
+      multiple={multiple}
       className={[styles.group, className].filter(Boolean).join(" ")}
       {...props}
     />

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import {
@@ -14,8 +14,24 @@ import { server } from "../../test/msw/server";
 import { makeEvent } from "../../test/msw/factory";
 import { SearchResults } from "./SearchResults";
 import type { SearchParams, EventSearchResponse } from "../../utils/types";
-import * as announceModule from "../../lib/announce";
 import { __reset } from "../../lib/announce";
+
+function setupLiveRegions() {
+  const polite = document.createElement("div");
+  polite.id = "live-polite";
+  polite.setAttribute("aria-live", "polite");
+  document.body.appendChild(polite);
+
+  const assertive = document.createElement("div");
+  assertive.id = "live-assertive";
+  assertive.setAttribute("aria-live", "assertive");
+  document.body.appendChild(assertive);
+
+  return () => {
+    polite.remove();
+    assertive.remove();
+  };
+}
 
 beforeEach(() => {
   localStorage.clear();
@@ -406,27 +422,42 @@ test('day column has aria-sort="ascending" when sorted by startDateTime ascendin
 
 test('announces "Sorted by Title, ascending" when clicking unsorted column', async () => {
   const user = userEvent.setup();
-  const spy = vi.spyOn(announceModule, "announce");
+  const cleanup = setupLiveRegions();
   renderSearchResults({}, vi.fn(), vi.fn());
   await screen.findAllByRole("row");
   await user.click(screen.getByRole("button", { name: "Sort by Title" }));
-  expect(spy).toHaveBeenCalledWith("Sorted by Title, ascending");
+  await waitFor(() => {
+    expect(document.getElementById("live-polite")?.textContent).toBe(
+      "Sorted by Title, ascending",
+    );
+  });
+  cleanup();
 });
 
 test('announces "Sorted by Title, descending" when clicking ascending column', async () => {
   const user = userEvent.setup();
-  const spy = vi.spyOn(announceModule, "announce");
+  const cleanup = setupLiveRegions();
   renderSearchResults({ sort: "title.asc" }, vi.fn(), vi.fn());
   await screen.findAllByRole("row");
   await user.click(screen.getByRole("button", { name: "Sort by Title" }));
-  expect(spy).toHaveBeenCalledWith("Sorted by Title, descending");
+  await waitFor(() => {
+    expect(document.getElementById("live-polite")?.textContent).toBe(
+      "Sorted by Title, descending",
+    );
+  });
+  cleanup();
 });
 
 test('announces "Sort cleared" when clicking descending column', async () => {
   const user = userEvent.setup();
-  const spy = vi.spyOn(announceModule, "announce");
+  const cleanup = setupLiveRegions();
   renderSearchResults({ sort: "title.desc" }, vi.fn(), vi.fn());
   await screen.findAllByRole("row");
   await user.click(screen.getByRole("button", { name: "Sort by Title" }));
-  expect(spy).toHaveBeenCalledWith("Sort cleared");
+  await waitFor(() => {
+    expect(document.getElementById("live-polite")?.textContent).toBe(
+      "Sort cleared",
+    );
+  });
+  cleanup();
 });

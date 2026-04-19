@@ -14,12 +14,7 @@ export function Toggletip({ label, message }: ToggletipProps) {
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner sideOffset={4}>
-          <Popover.Popup
-            render={<span role="tooltip" />}
-            className={styles.tooltip}
-          >
-            {message}
-          </Popover.Popup>
+          <Popover.Popup className={styles.tooltip}>{message}</Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>
     </Popover.Root>
