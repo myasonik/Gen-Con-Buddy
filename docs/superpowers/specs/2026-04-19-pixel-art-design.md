@@ -49,8 +49,12 @@ Sidebar Quest Log: fixed-width search panel (280px) pinned left, results fill th
   --color-bark: #8b4513 /* primary borders, button fills, header bg */
   --color-bark-dark: #5c3317 /* text, dark accents */
   --color-bark-light: #d4a76a /* secondary borders, dividers, zebra stripes */
-  --color-ink: #3b1e0a /* body text, max contrast on parchment */;
+  --color-ink: #3b1e0a /* body text, max contrast on parchment */
+  --color-gold: #c9a84c
+  /* accent: header title, active page, active sort, link hover */;
 ```
+
+`--color-gold` is the only sharp accent in an otherwise monochromatic brown palette. Use it specifically and sparingly: the "GEN CON BUDDY" header title, the active page number in pagination, the active sort `▲`/`▼` indicator, and table row link hover color. Do not use it for backgrounds or borders — gold is a highlight, not a fill.
 
 ### Typography
 
@@ -99,9 +103,10 @@ grid-template-rows: auto 1fr
 
 Header bar spans both columns:
 
-- `background: var(--color-bark)`, full width
-- App title "GEN CON BUDDY" in Press Start 2P, `color: var(--color-parchment)`
-- Padding `0.75rem 1rem`
+- `background: var(--color-bark)` with a subtle repeating cross-hatch `background-image` for wood grain depth (see Texture & Atmosphere)
+- App title "GEN CON BUDDY" in Press Start 2P at **18px**, `color: var(--color-gold)`, `letter-spacing: 0.15em`
+- Padding `1rem 1.5rem`
+- The title is the marquee — it should feel like box cover typography, not a nav label
 
 Sidebar and results panels each use `overflow: auto` and fill the remaining viewport height.
 
@@ -123,12 +128,18 @@ Sidebar and results panels each use `overflow: auto` and fill the remaining view
 
 **Day checkboxes:** Horizontal strip of toggle tiles. Each `<label>` renders as a pixel-bordered tile. Checked state: `background: var(--color-bark)`, parchment text. Unchecked: outlined. Implemented via `input[type=checkbox]:checked + span` adjacent sibling selector — no JS required. Requires a `<span>` wrapper around the day label text in the markup (e.g., `<label><input type="checkbox" /><span>Fri</span></label>`) — the current markup lacks this and will need updating.
 
-**Advanced Filters `<details>`:**
+**Filter groups:** The sidebar has room — don't hide filters behind a `<details>` collapse. Show all filters, organized into labeled `<fieldset>` groups with Press Start 2P `<legend>` labels at 8px. Groups:
 
-- `<summary>` in Press Start 2P with CSS `▸`/`▼` triangle indicator
-- When open: filter list below with `border-top: 1px solid var(--color-bark-light)` separator
+- **SEARCH** — free-text filter, event type select
+- **DAYS** — day toggle tiles (Wed–Sun)
+- **TIME** — start date range, duration range, end date range
+- **PLAYERS** — min players range, max players range, age required, experience required
+- **LOGISTICS** — location, room, table number, cost range, tickets available, attendee registration
+- **DETAILS** — game system, rules edition, materials, tournament, special category, GMs, round/total rounds, last modified
 
-**Buttons:** `[▶ SEARCH]` uses `.btn-primary`, `[↺ RESET]` uses `.btn-secondary`. Both full-width, stacked at bottom of sidebar.
+Each `<fieldset>` has `border: 1px solid var(--color-bark-light)` and `margin-bottom: 1rem`. The existing `<details>` for advanced filters is removed entirely from the sidebar. The current `Toggletip` for Start Date / Days conflict remains — only the trigger condition changes (now always visible fields, not hidden ones).
+
+**Buttons:** `[▶ SEARCH]` uses `.btn-primary`, `[↺ RESET]` uses `.btn-secondary`. Both full-width, stacked at bottom of sidebar, `position: sticky; bottom: 0` so they're always accessible without scrolling to the bottom.
 
 **Toggletip:** `?` button uses same pixel border as inputs. Tooltip popup: `background: var(--color-parchment-light)`, bark border, Courier Prime text.
 
@@ -153,12 +164,16 @@ Sidebar and results panels each use `overflow: auto` and fill the remaining view
 
 - No background (inherits bark thead)
 - `:hover`: slight opacity reduction
-- Active sort shows `▲` or `▼` in Press Start 2P alongside label
+- Active sort shows `▲` or `▼` in `--color-gold` alongside label — the gold makes the active column immediately scannable against the bark header
 - `aria-sort` attribute on `<th>` (already implemented)
 
 **Column visibility panel:** Same pixel `<details>`/`<summary>` treatment as Advanced Filters. Day-toggle tile style for checkboxes.
 
-**Loading / error / empty states:** Centered text in Courier Prime, bark-colored, inside a `border: 2px dashed var(--color-bark-light)` box.
+**Loading state:** A pixel progress bar — a `<div>` containing a fixed-width inner `<div>` that animates from 0% to 75% width via CSS `@keyframes`, followed by the text `LOADING QUESTS...` in Press Start 2P at 8px below it. The bar uses alternating `--color-bark` and `--color-gold` stripes via `repeating-linear-gradient`. Respects `prefers-reduced-motion` by showing static text only.
+
+**Error state:** `QUEST FAILED` in Press Start 2P (8px, bark-dark), with the actual error message below in Courier Prime. Dashed border box.
+
+**Empty state:** A Unicode die face `⚄` at 48px as a decorative element, then `NO QUESTS FOUND` in Press Start 2P (8px), then a Courier Prime suggestion ("Try broadening your search."). Centered, dashed border box.
 
 ### Pagination (`Pagination.module.css`)
 
@@ -172,7 +187,7 @@ Right-aligned bar below the table.
 ```
 
 - Prev/Next: `.btn-secondary` with `◀`/`▶` prefix
-- Page numbers: `.btn-secondary` for inactive, `.btn-primary` for active page
+- Page numbers: `.btn-secondary` for inactive; active page gets `background: var(--color-bark)`, `color: var(--color-gold)` — not plain parchment text, gold
 - Truncation: first, last, current ± 1 pages with `…` gaps (existing behavior retained)
 - "N events • N per page" summary: Courier Prime, `color: var(--color-bark-dark)`, right-aligned below buttons
 - Per-page `<select>`: same input styling as search form
@@ -190,15 +205,25 @@ Single centered column, max-width ~800px.
 
 **Inside the card:**
 
-- Game ID: Press Start 2P label above the title (like a card type indicator)
-- Event title: `<h1>` in Press Start 2P, `color: var(--color-bark-dark)`, `border-bottom: 3px solid var(--color-bark)` underline
-- Fields: `<dl>` definition list — `<dt>` in Press Start 2P at 8px (bark), `<dd>` in Courier Prime
-- Short fields (players, cost, duration): two-column grid inside the `<dl>`
-- Long fields (descriptions): full-width
-- Boolean fields (tournament, materials provided): `✓` in bark or `—` in bark-light
-- Registration status: pill with `border: 2px solid var(--color-bark)`; filled bark background if ticketed
+- Game ID: Press Start 2P at 8px, `color: var(--color-gold)`, above the title — acts as a card type badge
+- Event title: `<h1>` in Press Start 2P at 16px, `color: var(--color-bark-dark)`, `border-bottom: 3px solid var(--color-bark)`, `padding-bottom: 0.75rem`, `margin-bottom: 1rem`
 
-**Loading / error states:** Same dashed-border empty box as results table.
+**`<dl>` layout:** `<dt>` labels sit **above** their `<dd>` values (stacked, not side-by-side). This is a deliberate choice: side-by-side `<dt>`/`<dd>` pairs require a fixed label width that breaks at long label names. Stacked is more robust and reads better with Press Start 2P's wide character spacing.
+
+Fields are organized into four `<section>` groups, each with a Press Start 2P `<h2>` at 8px and `border-bottom: 1px solid var(--color-bark-light)`:
+
+- **THE EVENT** — title, short description, long description, event type, group, game system, rules edition, special category
+- **PLAYERS** — min/max players, age required, experience required, tournament (`✓`/`—`), round number, total rounds
+- **LOGISTICS** — day, start time, end time, duration, minimum play time, location, room, table number, cost, attendee registration, tickets available, materials provided (`✓`/`—`), materials required, materials required details
+- **CONTACT** — GMs, website, email, last modified
+
+Within each section, short single-value fields (`<dt>`/`<dd>` pairs) are laid out in a two-column CSS grid (`grid-template-columns: 1fr 1fr`). Long text fields (descriptions, materials details) span both columns via `grid-column: 1 / -1`.
+
+**Registration status pill:** Inline element next to "Attendee Registration" `<dd>` — `border: 2px solid var(--color-bark)`, `padding: 2px 8px`, filled bark background + parchment text if ticketed, outlined if not.
+
+**Boolean fields** (`tournament`, `materialsProvided`): `✓` rendered in `--color-bark` or `—` in `--color-bark-light`.
+
+**Loading / error states:** Same pixel progress bar (loading) and dashed-border box (error) as results table.
 
 ---
 
@@ -218,6 +243,62 @@ Single centered column, max-width ~800px.
 | `src/routes/index.module.css`                           | New — SearchPage grid layout styles                                  |
 
 **New dependency:** `@tanstack/react-table`
+
+---
+
+## Texture & Atmosphere
+
+Solid `#f5e6c8` is beige, not parchment. Texture is what makes the difference.
+
+**Body background:** Apply a repeating SVG noise grain overlay via a `body::before` pseudo-element — `position: fixed`, `inset: 0`, `pointer-events: none`, `z-index: 9999`, `opacity: 0.04`. The SVG uses a `<feTurbulence>` filter to generate organic noise. This sits above everything and adds paper grain without affecting layout or interaction.
+
+**Sidebar and card surfaces:** Apply a second, subtler `background-image` using a base64-encoded SVG noise pattern directly on `--color-parchment-light` surfaces (sidebar panel, event card). Opacity 0.06 — visible up close, invisible at a glance.
+
+**The bark header:** Add a very subtle repeating pixel cross-hatch pattern (`background-image: repeating-linear-gradient`) on top of the solid bark fill to give it depth — like worn cloth or aged wood grain.
+
+---
+
+## Motion
+
+One well-placed animation beats ten scattered ones. `prefers-reduced-motion: reduce` disables all of these.
+
+**Table row hover:** `background-color` transition, 80ms ease — shifts the row to a slightly darker parchment tone. Fast enough to feel responsive, slow enough to feel warm.
+
+**Button `:active`:** `transform: translateY(2px)` at 30ms — simulates pressing a physical key on a board. No easing, snaps back instantly on release. This is the single most tactile detail in the whole UI.
+
+**`<details>` expansion:** The filter list animates open via a CSS `@keyframes` that transitions `max-height` from 0 to full, 150ms ease-out. The `▸` indicator rotates 90° to `▼` on open.
+
+**Sort header click:** After a sort is applied, the `▲`/`▼` indicator does a single brief `transform: scale(1.4) → 1` pulse (100ms) to confirm the action registered. No bounce — just a clean pop.
+
+---
+
+## Pixel Border Technique
+
+Standard `border: 3px solid` produces a generic rectangle. Authentic pixel borders use stacked `box-shadow` offsets to create a stepped, hand-drawn feel.
+
+**Panel borders** (sidebar, event card):
+
+```css
+box-shadow:
+  4px 4px 0 var(--color-bark-dark),
+  inset 0 0 0 2px var(--color-bark);
+```
+
+The inset shadow acts as the border; the offset shadow creates a hard drop that reads as depth, like a raised game board component.
+
+**Button borders** (`.btn-primary`, `.btn-secondary` `:active` state removes the drop):
+
+```css
+/* default */
+box-shadow: 3px 3px 0 var(--color-bark-dark);
+/* :active */
+box-shadow: 1px 1px 0 var(--color-bark-dark);
+transform: translate(2px, 2px);
+```
+
+This makes buttons feel physically pressable — they "sink" when clicked.
+
+**Table outer border:** Same `inset` technique — `box-shadow: inset 0 0 0 3px var(--color-bark)` instead of a `border`, so the border renders inside the table's bounds and doesn't cause layout shifts.
 
 ---
 
