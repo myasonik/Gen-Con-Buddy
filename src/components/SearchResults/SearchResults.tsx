@@ -4,6 +4,7 @@ import { format } from 'date-fns'
 import { useColumnVisibility } from '../../hooks/useColumnVisibility'
 import { fetchEvents } from '../../utils/api'
 import { Pagination } from '../Pagination/Pagination'
+import { announce } from '../../lib/announce'
 import type { SearchParams, Event } from '../../utils/types'
 
 interface SearchResultsProps {
@@ -113,13 +114,16 @@ export function SearchResults({ searchParams, onNavigate, onSort }: SearchResult
     }
   }
 
-  const handleSortClick = (sortField: string) => {
+  const handleSortClick = (sortField: string, label: string) => {
     if (activeSortField !== sortField) {
       onSort(`${sortField}.asc`)
+      announce(`Sorted by ${label}, ascending`)
     } else if (activeSortDir === 'asc') {
       onSort(`${sortField}.desc`)
+      announce(`Sorted by ${label}, descending`)
     } else {
       onSort(undefined)
+      announce('Sort cleared')
     }
   }
 
@@ -178,7 +182,7 @@ export function SearchResults({ searchParams, onNavigate, onSort }: SearchResult
                       <button
                         type="button"
                         aria-label={`Sort by ${col.label}`}
-                        onClick={() => handleSortClick(col.sortField)}
+                        onClick={() => handleSortClick(col.sortField, col.label)}
                       >
                         {col.label}
                         {isActive && (

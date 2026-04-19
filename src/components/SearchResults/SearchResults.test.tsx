@@ -14,9 +14,16 @@ import { server } from '../../test/msw/server'
 import { makeEvent } from '../../test/msw/factory'
 import { SearchResults } from './SearchResults'
 import type { SearchParams, EventSearchResponse } from '../../utils/types'
+import * as announceModule from '../../lib/announce'
+import { __reset } from '../../lib/announce'
 
 beforeEach(() => {
   localStorage.clear()
+})
+
+beforeEach(() => {
+  __reset()
+  vi.restoreAllMocks()
 })
 
 function renderSearchResults(
@@ -369,4 +376,31 @@ test('day column has aria-sort="ascending" when sorted by startDateTime ascendin
   renderSearchResults({ sort: 'startDateTime.asc' })
   const th = await screen.findByRole('columnheader', { name: 'Day' })
   expect(th).toHaveAttribute('aria-sort', 'ascending')
+})
+
+test('announces "Sorted by Title, ascending" when clicking unsorted column', async () => {
+  const user = userEvent.setup()
+  const spy = vi.spyOn(announceModule, 'announce')
+  renderSearchResults({}, vi.fn(), vi.fn())
+  await screen.findAllByRole('row')
+  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
+  expect(spy).toHaveBeenCalledWith('Sorted by Title, ascending')
+})
+
+test('announces "Sorted by Title, descending" when clicking ascending column', async () => {
+  const user = userEvent.setup()
+  const spy = vi.spyOn(announceModule, 'announce')
+  renderSearchResults({ sort: 'title.asc' }, vi.fn(), vi.fn())
+  await screen.findAllByRole('row')
+  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
+  expect(spy).toHaveBeenCalledWith('Sorted by Title, descending')
+})
+
+test('announces "Sort cleared" when clicking descending column', async () => {
+  const user = userEvent.setup()
+  const spy = vi.spyOn(announceModule, 'announce')
+  renderSearchResults({ sort: 'title.desc' }, vi.fn(), vi.fn())
+  await screen.findAllByRole('row')
+  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
+  expect(spy).toHaveBeenCalledWith('Sort cleared')
 })
