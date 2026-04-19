@@ -1,4 +1,23 @@
+import { useState, useEffect } from 'react'
+
 const PAGE_SIZE_OPTIONS = [100, 500, 1000] as const
+const BACKEND_MAX_RESULTS = 10_000
+
+function Toggletip({ label, message }: { label: string; message: string }) {
+  const [open, setOpen] = useState(false)
+  useEffect(() => {
+    if (!open) return
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false) }
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  }, [open])
+  return (
+    <span style={{ position: 'relative', display: 'inline-block' }}>
+      <button type="button" aria-label={label} onClick={() => setOpen(o => !o)}>?</button>
+      {open && <span role="tooltip" style={{ position: 'absolute', zIndex: 1 }}>{message}</span>}
+    </span>
+  )
+}
 
 function getPageNumbers(page: number, totalPages: number): (number | '...')[] {
   if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1)
@@ -20,7 +39,10 @@ interface PaginationProps {
 }
 
 export function Pagination({ page, limit, total, onNavigate }: PaginationProps) {
-  const totalPages = Math.ceil(total / limit)
+  const naturalTotalPages = Math.ceil(total / limit)
+  const maxPages = Math.floor(BACKEND_MAX_RESULTS / limit)
+  const totalPages = Math.min(naturalTotalPages, maxPages)
+  const isTruncated = naturalTotalPages > maxPages
   const pageNumbers = getPageNumbers(page, totalPages)
 
   return (
@@ -33,6 +55,12 @@ export function Pagination({ page, limit, total, onNavigate }: PaginationProps) 
         Previous
       </button>
       <span>Page {page} of {totalPages}</span>
+      {isTruncated && (
+        <Toggletip
+          label="Why are some pages unavailable?"
+          message={`Results are capped at ${BACKEND_MAX_RESULTS.toLocaleString()} events. Narrow your search to see more.`}
+        />
+      )}
       {pageNumbers.map((p, i) =>
         p === '...' ? (
           <span key={`ellipsis-${i}`} aria-hidden>…</span>

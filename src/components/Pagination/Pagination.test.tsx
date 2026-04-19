@@ -71,3 +71,23 @@ test('page size select shows current limit', () => {
   render(<Pagination page={1} limit={500} total={1000} onNavigate={vi.fn()} />)
   expect(screen.getByRole('combobox', { name: 'Per page' })).toHaveValue('500')
 })
+
+test('caps page count at 10,000-result backend limit', () => {
+  render(<Pagination page={1} limit={100} total={50000} onNavigate={vi.fn()} />)
+  expect(screen.getByText('Page 1 of 100')).toBeInTheDocument()
+})
+
+test('Next is disabled when on the last accessible page due to backend limit', () => {
+  render(<Pagination page={100} limit={100} total={50000} onNavigate={vi.fn()} />)
+  expect(screen.getByRole('button', { name: 'Next' })).toBeDisabled()
+})
+
+test('shows truncation notice when results exceed backend limit', () => {
+  render(<Pagination page={1} limit={100} total={50000} onNavigate={vi.fn()} />)
+  expect(screen.getByRole('button', { name: 'Why are some pages unavailable?' })).toBeInTheDocument()
+})
+
+test('does not show truncation notice when results are within backend limit', () => {
+  render(<Pagination page={1} limit={100} total={500} onNavigate={vi.fn()} />)
+  expect(screen.queryByRole('button', { name: 'Why are some pages unavailable?' })).not.toBeInTheDocument()
+})
