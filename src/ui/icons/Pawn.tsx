@@ -1,4 +1,5 @@
-// src/ui/icons/Pawn.tsx
+import React from "react";
+
 interface PawnProps {
   className?: string;
   style?: React.CSSProperties;
