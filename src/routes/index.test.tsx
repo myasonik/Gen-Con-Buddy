@@ -144,7 +144,13 @@ test("clicking a sort column header updates the URL with sort param and resets p
 test("renders a banner landmark with the app title", async () => {
   await renderSearchPage("/");
   expect(screen.getByRole("banner")).toBeInTheDocument();
-  expect(screen.getByRole("banner")).toHaveTextContent("GEN CON BUDDY");
+  expect(screen.getByRole("banner")).toHaveTextContent("Gen Con Buddy");
+});
+
+test("site header contains the app title", async () => {
+  await renderSearchPage();
+  expect(screen.getByRole("banner")).toBeInTheDocument();
+  expect(screen.getByText("Gen Con Buddy")).toBeInTheDocument();
 });
 
 test("navigating back to page 1 omits page from URL and API call", async () => {
