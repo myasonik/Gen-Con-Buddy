@@ -1,5 +1,27 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { PixelState } from "./PixelState";
+import { __reset } from "../../lib/announce";
+
+function setupLiveRegions() {
+  const polite = document.createElement("div");
+  polite.id = "live-polite";
+  polite.setAttribute("aria-live", "polite");
+  document.body.appendChild(polite);
+
+  const assertive = document.createElement("div");
+  assertive.id = "live-assertive";
+  assertive.setAttribute("aria-live", "assertive");
+  document.body.appendChild(assertive);
+
+  return () => {
+    polite.remove();
+    assertive.remove();
+  };
+}
+
+afterEach(() => {
+  __reset();
+});
 
 describe("PixelState", () => {
   it("renders loading text for loading variant", () => {
@@ -51,5 +73,38 @@ describe("PixelState", () => {
     expect(screen.getByText("hint")).toBeInTheDocument();
     rerender(<PixelState variant="loading" text="LOADING..." />);
     expect(screen.queryByText("hint")).not.toBeInTheDocument();
+  });
+
+  it("announces loading text politely", async () => {
+    const cleanup = setupLiveRegions();
+    render(<PixelState variant="loading" text="LOADING QUESTS..." />);
+    await waitFor(() => {
+      expect(document.getElementById("live-polite")?.textContent).toBe(
+        "LOADING QUESTS...",
+      );
+    });
+    cleanup();
+  });
+
+  it("announces error text assertively", async () => {
+    const cleanup = setupLiveRegions();
+    render(<PixelState variant="error" text="QUEST FAILED" />);
+    await waitFor(() => {
+      expect(document.getElementById("live-assertive")?.textContent).toBe(
+        "QUEST FAILED",
+      );
+    });
+    cleanup();
+  });
+
+  it("announces empty text politely", async () => {
+    const cleanup = setupLiveRegions();
+    render(<PixelState variant="empty" text="NO QUESTS FOUND" />);
+    await waitFor(() => {
+      expect(document.getElementById("live-polite")?.textContent).toBe(
+        "NO QUESTS FOUND",
+      );
+    });
+    cleanup();
   });
 });

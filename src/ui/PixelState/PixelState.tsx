@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { announce } from "../../lib/announce";
 import styles from "./PixelState.module.css";
 
 interface PixelStateProps {
@@ -7,6 +9,10 @@ interface PixelStateProps {
 }
 
 export function PixelState({ variant, text, subtext }: PixelStateProps) {
+  useEffect(() => {
+    announce(text, variant === "error" ? "assertive" : "polite");
+  }, [variant, text]);
+
   return (
     <div className={styles.state}>
       {variant === "loading" && (
