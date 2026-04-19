@@ -46,6 +46,7 @@ export const Route = createFileRoute('/')({
       ticketsAvailable: str('ticketsAvailable'),
       lastModified: str('lastModified'),
       days: str('days'),
+      sort: str('sort'),
     }
   },
   component: SearchPage,
@@ -69,11 +70,22 @@ function SearchPage() {
     })
   }
 
+  const handleSort = (sort: string | undefined) => {
+    void navigate({
+      search: (prev) => ({
+        ...prev,
+        sort,
+        page: undefined,
+      }),
+    })
+  }
+
   return (
     <main>
       <h1>Gen Con Buddy</h1>
       <SearchForm key={JSON.stringify(search)} defaultValues={parseSearchParams(search)} onSearch={handleSearch} />
-      <SearchResults searchParams={search} onNavigate={handleNavigate} />
+      {/* @ts-expect-error -- onSort added in Task 2 */}
+      <SearchResults searchParams={search} onNavigate={handleNavigate} onSort={handleSort} />
     </main>
   )
 }

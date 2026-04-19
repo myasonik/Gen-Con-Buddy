@@ -104,6 +104,11 @@ test('navigating to page 2 sends page=1 to API (0-indexed)', async () => {
   expect(latestUrl!.searchParams.get('page')).toBe('1')
 })
 
+test('sort param is read from URL without crashing', async () => {
+  await renderSearchPage('/?sort=startDateTime.asc')
+  expect(screen.getByRole('main')).toBeInTheDocument()
+})
+
 test('navigating back to page 1 omits page from URL and API call', async () => {
   const user = userEvent.setup()
   let latestUrl: URL | null = null

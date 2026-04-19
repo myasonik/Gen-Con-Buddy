@@ -97,6 +97,7 @@ export interface SearchParams {
   ticketsAvailable?: string
   lastModified?: string
   days?: string
+  sort?: string
 }
 
 /** React Hook Form values — ranges split into min/max fields. */
