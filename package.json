@@ -9,7 +9,7 @@
     "start:prod": "VITE_API_URL=https://web-production-e0d43.up.railway.app vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "lint": "eslint .",
+    "lint": "oxlint . && eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
     "format": "prettier --write .",
@@ -53,6 +53,9 @@
   },
   "lint-staged": {
     "*.{ts,tsx,js,json,md}": "prettier --write",
-    "*.{ts,tsx,js}": "eslint --fix"
+    "*.{ts,tsx,js}": [
+      "oxlint --fix",
+      "eslint --fix"
+    ]
   }
 }
