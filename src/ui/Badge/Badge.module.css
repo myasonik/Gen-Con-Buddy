@@ -23,3 +23,17 @@
 .boolNo {
   color: var(--color-bark-light);
 }
+
+.conceptBadge {
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--concept-color, var(--color-bark));
+  border-radius: 10px;
+  background: var(--concept-bg, var(--color-parchment-light));
+  color: var(--concept-color, var(--color-bark));
+  font-family: var(--font-display);
+  font-size: var(--text-badge);
+  font-style: italic;
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+}

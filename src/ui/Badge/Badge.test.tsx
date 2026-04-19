@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { Badge, BoolBadge } from "./Badge";
+import { Badge, BoolBadge, ConceptBadge } from "./Badge";
 
 describe("Badge", () => {
   it("renders children", () => {
@@ -67,5 +67,50 @@ describe("BoolBadge", () => {
   it("shows sr-only 'no' for false", () => {
     render(<BoolBadge value={false} />);
     expect(screen.getByText("no")).toBeInTheDocument();
+  });
+});
+
+describe("ConceptBadge", () => {
+  it("renders the value as text when no children given", () => {
+    render(<ConceptBadge concept="eventType" value="RPG" />);
+    expect(screen.getByText("RPG")).toBeInTheDocument();
+  });
+
+  it("renders children instead of value when provided", () => {
+    render(
+      <ConceptBadge
+        concept="experience"
+        value="None (You've never played before - rules will be taught)"
+      >
+        None
+      </ConceptBadge>,
+    );
+    expect(screen.getByText("None")).toBeInTheDocument();
+  });
+
+  it("applies roleplay color custom properties for RPG", () => {
+    const { container } = render(
+      <ConceptBadge concept="eventType" value="RPG" />,
+    );
+    const el = container.firstChild as HTMLElement;
+    expect(el.style.getPropertyValue("--concept-color")).toBe("#5c3a7a");
+    expect(el.style.getPropertyValue("--concept-bg")).toBe("#f0eaf7");
+  });
+
+  it("applies Thursday color custom properties for day", () => {
+    const { container } = render(
+      <ConceptBadge concept="day" value="Thursday" />,
+    );
+    const el = container.firstChild as HTMLElement;
+    expect(el.style.getPropertyValue("--concept-color")).toBe("#7a4a00");
+    expect(el.style.getPropertyValue("--concept-bg")).toBe("#fdf0d8");
+  });
+
+  it("applies no inline style for an unknown value", () => {
+    const { container } = render(
+      <ConceptBadge concept="eventType" value="UNKNOWN" />,
+    );
+    const el = container.firstChild as HTMLElement;
+    expect(el.style.getPropertyValue("--concept-color")).toBe("");
   });
 });

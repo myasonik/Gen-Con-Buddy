@@ -1,5 +1,11 @@
 import React from "react";
 import styles from "./Badge.module.css";
+import {
+  EVENT_TYPE_COLORS,
+  DAY_COLORS,
+  EXPERIENCE_COLORS,
+} from "../../utils/conceptColors";
+import type { ConceptColor } from "../../utils/conceptColors";
 
 export const BADGE_VARIANTS = ["filled", "outline"] as const;
 export type BadgeVariant = (typeof BADGE_VARIANTS)[number];
@@ -19,6 +25,41 @@ export function Badge({ children, variant = "filled", className }: BadgeProps) {
         .join(" ")}
     >
       {children}
+    </span>
+  );
+}
+
+interface ConceptBadgeProps {
+  concept: "eventType" | "day" | "experience";
+  value: string;
+  children?: React.ReactNode;
+  className?: string;
+}
+
+export function ConceptBadge({
+  concept,
+  value,
+  children,
+  className,
+}: ConceptBadgeProps) {
+  let colors: ConceptColor | undefined;
+  if (concept === "eventType") colors = EVENT_TYPE_COLORS[value];
+  else if (concept === "day") colors = DAY_COLORS[value];
+  else if (concept === "experience") colors = EXPERIENCE_COLORS[value];
+
+  const style = colors
+    ? ({
+        "--concept-color": colors.color,
+        "--concept-bg": colors.bg,
+      } as React.CSSProperties)
+    : undefined;
+
+  return (
+    <span
+      className={[styles.conceptBadge, className].filter(Boolean).join(" ")}
+      style={style}
+    >
+      {children ?? value}
     </span>
   );
 }
