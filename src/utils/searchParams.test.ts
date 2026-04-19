@@ -1,4 +1,4 @@
-import { buildSearchParams, parseSearchParams } from './searchParams'
+import { buildSearchParams, daysToStartDateTime, parseSearchParams } from './searchParams'
 
 describe('buildSearchParams', () => {
   it('omits empty/undefined fields', () => {
@@ -57,6 +57,41 @@ describe('buildSearchParams', () => {
   it('omits empty tournament', () => {
     const result = buildSearchParams({ tournament: '' })
     expect(result).not.toHaveProperty('tournament')
+  })
+
+  it('sets only days in URL when days is selected (no startDateTime)', () => {
+    const result = buildSearchParams({ days: 'thu' })
+    expect(result.days).toBe('thu')
+    expect(result).not.toHaveProperty('startDateTime')
+  })
+
+  it('sets only days in URL for multiple non-contiguous days (no startDateTime)', () => {
+    const result = buildSearchParams({ days: 'wed,sun' })
+    expect(result.days).toBe('wed,sun')
+    expect(result).not.toHaveProperty('startDateTime')
+  })
+
+  it('sets only days in URL for all five days (no startDateTime)', () => {
+    const result = buildSearchParams({ days: 'wed,thu,fri,sat,sun' })
+    expect(result.days).toBe('wed,thu,fri,sat,sun')
+    expect(result).not.toHaveProperty('startDateTime')
+  })
+
+  it('does not set startDateTime when days is empty', () => {
+    const result = buildSearchParams({ days: '' })
+    expect(result).not.toHaveProperty('startDateTime')
+    expect(result).not.toHaveProperty('days')
+  })
+
+  it('uses explicit startDateTime fields when days is not set', () => {
+    const result = buildSearchParams({ startDateTimeStart: '2024-08-01T10:00', startDateTimeEnd: '' })
+    expect(result.startDateTime).toBe('[2024-08-01T10:00:00Z,]')
+  })
+
+  it('days takes priority over explicit startDateTime fields when both are set', () => {
+    const result = buildSearchParams({ days: 'fri', startDateTimeStart: '2024-08-01T10:00', startDateTimeEnd: '2024-08-01T14:00' })
+    expect(result.days).toBe('fri')
+    expect(result).not.toHaveProperty('startDateTime')
   })
 })
 
@@ -141,5 +176,61 @@ describe('parseSearchParams', () => {
   it('parseSearchParams passes materialsRequiredDetails text through', () => {
     const result = parseSearchParams({ materialsRequiredDetails: 'Bring dice' })
     expect(result.materialsRequiredDetails).toBe('Bring dice')
+  })
+
+  it('round-trips days directly from URL params', () => {
+    const result = parseSearchParams({ days: 'thu,sat' })
+    expect(result.days).toBe('thu,sat')
+  })
+
+  it('returns undefined days when not in URL params', () => {
+    const result = parseSearchParams({})
+    expect(result.days).toBeUndefined()
+  })
+
+  it('round-trips days through buildSearchParams then parseSearchParams', () => {
+    const params = buildSearchParams({ days: 'fri,sat' })
+    const parsed = parseSearchParams(params)
+    expect(parsed.days).toBe('fri,sat')
+  })
+
+  it('does not populate startDateTimeStart/End when days is present (single day)', () => {
+    const params = buildSearchParams({ days: 'thu' })
+    const parsed = parseSearchParams(params)
+    expect(parsed.startDateTimeStart).toBeUndefined()
+    expect(parsed.startDateTimeEnd).toBeUndefined()
+  })
+
+  it('does not populate startDateTimeStart/End when days is present (multiple days)', () => {
+    const params = buildSearchParams({ days: 'wed,sun' })
+    const parsed = parseSearchParams(params)
+    expect(parsed.startDateTimeStart).toBeUndefined()
+    expect(parsed.startDateTimeEnd).toBeUndefined()
+  })
+})
+
+describe('daysToStartDateTime', () => {
+  it('converts a single day to a bracket range', () => {
+    expect(daysToStartDateTime('thu')).toBe('[2024-08-01T00:00:00-04:00,2024-08-02T00:00:00-04:00]')
+  })
+
+  it('converts two non-contiguous days to comma-separated ranges', () => {
+    expect(daysToStartDateTime('wed,sun')).toBe(
+      '[2024-07-31T00:00:00-04:00,2024-08-01T00:00:00-04:00],[2024-08-04T00:00:00-04:00,2024-08-05T00:00:00-04:00]'
+    )
+  })
+
+  it('converts all five days to five ranges', () => {
+    expect(daysToStartDateTime('wed,thu,fri,sat,sun')).toBe(
+      '[2024-07-31T00:00:00-04:00,2024-08-01T00:00:00-04:00],' +
+      '[2024-08-01T00:00:00-04:00,2024-08-02T00:00:00-04:00],' +
+      '[2024-08-02T00:00:00-04:00,2024-08-03T00:00:00-04:00],' +
+      '[2024-08-03T00:00:00-04:00,2024-08-04T00:00:00-04:00],' +
+      '[2024-08-04T00:00:00-04:00,2024-08-05T00:00:00-04:00]'
+    )
+  })
+
+  it('returns undefined for an empty string', () => {
+    expect(daysToStartDateTime('')).toBeUndefined()
   })
 })

@@ -44,6 +44,7 @@ export const Route = createFileRoute('/')({
       specialCategory: str('specialCategory'),
       ticketsAvailable: str('ticketsAvailable'),
       lastModified: str('lastModified'),
+      days: str('days'),
     }
   },
   component: SearchPage,

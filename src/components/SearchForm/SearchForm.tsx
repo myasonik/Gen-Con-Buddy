@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   AGE_GROUPS,
@@ -54,7 +55,47 @@ const EMPTY_VALUES: SearchFormValues = {
   ticketsAvailableMax: "",
   lastModifiedStart: "",
   lastModifiedEnd: "",
+  days: "",
 };
+
+const DAY_KEYS = ["wed", "thu", "fri", "sat", "sun"] as const;
+const DAY_LABELS: Record<string, string> = {
+  wed: "Wed",
+  thu: "Thu",
+  fri: "Fri",
+  sat: "Sat",
+  sun: "Sun",
+};
+
+function Toggletip({ label, message }: { label: string; message: string }) {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [open]);
+
+  return (
+    <span style={{ position: "relative", display: "inline-block" }}>
+      <button
+        type="button"
+        aria-label={label}
+        onClick={() => setOpen((o) => !o)}
+      >
+        ?
+      </button>
+      {open && (
+        <span role="tooltip" style={{ position: "absolute", zIndex: 1 }}>
+          {message}
+        </span>
+      )}
+    </span>
+  );
+}
 
 interface SearchFormProps {
   defaultValues: SearchFormValues;
@@ -62,9 +103,28 @@ interface SearchFormProps {
 }
 
 export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
-  const { register, handleSubmit, reset } = useForm<SearchFormValues>({
-    defaultValues,
-  });
+  const { register, handleSubmit, reset, watch, setValue } =
+    useForm<SearchFormValues>({ defaultValues });
+
+  const days = watch("days") ?? "";
+  const selectedDays = new Set(days ? days.split(",") : []);
+
+  const startDateTimeStart = watch("startDateTimeStart") ?? "";
+  const startDateTimeEnd = watch("startDateTimeEnd") ?? "";
+  const startDateActive = !!(startDateTimeStart || startDateTimeEnd);
+  const daysActive = selectedDays.size > 0;
+  const daysDisabled = startDateActive;
+  const startDateDisabled = daysActive;
+
+  const handleDayChange = (key: string, checked: boolean) => {
+    const next = new Set(selectedDays);
+    if (checked) {
+      next.add(key);
+    } else {
+      next.delete(key);
+    }
+    setValue("days", DAY_KEYS.filter((d) => next.has(d)).join(","));
+  };
 
   return (
     <form onSubmit={handleSubmit(onSearch)}>
@@ -84,6 +144,26 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
             ))}
           </select>
         </label>
+        <fieldset>
+          <legend>Days</legend>
+          {daysDisabled && (
+            <Toggletip
+              label="Why are day filters disabled?"
+              message="Clear the Start Date fields in Advanced Filters to use day checkboxes."
+            />
+          )}
+          {DAY_KEYS.map((key) => (
+            <label key={key}>
+              <input
+                type="checkbox"
+                checked={selectedDays.has(key)}
+                disabled={daysDisabled}
+                onChange={(e) => handleDayChange(key, e.target.checked)}
+              />
+              {DAY_LABELS[key]}
+            </label>
+          ))}
+        </fieldset>
       </div>
 
       <details>
@@ -192,35 +272,52 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
           </li>
           <li>
             Start Date:
+            {startDateDisabled && (
+              <Toggletip
+                label="Why are Start Date fields disabled?"
+                message="Clear the day checkboxes above to use custom Start Date fields."
+              />
+            )}
             <label>
               from{" "}
               <input
                 type="datetime-local"
+                disabled={startDateDisabled}
                 {...register("startDateTimeStart")}
               />
             </label>
             <label>
               to{" "}
-              <input type="datetime-local" {...register("startDateTimeEnd")} />
+              <input
+                type="datetime-local"
+                disabled={startDateDisabled}
+                {...register("startDateTimeEnd")}
+              />
             </label>
           </li>
           <li>
             Duration (hours):
             <label>
-              from <input type="number" min="0" {...register("durationMin")} />
+              from <input type="number" min="0" step="0.5" {...register("durationMin")} />
             </label>
             <label>
-              to <input type="number" min="0" {...register("durationMax")} />
+              to <input type="number" min="0" step="0.5" {...register("durationMax")} />
             </label>
           </li>
           <li>
             End Date:
+            {startDateDisabled && (
+              <Toggletip
+                label="Why are End Date fields disabled?"
+                message="Clear the day checkboxes above to use custom End Date fields."
+              />
+            )}
             <label>
               from{" "}
-              <input type="datetime-local" {...register("endDateTimeStart")} />
+              <input type="datetime-local" disabled={startDateDisabled} {...register("endDateTimeStart")} />
             </label>
             <label>
-              to <input type="datetime-local" {...register("endDateTimeEnd")} />
+              to <input type="datetime-local" disabled={startDateDisabled} {...register("endDateTimeEnd")} />
             </label>
           </li>
           <li>

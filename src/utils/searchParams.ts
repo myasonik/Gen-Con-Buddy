@@ -1,5 +1,22 @@
 import type { SearchFormValues, SearchParams } from './types'
 
+const DAY_DATES: Record<string, { start: string; end: string }> = {
+  wed: { start: '2024-07-31T00:00:00-04:00', end: '2024-08-01T00:00:00-04:00' },
+  thu: { start: '2024-08-01T00:00:00-04:00', end: '2024-08-02T00:00:00-04:00' },
+  fri: { start: '2024-08-02T00:00:00-04:00', end: '2024-08-03T00:00:00-04:00' },
+  sat: { start: '2024-08-03T00:00:00-04:00', end: '2024-08-04T00:00:00-04:00' },
+  sun: { start: '2024-08-04T00:00:00-04:00', end: '2024-08-05T00:00:00-04:00' },
+}
+
+export function daysToStartDateTime(days: string): string | undefined {
+  const ranges = days
+    .split(',')
+    .filter(d => DAY_DATES[d])
+    .map(d => `[${DAY_DATES[d].start},${DAY_DATES[d].end}]`)
+    .join(',')
+  return ranges || undefined
+}
+
 export function buildSearchParams(values: SearchFormValues): SearchParams {
   const params: SearchParams = {}
 
@@ -44,7 +61,11 @@ export function buildSearchParams(values: SearchFormValues): SearchParams {
   set('materialsProvided', values.materialsProvided)
   set('materialsRequired', values.materialsRequired)
   set('materialsRequiredDetails', values.materialsRequiredDetails)
-  setDateRange('startDateTime', values.startDateTimeStart, values.startDateTimeEnd)
+  if (values.days) {
+    params.days = values.days
+  } else {
+    setDateRange('startDateTime', values.startDateTimeStart, values.startDateTimeEnd)
+  }
   setRange('duration', values.durationMin, values.durationMax)
   setDateRange('endDateTime', values.endDateTimeStart, values.endDateTimeEnd)
   set('gmNames', values.gmNames)
@@ -115,8 +136,8 @@ export function parseSearchParams(params: SearchParams): SearchFormValues {
     materialsProvided: params.materialsProvided,
     materialsRequired: params.materialsRequired,
     materialsRequiredDetails: params.materialsRequiredDetails,
-    startDateTimeStart: params.startDateTime ? startDateTime.start : undefined,
-    startDateTimeEnd: params.startDateTime ? startDateTime.end : undefined,
+    startDateTimeStart: params.days ? undefined : (params.startDateTime ? startDateTime.start : undefined),
+    startDateTimeEnd: params.days ? undefined : (params.startDateTime ? startDateTime.end : undefined),
     durationMin: params.duration ? duration.min : undefined,
     durationMax: params.duration ? duration.max : undefined,
     endDateTimeStart: params.endDateTime ? endDateTime.start : undefined,
@@ -142,5 +163,6 @@ export function parseSearchParams(params: SearchParams): SearchFormValues {
     ticketsAvailableMax: params.ticketsAvailable ? ticketsAvailable.max : undefined,
     lastModifiedStart: params.lastModified ? lastModified.start : undefined,
     lastModifiedEnd: params.lastModified ? lastModified.end : undefined,
+    days: params.days,
   }
 }
