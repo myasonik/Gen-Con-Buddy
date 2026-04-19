@@ -1,8 +1,9 @@
 .button {
   display: inline-block;
-  border-radius: 0;
-  font-family: var(--font-pixel);
+  border-radius: 3px;
+  font-family: var(--font-display);
   font-size: var(--text-label);
+  font-style: italic;
   padding: var(--space-2) var(--space-3);
   cursor: pointer;
   box-shadow: var(--shadow-button);
@@ -10,13 +11,13 @@
   text-decoration: none;
   transition:
     box-shadow var(--motion-press),
-    transform var(--motion-press);
+    opacity var(--motion-hover);
   line-height: 1;
+  letter-spacing: 0.03em;
 }
 
 .button:active {
   box-shadow: var(--shadow-button-active);
-  transform: translate(2px, 2px);
 }
 
 .button:focus-visible {
@@ -34,7 +35,15 @@
   color: var(--color-parchment);
 }
 
+.primary:hover {
+  opacity: 0.9;
+}
+
 .secondary {
   background: transparent;
   color: var(--color-bark);
+}
+
+.secondary:hover {
+  background: var(--color-parchment-light);
 }
