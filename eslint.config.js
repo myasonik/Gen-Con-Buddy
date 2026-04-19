@@ -44,7 +44,7 @@ export default [
       local: { rules: { "no-inline-live-regions": noInlineLiveRegions } },
     },
     rules: {
-      "react-hooks/exhaustive-deps": "warn",
+      "react-hooks/exhaustive-deps": "error",
       "local/no-inline-live-regions": "error",
     },
   },
