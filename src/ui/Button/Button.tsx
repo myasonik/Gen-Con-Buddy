@@ -5,8 +5,12 @@ import styles from "./Button.module.css";
 export const BUTTON_VARIANTS = ["primary", "secondary"] as const;
 export type ButtonVariant = (typeof BUTTON_VARIANTS)[number];
 
-interface ButtonProps extends React.ComponentPropsWithRef<typeof BaseButton> {
+interface ButtonProps extends Omit<
+  React.ComponentPropsWithRef<typeof BaseButton>,
+  "className"
+> {
   variant?: ButtonVariant;
+  className?: string;
 }
 
 export const Button = React.forwardRef<HTMLElement, ButtonProps>(
