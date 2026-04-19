@@ -48,6 +48,12 @@ describe("ToggleTile", () => {
     });
     expect(handleChange).not.toHaveBeenCalled();
   });
+
+  it("renders an aria-hidden meeple SVG inside the tile", () => {
+    render(<ToggleTile>Thu</ToggleTile>);
+    const btn = screen.getByRole("button", { name: "Thu" });
+    expect(btn.querySelector("svg[aria-hidden='true']")).toBeInTheDocument();
+  });
 });
 
 describe("ToggleTileGroup", () => {
