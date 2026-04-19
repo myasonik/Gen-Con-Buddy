@@ -42,4 +42,25 @@ describe("Toggletip", () => {
     await userEvent.keyboard("{Escape}");
     expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
   });
+
+  it("hides tooltip when clicking outside", async () => {
+    render(
+      <div>
+        <Toggletip label="Why?" message="Because" />
+        <button type="button">Outside</button>
+      </div>,
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Why?" }));
+    expect(screen.getByRole("tooltip")).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Outside" }));
+    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+  });
+
+  it("sets aria-expanded on trigger when open", async () => {
+    render(<Toggletip label="Why?" message="Because" />);
+    const btn = screen.getByRole("button", { name: "Why?" });
+    expect(btn).toHaveAttribute("aria-expanded", "false");
+    await userEvent.click(btn);
+    expect(btn).toHaveAttribute("aria-expanded", "true");
+  });
 });
