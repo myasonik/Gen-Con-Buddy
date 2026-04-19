@@ -44,9 +44,7 @@ describe("PixelState", () => {
     );
     expect(screen.getByText("NO QUESTS FOUND")).toBeInTheDocument();
     expect(screen.getByText("Try broadening your search.")).toBeInTheDocument();
-    expect(
-      document.querySelector('[data-testid="empty-icon"]'),
-    ).toBeInTheDocument();
+    expect(screen.getByTestId("empty-icon")).toBeInTheDocument();
   });
 
   it("renders error text and subtext for error variant", () => {
@@ -61,6 +59,7 @@ describe("PixelState", () => {
     expect(
       screen.getByText("Unable to load events. Please try again."),
     ).toBeInTheDocument();
+    expect(screen.getByTestId("error-icon")).toBeInTheDocument();
   });
 
   it("shows a progress bar for the loading variant", () => {
@@ -108,18 +107,5 @@ describe("PixelState", () => {
       );
     });
     cleanup();
-  });
-
-  it("renders an SVG for the empty variant", () => {
-    render(<PixelState variant="empty" text="No results" />);
-    const svg = document.querySelector('[data-testid="empty-icon"]');
-    expect(svg).toBeInTheDocument();
-  });
-
-  it("renders an SVG for the error variant", () => {
-    render(<PixelState variant="error" text="Error" />);
-    expect(
-      document.querySelector('[data-testid="error-icon"]'),
-    ).toBeInTheDocument();
   });
 });
