@@ -10,19 +10,17 @@
   --color-gold: #c9a84c;
 
   /* Typography */
-  --font-pixel: "Press Start 2P", monospace;
+  --font-display: "IM Fell English", serif;
   --font-data: "Courier Prime", monospace;
 
-  /* Type scale — Press Start 2P only; all sizes must be multiples of 8px */
-  --text-display: 18px; /* page title */
-  --text-heading: 16px; /* section headings, fieldset legends */
-  --text-label: 16px; /* button labels, column headers, field labels */
-  --text-badge: 8px; /* 8px — tiny incidental labels only: Game ID tag, sort direction arrows */
-  --text-icon: 48px; /* large decorative icons (PixelState die, status icons) */
-
-  /* Data font sizes */
-  --text-body: 16px; /* standard data text (Courier Prime body) */
-  --text-small: 14px; /* secondary data text (ranges, summaries) */
+  /* Type scale */
+  --text-display: 22px;
+  --text-heading: 18px;
+  --text-label: 14px;
+  --text-badge: 11px;
+  --text-icon: 48px;
+  --text-body: 16px;
+  --text-small: 14px;
 
   /* Spacing — 8px grid */
   --space-1: 4px;
@@ -35,12 +33,10 @@
   --size-sidebar: 280px;
   --size-detail-max: 800px;
 
-  /* Shadow / Pixel Border System */
-  --shadow-panel: 4px 4px 0 var(--color-bark-dark);
-  --shadow-panel-inset: inset 0 0 0 2px var(--color-bark);
-  --shadow-button: 3px 3px 0 var(--color-bark-dark);
-  --shadow-button-active: 1px 1px 0 var(--color-bark-dark);
-  --shadow-table-inset: inset 0 0 0 3px var(--color-bark);
+  /* Shadow — warm organic cast */
+  --shadow-panel: 2px 3px 8px rgba(59, 30, 10, 0.18);
+  --shadow-button: 1px 2px 5px rgba(59, 30, 10, 0.25);
+  --shadow-button-active: 0px 1px 2px rgba(59, 30, 10, 0.2);
 
   /* Motion */
   --motion-press: 30ms linear;
@@ -54,6 +50,32 @@
   --z-popover: 30;
   --z-modal: 40;
   --z-grain: 50;
+
+  /* Event type family colors */
+  --color-type-roleplay: #5c3a7a;
+  --color-type-roleplay-bg: #f0eaf7;
+  --color-type-board: #2a5c3a;
+  --color-type-board-bg: #e8f2ea;
+  --color-type-mini: #1a3d5c;
+  --color-type-mini-bg: #e4edf5;
+  --color-type-electronic: #7a4a00;
+  --color-type-electronic-bg: #fdf0d8;
+  --color-type-learning: #1a5c5c;
+  --color-type-learning-bg: #e4f2f2;
+  --color-type-entertainment: #7a2040;
+  --color-type-entertainment-bg: #f5e4ea;
+
+  /* Convention day colors */
+  --color-day-wed: #4a3570;
+  --color-day-wed-bg: #edeaf7;
+  --color-day-thu: #7a4a00;
+  --color-day-thu-bg: #fdf0d8;
+  --color-day-fri: #2a5c3a;
+  --color-day-fri-bg: #e8f2ea;
+  --color-day-sat: #1a3d5c;
+  --color-day-sat-bg: #e4edf5;
+  --color-day-sun: #7a2040;
+  --color-day-sun-bg: #f5e4ea;
 
   /* interpolate-size: allow <details> height: auto transitions */
   interpolate-size: allow-keywords;
