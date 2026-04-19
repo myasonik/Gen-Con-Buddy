@@ -13,11 +13,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Unselected: Story = {
-  args: { selected: false },
+  args: { defaultPressed: false },
 };
 
 export const Selected: Story = {
-  args: { selected: true },
+  args: { pressed: true },
 };
 
 export const Disabled: Story = {
@@ -25,12 +25,12 @@ export const Disabled: Story = {
 };
 
 export const DisabledSelected: Story = {
-  args: { selected: true, disabled: true },
+  args: { pressed: true, disabled: true },
 };
 
 const { Grid } = makeMatrix(
   meta,
-  { selected: [false, true], disabled: [false, true] },
+  { pressed: [false, true], disabled: [false, true] },
   { children: "Fri" },
 );
 
