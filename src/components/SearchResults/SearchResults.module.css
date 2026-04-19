@@ -1,16 +1,17 @@
-/* Table container */
+/* Table container — border-radius lives on the wrapper because border-collapse:collapse
+   prevents border-radius from rendering on the table element itself */
 .tableWrapper {
   overflow-x: auto;
+  border: 2px solid var(--color-bark);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: var(--shadow-panel);
 }
 
 .tableWrapper table {
   width: 100%;
   border-collapse: collapse;
   font-family: var(--font-data);
-  border: 2px solid var(--color-bark);
-  border-radius: 4px;
-  overflow: hidden;
-  box-shadow: var(--shadow-panel);
 }
 
 .tableWrapper table thead {
