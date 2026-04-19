@@ -1,12 +1,13 @@
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
+  Link,
   createRootRoute,
   createRouter,
   RouterProvider,
   createMemoryHistory,
 } from "@tanstack/react-router";
-import { Button, LinkButton } from "./Button";
+import { Button } from "./Button";
 
 async function renderWithRouter(ui: React.ReactNode) {
   const rootRoute = createRootRoute({ component: () => <>{ui}</> });
@@ -64,14 +65,16 @@ describe("Button", () => {
   });
 });
 
-describe("LinkButton", () => {
-  it("renders as a link", async () => {
-    await renderWithRouter(<LinkButton to="/">Back</LinkButton>);
+describe("Button render prop", () => {
+  it("renders as a link when given a Link render element", async () => {
+    await renderWithRouter(<Button render={<Link to="/" />}>Back</Button>);
     expect(screen.getByRole("link", { name: "Back" })).toBeInTheDocument();
   });
 
-  it("navigates to the given route", async () => {
-    await renderWithRouter(<LinkButton to="/">Back to results</LinkButton>);
+  it("navigates to the given route via render prop", async () => {
+    await renderWithRouter(
+      <Button render={<Link to="/" />}>Back to results</Button>,
+    );
     expect(
       screen.getByRole("link", { name: "Back to results" }),
     ).toHaveAttribute("href", "/");

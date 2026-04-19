@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
+import { Link } from "@tanstack/react-router";
 import { fetchEvents } from "../../utils/api";
-import { LinkButton } from "../../ui/Button/Button";
+import { Button } from "../../ui/Button/Button";
 import { PixelState } from "../../ui/PixelState/PixelState";
 import { Badge, BoolBadge } from "../../ui/Badge/Badge";
 import styles from "./EventDetail.module.css";
@@ -42,9 +43,13 @@ export function EventDetail({ gameId }: EventDetailProps) {
 
   return (
     <article className={styles.article}>
-      <LinkButton to="/" className={styles.backLink}>
+      <Button
+        render={<Link to="/" />}
+        variant="secondary"
+        className={styles.backLink}
+      >
         ← Back to results
-      </LinkButton>
+      </Button>
 
       <div className={styles.card}>
         <p className={styles.gameIdBadge}>{a.gameId}</p>
