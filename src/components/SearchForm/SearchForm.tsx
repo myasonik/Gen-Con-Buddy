@@ -298,10 +298,10 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
           <li>
             Duration (hours):
             <label>
-              from <input type="number" min="0" {...register("durationMin")} />
+              from <input type="number" min="0" step="0.5" {...register("durationMin")} />
             </label>
             <label>
-              to <input type="number" min="0" {...register("durationMax")} />
+              to <input type="number" min="0" step="0.5" {...register("durationMax")} />
             </label>
           </li>
           <li>

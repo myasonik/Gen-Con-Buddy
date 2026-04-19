@@ -181,3 +181,9 @@ test('toggletip message for disabled start date explains to clear day checkboxes
 
   expect(screen.getByRole('tooltip')).toHaveTextContent(/clear the day checkboxes/i)
 })
+
+test('duration inputs use 0.5-hour steps to match real event data', () => {
+  const { container } = render(<SearchForm defaultValues={{}} onSearch={noop} />)
+  expect(container.querySelector('input[name="durationMin"]')).toHaveAttribute('step', '0.5')
+  expect(container.querySelector('input[name="durationMax"]')).toHaveAttribute('step', '0.5')
+})
