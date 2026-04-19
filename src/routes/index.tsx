@@ -84,7 +84,6 @@ function SearchPage() {
     <main>
       <h1>Gen Con Buddy</h1>
       <SearchForm key={JSON.stringify(search)} defaultValues={parseSearchParams(search)} onSearch={handleSearch} />
-      {/* @ts-expect-error -- onSort added in Task 2 */}
       <SearchResults searchParams={search} onNavigate={handleNavigate} onSort={handleSort} />
     </main>
   )
