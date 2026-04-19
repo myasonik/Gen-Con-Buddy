@@ -109,6 +109,30 @@ test('sort param is read from URL without crashing', async () => {
   expect(screen.getByRole('main')).toBeInTheDocument()
 })
 
+test('clicking a sort column header updates the URL with sort param and resets page', async () => {
+  const user = userEvent.setup()
+  let latestUrl: URL | null = null
+  server.use(
+    http.get('/api/events/search', ({ request }) => {
+      latestUrl = new URL(request.url)
+      const response: EventSearchResponse = {
+        data: [makeEvent()],
+        meta: { total: 200 },
+        links: { self: '' },
+        error: null,
+      }
+      return HttpResponse.json(response)
+    }),
+  )
+  await renderSearchPage('/?page=3')
+  await screen.findAllByRole('navigation', { name: 'Pagination' })
+  latestUrl = null
+  await user.click(screen.getByRole('button', { name: 'Sort by Start' }))
+  await screen.findAllByRole('navigation', { name: 'Pagination' })
+  expect(latestUrl!.searchParams.has('page')).toBe(false)
+  expect(latestUrl!.searchParams.get('sort')).toBe('startDateTime.asc')
+})
+
 test('navigating back to page 1 omits page from URL and API call', async () => {
   const user = userEvent.setup()
   let latestUrl: URL | null = null
