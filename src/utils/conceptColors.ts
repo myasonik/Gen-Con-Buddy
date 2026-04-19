@@ -3,6 +3,8 @@ export interface ConceptColor {
   bg: string;
 }
 
+// These values mirror the CSS tokens in src/styles/tokens.css (--color-type-*, --color-day-*).
+// If a token color changes, update both files.
 const ROLEPLAY: ConceptColor = { color: "#5c3a7a", bg: "#f0eaf7" };
 const BOARD_CARD: ConceptColor = { color: "#2a5c3a", bg: "#e8f2ea" };
 const MINIATURES: ConceptColor = { color: "#1a3d5c", bg: "#e4edf5" };
