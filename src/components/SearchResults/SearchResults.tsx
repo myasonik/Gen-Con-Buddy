@@ -103,9 +103,15 @@ export function SearchResults({ searchParams, onNavigate, onSort }: SearchResult
     queryFn: () => fetchEvents(searchParams),
   })
 
-  const [activeSortField, activeSortDir] = searchParams.sort
-    ? searchParams.sort.split('.')
-    : [undefined, undefined]
+  let activeSortField: string | undefined
+  let activeSortDir: 'asc' | 'desc' | undefined
+  if (searchParams.sort) {
+    const [field, dir] = searchParams.sort.split('.')
+    if (field && (dir === 'asc' || dir === 'desc')) {
+      activeSortField = field
+      activeSortDir = dir
+    }
+  }
 
   const handleSortClick = (sortField: string) => {
     if (activeSortField !== sortField) {
