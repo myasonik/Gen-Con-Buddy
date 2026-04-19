@@ -15,7 +15,7 @@ No new files. Two small changes to existing files.
 Add a `reset` function:
 
 ```ts
-const reset = () => setVisibility({ ...DEFAULTS })
+const reset = () => setVisibility({ ...DEFAULTS });
 ```
 
 Return it alongside `visibility` and `toggle`. The existing `useEffect` already syncs state to localStorage on every change, so reset persists automatically.
@@ -25,7 +25,9 @@ Return it alongside `visibility` and `toggle`. The existing `useEffect` already 
 Destructure `reset` from `useColumnVisibility`. Add a `<button>` inside the `<fieldset>` in the "Customize columns" `<details>` panel:
 
 ```tsx
-<button type="button" onClick={reset}>Reset to defaults</button>
+<button type="button" onClick={reset}>
+  Reset to defaults
+</button>
 ```
 
 ## Data Flow

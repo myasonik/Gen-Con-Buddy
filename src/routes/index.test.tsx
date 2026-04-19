@@ -1,158 +1,166 @@
-import { act, render, screen, within } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { http, HttpResponse } from 'msw'
-import { server } from '../test/msw/server'
-import { makeEvent } from '../test/msw/factory'
-import type { EventSearchResponse } from '../utils/types'
+import { act, render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { http, HttpResponse } from "msw";
+import { server } from "../test/msw/server";
+import { makeEvent } from "../test/msw/factory";
+import type { EventSearchResponse } from "../utils/types";
 import {
   RouterProvider,
   createRouter,
   createMemoryHistory,
-} from '@tanstack/react-router'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { routeTree } from '../routeTree.gen'
+} from "@tanstack/react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { routeTree } from "../routeTree.gen";
 
-async function renderSearchPage(initialEntry = '/') {
-  const history = createMemoryHistory({ initialEntries: [initialEntry] })
-  const router = createRouter({ routeTree, history })
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
-  await router.load()
+async function renderSearchPage(initialEntry = "/") {
+  const history = createMemoryHistory({ initialEntries: [initialEntry] });
+  const router = createRouter({ routeTree, history });
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  await router.load();
   await act(async () => {
     render(
       <QueryClientProvider client={client}>
         <RouterProvider router={router} />
       </QueryClientProvider>,
-    )
-  })
-  return router
+    );
+  });
+  return router;
 }
 
-test('populates eventType dropdown from URL search param on load', async () => {
-  await renderSearchPage('/?eventType=BGM')
-  expect(screen.getByRole('combobox', { name: 'Event Type' })).toHaveValue('BGM')
-})
+test("populates eventType dropdown from URL search param on load", async () => {
+  await renderSearchPage("/?eventType=BGM");
+  expect(screen.getByRole("combobox", { name: "Event Type" })).toHaveValue(
+    "BGM",
+  );
+});
 
-test('updates form when URL search params change after initial render', async () => {
-  const router = await renderSearchPage('/?eventType=BGM')
-  expect(screen.getByRole('combobox', { name: 'Event Type' })).toHaveValue('BGM')
+test("updates form when URL search params change after initial render", async () => {
+  const router = await renderSearchPage("/?eventType=BGM");
+  expect(screen.getByRole("combobox", { name: "Event Type" })).toHaveValue(
+    "BGM",
+  );
 
   await act(async () => {
-    await router.navigate({ to: '/', search: { eventType: 'RPG' } })
-  })
+    await router.navigate({ to: "/", search: { eventType: "RPG" } });
+  });
 
-  expect(screen.getByRole('combobox', { name: 'Event Type' })).toHaveValue('RPG')
-})
+  expect(screen.getByRole("combobox", { name: "Event Type" })).toHaveValue(
+    "RPG",
+  );
+});
 
-test('page param is read from URL without crashing', async () => {
-  await renderSearchPage('/?page=3')
-  expect(screen.getByRole('main')).toBeInTheDocument()
-})
+test("page param is read from URL without crashing", async () => {
+  await renderSearchPage("/?page=3");
+  expect(screen.getByRole("main")).toBeInTheDocument();
+});
 
-test('limit param is read from URL without crashing', async () => {
-  await renderSearchPage('/?limit=500')
-  expect(screen.getByRole('main')).toBeInTheDocument()
-})
+test("limit param is read from URL without crashing", async () => {
+  await renderSearchPage("/?limit=500");
+  expect(screen.getByRole("main")).toBeInTheDocument();
+});
 
-test('submitting a new search resets page to 1', async () => {
-  const user = userEvent.setup()
-  let latestUrl: URL | null = null
+test("submitting a new search resets page to 1", async () => {
+  const user = userEvent.setup();
+  let latestUrl: URL | null = null;
   server.use(
-    http.get('/api/events/search', ({ request }) => {
-      latestUrl = new URL(request.url)
+    http.get("/api/events/search", ({ request }) => {
+      latestUrl = new URL(request.url);
       const response: EventSearchResponse = {
         data: [makeEvent()],
         meta: { total: 200 },
-        links: { self: '' },
+        links: { self: "" },
         error: null,
-      }
-      return HttpResponse.json(response)
+      };
+      return HttpResponse.json(response);
     }),
-  )
-  await renderSearchPage('/?page=3')
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
-  latestUrl = null
+  );
+  await renderSearchPage("/?page=3");
+  await screen.findAllByRole("navigation", { name: "Pagination" });
+  latestUrl = null;
   // Submit the search form (clicking Search button resets page)
-  await user.click(screen.getByRole('button', { name: 'Search' }))
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
-  expect(latestUrl!.searchParams.has('page')).toBe(false)
-})
+  await user.click(screen.getByRole("button", { name: "Search" }));
+  await screen.findAllByRole("navigation", { name: "Pagination" });
+  expect(latestUrl!.searchParams.has("page")).toBe(false);
+});
 
-test('navigating to page 2 sends page=1 to API (0-indexed)', async () => {
-  const user = userEvent.setup()
-  let latestUrl: URL | null = null
+test("navigating to page 2 sends page=1 to API (0-indexed)", async () => {
+  const user = userEvent.setup();
+  let latestUrl: URL | null = null;
   server.use(
-    http.get('/api/events/search', ({ request }) => {
-      latestUrl = new URL(request.url)
+    http.get("/api/events/search", ({ request }) => {
+      latestUrl = new URL(request.url);
       const response: EventSearchResponse = {
         data: [makeEvent()],
         meta: { total: 200 },
-        links: { self: '' },
+        links: { self: "" },
         error: null,
-      }
-      return HttpResponse.json(response)
+      };
+      return HttpResponse.json(response);
     }),
-  )
-  await renderSearchPage('/')
+  );
+  await renderSearchPage("/");
   // wait for initial render and pagination
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
-  latestUrl = null
+  await screen.findAllByRole("navigation", { name: "Pagination" });
+  latestUrl = null;
   // click Next on the first pagination nav
-  const navs = screen.getAllByRole('navigation', { name: 'Pagination' })
-  await user.click(within(navs[0]).getByRole('button', { name: 'Next' }))
+  const navs = screen.getAllByRole("navigation", { name: "Pagination" });
+  await user.click(within(navs[0]).getByRole("button", { name: "Next" }));
   // wait for re-render after navigation
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
-  expect(latestUrl!.searchParams.get('page')).toBe('1')
-})
+  await screen.findAllByRole("navigation", { name: "Pagination" });
+  expect(latestUrl!.searchParams.get("page")).toBe("1");
+});
 
-test('sort param is read from URL without crashing', async () => {
-  await renderSearchPage('/?sort=startDateTime.asc')
-  expect(screen.getByRole('main')).toBeInTheDocument()
-})
+test("sort param is read from URL without crashing", async () => {
+  await renderSearchPage("/?sort=startDateTime.asc");
+  expect(screen.getByRole("main")).toBeInTheDocument();
+});
 
-test('clicking a sort column header updates the URL with sort param and resets page', async () => {
-  const user = userEvent.setup()
-  let latestUrl: URL | null = null
+test("clicking a sort column header updates the URL with sort param and resets page", async () => {
+  const user = userEvent.setup();
+  let latestUrl: URL | null = null;
   server.use(
-    http.get('/api/events/search', ({ request }) => {
-      latestUrl = new URL(request.url)
+    http.get("/api/events/search", ({ request }) => {
+      latestUrl = new URL(request.url);
       const response: EventSearchResponse = {
         data: [makeEvent()],
         meta: { total: 200 },
-        links: { self: '' },
+        links: { self: "" },
         error: null,
-      }
-      return HttpResponse.json(response)
+      };
+      return HttpResponse.json(response);
     }),
-  )
-  await renderSearchPage('/?page=3')
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
-  latestUrl = null
-  await user.click(screen.getByRole('button', { name: 'Sort by Start' }))
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
-  expect(latestUrl!.searchParams.has('page')).toBe(false)
-  expect(latestUrl!.searchParams.get('sort')).toBe('startDateTime.asc')
-})
+  );
+  await renderSearchPage("/?page=3");
+  await screen.findAllByRole("navigation", { name: "Pagination" });
+  latestUrl = null;
+  await user.click(screen.getByRole("button", { name: "Sort by Start" }));
+  await screen.findAllByRole("navigation", { name: "Pagination" });
+  expect(latestUrl!.searchParams.has("page")).toBe(false);
+  expect(latestUrl!.searchParams.get("sort")).toBe("startDateTime.asc");
+});
 
-test('navigating back to page 1 omits page from URL and API call', async () => {
-  const user = userEvent.setup()
-  let latestUrl: URL | null = null
+test("navigating back to page 1 omits page from URL and API call", async () => {
+  const user = userEvent.setup();
+  let latestUrl: URL | null = null;
   server.use(
-    http.get('/api/events/search', ({ request }) => {
-      latestUrl = new URL(request.url)
+    http.get("/api/events/search", ({ request }) => {
+      latestUrl = new URL(request.url);
       const response: EventSearchResponse = {
         data: [makeEvent()],
         meta: { total: 200 },
-        links: { self: '' },
+        links: { self: "" },
         error: null,
-      }
-      return HttpResponse.json(response)
+      };
+      return HttpResponse.json(response);
     }),
-  )
-  await renderSearchPage('/?page=2')
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
-  latestUrl = null
-  const navs = screen.getAllByRole('navigation', { name: 'Pagination' })
-  await user.click(within(navs[0]).getByRole('button', { name: 'Previous' }))
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
-  expect(latestUrl!.searchParams.has('page')).toBe(false)
-})
+  );
+  await renderSearchPage("/?page=2");
+  await screen.findAllByRole("navigation", { name: "Pagination" });
+  latestUrl = null;
+  const navs = screen.getAllByRole("navigation", { name: "Pagination" });
+  await user.click(within(navs[0]).getByRole("button", { name: "Previous" }));
+  await screen.findAllByRole("navigation", { name: "Pagination" });
+  expect(latestUrl!.searchParams.has("page")).toBe(false);
+});

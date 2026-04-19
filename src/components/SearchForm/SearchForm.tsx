@@ -298,10 +298,22 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
           <li>
             Duration (hours):
             <label>
-              from <input type="number" min="0" step="0.5" {...register("durationMin")} />
+              from{" "}
+              <input
+                type="number"
+                min="0"
+                step="0.5"
+                {...register("durationMin")}
+              />
             </label>
             <label>
-              to <input type="number" min="0" step="0.5" {...register("durationMax")} />
+              to{" "}
+              <input
+                type="number"
+                min="0"
+                step="0.5"
+                {...register("durationMax")}
+              />
             </label>
           </li>
           <li>
@@ -314,10 +326,19 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
             )}
             <label>
               from{" "}
-              <input type="datetime-local" disabled={startDateDisabled} {...register("endDateTimeStart")} />
+              <input
+                type="datetime-local"
+                disabled={startDateDisabled}
+                {...register("endDateTimeStart")}
+              />
             </label>
             <label>
-              to <input type="datetime-local" disabled={startDateDisabled} {...register("endDateTimeEnd")} />
+              to{" "}
+              <input
+                type="datetime-local"
+                disabled={startDateDisabled}
+                {...register("endDateTimeEnd")}
+              />
             </label>
           </li>
           <li>

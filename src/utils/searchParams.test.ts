@@ -1,236 +1,261 @@
-import { buildSearchParams, daysToStartDateTime, parseSearchParams } from './searchParams'
+import {
+  buildSearchParams,
+  daysToStartDateTime,
+  parseSearchParams,
+} from "./searchParams";
 
-describe('buildSearchParams', () => {
-  it('omits empty/undefined fields', () => {
-    const result = buildSearchParams({ title: '' })
-    expect(result).not.toHaveProperty('title')
-  })
+describe("buildSearchParams", () => {
+  it("omits empty/undefined fields", () => {
+    const result = buildSearchParams({ title: "" });
+    expect(result).not.toHaveProperty("title");
+  });
 
-  it('includes non-empty text fields', () => {
-    const result = buildSearchParams({ title: 'Dungeons' })
-    expect(result.title).toBe('Dungeons')
-  })
+  it("includes non-empty text fields", () => {
+    const result = buildSearchParams({ title: "Dungeons" });
+    expect(result.title).toBe("Dungeons");
+  });
 
   it('encodes a numeric range as "[min,max]"', () => {
-    const result = buildSearchParams({ minPlayersMin: '2', minPlayersMax: '6' })
-    expect(result.minPlayers).toBe('[2,6]')
-  })
-
-  it('encodes a partial range with empty side', () => {
-    const result = buildSearchParams({ minPlayersMin: '2', minPlayersMax: '' })
-    expect(result.minPlayers).toBe('[2,]')
-  })
-
-  it('omits range when both sides are empty', () => {
-    const result = buildSearchParams({ minPlayersMin: '', minPlayersMax: '' })
-    expect(result).not.toHaveProperty('minPlayers')
-  })
-
-  it('encodes a date range appending :00Z to each side', () => {
     const result = buildSearchParams({
-      startDateTimeStart: '2024-08-01T10:00',
-      startDateTimeEnd: '2024-08-01T14:00',
-    })
-    expect(result.startDateTime).toBe('[2024-08-01T10:00:00Z,2024-08-01T14:00:00Z]')
-  })
+      minPlayersMin: "2",
+      minPlayersMax: "6",
+    });
+    expect(result.minPlayers).toBe("[2,6]");
+  });
 
-  it('encodes a partial date range', () => {
-    const result = buildSearchParams({ startDateTimeStart: '2024-08-01T10:00', startDateTimeEnd: '' })
-    expect(result.startDateTime).toBe('[2024-08-01T10:00:00Z,]')
-  })
+  it("encodes a partial range with empty side", () => {
+    const result = buildSearchParams({ minPlayersMin: "2", minPlayersMax: "" });
+    expect(result.minPlayers).toBe("[2,]");
+  });
 
-  it('passes materialsProvided text through unchanged', () => {
-    const result = buildSearchParams({ materialsProvided: 'Yes' })
-    expect(result.materialsProvided).toBe('Yes')
-  })
+  it("omits range when both sides are empty", () => {
+    const result = buildSearchParams({ minPlayersMin: "", minPlayersMax: "" });
+    expect(result).not.toHaveProperty("minPlayers");
+  });
 
-  it('omits empty materialsProvided', () => {
-    const result = buildSearchParams({ materialsProvided: '' })
-    expect(result).not.toHaveProperty('materialsProvided')
-  })
+  it("encodes a date range appending :00Z to each side", () => {
+    const result = buildSearchParams({
+      startDateTimeStart: "2024-08-01T10:00",
+      startDateTimeEnd: "2024-08-01T14:00",
+    });
+    expect(result.startDateTime).toBe(
+      "[2024-08-01T10:00:00Z,2024-08-01T14:00:00Z]",
+    );
+  });
 
-  it('passes tournament text through unchanged', () => {
-    const result = buildSearchParams({ tournament: 'Grand Prix' })
-    expect(result.tournament).toBe('Grand Prix')
-  })
+  it("encodes a partial date range", () => {
+    const result = buildSearchParams({
+      startDateTimeStart: "2024-08-01T10:00",
+      startDateTimeEnd: "",
+    });
+    expect(result.startDateTime).toBe("[2024-08-01T10:00:00Z,]");
+  });
 
-  it('omits empty tournament', () => {
-    const result = buildSearchParams({ tournament: '' })
-    expect(result).not.toHaveProperty('tournament')
-  })
+  it("passes materialsProvided text through unchanged", () => {
+    const result = buildSearchParams({ materialsProvided: "Yes" });
+    expect(result.materialsProvided).toBe("Yes");
+  });
 
-  it('sets only days in URL when days is selected (no startDateTime)', () => {
-    const result = buildSearchParams({ days: 'thu' })
-    expect(result.days).toBe('thu')
-    expect(result).not.toHaveProperty('startDateTime')
-  })
+  it("omits empty materialsProvided", () => {
+    const result = buildSearchParams({ materialsProvided: "" });
+    expect(result).not.toHaveProperty("materialsProvided");
+  });
 
-  it('sets only days in URL for multiple non-contiguous days (no startDateTime)', () => {
-    const result = buildSearchParams({ days: 'wed,sun' })
-    expect(result.days).toBe('wed,sun')
-    expect(result).not.toHaveProperty('startDateTime')
-  })
+  it("passes tournament text through unchanged", () => {
+    const result = buildSearchParams({ tournament: "Grand Prix" });
+    expect(result.tournament).toBe("Grand Prix");
+  });
 
-  it('sets only days in URL for all five days (no startDateTime)', () => {
-    const result = buildSearchParams({ days: 'wed,thu,fri,sat,sun' })
-    expect(result.days).toBe('wed,thu,fri,sat,sun')
-    expect(result).not.toHaveProperty('startDateTime')
-  })
+  it("omits empty tournament", () => {
+    const result = buildSearchParams({ tournament: "" });
+    expect(result).not.toHaveProperty("tournament");
+  });
 
-  it('does not set startDateTime when days is empty', () => {
-    const result = buildSearchParams({ days: '' })
-    expect(result).not.toHaveProperty('startDateTime')
-    expect(result).not.toHaveProperty('days')
-  })
+  it("sets only days in URL when days is selected (no startDateTime)", () => {
+    const result = buildSearchParams({ days: "thu" });
+    expect(result.days).toBe("thu");
+    expect(result).not.toHaveProperty("startDateTime");
+  });
 
-  it('uses explicit startDateTime fields when days is not set', () => {
-    const result = buildSearchParams({ startDateTimeStart: '2024-08-01T10:00', startDateTimeEnd: '' })
-    expect(result.startDateTime).toBe('[2024-08-01T10:00:00Z,]')
-  })
+  it("sets only days in URL for multiple non-contiguous days (no startDateTime)", () => {
+    const result = buildSearchParams({ days: "wed,sun" });
+    expect(result.days).toBe("wed,sun");
+    expect(result).not.toHaveProperty("startDateTime");
+  });
 
-  it('days takes priority over explicit startDateTime fields when both are set', () => {
-    const result = buildSearchParams({ days: 'fri', startDateTimeStart: '2024-08-01T10:00', startDateTimeEnd: '2024-08-01T14:00' })
-    expect(result.days).toBe('fri')
-    expect(result).not.toHaveProperty('startDateTime')
-  })
-})
+  it("sets only days in URL for all five days (no startDateTime)", () => {
+    const result = buildSearchParams({ days: "wed,thu,fri,sat,sun" });
+    expect(result.days).toBe("wed,thu,fri,sat,sun");
+    expect(result).not.toHaveProperty("startDateTime");
+  });
 
-describe('parseSearchParams', () => {
-  it('returns empty object from empty params', () => {
-    const result = parseSearchParams({})
-    expect(result.title).toBeUndefined()
-    expect(result.minPlayersMin).toBeUndefined()
-  })
+  it("does not set startDateTime when days is empty", () => {
+    const result = buildSearchParams({ days: "" });
+    expect(result).not.toHaveProperty("startDateTime");
+    expect(result).not.toHaveProperty("days");
+  });
 
-  it('passes through text fields unchanged', () => {
-    const result = parseSearchParams({ title: 'Dungeons' })
-    expect(result.title).toBe('Dungeons')
-  })
+  it("uses explicit startDateTime fields when days is not set", () => {
+    const result = buildSearchParams({
+      startDateTimeStart: "2024-08-01T10:00",
+      startDateTimeEnd: "",
+    });
+    expect(result.startDateTime).toBe("[2024-08-01T10:00:00Z,]");
+  });
+
+  it("days takes priority over explicit startDateTime fields when both are set", () => {
+    const result = buildSearchParams({
+      days: "fri",
+      startDateTimeStart: "2024-08-01T10:00",
+      startDateTimeEnd: "2024-08-01T14:00",
+    });
+    expect(result.days).toBe("fri");
+    expect(result).not.toHaveProperty("startDateTime");
+  });
+});
+
+describe("parseSearchParams", () => {
+  it("returns empty object from empty params", () => {
+    const result = parseSearchParams({});
+    expect(result.title).toBeUndefined();
+    expect(result.minPlayersMin).toBeUndefined();
+  });
+
+  it("passes through text fields unchanged", () => {
+    const result = parseSearchParams({ title: "Dungeons" });
+    expect(result.title).toBe("Dungeons");
+  });
 
   it('splits a numeric range "[2,6]" into min and max', () => {
-    const result = parseSearchParams({ minPlayers: '[2,6]' })
-    expect(result.minPlayersMin).toBe('2')
-    expect(result.minPlayersMax).toBe('6')
-  })
+    const result = parseSearchParams({ minPlayers: "[2,6]" });
+    expect(result.minPlayersMin).toBe("2");
+    expect(result.minPlayersMax).toBe("6");
+  });
 
   it('handles a partial range "[2,]"', () => {
-    const result = parseSearchParams({ minPlayers: '[2,]' })
-    expect(result.minPlayersMin).toBe('2')
-    expect(result.minPlayersMax).toBe('')
-  })
+    const result = parseSearchParams({ minPlayers: "[2,]" });
+    expect(result.minPlayersMin).toBe("2");
+    expect(result.minPlayersMax).toBe("");
+  });
 
-  it('strips :00Z from date range values', () => {
+  it("strips :00Z from date range values", () => {
     const result = parseSearchParams({
-      startDateTime: '[2024-08-01T10:00:00Z,2024-08-01T14:00:00Z]',
-    })
-    expect(result.startDateTimeStart).toBe('2024-08-01T10:00')
-    expect(result.startDateTimeEnd).toBe('2024-08-01T14:00')
-  })
+      startDateTime: "[2024-08-01T10:00:00Z,2024-08-01T14:00:00Z]",
+    });
+    expect(result.startDateTimeStart).toBe("2024-08-01T10:00");
+    expect(result.startDateTimeEnd).toBe("2024-08-01T14:00");
+  });
 
-  it('roundtrips: buildSearchParams then parseSearchParams returns original values', () => {
+  it("roundtrips: buildSearchParams then parseSearchParams returns original values", () => {
     const original = {
-      title: 'Test',
-      minPlayersMin: '2',
-      minPlayersMax: '6',
-      startDateTimeStart: '2024-08-01T10:00',
-      startDateTimeEnd: '2024-08-01T14:00',
-      materialsProvided: 'Yes',
-      tournament: 'Grand Prix',
-    }
-    const params = buildSearchParams(original)
-    const parsed = parseSearchParams(params)
-    expect(parsed.title).toBe('Test')
-    expect(parsed.minPlayersMin).toBe('2')
-    expect(parsed.minPlayersMax).toBe('6')
-    expect(parsed.startDateTimeStart).toBe('2024-08-01T10:00')
-    expect(parsed.startDateTimeEnd).toBe('2024-08-01T14:00')
-    expect(parsed.materialsProvided).toBe('Yes')
-    expect(parsed.tournament).toBe('Grand Prix')
-  })
+      title: "Test",
+      minPlayersMin: "2",
+      minPlayersMax: "6",
+      startDateTimeStart: "2024-08-01T10:00",
+      startDateTimeEnd: "2024-08-01T14:00",
+      materialsProvided: "Yes",
+      tournament: "Grand Prix",
+    };
+    const params = buildSearchParams(original);
+    const parsed = parseSearchParams(params);
+    expect(parsed.title).toBe("Test");
+    expect(parsed.minPlayersMin).toBe("2");
+    expect(parsed.minPlayersMax).toBe("6");
+    expect(parsed.startDateTimeStart).toBe("2024-08-01T10:00");
+    expect(parsed.startDateTimeEnd).toBe("2024-08-01T14:00");
+    expect(parsed.materialsProvided).toBe("Yes");
+    expect(parsed.tournament).toBe("Grand Prix");
+  });
 
-  it('parseSearchParams passes materialsProvided text through', () => {
-    const result = parseSearchParams({ materialsProvided: 'Yes' })
-    expect(result.materialsProvided).toBe('Yes')
-  })
+  it("parseSearchParams passes materialsProvided text through", () => {
+    const result = parseSearchParams({ materialsProvided: "Yes" });
+    expect(result.materialsProvided).toBe("Yes");
+  });
 
-  it('parseSearchParams passes tournament text through', () => {
-    const result = parseSearchParams({ tournament: 'Grand Prix' })
-    expect(result.tournament).toBe('Grand Prix')
-  })
+  it("parseSearchParams passes tournament text through", () => {
+    const result = parseSearchParams({ tournament: "Grand Prix" });
+    expect(result.tournament).toBe("Grand Prix");
+  });
 
-  it('passes materialsRequired text through', () => {
-    const result = buildSearchParams({ materialsRequired: 'Yes' })
-    expect(result.materialsRequired).toBe('Yes')
-  })
+  it("passes materialsRequired text through", () => {
+    const result = buildSearchParams({ materialsRequired: "Yes" });
+    expect(result.materialsRequired).toBe("Yes");
+  });
 
-  it('passes materialsRequiredDetails text through', () => {
-    const result = buildSearchParams({ materialsRequiredDetails: 'Bring dice' })
-    expect(result.materialsRequiredDetails).toBe('Bring dice')
-  })
+  it("passes materialsRequiredDetails text through", () => {
+    const result = buildSearchParams({
+      materialsRequiredDetails: "Bring dice",
+    });
+    expect(result.materialsRequiredDetails).toBe("Bring dice");
+  });
 
-  it('parseSearchParams passes materialsRequired text through', () => {
-    const result = parseSearchParams({ materialsRequired: 'Yes' })
-    expect(result.materialsRequired).toBe('Yes')
-  })
+  it("parseSearchParams passes materialsRequired text through", () => {
+    const result = parseSearchParams({ materialsRequired: "Yes" });
+    expect(result.materialsRequired).toBe("Yes");
+  });
 
-  it('parseSearchParams passes materialsRequiredDetails text through', () => {
-    const result = parseSearchParams({ materialsRequiredDetails: 'Bring dice' })
-    expect(result.materialsRequiredDetails).toBe('Bring dice')
-  })
+  it("parseSearchParams passes materialsRequiredDetails text through", () => {
+    const result = parseSearchParams({
+      materialsRequiredDetails: "Bring dice",
+    });
+    expect(result.materialsRequiredDetails).toBe("Bring dice");
+  });
 
-  it('round-trips days directly from URL params', () => {
-    const result = parseSearchParams({ days: 'thu,sat' })
-    expect(result.days).toBe('thu,sat')
-  })
+  it("round-trips days directly from URL params", () => {
+    const result = parseSearchParams({ days: "thu,sat" });
+    expect(result.days).toBe("thu,sat");
+  });
 
-  it('returns undefined days when not in URL params', () => {
-    const result = parseSearchParams({})
-    expect(result.days).toBeUndefined()
-  })
+  it("returns undefined days when not in URL params", () => {
+    const result = parseSearchParams({});
+    expect(result.days).toBeUndefined();
+  });
 
-  it('round-trips days through buildSearchParams then parseSearchParams', () => {
-    const params = buildSearchParams({ days: 'fri,sat' })
-    const parsed = parseSearchParams(params)
-    expect(parsed.days).toBe('fri,sat')
-  })
+  it("round-trips days through buildSearchParams then parseSearchParams", () => {
+    const params = buildSearchParams({ days: "fri,sat" });
+    const parsed = parseSearchParams(params);
+    expect(parsed.days).toBe("fri,sat");
+  });
 
-  it('does not populate startDateTimeStart/End when days is present (single day)', () => {
-    const params = buildSearchParams({ days: 'thu' })
-    const parsed = parseSearchParams(params)
-    expect(parsed.startDateTimeStart).toBeUndefined()
-    expect(parsed.startDateTimeEnd).toBeUndefined()
-  })
+  it("does not populate startDateTimeStart/End when days is present (single day)", () => {
+    const params = buildSearchParams({ days: "thu" });
+    const parsed = parseSearchParams(params);
+    expect(parsed.startDateTimeStart).toBeUndefined();
+    expect(parsed.startDateTimeEnd).toBeUndefined();
+  });
 
-  it('does not populate startDateTimeStart/End when days is present (multiple days)', () => {
-    const params = buildSearchParams({ days: 'wed,sun' })
-    const parsed = parseSearchParams(params)
-    expect(parsed.startDateTimeStart).toBeUndefined()
-    expect(parsed.startDateTimeEnd).toBeUndefined()
-  })
-})
+  it("does not populate startDateTimeStart/End when days is present (multiple days)", () => {
+    const params = buildSearchParams({ days: "wed,sun" });
+    const parsed = parseSearchParams(params);
+    expect(parsed.startDateTimeStart).toBeUndefined();
+    expect(parsed.startDateTimeEnd).toBeUndefined();
+  });
+});
 
-describe('daysToStartDateTime', () => {
-  it('converts a single day to a bracket range', () => {
-    expect(daysToStartDateTime('thu')).toBe('[2024-08-01T00:00:00-04:00,2024-08-02T00:00:00-04:00]')
-  })
+describe("daysToStartDateTime", () => {
+  it("converts a single day to a bracket range", () => {
+    expect(daysToStartDateTime("thu")).toBe(
+      "[2024-08-01T00:00:00-04:00,2024-08-02T00:00:00-04:00]",
+    );
+  });
 
-  it('converts two non-contiguous days to comma-separated ranges', () => {
-    expect(daysToStartDateTime('wed,sun')).toBe(
-      '[2024-07-31T00:00:00-04:00,2024-08-01T00:00:00-04:00],[2024-08-04T00:00:00-04:00,2024-08-05T00:00:00-04:00]'
-    )
-  })
+  it("converts two non-contiguous days to comma-separated ranges", () => {
+    expect(daysToStartDateTime("wed,sun")).toBe(
+      "[2024-07-31T00:00:00-04:00,2024-08-01T00:00:00-04:00],[2024-08-04T00:00:00-04:00,2024-08-05T00:00:00-04:00]",
+    );
+  });
 
-  it('converts all five days to five ranges', () => {
-    expect(daysToStartDateTime('wed,thu,fri,sat,sun')).toBe(
-      '[2024-07-31T00:00:00-04:00,2024-08-01T00:00:00-04:00],' +
-      '[2024-08-01T00:00:00-04:00,2024-08-02T00:00:00-04:00],' +
-      '[2024-08-02T00:00:00-04:00,2024-08-03T00:00:00-04:00],' +
-      '[2024-08-03T00:00:00-04:00,2024-08-04T00:00:00-04:00],' +
-      '[2024-08-04T00:00:00-04:00,2024-08-05T00:00:00-04:00]'
-    )
-  })
+  it("converts all five days to five ranges", () => {
+    expect(daysToStartDateTime("wed,thu,fri,sat,sun")).toBe(
+      "[2024-07-31T00:00:00-04:00,2024-08-01T00:00:00-04:00]," +
+        "[2024-08-01T00:00:00-04:00,2024-08-02T00:00:00-04:00]," +
+        "[2024-08-02T00:00:00-04:00,2024-08-03T00:00:00-04:00]," +
+        "[2024-08-03T00:00:00-04:00,2024-08-04T00:00:00-04:00]," +
+        "[2024-08-04T00:00:00-04:00,2024-08-05T00:00:00-04:00]",
+    );
+  });
 
-  it('returns undefined for an empty string', () => {
-    expect(daysToStartDateTime('')).toBeUndefined()
-  })
-})
+  it("returns undefined for an empty string", () => {
+    expect(daysToStartDateTime("")).toBeUndefined();
+  });
+});

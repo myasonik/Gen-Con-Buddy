@@ -1,16 +1,3 @@
-# unconventional js
-/blueprints/*/files/
-
-# compiled output
-/dist/
-
-# misc
-/coverage/
-!.*
-.*/
-
-# ember-try
-/.node_modules.ember-try/
-
-# mirage
-/mirage/mirage
+dist/
+node_modules/
+public/mockServiceWorker.js

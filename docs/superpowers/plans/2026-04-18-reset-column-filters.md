@@ -22,6 +22,7 @@
 ### Task 1: Add `reset` to `useColumnVisibility`
 
 **Files:**
+
 - Modify: `src/hooks/useColumnVisibility.ts`
 - Modify: `src/hooks/useColumnVisibility.test.ts`
 
@@ -30,24 +31,24 @@
 Open `src/hooks/useColumnVisibility.test.ts` and add at the end:
 
 ```ts
-test('reset restores all columns to defaults after toggling', () => {
-  const { result } = renderHook(() => useColumnVisibility())
+test("reset restores all columns to defaults after toggling", () => {
+  const { result } = renderHook(() => useColumnVisibility());
 
   act(() => {
-    result.current.toggle('title')      // title: true → false
-    result.current.toggle('gameId')     // gameId: false → true
-  })
+    result.current.toggle("title"); // title: true → false
+    result.current.toggle("gameId"); // gameId: false → true
+  });
 
-  expect(result.current.visibility.title).toBe(false)
-  expect(result.current.visibility.gameId).toBe(true)
+  expect(result.current.visibility.title).toBe(false);
+  expect(result.current.visibility.gameId).toBe(true);
 
   act(() => {
-    result.current.reset()
-  })
+    result.current.reset();
+  });
 
-  expect(result.current.visibility.title).toBe(true)
-  expect(result.current.visibility.gameId).toBe(false)
-})
+  expect(result.current.visibility.title).toBe(true);
+  expect(result.current.visibility.gameId).toBe(false);
+});
 ```
 
 - [ ] **Step 2: Run the test to confirm it fails**
@@ -64,21 +65,25 @@ In `src/hooks/useColumnVisibility.ts`, add `reset` before the return statement a
 
 ```ts
 export function useColumnVisibility() {
-  const [visibility, setVisibility] = useState<Record<string, boolean>>(readFromStorage)
+  const [visibility, setVisibility] =
+    useState<Record<string, boolean>>(readFromStorage);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: VERSION, visibility }))
-  }, [visibility])
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ version: VERSION, visibility }),
+    );
+  }, [visibility]);
 
   const toggle = (column: string) => {
-    setVisibility((prev) => ({ ...prev, [column]: !prev[column] }))
-  }
+    setVisibility((prev) => ({ ...prev, [column]: !prev[column] }));
+  };
 
   const reset = () => {
-    setVisibility({ ...DEFAULTS })
-  }
+    setVisibility({ ...DEFAULTS });
+  };
 
-  return { visibility, toggle, reset }
+  return { visibility, toggle, reset };
 }
 ```
 
@@ -102,6 +107,7 @@ git commit -m "feat: add reset function to useColumnVisibility"
 ### Task 2: Wire reset button in `SearchResults`
 
 **Files:**
+
 - Modify: `src/components/SearchResults/SearchResults.tsx`
 - Modify: `src/components/SearchResults/SearchResults.test.tsx`
 
@@ -110,23 +116,29 @@ git commit -m "feat: add reset function to useColumnVisibility"
 Open `src/components/SearchResults/SearchResults.test.tsx` and add at the end:
 
 ```tsx
-test('reset button restores default column visibility', async () => {
-  const user = userEvent.setup()
-  renderSearchResults()
-  await screen.findAllByRole('row')
+test("reset button restores default column visibility", async () => {
+  const user = userEvent.setup();
+  renderSearchResults();
+  await screen.findAllByRole("row");
 
   // gameId is hidden by default — toggle it on
-  const checkbox = screen.getByRole('checkbox', { name: 'Game ID' })
-  await user.click(checkbox)
-  expect(screen.getByRole('columnheader', { name: 'Game ID' })).toBeInTheDocument()
+  const checkbox = screen.getByRole("checkbox", { name: "Game ID" });
+  await user.click(checkbox);
+  expect(
+    screen.getByRole("columnheader", { name: "Game ID" }),
+  ).toBeInTheDocument();
 
   // click reset — gameId should disappear again
-  await user.click(screen.getByRole('button', { name: 'Reset to defaults' }))
-  expect(screen.queryByRole('columnheader', { name: 'Game ID' })).not.toBeInTheDocument()
+  await user.click(screen.getByRole("button", { name: "Reset to defaults" }));
+  expect(
+    screen.queryByRole("columnheader", { name: "Game ID" }),
+  ).not.toBeInTheDocument();
 
   // title (default-visible) should still be present
-  expect(screen.getByRole('columnheader', { name: 'Title' })).toBeInTheDocument()
-})
+  expect(
+    screen.getByRole("columnheader", { name: "Title" }),
+  ).toBeInTheDocument();
+});
 ```
 
 - [ ] **Step 2: Run the test to confirm it fails**
@@ -143,7 +155,7 @@ In `src/components/SearchResults/SearchResults.tsx`, destructure `reset` from th
 
 ```tsx
 export function SearchResults({ searchParams }: SearchResultsProps) {
-  const { visibility, toggle, reset } = useColumnVisibility()
+  const { visibility, toggle, reset } = useColumnVisibility();
   // ... rest unchanged ...
 
   return (
@@ -165,7 +177,9 @@ export function SearchResults({ searchParams }: SearchResultsProps) {
               </li>
             ))}
           </ul>
-          <button type="button" onClick={reset}>Reset to defaults</button>
+          <button type="button" onClick={reset}>
+            Reset to defaults
+          </button>
         </fieldset>
       </details>
 
@@ -193,7 +207,7 @@ export function SearchResults({ searchParams }: SearchResultsProps) {
         </table>
       )}
     </section>
-  )
+  );
 }
 ```
 

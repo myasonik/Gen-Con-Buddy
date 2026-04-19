@@ -17,6 +17,7 @@ When `SearchForm` submits a new search, it always sets `page: 1` in the resultin
 ## API Integration
 
 `fetchEvents` in `src/utils/api.ts`:
+
 - The URL and UI use 1-indexed pages (first page = 1); `fetchEvents` translates to 0-indexed before sending (sends `page=0` when `page === 1`)
 - Omits `page` from the request when it equals 1 (translates to 0, which is the server default)
 - Omits `limit` from the request when it equals 100 (server default)
@@ -30,6 +31,7 @@ New component at `src/components/Pagination/Pagination.tsx`.
 **Props:** `page: number`, `limit: number`, `total: number`, `onNavigate: (page: number, limit: number) => void`
 
 **Renders:**
+
 - "Page X of Y" label with Prev and Next buttons (disabled at boundaries)
 - Numbered page links showing up to 7 entries with ellipsis gaps for large ranges (e.g. `1 … 4 5 6 … 20`)
 - A `<select>` for page size with options 100 / 500 / 1000; changing it resets to page 1

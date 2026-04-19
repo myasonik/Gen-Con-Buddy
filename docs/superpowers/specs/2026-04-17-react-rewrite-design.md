@@ -78,6 +78,7 @@ The backend is a JSON:API-flavored Go service.
 Query params: all filter fields by name, plus `limit` (default 100, max 5000) and `page` (default 0).
 
 Response shape:
+
 ```json
 {
   "data": [{ "id": "...", "type": "events", "attributes": { ... } }],

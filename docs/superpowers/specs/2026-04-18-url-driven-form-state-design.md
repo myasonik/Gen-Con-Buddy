@@ -23,6 +23,7 @@ When the URL search params change, the new key causes React to unmount and remou
 ## Why this works for all field types
 
 The remount re-runs `parseSearchParams(search)`, which already handles:
+
 - Simple strings (`filter`, `title`, `eventType`, etc.)
 - Numeric ranges (`minPlayers`, `cost`, etc.) via `[min,max]` parsing
 - Date ranges (`startDateTime`, `endDateTime`, etc.) via `:00Z` stripping

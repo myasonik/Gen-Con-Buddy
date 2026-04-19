@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 
-const STORAGE_KEY = 'gen-con-buddy-columns'
-const VERSION = 1
+const STORAGE_KEY = "gen-con-buddy-columns";
+const VERSION = 1;
 
 const DEFAULTS: Record<string, boolean> = {
   gameId: false,
@@ -38,40 +38,45 @@ const DEFAULTS: Record<string, boolean> = {
   specialCategory: false,
   ticketsAvailable: true,
   lastModified: false,
-}
+};
 
 function readFromStorage(): Record<string, boolean> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return { ...DEFAULTS }
-    const parsed: unknown = JSON.parse(raw)
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return { ...DEFAULTS };
+    const parsed: unknown = JSON.parse(raw);
     if (
-      typeof parsed !== 'object' ||
+      typeof parsed !== "object" ||
       parsed === null ||
       (parsed as { version?: unknown }).version !== VERSION
     ) {
-      return { ...DEFAULTS }
+      return { ...DEFAULTS };
     }
-    return (parsed as { version: number; visibility: Record<string, boolean> }).visibility
+    return (parsed as { version: number; visibility: Record<string, boolean> })
+      .visibility;
   } catch {
-    return { ...DEFAULTS }
+    return { ...DEFAULTS };
   }
 }
 
 export function useColumnVisibility() {
-  const [visibility, setVisibility] = useState<Record<string, boolean>>(readFromStorage)
+  const [visibility, setVisibility] =
+    useState<Record<string, boolean>>(readFromStorage);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: VERSION, visibility }))
-  }, [visibility])
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ version: VERSION, visibility }),
+    );
+  }, [visibility]);
 
   const toggle = (column: string) => {
-    setVisibility((prev) => ({ ...prev, [column]: !prev[column] }))
-  }
+    setVisibility((prev) => ({ ...prev, [column]: !prev[column] }));
+  };
 
   const reset = () => {
-    setVisibility({ ...DEFAULTS })
-  }
+    setVisibility({ ...DEFAULTS });
+  };
 
-  return { visibility, toggle, reset }
+  return { visibility, toggle, reset };
 }

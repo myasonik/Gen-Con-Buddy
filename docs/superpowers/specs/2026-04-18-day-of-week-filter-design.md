@@ -25,17 +25,18 @@ Hardcoded constant in `searchParams.ts` (Indianapolis time, UTC-4):
 
 ```ts
 const DAY_DATES: Record<string, { start: string; end: string }> = {
-  wed: { start: '2024-07-31T00:00:00-04:00', end: '2024-08-01T00:00:00-04:00' },
-  thu: { start: '2024-08-01T00:00:00-04:00', end: '2024-08-02T00:00:00-04:00' },
-  fri: { start: '2024-08-02T00:00:00-04:00', end: '2024-08-03T00:00:00-04:00' },
-  sat: { start: '2024-08-03T00:00:00-04:00', end: '2024-08-04T00:00:00-04:00' },
-  sun: { start: '2024-08-04T00:00:00-04:00', end: '2024-08-05T00:00:00-04:00' },
-}
+  wed: { start: "2024-07-31T00:00:00-04:00", end: "2024-08-01T00:00:00-04:00" },
+  thu: { start: "2024-08-01T00:00:00-04:00", end: "2024-08-02T00:00:00-04:00" },
+  fri: { start: "2024-08-02T00:00:00-04:00", end: "2024-08-03T00:00:00-04:00" },
+  sat: { start: "2024-08-03T00:00:00-04:00", end: "2024-08-04T00:00:00-04:00" },
+  sun: { start: "2024-08-04T00:00:00-04:00", end: "2024-08-05T00:00:00-04:00" },
+};
 ```
 
 ### `buildSearchParams`
 
 If `days` is set and non-empty:
+
 1. Split on `,`, look up each key in `DAY_DATES`
 2. Build a comma-separated string of `[start,end]` ranges
 3. Write result to `startDateTime` (overrides the explicit datetime fields)
@@ -65,14 +66,15 @@ Days:  [ ] Wed  [ ] Thu  [ ] Fri  [ ] Sat  [ ] Sun
 
 ### Mutual exclusion
 
-| Condition | Effect |
-|-----------|--------|
-| Any day checkbox checked | Advanced `Start Date` fields disabled |
-| Either advanced `Start Date` field has a value | All day checkboxes disabled |
+| Condition                                      | Effect                                |
+| ---------------------------------------------- | ------------------------------------- |
+| Any day checkbox checked                       | Advanced `Start Date` fields disabled |
+| Either advanced `Start Date` field has a value | All day checkboxes disabled           |
 
 A toggletip (`?` button) appears next to the disabled group with the message:
-- Checkboxes disabled: *"Clear the Start Date fields in Advanced Filters to use day checkboxes."*
-- Start Date disabled: *"Clear the day checkboxes above to use custom Start Date fields."*
+
+- Checkboxes disabled: _"Clear the Start Date fields in Advanced Filters to use day checkboxes."_
+- Start Date disabled: _"Clear the day checkboxes above to use custom Start Date fields."_
 
 ### Reset
 
@@ -81,6 +83,7 @@ A toggletip (`?` button) appears next to the disabled group with the message:
 ## Testing
 
 ### `buildSearchParams` unit tests
+
 - Single day selected → correct single `[start,end]` range in `startDateTime`
 - Multiple non-contiguous days → comma-separated multi-range `startDateTime`
 - All five days selected → five ranges
@@ -88,10 +91,12 @@ A toggletip (`?` button) appears next to the disabled group with the message:
 - `days` set → `days` key absent from output params
 
 ### `parseSearchParams` unit tests
+
 - `days=thu,sat` in URL → `days: "thu,sat"` in form values
 - `days` absent → `days` undefined in form values
 
 ### `SearchForm` unit tests
+
 - Day checkboxes disabled when `startDateTimeStart` or `startDateTimeEnd` has a value
 - Advanced Start Date inputs disabled when any day checkbox is checked
 - Toggletip renders with correct message in each disabled state

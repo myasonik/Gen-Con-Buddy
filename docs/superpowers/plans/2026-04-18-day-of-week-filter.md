@@ -23,6 +23,7 @@
 ## Task 1: Add `days` to types
 
 **Files:**
+
 - Modify: `src/utils/types.ts`
 
 - [ ] **Step 1: Add `days` to `SearchParams`**
@@ -32,42 +33,42 @@ In `src/utils/types.ts`, add `days?: string` to the `SearchParams` interface aft
 ```ts
 /** URL search params — map directly to API query params. Ranges encoded as "[min,max]". */
 export interface SearchParams {
-  limit?: number
-  filter?: string
-  gameId?: string
-  title?: string
-  eventType?: string
-  group?: string
-  shortDescription?: string
-  longDescription?: string
-  gameSystem?: string
-  rulesEdition?: string
-  minPlayers?: string
-  maxPlayers?: string
-  ageRequired?: string
-  experienceRequired?: string
-  materialsProvided?: string
-  materialsRequired?: string
-  materialsRequiredDetails?: string
-  startDateTime?: string
-  duration?: string
-  endDateTime?: string
-  gmNames?: string
-  website?: string
-  email?: string
-  tournament?: string
-  roundNumber?: string
-  totalRounds?: string
-  minimumPlayTime?: string
-  attendeeRegistration?: string
-  cost?: string
-  location?: string
-  roomName?: string
-  tableNumber?: string
-  specialCategory?: string
-  ticketsAvailable?: string
-  lastModified?: string
-  days?: string
+  limit?: number;
+  filter?: string;
+  gameId?: string;
+  title?: string;
+  eventType?: string;
+  group?: string;
+  shortDescription?: string;
+  longDescription?: string;
+  gameSystem?: string;
+  rulesEdition?: string;
+  minPlayers?: string;
+  maxPlayers?: string;
+  ageRequired?: string;
+  experienceRequired?: string;
+  materialsProvided?: string;
+  materialsRequired?: string;
+  materialsRequiredDetails?: string;
+  startDateTime?: string;
+  duration?: string;
+  endDateTime?: string;
+  gmNames?: string;
+  website?: string;
+  email?: string;
+  tournament?: string;
+  roundNumber?: string;
+  totalRounds?: string;
+  minimumPlayTime?: string;
+  attendeeRegistration?: string;
+  cost?: string;
+  location?: string;
+  roomName?: string;
+  tableNumber?: string;
+  specialCategory?: string;
+  ticketsAvailable?: string;
+  lastModified?: string;
+  days?: string;
 }
 ```
 
@@ -78,52 +79,52 @@ In `src/utils/types.ts`, add `days?: string` to the `SearchFormValues` interface
 ```ts
 /** React Hook Form values — ranges split into min/max fields. */
 export interface SearchFormValues {
-  filter?: string
-  gameId?: string
-  title?: string
-  eventType?: string
-  group?: string
-  shortDescription?: string
-  longDescription?: string
-  gameSystem?: string
-  rulesEdition?: string
-  minPlayersMin?: string
-  minPlayersMax?: string
-  maxPlayersMin?: string
-  maxPlayersMax?: string
-  ageRequired?: string
-  experienceRequired?: string
-  materialsProvided?: string
-  materialsRequired?: string
-  materialsRequiredDetails?: string
-  startDateTimeStart?: string
-  startDateTimeEnd?: string
-  durationMin?: string
-  durationMax?: string
-  endDateTimeStart?: string
-  endDateTimeEnd?: string
-  gmNames?: string
-  website?: string
-  email?: string
-  tournament?: string
-  roundNumberMin?: string
-  roundNumberMax?: string
-  totalRoundsMin?: string
-  totalRoundsMax?: string
-  minimumPlayTimeMin?: string
-  minimumPlayTimeMax?: string
-  attendeeRegistration?: string
-  costMin?: string
-  costMax?: string
-  location?: string
-  roomName?: string
-  tableNumber?: string
-  specialCategory?: string
-  ticketsAvailableMin?: string
-  ticketsAvailableMax?: string
-  lastModifiedStart?: string
-  lastModifiedEnd?: string
-  days?: string
+  filter?: string;
+  gameId?: string;
+  title?: string;
+  eventType?: string;
+  group?: string;
+  shortDescription?: string;
+  longDescription?: string;
+  gameSystem?: string;
+  rulesEdition?: string;
+  minPlayersMin?: string;
+  minPlayersMax?: string;
+  maxPlayersMin?: string;
+  maxPlayersMax?: string;
+  ageRequired?: string;
+  experienceRequired?: string;
+  materialsProvided?: string;
+  materialsRequired?: string;
+  materialsRequiredDetails?: string;
+  startDateTimeStart?: string;
+  startDateTimeEnd?: string;
+  durationMin?: string;
+  durationMax?: string;
+  endDateTimeStart?: string;
+  endDateTimeEnd?: string;
+  gmNames?: string;
+  website?: string;
+  email?: string;
+  tournament?: string;
+  roundNumberMin?: string;
+  roundNumberMax?: string;
+  totalRoundsMin?: string;
+  totalRoundsMax?: string;
+  minimumPlayTimeMin?: string;
+  minimumPlayTimeMax?: string;
+  attendeeRegistration?: string;
+  costMin?: string;
+  costMax?: string;
+  location?: string;
+  roomName?: string;
+  tableNumber?: string;
+  specialCategory?: string;
+  ticketsAvailableMin?: string;
+  ticketsAvailableMax?: string;
+  lastModifiedStart?: string;
+  lastModifiedEnd?: string;
+  days?: string;
 }
 ```
 
@@ -147,6 +148,7 @@ git commit -m "feat: add days field to SearchParams and SearchFormValues"
 ## Task 2: Update `buildSearchParams` for `days`
 
 **Files:**
+
 - Modify: `src/utils/searchParams.ts`
 - Modify: `src/utils/searchParams.test.ts`
 
@@ -155,46 +157,57 @@ git commit -m "feat: add days field to SearchParams and SearchFormValues"
 Add to the `describe('buildSearchParams')` block in `src/utils/searchParams.test.ts`:
 
 ```ts
-it('translates a single day to a startDateTime range', () => {
-  const result = buildSearchParams({ days: 'thu' })
-  expect(result.startDateTime).toBe('[2024-08-01T00:00:00-04:00,2024-08-02T00:00:00-04:00]')
-  expect(result).not.toHaveProperty('days')
-})
-
-it('translates two non-contiguous days to a comma-separated multi-range startDateTime', () => {
-  const result = buildSearchParams({ days: 'wed,sun' })
+it("translates a single day to a startDateTime range", () => {
+  const result = buildSearchParams({ days: "thu" });
   expect(result.startDateTime).toBe(
-    '[2024-07-31T00:00:00-04:00,2024-08-01T00:00:00-04:00],[2024-08-04T00:00:00-04:00,2024-08-05T00:00:00-04:00]'
-  )
-  expect(result).not.toHaveProperty('days')
-})
+    "[2024-08-01T00:00:00-04:00,2024-08-02T00:00:00-04:00]",
+  );
+  expect(result).not.toHaveProperty("days");
+});
 
-it('translates all five days to five ranges', () => {
-  const result = buildSearchParams({ days: 'wed,thu,fri,sat,sun' })
+it("translates two non-contiguous days to a comma-separated multi-range startDateTime", () => {
+  const result = buildSearchParams({ days: "wed,sun" });
   expect(result.startDateTime).toBe(
-    '[2024-07-31T00:00:00-04:00,2024-08-01T00:00:00-04:00],' +
-    '[2024-08-01T00:00:00-04:00,2024-08-02T00:00:00-04:00],' +
-    '[2024-08-02T00:00:00-04:00,2024-08-03T00:00:00-04:00],' +
-    '[2024-08-03T00:00:00-04:00,2024-08-04T00:00:00-04:00],' +
-    '[2024-08-04T00:00:00-04:00,2024-08-05T00:00:00-04:00]'
-  )
-})
+    "[2024-07-31T00:00:00-04:00,2024-08-01T00:00:00-04:00],[2024-08-04T00:00:00-04:00,2024-08-05T00:00:00-04:00]",
+  );
+  expect(result).not.toHaveProperty("days");
+});
 
-it('does not set startDateTime when days is empty', () => {
-  const result = buildSearchParams({ days: '' })
-  expect(result).not.toHaveProperty('startDateTime')
-  expect(result).not.toHaveProperty('days')
-})
+it("translates all five days to five ranges", () => {
+  const result = buildSearchParams({ days: "wed,thu,fri,sat,sun" });
+  expect(result.startDateTime).toBe(
+    "[2024-07-31T00:00:00-04:00,2024-08-01T00:00:00-04:00]," +
+      "[2024-08-01T00:00:00-04:00,2024-08-02T00:00:00-04:00]," +
+      "[2024-08-02T00:00:00-04:00,2024-08-03T00:00:00-04:00]," +
+      "[2024-08-03T00:00:00-04:00,2024-08-04T00:00:00-04:00]," +
+      "[2024-08-04T00:00:00-04:00,2024-08-05T00:00:00-04:00]",
+  );
+});
 
-it('uses explicit startDateTime fields when days is not set', () => {
-  const result = buildSearchParams({ startDateTimeStart: '2024-08-01T10:00', startDateTimeEnd: '' })
-  expect(result.startDateTime).toBe('[2024-08-01T10:00:00Z,]')
-})
+it("does not set startDateTime when days is empty", () => {
+  const result = buildSearchParams({ days: "" });
+  expect(result).not.toHaveProperty("startDateTime");
+  expect(result).not.toHaveProperty("days");
+});
 
-it('days takes priority over explicit startDateTime fields when both are set', () => {
-  const result = buildSearchParams({ days: 'fri', startDateTimeStart: '2024-08-01T10:00', startDateTimeEnd: '2024-08-01T14:00' })
-  expect(result.startDateTime).toBe('[2024-08-02T00:00:00-04:00,2024-08-03T00:00:00-04:00]')
-})
+it("uses explicit startDateTime fields when days is not set", () => {
+  const result = buildSearchParams({
+    startDateTimeStart: "2024-08-01T10:00",
+    startDateTimeEnd: "",
+  });
+  expect(result.startDateTime).toBe("[2024-08-01T10:00:00Z,]");
+});
+
+it("days takes priority over explicit startDateTime fields when both are set", () => {
+  const result = buildSearchParams({
+    days: "fri",
+    startDateTimeStart: "2024-08-01T10:00",
+    startDateTimeEnd: "2024-08-01T14:00",
+  });
+  expect(result.startDateTime).toBe(
+    "[2024-08-02T00:00:00-04:00,2024-08-03T00:00:00-04:00]",
+  );
+});
 ```
 
 - [ ] **Step 2: Run tests to verify they fail**
@@ -210,93 +223,112 @@ Expected: new tests fail with errors about missing functionality.
 Replace the top of `src/utils/searchParams.ts` (keep the existing import and add the constant, then update `buildSearchParams`):
 
 ```ts
-import type { SearchFormValues, SearchParams } from './types'
+import type { SearchFormValues, SearchParams } from "./types";
 
 const DAY_DATES: Record<string, { start: string; end: string }> = {
-  wed: { start: '2024-07-31T00:00:00-04:00', end: '2024-08-01T00:00:00-04:00' },
-  thu: { start: '2024-08-01T00:00:00-04:00', end: '2024-08-02T00:00:00-04:00' },
-  fri: { start: '2024-08-02T00:00:00-04:00', end: '2024-08-03T00:00:00-04:00' },
-  sat: { start: '2024-08-03T00:00:00-04:00', end: '2024-08-04T00:00:00-04:00' },
-  sun: { start: '2024-08-04T00:00:00-04:00', end: '2024-08-05T00:00:00-04:00' },
-}
+  wed: { start: "2024-07-31T00:00:00-04:00", end: "2024-08-01T00:00:00-04:00" },
+  thu: { start: "2024-08-01T00:00:00-04:00", end: "2024-08-02T00:00:00-04:00" },
+  fri: { start: "2024-08-02T00:00:00-04:00", end: "2024-08-03T00:00:00-04:00" },
+  sat: { start: "2024-08-03T00:00:00-04:00", end: "2024-08-04T00:00:00-04:00" },
+  sun: { start: "2024-08-04T00:00:00-04:00", end: "2024-08-05T00:00:00-04:00" },
+};
 
 export function buildSearchParams(values: SearchFormValues): SearchParams {
-  const params: SearchParams = {}
+  const params: SearchParams = {};
 
-  const set = (key: keyof SearchParams, val: string | number | undefined | boolean) => {
-    if (val === undefined || val === '' || val === false) return
-    ;(params as Record<string, unknown>)[key] = val
-  }
+  const set = (
+    key: keyof SearchParams,
+    val: string | number | undefined | boolean,
+  ) => {
+    if (val === undefined || val === "" || val === false) return;
+    (params as Record<string, unknown>)[key] = val;
+  };
 
   const setRange = (
     key: keyof SearchParams,
     min: string | undefined,
     max: string | undefined,
   ) => {
-    if (!min && !max) return
-    ;(params as Record<string, unknown>)[key] = `[${min ?? ''},${max ?? ''}]`
-  }
+    if (!min && !max) return;
+    (params as Record<string, unknown>)[key] = `[${min ?? ""},${max ?? ""}]`;
+  };
 
   const setDateRange = (
     key: keyof SearchParams,
     start: string | undefined,
     end: string | undefined,
   ) => {
-    if (!start && !end) return
-    const s = start ? `${start}:00Z` : ''
-    const e = end ? `${end}:00Z` : ''
-    ;(params as Record<string, unknown>)[key] = `[${s},${e}]`
-  }
+    if (!start && !end) return;
+    const s = start ? `${start}:00Z` : "";
+    const e = end ? `${end}:00Z` : "";
+    (params as Record<string, unknown>)[key] = `[${s},${e}]`;
+  };
 
-  set('filter', values.filter)
-  set('gameId', values.gameId)
-  set('title', values.title)
-  set('eventType', values.eventType)
-  set('group', values.group)
-  set('shortDescription', values.shortDescription)
-  set('longDescription', values.longDescription)
-  set('gameSystem', values.gameSystem)
-  set('rulesEdition', values.rulesEdition)
-  setRange('minPlayers', values.minPlayersMin, values.minPlayersMax)
-  setRange('maxPlayers', values.maxPlayersMin, values.maxPlayersMax)
-  set('ageRequired', values.ageRequired)
-  set('experienceRequired', values.experienceRequired)
-  set('materialsProvided', values.materialsProvided)
-  set('materialsRequired', values.materialsRequired)
-  set('materialsRequiredDetails', values.materialsRequiredDetails)
+  set("filter", values.filter);
+  set("gameId", values.gameId);
+  set("title", values.title);
+  set("eventType", values.eventType);
+  set("group", values.group);
+  set("shortDescription", values.shortDescription);
+  set("longDescription", values.longDescription);
+  set("gameSystem", values.gameSystem);
+  set("rulesEdition", values.rulesEdition);
+  setRange("minPlayers", values.minPlayersMin, values.minPlayersMax);
+  setRange("maxPlayers", values.maxPlayersMin, values.maxPlayersMax);
+  set("ageRequired", values.ageRequired);
+  set("experienceRequired", values.experienceRequired);
+  set("materialsProvided", values.materialsProvided);
+  set("materialsRequired", values.materialsRequired);
+  set("materialsRequiredDetails", values.materialsRequiredDetails);
 
   if (values.days) {
     const ranges = values.days
-      .split(',')
-      .filter(d => DAY_DATES[d])
-      .map(d => `[${DAY_DATES[d].start},${DAY_DATES[d].end}]`)
-      .join(',')
+      .split(",")
+      .filter((d) => DAY_DATES[d])
+      .map((d) => `[${DAY_DATES[d].start},${DAY_DATES[d].end}]`)
+      .join(",");
     if (ranges) {
-      ;(params as Record<string, unknown>)['startDateTime'] = ranges
+      (params as Record<string, unknown>)["startDateTime"] = ranges;
     }
   } else {
-    setDateRange('startDateTime', values.startDateTimeStart, values.startDateTimeEnd)
+    setDateRange(
+      "startDateTime",
+      values.startDateTimeStart,
+      values.startDateTimeEnd,
+    );
   }
 
-  setRange('duration', values.durationMin, values.durationMax)
-  setDateRange('endDateTime', values.endDateTimeStart, values.endDateTimeEnd)
-  set('gmNames', values.gmNames)
-  set('website', values.website)
-  set('email', values.email)
-  set('tournament', values.tournament)
-  setRange('roundNumber', values.roundNumberMin, values.roundNumberMax)
-  setRange('totalRounds', values.totalRoundsMin, values.totalRoundsMax)
-  setRange('minimumPlayTime', values.minimumPlayTimeMin, values.minimumPlayTimeMax)
-  set('attendeeRegistration', values.attendeeRegistration)
-  setRange('cost', values.costMin, values.costMax)
-  set('location', values.location)
-  set('roomName', values.roomName)
-  set('tableNumber', values.tableNumber)
-  set('specialCategory', values.specialCategory)
-  setRange('ticketsAvailable', values.ticketsAvailableMin, values.ticketsAvailableMax)
-  setDateRange('lastModified', values.lastModifiedStart, values.lastModifiedEnd)
+  setRange("duration", values.durationMin, values.durationMax);
+  setDateRange("endDateTime", values.endDateTimeStart, values.endDateTimeEnd);
+  set("gmNames", values.gmNames);
+  set("website", values.website);
+  set("email", values.email);
+  set("tournament", values.tournament);
+  setRange("roundNumber", values.roundNumberMin, values.roundNumberMax);
+  setRange("totalRounds", values.totalRoundsMin, values.totalRoundsMax);
+  setRange(
+    "minimumPlayTime",
+    values.minimumPlayTimeMin,
+    values.minimumPlayTimeMax,
+  );
+  set("attendeeRegistration", values.attendeeRegistration);
+  setRange("cost", values.costMin, values.costMax);
+  set("location", values.location);
+  set("roomName", values.roomName);
+  set("tableNumber", values.tableNumber);
+  set("specialCategory", values.specialCategory);
+  setRange(
+    "ticketsAvailable",
+    values.ticketsAvailableMin,
+    values.ticketsAvailableMax,
+  );
+  setDateRange(
+    "lastModified",
+    values.lastModifiedStart,
+    values.lastModifiedEnd,
+  );
 
-  return params
+  return params;
 }
 ```
 
@@ -320,6 +352,7 @@ git commit -m "feat: translate days selection to startDateTime ranges in buildSe
 ## Task 3: Update `parseSearchParams` for `days`
 
 **Files:**
+
 - Modify: `src/utils/searchParams.ts`
 - Modify: `src/utils/searchParams.test.ts`
 
@@ -328,15 +361,15 @@ git commit -m "feat: translate days selection to startDateTime ranges in buildSe
 Add to the `describe('parseSearchParams')` block in `src/utils/searchParams.test.ts`:
 
 ```ts
-it('round-trips days directly from URL params', () => {
-  const result = parseSearchParams({ days: 'thu,sat' })
-  expect(result.days).toBe('thu,sat')
-})
+it("round-trips days directly from URL params", () => {
+  const result = parseSearchParams({ days: "thu,sat" });
+  expect(result.days).toBe("thu,sat");
+});
 
-it('returns undefined days when not in URL params', () => {
-  const result = parseSearchParams({})
-  expect(result.days).toBeUndefined()
-})
+it("returns undefined days when not in URL params", () => {
+  const result = parseSearchParams({});
+  expect(result.days).toBeUndefined();
+});
 ```
 
 - [ ] **Step 2: Run tests to verify they fail**
@@ -394,12 +427,16 @@ return {
   roomName: params.roomName,
   tableNumber: params.tableNumber,
   specialCategory: params.specialCategory,
-  ticketsAvailableMin: params.ticketsAvailable ? ticketsAvailable.min : undefined,
-  ticketsAvailableMax: params.ticketsAvailable ? ticketsAvailable.max : undefined,
+  ticketsAvailableMin: params.ticketsAvailable
+    ? ticketsAvailable.min
+    : undefined,
+  ticketsAvailableMax: params.ticketsAvailable
+    ? ticketsAvailable.max
+    : undefined,
   lastModifiedStart: params.lastModified ? lastModified.start : undefined,
   lastModifiedEnd: params.lastModified ? lastModified.end : undefined,
   days: params.days,
-}
+};
 ```
 
 - [ ] **Step 4: Run tests to verify they pass**
@@ -422,6 +459,7 @@ git commit -m "feat: round-trip days through parseSearchParams"
 ## Task 4: Add day checkboxes to SearchForm
 
 **Files:**
+
 - Modify: `src/components/SearchForm/SearchForm.tsx`
 - Modify: `src/components/SearchForm/SearchForm.test.tsx`
 
@@ -924,6 +962,7 @@ git commit -m "feat: add day checkboxes to SearchForm"
 ## Task 5: Add mutual exclusion and toggletip
 
 **Files:**
+
 - Modify: `src/components/SearchForm/SearchForm.tsx`
 - Modify: `src/components/SearchForm/SearchForm.test.tsx`
 

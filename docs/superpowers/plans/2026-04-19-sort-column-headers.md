@@ -12,20 +12,21 @@
 
 ## File Map
 
-| File | Change |
-|------|--------|
-| `src/utils/types.ts` | Add `sort?: string` to `SearchParams` |
-| `src/utils/api.ts` | No change — `sort` passes through the existing `Object.entries` loop automatically |
-| `src/routes/index.tsx` | Add `sort` to `validateSearch`; add `handleSort`; pass `onSort` to `SearchResults` |
-| `src/components/SearchResults/SearchResults.tsx` | Add `sortField` to `COLUMNS`; add `onSort` prop; render sortable `<th>` buttons with `aria-sort`; call `announce()` |
-| `src/routes/index.test.tsx` | Add: sort URL param test, sort resets page test |
-| `src/components/SearchResults/SearchResults.test.tsx` | Add: sort cycle tests, `aria-sort` tests, `announce` tests; update `renderSearchResults` helper |
+| File                                                  | Change                                                                                                              |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `src/utils/types.ts`                                  | Add `sort?: string` to `SearchParams`                                                                               |
+| `src/utils/api.ts`                                    | No change — `sort` passes through the existing `Object.entries` loop automatically                                  |
+| `src/routes/index.tsx`                                | Add `sort` to `validateSearch`; add `handleSort`; pass `onSort` to `SearchResults`                                  |
+| `src/components/SearchResults/SearchResults.tsx`      | Add `sortField` to `COLUMNS`; add `onSort` prop; render sortable `<th>` buttons with `aria-sort`; call `announce()` |
+| `src/routes/index.test.tsx`                           | Add: sort URL param test, sort resets page test                                                                     |
+| `src/components/SearchResults/SearchResults.test.tsx` | Add: sort cycle tests, `aria-sort` tests, `announce` tests; update `renderSearchResults` helper                     |
 
 ---
 
 ### Task 1: Add `sort` to `SearchParams`, route validation, and `handleSort`
 
 **Files:**
+
 - Modify: `src/utils/types.ts`
 - Modify: `src/routes/index.tsx`
 - Test: `src/routes/index.test.tsx`
@@ -35,10 +36,10 @@
 In `src/routes/index.test.tsx`, add after the existing tests:
 
 ```tsx
-test('sort param is read from URL without crashing', async () => {
-  await renderSearchPage('/?sort=startDateTime.asc')
-  expect(screen.getByRole('main')).toBeInTheDocument()
-})
+test("sort param is read from URL without crashing", async () => {
+  await renderSearchPage("/?sort=startDateTime.asc");
+  expect(screen.getByRole("main")).toBeInTheDocument();
+});
 ```
 
 - [ ] **Step 2: Run to verify it fails**
@@ -75,14 +76,18 @@ const handleSort = (sort: string | undefined) => {
       sort,
       page: undefined,
     }),
-  })
-}
+  });
+};
 ```
 
 Update the `<SearchResults>` render to pass `onSort` (the prop doesn't exist yet but TypeScript will error in Task 2 — add it now to avoid two-pass editing):
 
 ```tsx
-<SearchResults searchParams={search} onNavigate={handleNavigate} onSort={handleSort} />
+<SearchResults
+  searchParams={search}
+  onNavigate={handleNavigate}
+  onSort={handleSort}
+/>
 ```
 
 - [ ] **Step 5: Run the route tests to verify the first test passes**
@@ -105,6 +110,7 @@ git commit -m "feat: add sort to SearchParams, validateSearch, and handleSort"
 ### Task 2: Render sortable column headers with `aria-sort`
 
 **Files:**
+
 - Modify: `src/components/SearchResults/SearchResults.tsx`
 - Test: `src/components/SearchResults/SearchResults.test.tsx`
 
@@ -120,24 +126,30 @@ function renderSearchResults(
 ) {
   const rootRoute = createRootRoute({
     component: () => (
-      <SearchResults searchParams={searchParams} onNavigate={onNavigate} onSort={onSort} />
+      <SearchResults
+        searchParams={searchParams}
+        onNavigate={onNavigate}
+        onSort={onSort}
+      />
     ),
-  })
+  });
   const eventRoute = createRoute({
     getParentRoute: () => rootRoute,
-    path: '/event/$id',
+    path: "/event/$id",
     component: () => null,
-  })
+  });
   const router = createRouter({
     routeTree: rootRoute.addChildren([eventRoute]),
-    history: createMemoryHistory({ initialEntries: ['/'] }),
-  })
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    history: createMemoryHistory({ initialEntries: ["/"] }),
+  });
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   return render(
     <QueryClientProvider client={client}>
       <RouterProvider router={router} />
     </QueryClientProvider>,
-  )
+  );
 }
 ```
 
@@ -146,94 +158,94 @@ function renderSearchResults(
 Add to `src/components/SearchResults/SearchResults.test.tsx`:
 
 ```tsx
-test('sends sort param to API when provided in searchParams', async () => {
-  let capturedUrl: URL | null = null
+test("sends sort param to API when provided in searchParams", async () => {
+  let capturedUrl: URL | null = null;
   server.use(
-    http.get('/api/events/search', ({ request }) => {
-      capturedUrl = new URL(request.url)
+    http.get("/api/events/search", ({ request }) => {
+      capturedUrl = new URL(request.url);
       const response: EventSearchResponse = {
         data: [makeEvent()],
         meta: { total: 1 },
-        links: { self: '' },
+        links: { self: "" },
         error: null,
-      }
-      return HttpResponse.json(response)
+      };
+      return HttpResponse.json(response);
     }),
-  )
-  renderSearchResults({ sort: 'startDateTime.asc' })
-  await screen.findAllByRole('row')
-  expect(capturedUrl!.searchParams.get('sort')).toBe('startDateTime.asc')
-})
+  );
+  renderSearchResults({ sort: "startDateTime.asc" });
+  await screen.findAllByRole("row");
+  expect(capturedUrl!.searchParams.get("sort")).toBe("startDateTime.asc");
+});
 
-test('omits sort param from API when not in searchParams', async () => {
-  let capturedUrl: URL | null = null
+test("omits sort param from API when not in searchParams", async () => {
+  let capturedUrl: URL | null = null;
   server.use(
-    http.get('/api/events/search', ({ request }) => {
-      capturedUrl = new URL(request.url)
+    http.get("/api/events/search", ({ request }) => {
+      capturedUrl = new URL(request.url);
       const response: EventSearchResponse = {
         data: [makeEvent()],
         meta: { total: 1 },
-        links: { self: '' },
+        links: { self: "" },
         error: null,
-      }
-      return HttpResponse.json(response)
+      };
+      return HttpResponse.json(response);
     }),
-  )
-  renderSearchResults({})
-  await screen.findAllByRole('row')
-  expect(capturedUrl!.searchParams.has('sort')).toBe(false)
-})
+  );
+  renderSearchResults({});
+  await screen.findAllByRole("row");
+  expect(capturedUrl!.searchParams.has("sort")).toBe(false);
+});
 
 test('unsorted sortable column has aria-sort="none"', async () => {
-  renderSearchResults({})
-  const th = await screen.findByRole('columnheader', { name: 'Title' })
-  expect(th).toHaveAttribute('aria-sort', 'none')
-})
+  renderSearchResults({});
+  const th = await screen.findByRole("columnheader", { name: "Title" });
+  expect(th).toHaveAttribute("aria-sort", "none");
+});
 
 test('active ascending column has aria-sort="ascending"', async () => {
-  renderSearchResults({ sort: 'title.asc' })
-  const th = await screen.findByRole('columnheader', { name: 'Title' })
-  expect(th).toHaveAttribute('aria-sort', 'ascending')
-})
+  renderSearchResults({ sort: "title.asc" });
+  const th = await screen.findByRole("columnheader", { name: "Title" });
+  expect(th).toHaveAttribute("aria-sort", "ascending");
+});
 
 test('active descending column has aria-sort="descending"', async () => {
-  renderSearchResults({ sort: 'title.desc' })
-  const th = await screen.findByRole('columnheader', { name: 'Title' })
-  expect(th).toHaveAttribute('aria-sort', 'descending')
-})
+  renderSearchResults({ sort: "title.desc" });
+  const th = await screen.findByRole("columnheader", { name: "Title" });
+  expect(th).toHaveAttribute("aria-sort", "descending");
+});
 
-test('clicking unsorted column calls onSort with field.asc', async () => {
-  const user = userEvent.setup()
-  const onSort = vi.fn()
-  renderSearchResults({}, vi.fn(), onSort)
-  await screen.findAllByRole('row')
-  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
-  expect(onSort).toHaveBeenCalledWith('title.asc')
-})
+test("clicking unsorted column calls onSort with field.asc", async () => {
+  const user = userEvent.setup();
+  const onSort = vi.fn();
+  renderSearchResults({}, vi.fn(), onSort);
+  await screen.findAllByRole("row");
+  await user.click(screen.getByRole("button", { name: "Sort by Title" }));
+  expect(onSort).toHaveBeenCalledWith("title.asc");
+});
 
-test('clicking ascending column calls onSort with field.desc', async () => {
-  const user = userEvent.setup()
-  const onSort = vi.fn()
-  renderSearchResults({ sort: 'title.asc' }, vi.fn(), onSort)
-  await screen.findAllByRole('row')
-  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
-  expect(onSort).toHaveBeenCalledWith('title.desc')
-})
+test("clicking ascending column calls onSort with field.desc", async () => {
+  const user = userEvent.setup();
+  const onSort = vi.fn();
+  renderSearchResults({ sort: "title.asc" }, vi.fn(), onSort);
+  await screen.findAllByRole("row");
+  await user.click(screen.getByRole("button", { name: "Sort by Title" }));
+  expect(onSort).toHaveBeenCalledWith("title.desc");
+});
 
-test('clicking descending column calls onSort with undefined (clears sort)', async () => {
-  const user = userEvent.setup()
-  const onSort = vi.fn()
-  renderSearchResults({ sort: 'title.desc' }, vi.fn(), onSort)
-  await screen.findAllByRole('row')
-  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
-  expect(onSort).toHaveBeenCalledWith(undefined)
-})
+test("clicking descending column calls onSort with undefined (clears sort)", async () => {
+  const user = userEvent.setup();
+  const onSort = vi.fn();
+  renderSearchResults({ sort: "title.desc" }, vi.fn(), onSort);
+  await screen.findAllByRole("row");
+  await user.click(screen.getByRole("button", { name: "Sort by Title" }));
+  expect(onSort).toHaveBeenCalledWith(undefined);
+});
 
 test('day column has aria-sort="ascending" when sorted by startDateTime ascending', async () => {
-  renderSearchResults({ sort: 'startDateTime.asc' })
-  const th = await screen.findByRole('columnheader', { name: 'Day' })
-  expect(th).toHaveAttribute('aria-sort', 'ascending')
-})
+  renderSearchResults({ sort: "startDateTime.asc" });
+  const th = await screen.findByRole("columnheader", { name: "Day" });
+  expect(th).toHaveAttribute("aria-sort", "ascending");
+});
 ```
 
 - [ ] **Step 3: Run to verify they fail**
@@ -250,41 +262,77 @@ Replace the `COLUMNS` const entirely:
 
 ```tsx
 const COLUMNS = [
-  { key: 'gameId', label: 'Game ID', sortField: 'gameId' },
-  { key: 'title', label: 'Title', sortField: 'title' },
-  { key: 'eventType', label: 'Type', sortField: 'eventType' },
-  { key: 'group', label: 'Group', sortField: 'group' },
-  { key: 'shortDescription', label: 'Short Description', sortField: 'shortDescription' },
-  { key: 'longDescription', label: 'Long Description', sortField: 'longDescription' },
-  { key: 'gameSystem', label: 'Game System', sortField: 'gameSystem' },
-  { key: 'rulesEdition', label: 'Rules Edition', sortField: 'rulesEdition' },
-  { key: 'minPlayers', label: 'Min Players', sortField: 'minPlayers' },
-  { key: 'maxPlayers', label: 'Max Players', sortField: 'maxPlayers' },
-  { key: 'ageRequired', label: 'Age Required', sortField: 'ageRequired' },
-  { key: 'experienceRequired', label: 'Experience Required', sortField: 'experienceRequired' },
-  { key: 'materialsProvided', label: 'Materials Provided', sortField: 'materialsProvided' },
-  { key: 'materialsRequired', label: 'Materials Required', sortField: 'materialsRequired' },
-  { key: 'materialsRequiredDetails', label: 'Materials Required Details', sortField: 'materialsRequiredDetails' },
-  { key: 'day', label: 'Day', sortField: 'startDateTime' },
-  { key: 'startDateTime', label: 'Start', sortField: 'startDateTime' },
-  { key: 'duration', label: 'Duration', sortField: 'duration' },
-  { key: 'endDateTime', label: 'End', sortField: 'endDateTime' },
-  { key: 'gmNames', label: 'GMs', sortField: 'gmNames' },
-  { key: 'website', label: 'Website', sortField: 'website' },
-  { key: 'email', label: 'Email', sortField: 'email' },
-  { key: 'tournament', label: 'Tournament', sortField: 'tournament' },
-  { key: 'roundNumber', label: 'Round Number', sortField: 'roundNumber' },
-  { key: 'totalRounds', label: 'Total Rounds', sortField: 'totalRounds' },
-  { key: 'minimumPlayTime', label: 'Min Time', sortField: 'minimumPlayTime' },
-  { key: 'attendeeRegistration', label: 'Attendee Registration', sortField: 'attendeeRegistration' },
-  { key: 'cost', label: 'Cost', sortField: 'cost' },
-  { key: 'location', label: 'Location', sortField: 'location' },
-  { key: 'roomName', label: 'Room', sortField: 'roomName' },
-  { key: 'tableNumber', label: 'Table Number', sortField: 'tableNumber' },
-  { key: 'specialCategory', label: 'Special Category', sortField: 'specialCategory' },
-  { key: 'ticketsAvailable', label: 'Tickets Available', sortField: 'ticketsAvailable' },
-  { key: 'lastModified', label: 'Last Modified', sortField: 'lastModified' },
-] as const
+  { key: "gameId", label: "Game ID", sortField: "gameId" },
+  { key: "title", label: "Title", sortField: "title" },
+  { key: "eventType", label: "Type", sortField: "eventType" },
+  { key: "group", label: "Group", sortField: "group" },
+  {
+    key: "shortDescription",
+    label: "Short Description",
+    sortField: "shortDescription",
+  },
+  {
+    key: "longDescription",
+    label: "Long Description",
+    sortField: "longDescription",
+  },
+  { key: "gameSystem", label: "Game System", sortField: "gameSystem" },
+  { key: "rulesEdition", label: "Rules Edition", sortField: "rulesEdition" },
+  { key: "minPlayers", label: "Min Players", sortField: "minPlayers" },
+  { key: "maxPlayers", label: "Max Players", sortField: "maxPlayers" },
+  { key: "ageRequired", label: "Age Required", sortField: "ageRequired" },
+  {
+    key: "experienceRequired",
+    label: "Experience Required",
+    sortField: "experienceRequired",
+  },
+  {
+    key: "materialsProvided",
+    label: "Materials Provided",
+    sortField: "materialsProvided",
+  },
+  {
+    key: "materialsRequired",
+    label: "Materials Required",
+    sortField: "materialsRequired",
+  },
+  {
+    key: "materialsRequiredDetails",
+    label: "Materials Required Details",
+    sortField: "materialsRequiredDetails",
+  },
+  { key: "day", label: "Day", sortField: "startDateTime" },
+  { key: "startDateTime", label: "Start", sortField: "startDateTime" },
+  { key: "duration", label: "Duration", sortField: "duration" },
+  { key: "endDateTime", label: "End", sortField: "endDateTime" },
+  { key: "gmNames", label: "GMs", sortField: "gmNames" },
+  { key: "website", label: "Website", sortField: "website" },
+  { key: "email", label: "Email", sortField: "email" },
+  { key: "tournament", label: "Tournament", sortField: "tournament" },
+  { key: "roundNumber", label: "Round Number", sortField: "roundNumber" },
+  { key: "totalRounds", label: "Total Rounds", sortField: "totalRounds" },
+  { key: "minimumPlayTime", label: "Min Time", sortField: "minimumPlayTime" },
+  {
+    key: "attendeeRegistration",
+    label: "Attendee Registration",
+    sortField: "attendeeRegistration",
+  },
+  { key: "cost", label: "Cost", sortField: "cost" },
+  { key: "location", label: "Location", sortField: "location" },
+  { key: "roomName", label: "Room", sortField: "roomName" },
+  { key: "tableNumber", label: "Table Number", sortField: "tableNumber" },
+  {
+    key: "specialCategory",
+    label: "Special Category",
+    sortField: "specialCategory",
+  },
+  {
+    key: "ticketsAvailable",
+    label: "Tickets Available",
+    sortField: "ticketsAvailable",
+  },
+  { key: "lastModified", label: "Last Modified", sortField: "lastModified" },
+] as const;
 ```
 
 - [ ] **Step 5: Update `SearchResultsProps` and add sort state derivation**
@@ -293,9 +341,9 @@ Replace the `SearchResultsProps` interface:
 
 ```tsx
 interface SearchResultsProps {
-  searchParams: SearchParams
-  onNavigate: (page: number, limit: number) => void
-  onSort: (sort: string | undefined) => void
+  searchParams: SearchParams;
+  onNavigate: (page: number, limit: number) => void;
+  onSort: (sort: string | undefined) => void;
 }
 ```
 
@@ -303,18 +351,18 @@ At the top of the `SearchResults` function body, after the existing hook calls, 
 
 ```tsx
 const [activeSortField, activeSortDir] = searchParams.sort
-  ? searchParams.sort.split('.')
-  : [undefined, undefined]
+  ? searchParams.sort.split(".")
+  : [undefined, undefined];
 
 const handleSortClick = (sortField: string, label: string) => {
   if (activeSortField !== sortField) {
-    onSort(`${sortField}.asc`)
-  } else if (activeSortDir === 'asc') {
-    onSort(`${sortField}.desc`)
+    onSort(`${sortField}.asc`);
+  } else if (activeSortDir === "asc") {
+    onSort(`${sortField}.desc`);
   } else {
-    onSort(undefined)
+    onSort(undefined);
   }
-}
+};
 ```
 
 Update the function signature to destructure `onSort`:
@@ -328,38 +376,40 @@ export function SearchResults({ searchParams, onNavigate, onSort }: SearchResult
 Replace:
 
 ```tsx
-{visibleColumns.map((col) => (
-  <th key={col.key}>{col.label}</th>
-))}
+{
+  visibleColumns.map((col) => <th key={col.key}>{col.label}</th>);
+}
 ```
 
 With:
 
 ```tsx
-{visibleColumns.map((col) => {
-  const isActive = activeSortField === col.sortField
-  const ariaSort = isActive
-    ? activeSortDir === 'asc'
-      ? ('ascending' as const)
-      : ('descending' as const)
-    : ('none' as const)
-  return (
-    <th key={col.key} aria-sort={ariaSort} scope="col" aria-label={col.label}>
-      <button
-        type="button"
-        aria-label={`Sort by ${col.label}`}
-        onClick={() => handleSortClick(col.sortField, col.label)}
-      >
-        {col.label}
-        {isActive && (
-          <span aria-hidden="true">
-            {activeSortDir === 'asc' ? ' ▲' : ' ▼'}
-          </span>
-        )}
-      </button>
-    </th>
-  )
-})}
+{
+  visibleColumns.map((col) => {
+    const isActive = activeSortField === col.sortField;
+    const ariaSort = isActive
+      ? activeSortDir === "asc"
+        ? ("ascending" as const)
+        : ("descending" as const)
+      : ("none" as const);
+    return (
+      <th key={col.key} aria-sort={ariaSort} scope="col" aria-label={col.label}>
+        <button
+          type="button"
+          aria-label={`Sort by ${col.label}`}
+          onClick={() => handleSortClick(col.sortField, col.label)}
+        >
+          {col.label}
+          {isActive && (
+            <span aria-hidden="true">
+              {activeSortDir === "asc" ? " ▲" : " ▼"}
+            </span>
+          )}
+        </button>
+      </th>
+    );
+  });
+}
 ```
 
 - [ ] **Step 7: Run the tests to verify they pass**
@@ -382,6 +432,7 @@ git commit -m "feat: render sortable column headers with three-state toggle and 
 ### Task 3: Announce sort changes for screen readers
 
 **Files:**
+
 - Modify: `src/components/SearchResults/SearchResults.tsx`
 - Test: `src/components/SearchResults/SearchResults.test.tsx`
 
@@ -390,48 +441,48 @@ git commit -m "feat: render sortable column headers with three-state toggle and 
 Add these imports to `src/components/SearchResults/SearchResults.test.tsx` (after the existing imports):
 
 ```tsx
-import * as announceModule from '../../lib/announce'
-import { __reset } from '../../lib/announce'
+import * as announceModule from "../../lib/announce";
+import { __reset } from "../../lib/announce";
 ```
 
 Add a second `beforeEach` after the existing `localStorage.clear()` one:
 
 ```tsx
 beforeEach(() => {
-  __reset()
-  vi.restoreAllMocks()
-})
+  __reset();
+  vi.restoreAllMocks();
+});
 ```
 
 Add the tests:
 
 ```tsx
 test('announces "Sorted by Title, ascending" when clicking unsorted column', async () => {
-  const user = userEvent.setup()
-  const spy = vi.spyOn(announceModule, 'announce')
-  renderSearchResults({}, vi.fn(), vi.fn())
-  await screen.findAllByRole('row')
-  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
-  expect(spy).toHaveBeenCalledWith('Sorted by Title, ascending')
-})
+  const user = userEvent.setup();
+  const spy = vi.spyOn(announceModule, "announce");
+  renderSearchResults({}, vi.fn(), vi.fn());
+  await screen.findAllByRole("row");
+  await user.click(screen.getByRole("button", { name: "Sort by Title" }));
+  expect(spy).toHaveBeenCalledWith("Sorted by Title, ascending");
+});
 
 test('announces "Sorted by Title, descending" when clicking ascending column', async () => {
-  const user = userEvent.setup()
-  const spy = vi.spyOn(announceModule, 'announce')
-  renderSearchResults({ sort: 'title.asc' }, vi.fn(), vi.fn())
-  await screen.findAllByRole('row')
-  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
-  expect(spy).toHaveBeenCalledWith('Sorted by Title, descending')
-})
+  const user = userEvent.setup();
+  const spy = vi.spyOn(announceModule, "announce");
+  renderSearchResults({ sort: "title.asc" }, vi.fn(), vi.fn());
+  await screen.findAllByRole("row");
+  await user.click(screen.getByRole("button", { name: "Sort by Title" }));
+  expect(spy).toHaveBeenCalledWith("Sorted by Title, descending");
+});
 
 test('announces "Sort cleared" when clicking descending column', async () => {
-  const user = userEvent.setup()
-  const spy = vi.spyOn(announceModule, 'announce')
-  renderSearchResults({ sort: 'title.desc' }, vi.fn(), vi.fn())
-  await screen.findAllByRole('row')
-  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
-  expect(spy).toHaveBeenCalledWith('Sort cleared')
-})
+  const user = userEvent.setup();
+  const spy = vi.spyOn(announceModule, "announce");
+  renderSearchResults({ sort: "title.desc" }, vi.fn(), vi.fn());
+  await screen.findAllByRole("row");
+  await user.click(screen.getByRole("button", { name: "Sort by Title" }));
+  expect(spy).toHaveBeenCalledWith("Sort cleared");
+});
 ```
 
 - [ ] **Step 2: Run to verify they fail**
@@ -447,7 +498,7 @@ Expected: the three announce tests fail — `announce` is not yet called.
 Add import at the top of `src/components/SearchResults/SearchResults.tsx`:
 
 ```tsx
-import { announce } from '../../lib/announce'
+import { announce } from "../../lib/announce";
 ```
 
 Update `handleSortClick` to call `announce`:
@@ -455,16 +506,16 @@ Update `handleSortClick` to call `announce`:
 ```tsx
 const handleSortClick = (sortField: string, label: string) => {
   if (activeSortField !== sortField) {
-    onSort(`${sortField}.asc`)
-    announce(`Sorted by ${label}, ascending`)
-  } else if (activeSortDir === 'asc') {
-    onSort(`${sortField}.desc`)
-    announce(`Sorted by ${label}, descending`)
+    onSort(`${sortField}.asc`);
+    announce(`Sorted by ${label}, ascending`);
+  } else if (activeSortDir === "asc") {
+    onSort(`${sortField}.desc`);
+    announce(`Sorted by ${label}, descending`);
   } else {
-    onSort(undefined)
-    announce('Sort cleared')
+    onSort(undefined);
+    announce("Sort cleared");
   }
-}
+};
 ```
 
 - [ ] **Step 4: Run to verify all tests pass**
@@ -487,6 +538,7 @@ git commit -m "feat: announce sort state changes via announce() for screen reade
 ### Task 4: Integration test — sort navigates and resets page
 
 **Files:**
+
 - Test: `src/routes/index.test.tsx`
 
 The route already has `handleSort` wired (Task 1). Now that the sort button exists (Task 2), the integration test can be written and run.
@@ -496,29 +548,29 @@ The route already has `handleSort` wired (Task 1). Now that the sort button exis
 Add to `src/routes/index.test.tsx`:
 
 ```tsx
-test('clicking a sort column header updates the URL with sort param and resets page', async () => {
-  const user = userEvent.setup()
-  let latestUrl: URL | null = null
+test("clicking a sort column header updates the URL with sort param and resets page", async () => {
+  const user = userEvent.setup();
+  let latestUrl: URL | null = null;
   server.use(
-    http.get('/api/events/search', ({ request }) => {
-      latestUrl = new URL(request.url)
+    http.get("/api/events/search", ({ request }) => {
+      latestUrl = new URL(request.url);
       const response: EventSearchResponse = {
         data: [makeEvent()],
         meta: { total: 200 },
-        links: { self: '' },
+        links: { self: "" },
         error: null,
-      }
-      return HttpResponse.json(response)
+      };
+      return HttpResponse.json(response);
     }),
-  )
-  await renderSearchPage('/?page=3')
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
-  latestUrl = null
-  await user.click(screen.getByRole('button', { name: 'Sort by Start' }))
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
-  expect(latestUrl!.searchParams.has('page')).toBe(false)
-  expect(latestUrl!.searchParams.get('sort')).toBe('startDateTime.asc')
-})
+  );
+  await renderSearchPage("/?page=3");
+  await screen.findAllByRole("navigation", { name: "Pagination" });
+  latestUrl = null;
+  await user.click(screen.getByRole("button", { name: "Sort by Start" }));
+  await screen.findAllByRole("navigation", { name: "Pagination" });
+  expect(latestUrl!.searchParams.has("page")).toBe(false);
+  expect(latestUrl!.searchParams.get("sort")).toBe("startDateTime.asc");
+});
 ```
 
 - [ ] **Step 2: Run to verify it fails**

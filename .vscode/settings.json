@@ -1,6 +1,8 @@
 {
-    "eslint.validate": [
-        "glimmer-ts",
-        "glimmer-js"
-    ]
+  "eslint.validate": ["typescript", "typescriptreact"],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
 }

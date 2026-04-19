@@ -127,23 +127,23 @@ git commit -m "chore: delete Ember codebase"
 
 ```typescript
 /// <reference types="vitest" />
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 
 export default defineConfig({
   plugins: [
     TanStackRouterVite({
-      routeFileIgnorePattern: '\\.test\\.tsx?$',
+      routeFileIgnorePattern: "\\.test\\.tsx?$",
     }),
     react(),
   ],
   test: {
     globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
+    environment: "jsdom",
+    setupFiles: ["./src/test/setup.ts"],
   },
-})
+});
 ```
 
 - [ ] **Step 3: Create `tsconfig.json`**
@@ -227,6 +227,7 @@ git commit -m "chore: scaffold Vite React TS project"
 ## Task 3: Types, enums, and search param utilities (TDD)
 
 **Files:**
+
 - Create: `src/utils/types.ts`
 - Create: `src/utils/enums.ts`
 - Create: `src/utils/searchParams.ts`
@@ -236,147 +237,147 @@ git commit -m "chore: scaffold Vite React TS project"
 
 ```typescript
 export interface EventAttributes {
-  gameId: string
-  year: number
-  group: string
-  title: string
-  shortDescription: string
-  longDescription: string
-  eventType: string
-  gameSystem: string
-  rulesEdition: string
-  minPlayers: number
-  maxPlayers: number
-  ageRequired: string
-  experienceRequired: string
-  materialsProvided: string
-  materialsRequired: string
-  materialsRequiredDetails: string
-  startDateTime: string
-  duration: number
-  endDateTime: string
-  gmNames: string
-  website: string
-  email: string
-  tournament: string
-  roundNumber: number
-  totalRounds: number
-  minimumPlayTime: number
-  attendeeRegistration: string
-  cost: number
-  location: string
-  roomName: string
-  tableNumber: string
-  specialCategory: string
-  ticketsAvailable: number
-  lastModified: string
-  alsoRuns: string
-  prize: string
-  rulesComplexity: string
-  originalOrder: number
+  gameId: string;
+  year: number;
+  group: string;
+  title: string;
+  shortDescription: string;
+  longDescription: string;
+  eventType: string;
+  gameSystem: string;
+  rulesEdition: string;
+  minPlayers: number;
+  maxPlayers: number;
+  ageRequired: string;
+  experienceRequired: string;
+  materialsProvided: string;
+  materialsRequired: string;
+  materialsRequiredDetails: string;
+  startDateTime: string;
+  duration: number;
+  endDateTime: string;
+  gmNames: string;
+  website: string;
+  email: string;
+  tournament: string;
+  roundNumber: number;
+  totalRounds: number;
+  minimumPlayTime: number;
+  attendeeRegistration: string;
+  cost: number;
+  location: string;
+  roomName: string;
+  tableNumber: string;
+  specialCategory: string;
+  ticketsAvailable: number;
+  lastModified: string;
+  alsoRuns: string;
+  prize: string;
+  rulesComplexity: string;
+  originalOrder: number;
 }
 
 export interface Event {
-  id: string
-  type: string
-  attributes: EventAttributes
+  id: string;
+  type: string;
+  attributes: EventAttributes;
 }
 
 export interface EventSearchResponse {
-  data: Event[]
-  meta: { total: number }
+  data: Event[];
+  meta: { total: number };
   links: {
-    self: string
-    first?: string
-    last?: string
-    previous?: string
-    next?: string
-  }
-  error: { status: string; detail: string } | null
+    self: string;
+    first?: string;
+    last?: string;
+    previous?: string;
+    next?: string;
+  };
+  error: { status: string; detail: string } | null;
 }
 
 /** URL search params — map directly to API query params. Ranges encoded as "[min,max]". */
 export interface SearchParams {
-  limit?: number
-  filter?: string
-  gameId?: string
-  title?: string
-  eventType?: string
-  group?: string
-  shortDescription?: string
-  longDescription?: string
-  gameSystem?: string
-  rulesEdition?: string
-  minPlayers?: string
-  maxPlayers?: string
-  ageRequired?: string
-  experienceRequired?: string
-  materialsProvided?: string
-  startDateTime?: string
-  duration?: string
-  endDateTime?: string
-  gmNames?: string
-  website?: string
-  email?: string
-  tournament?: string
-  roundNumber?: string
-  totalRounds?: string
-  minimumPlayTime?: string
-  attendeeRegistration?: string
-  cost?: string
-  location?: string
-  roomName?: string
-  tableNumber?: string
-  specialCategory?: string
-  ticketsAvailable?: string
-  lastModified?: string
+  limit?: number;
+  filter?: string;
+  gameId?: string;
+  title?: string;
+  eventType?: string;
+  group?: string;
+  shortDescription?: string;
+  longDescription?: string;
+  gameSystem?: string;
+  rulesEdition?: string;
+  minPlayers?: string;
+  maxPlayers?: string;
+  ageRequired?: string;
+  experienceRequired?: string;
+  materialsProvided?: string;
+  startDateTime?: string;
+  duration?: string;
+  endDateTime?: string;
+  gmNames?: string;
+  website?: string;
+  email?: string;
+  tournament?: string;
+  roundNumber?: string;
+  totalRounds?: string;
+  minimumPlayTime?: string;
+  attendeeRegistration?: string;
+  cost?: string;
+  location?: string;
+  roomName?: string;
+  tableNumber?: string;
+  specialCategory?: string;
+  ticketsAvailable?: string;
+  lastModified?: string;
 }
 
 /** React Hook Form values — ranges split into min/max fields. */
 export interface SearchFormValues {
-  filter?: string
-  gameId?: string
-  title?: string
-  eventType?: string
-  group?: string
-  shortDescription?: string
-  longDescription?: string
-  gameSystem?: string
-  rulesEdition?: string
-  minPlayersMin?: string
-  minPlayersMax?: string
-  maxPlayersMin?: string
-  maxPlayersMax?: string
-  ageRequired?: string
-  experienceRequired?: string
-  materialsProvided?: boolean
-  startDateTimeStart?: string
-  startDateTimeEnd?: string
-  durationMin?: string
-  durationMax?: string
-  endDateTimeStart?: string
-  endDateTimeEnd?: string
-  gmNames?: string
-  website?: string
-  email?: string
-  tournament?: boolean
-  roundNumberMin?: string
-  roundNumberMax?: string
-  totalRoundsMin?: string
-  totalRoundsMax?: string
-  minimumPlayTimeMin?: string
-  minimumPlayTimeMax?: string
-  attendeeRegistration?: string
-  costMin?: string
-  costMax?: string
-  location?: string
-  roomName?: string
-  tableNumber?: string
-  specialCategory?: string
-  ticketsAvailableMin?: string
-  ticketsAvailableMax?: string
-  lastModifiedStart?: string
-  lastModifiedEnd?: string
+  filter?: string;
+  gameId?: string;
+  title?: string;
+  eventType?: string;
+  group?: string;
+  shortDescription?: string;
+  longDescription?: string;
+  gameSystem?: string;
+  rulesEdition?: string;
+  minPlayersMin?: string;
+  minPlayersMax?: string;
+  maxPlayersMin?: string;
+  maxPlayersMax?: string;
+  ageRequired?: string;
+  experienceRequired?: string;
+  materialsProvided?: boolean;
+  startDateTimeStart?: string;
+  startDateTimeEnd?: string;
+  durationMin?: string;
+  durationMax?: string;
+  endDateTimeStart?: string;
+  endDateTimeEnd?: string;
+  gmNames?: string;
+  website?: string;
+  email?: string;
+  tournament?: boolean;
+  roundNumberMin?: string;
+  roundNumberMax?: string;
+  totalRoundsMin?: string;
+  totalRoundsMax?: string;
+  minimumPlayTimeMin?: string;
+  minimumPlayTimeMax?: string;
+  attendeeRegistration?: string;
+  costMin?: string;
+  costMax?: string;
+  location?: string;
+  roomName?: string;
+  tableNumber?: string;
+  specialCategory?: string;
+  ticketsAvailableMin?: string;
+  ticketsAvailableMax?: string;
+  lastModifiedStart?: string;
+  lastModifiedEnd?: string;
 }
 ```
 
@@ -384,52 +385,52 @@ export interface SearchFormValues {
 
 ```typescript
 export const EVENT_TYPES: Record<string, string> = {
-  SEM: 'SEM - Seminar',
-  ZED: 'ZED - Isle of Misfit Events',
-  ENT: 'ENT - Entertainment Events',
-  RPG: 'RPG - Role Playing Game',
-  BGM: 'BGM - Board Game',
-  CGM: 'CGM - Non-Collectible / Tradable Card Game',
-  WKS: 'WKS - Workshop',
-  MHE: 'MHE - Miniature Hobby Events',
-  LRP: 'LRP - LARP',
-  TRD: 'TRD - Trade Day Event',
-  HMN: 'HMN - Historical Miniatures',
-  NMN: 'NMN - Non-Historical Miniatures',
-  TCG: 'TCG - Tradable Card Game',
-  FLM: 'FLM - Film Fest',
-  KID: 'KID - Kids Activities',
-  ANI: 'ANI - Anime Activities',
-}
+  SEM: "SEM - Seminar",
+  ZED: "ZED - Isle of Misfit Events",
+  ENT: "ENT - Entertainment Events",
+  RPG: "RPG - Role Playing Game",
+  BGM: "BGM - Board Game",
+  CGM: "CGM - Non-Collectible / Tradable Card Game",
+  WKS: "WKS - Workshop",
+  MHE: "MHE - Miniature Hobby Events",
+  LRP: "LRP - LARP",
+  TRD: "TRD - Trade Day Event",
+  HMN: "HMN - Historical Miniatures",
+  NMN: "NMN - Non-Historical Miniatures",
+  TCG: "TCG - Tradable Card Game",
+  FLM: "FLM - Film Fest",
+  KID: "KID - Kids Activities",
+  ANI: "ANI - Anime Activities",
+};
 
 export const AGE_GROUPS: Record<string, string> = {
-  kids: 'Kids only (12 and under)',
-  everyone: 'Everyone (6+)',
-  teen: 'Teen (13+)',
-  mature: 'Mature (18+)',
-  drinking: '21+',
-}
+  kids: "Kids only (12 and under)",
+  everyone: "Everyone (6+)",
+  teen: "Teen (13+)",
+  mature: "Mature (18+)",
+  drinking: "21+",
+};
 
 export const EXP: Record<string, string> = {
   none: "None (You've never played before - rules will be taught)",
   some: "Some (You've played it a bit and understand the basics)",
-  expert: 'Expert (You play it regularly and know all the rules)',
-}
+  expert: "Expert (You play it regularly and know all the rules)",
+};
 
 export const REGISTRATION: Record<string, string> = {
-  open: 'Yes, they can register for this round without having played in any other events',
-  free: 'No, this event does not require tickets!',
-  vig: 'VIG-only!',
-  invite: 'No, this event is invite-only.',
-}
+  open: "Yes, they can register for this round without having played in any other events",
+  free: "No, this event does not require tickets!",
+  vig: "VIG-only!",
+  invite: "No, this event is invite-only.",
+};
 
 export const CATEGORY: Record<string, string> = {
-  none: 'None',
-  official: 'Gen Con presents',
-  premier: 'Premier Event',
-}
+  none: "None",
+  official: "Gen Con presents",
+  premier: "Premier Event",
+};
 
-export const EST = 'America/New_York'
+export const EST = "America/New_York";
 ```
 
 - [ ] **Step 3: Write failing tests for `src/utils/searchParams.ts`**
@@ -437,113 +438,121 @@ export const EST = 'America/New_York'
 Create `src/utils/searchParams.test.ts`:
 
 ```typescript
-import { buildSearchParams, parseSearchParams } from './searchParams'
+import { buildSearchParams, parseSearchParams } from "./searchParams";
 
-describe('buildSearchParams', () => {
-  it('omits empty/undefined fields', () => {
-    const result = buildSearchParams({ title: '' })
-    expect(result).not.toHaveProperty('title')
-  })
+describe("buildSearchParams", () => {
+  it("omits empty/undefined fields", () => {
+    const result = buildSearchParams({ title: "" });
+    expect(result).not.toHaveProperty("title");
+  });
 
-  it('includes non-empty text fields', () => {
-    const result = buildSearchParams({ title: 'Dungeons' })
-    expect(result.title).toBe('Dungeons')
-  })
+  it("includes non-empty text fields", () => {
+    const result = buildSearchParams({ title: "Dungeons" });
+    expect(result.title).toBe("Dungeons");
+  });
 
-  it('always sets limit to 500', () => {
-    const result = buildSearchParams({})
-    expect(result.limit).toBe(500)
-  })
+  it("always sets limit to 500", () => {
+    const result = buildSearchParams({});
+    expect(result.limit).toBe(500);
+  });
 
   it('encodes a numeric range as "[min,max]"', () => {
-    const result = buildSearchParams({ minPlayersMin: '2', minPlayersMax: '6' })
-    expect(result.minPlayers).toBe('[2,6]')
-  })
-
-  it('encodes a partial range with empty side', () => {
-    const result = buildSearchParams({ minPlayersMin: '2', minPlayersMax: '' })
-    expect(result.minPlayers).toBe('[2,]')
-  })
-
-  it('omits range when both sides are empty', () => {
-    const result = buildSearchParams({ minPlayersMin: '', minPlayersMax: '' })
-    expect(result).not.toHaveProperty('minPlayers')
-  })
-
-  it('encodes a date range appending :00Z to each side', () => {
     const result = buildSearchParams({
-      startDateTimeStart: '2024-08-01T10:00',
-      startDateTimeEnd: '2024-08-01T14:00',
-    })
-    expect(result.startDateTime).toBe('[2024-08-01T10:00:00Z,2024-08-01T14:00:00Z]')
-  })
+      minPlayersMin: "2",
+      minPlayersMax: "6",
+    });
+    expect(result.minPlayers).toBe("[2,6]");
+  });
 
-  it('encodes a partial date range', () => {
-    const result = buildSearchParams({ startDateTimeStart: '2024-08-01T10:00', startDateTimeEnd: '' })
-    expect(result.startDateTime).toBe('[2024-08-01T10:00:00Z,]')
-  })
+  it("encodes a partial range with empty side", () => {
+    const result = buildSearchParams({ minPlayersMin: "2", minPlayersMax: "" });
+    expect(result.minPlayers).toBe("[2,]");
+  });
+
+  it("omits range when both sides are empty", () => {
+    const result = buildSearchParams({ minPlayersMin: "", minPlayersMax: "" });
+    expect(result).not.toHaveProperty("minPlayers");
+  });
+
+  it("encodes a date range appending :00Z to each side", () => {
+    const result = buildSearchParams({
+      startDateTimeStart: "2024-08-01T10:00",
+      startDateTimeEnd: "2024-08-01T14:00",
+    });
+    expect(result.startDateTime).toBe(
+      "[2024-08-01T10:00:00Z,2024-08-01T14:00:00Z]",
+    );
+  });
+
+  it("encodes a partial date range", () => {
+    const result = buildSearchParams({
+      startDateTimeStart: "2024-08-01T10:00",
+      startDateTimeEnd: "",
+    });
+    expect(result.startDateTime).toBe("[2024-08-01T10:00:00Z,]");
+  });
 
   it('encodes boolean true as "true"', () => {
-    const result = buildSearchParams({ materialsProvided: true })
-    expect(result.materialsProvided).toBe('true')
-  })
+    const result = buildSearchParams({ materialsProvided: true });
+    expect(result.materialsProvided).toBe("true");
+  });
 
-  it('omits boolean false', () => {
-    const result = buildSearchParams({ materialsProvided: false })
-    expect(result).not.toHaveProperty('materialsProvided')
-  })
-})
+  it("omits boolean false", () => {
+    const result = buildSearchParams({ materialsProvided: false });
+    expect(result).not.toHaveProperty("materialsProvided");
+  });
+});
 
-describe('parseSearchParams', () => {
-  it('returns empty object from empty params', () => {
-    const result = parseSearchParams({})
-    expect(result.title).toBeUndefined()
-    expect(result.minPlayersMin).toBeUndefined()
-  })
+describe("parseSearchParams", () => {
+  it("returns empty object from empty params", () => {
+    const result = parseSearchParams({});
+    expect(result.title).toBeUndefined();
+    expect(result.minPlayersMin).toBeUndefined();
+  });
 
-  it('passes through text fields unchanged', () => {
-    const result = parseSearchParams({ title: 'Dungeons' })
-    expect(result.title).toBe('Dungeons')
-  })
+  it("passes through text fields unchanged", () => {
+    const result = parseSearchParams({ title: "Dungeons" });
+    expect(result.title).toBe("Dungeons");
+  });
 
   it('splits a numeric range "[2,6]" into min and max', () => {
-    const result = parseSearchParams({ minPlayers: '[2,6]' })
-    expect(result.minPlayersMin).toBe('2')
-    expect(result.minPlayersMax).toBe('6')
-  })
+    const result = parseSearchParams({ minPlayers: "[2,6]" });
+    expect(result.minPlayersMin).toBe("2");
+    expect(result.minPlayersMax).toBe("6");
+  });
 
   it('handles a partial range "[2,]"', () => {
-    const result = parseSearchParams({ minPlayers: '[2,]' })
-    expect(result.minPlayersMin).toBe('2')
-    expect(result.minPlayersMax).toBe('')
-  })
+    const result = parseSearchParams({ minPlayers: "[2,]" });
+    expect(result.minPlayersMin).toBe("2");
+    expect(result.minPlayersMax).toBe("");
+  });
 
-  it('strips :00Z from date range values', () => {
+  it("strips :00Z from date range values", () => {
     const result = parseSearchParams({
-      startDateTime: '[2024-08-01T10:00:00Z,2024-08-01T14:00:00Z]',
-    })
-    expect(result.startDateTimeStart).toBe('2024-08-01T10:00')
-    expect(result.startDateTimeEnd).toBe('2024-08-01T14:00')
-  })
+      startDateTime: "[2024-08-01T10:00:00Z,2024-08-01T14:00:00Z]",
+    });
+    expect(result.startDateTimeStart).toBe("2024-08-01T10:00");
+    expect(result.startDateTimeEnd).toBe("2024-08-01T14:00");
+  });
 
-  it('roundtrips: buildSearchParams then parseSearchParams returns original values', () => {
+  it("roundtrips: buildSearchParams then parseSearchParams returns original values", () => {
     const original = {
-      title: 'Test',
-      minPlayersMin: '2',
-      minPlayersMax: '6',
-      startDateTimeStart: '2024-08-01T10:00',
-      startDateTimeEnd: '2024-08-01T14:00',
+      title: "Test",
+      minPlayersMin: "2",
+      minPlayersMax: "6",
+      startDateTimeStart: "2024-08-01T10:00",
+      startDateTimeEnd: "2024-08-01T14:00",
       materialsProvided: true as boolean | undefined,
-    }
-    const params = buildSearchParams(original)
-    const parsed = parseSearchParams(params)
-    expect(parsed.title).toBe('Test')
-    expect(parsed.minPlayersMin).toBe('2')
-    expect(parsed.minPlayersMax).toBe('6')
-    expect(parsed.startDateTimeStart).toBe('2024-08-01T10:00')
-    expect(parsed.startDateTimeEnd).toBe('2024-08-01T14:00')
-  })
-})
+    };
+    const params = buildSearchParams(original);
+    const parsed = parseSearchParams(params);
+    expect(parsed.title).toBe("Test");
+    expect(parsed.minPlayersMin).toBe("2");
+    expect(parsed.minPlayersMax).toBe("6");
+    expect(parsed.startDateTimeStart).toBe("2024-08-01T10:00");
+    expect(parsed.startDateTimeEnd).toBe("2024-08-01T14:00");
+  });
+});
 ```
 
 - [ ] **Step 4: Run tests to confirm they fail**
@@ -557,101 +566,124 @@ Expected: FAIL — `Cannot find module './searchParams'`
 - [ ] **Step 5: Create `src/utils/searchParams.ts`**
 
 ```typescript
-import type { SearchFormValues, SearchParams } from './types'
+import type { SearchFormValues, SearchParams } from "./types";
 
 export function buildSearchParams(values: SearchFormValues): SearchParams {
-  const params: SearchParams = { limit: 500 }
+  const params: SearchParams = { limit: 500 };
 
-  const set = (key: keyof SearchParams, val: string | number | undefined | boolean) => {
-    if (val === undefined || val === '' || val === false) return
-    ;(params as Record<string, unknown>)[key] = val
-  }
+  const set = (
+    key: keyof SearchParams,
+    val: string | number | undefined | boolean,
+  ) => {
+    if (val === undefined || val === "" || val === false) return;
+    (params as Record<string, unknown>)[key] = val;
+  };
 
   const setRange = (
     key: keyof SearchParams,
     min: string | undefined,
     max: string | undefined,
   ) => {
-    if (!min && !max) return
-    ;(params as Record<string, unknown>)[key] = `[${min ?? ''},${max ?? ''}]`
-  }
+    if (!min && !max) return;
+    (params as Record<string, unknown>)[key] = `[${min ?? ""},${max ?? ""}]`;
+  };
 
   const setDateRange = (
     key: keyof SearchParams,
     start: string | undefined,
     end: string | undefined,
   ) => {
-    if (!start && !end) return
-    const s = start ? `${start}:00Z` : ''
-    const e = end ? `${end}:00Z` : ''
-    ;(params as Record<string, unknown>)[key] = `[${s},${e}]`
-  }
+    if (!start && !end) return;
+    const s = start ? `${start}:00Z` : "";
+    const e = end ? `${end}:00Z` : "";
+    (params as Record<string, unknown>)[key] = `[${s},${e}]`;
+  };
 
-  set('filter', values.filter)
-  set('gameId', values.gameId)
-  set('title', values.title)
-  set('eventType', values.eventType)
-  set('group', values.group)
-  set('shortDescription', values.shortDescription)
-  set('longDescription', values.longDescription)
-  set('gameSystem', values.gameSystem)
-  set('rulesEdition', values.rulesEdition)
-  setRange('minPlayers', values.minPlayersMin, values.minPlayersMax)
-  setRange('maxPlayers', values.maxPlayersMin, values.maxPlayersMax)
-  set('ageRequired', values.ageRequired)
-  set('experienceRequired', values.experienceRequired)
-  if (values.materialsProvided === true) params.materialsProvided = 'true'
-  setDateRange('startDateTime', values.startDateTimeStart, values.startDateTimeEnd)
-  setRange('duration', values.durationMin, values.durationMax)
-  setDateRange('endDateTime', values.endDateTimeStart, values.endDateTimeEnd)
-  set('gmNames', values.gmNames)
-  set('website', values.website)
-  set('email', values.email)
-  if (values.tournament === true) params.tournament = 'true'
-  setRange('roundNumber', values.roundNumberMin, values.roundNumberMax)
-  setRange('totalRounds', values.totalRoundsMin, values.totalRoundsMax)
-  setRange('minimumPlayTime', values.minimumPlayTimeMin, values.minimumPlayTimeMax)
-  set('attendeeRegistration', values.attendeeRegistration)
-  setRange('cost', values.costMin, values.costMax)
-  set('location', values.location)
-  set('roomName', values.roomName)
-  set('tableNumber', values.tableNumber)
-  set('specialCategory', values.specialCategory)
-  setRange('ticketsAvailable', values.ticketsAvailableMin, values.ticketsAvailableMax)
-  setDateRange('lastModified', values.lastModifiedStart, values.lastModifiedEnd)
+  set("filter", values.filter);
+  set("gameId", values.gameId);
+  set("title", values.title);
+  set("eventType", values.eventType);
+  set("group", values.group);
+  set("shortDescription", values.shortDescription);
+  set("longDescription", values.longDescription);
+  set("gameSystem", values.gameSystem);
+  set("rulesEdition", values.rulesEdition);
+  setRange("minPlayers", values.minPlayersMin, values.minPlayersMax);
+  setRange("maxPlayers", values.maxPlayersMin, values.maxPlayersMax);
+  set("ageRequired", values.ageRequired);
+  set("experienceRequired", values.experienceRequired);
+  if (values.materialsProvided === true) params.materialsProvided = "true";
+  setDateRange(
+    "startDateTime",
+    values.startDateTimeStart,
+    values.startDateTimeEnd,
+  );
+  setRange("duration", values.durationMin, values.durationMax);
+  setDateRange("endDateTime", values.endDateTimeStart, values.endDateTimeEnd);
+  set("gmNames", values.gmNames);
+  set("website", values.website);
+  set("email", values.email);
+  if (values.tournament === true) params.tournament = "true";
+  setRange("roundNumber", values.roundNumberMin, values.roundNumberMax);
+  setRange("totalRounds", values.totalRoundsMin, values.totalRoundsMax);
+  setRange(
+    "minimumPlayTime",
+    values.minimumPlayTimeMin,
+    values.minimumPlayTimeMax,
+  );
+  set("attendeeRegistration", values.attendeeRegistration);
+  setRange("cost", values.costMin, values.costMax);
+  set("location", values.location);
+  set("roomName", values.roomName);
+  set("tableNumber", values.tableNumber);
+  set("specialCategory", values.specialCategory);
+  setRange(
+    "ticketsAvailable",
+    values.ticketsAvailableMin,
+    values.ticketsAvailableMax,
+  );
+  setDateRange(
+    "lastModified",
+    values.lastModifiedStart,
+    values.lastModifiedEnd,
+  );
 
-  return params
+  return params;
 }
 
 export function parseSearchParams(params: SearchParams): SearchFormValues {
-  const parseRange = (val: string | undefined): { min: string; max: string } => {
-    if (!val) return { min: '', max: '' }
-    const match = val.match(/^\[([^,]*),([^\]]*)\]$/)
-    if (!match) return { min: '', max: '' }
-    return { min: match[1], max: match[2] }
-  }
+  const parseRange = (
+    val: string | undefined,
+  ): { min: string; max: string } => {
+    if (!val) return { min: "", max: "" };
+    const match = val.match(/^\[([^,]*),([^\]]*)\]$/);
+    if (!match) return { min: "", max: "" };
+    return { min: match[1], max: match[2] };
+  };
 
-  const parseDateRange = (val: string | undefined): { start: string; end: string } => {
-    if (!val) return { start: '', end: '' }
-    const match = val.match(/^\[([^,]*),([^\]]*)\]$/)
-    if (!match) return { start: '', end: '' }
+  const parseDateRange = (
+    val: string | undefined,
+  ): { start: string; end: string } => {
+    if (!val) return { start: "", end: "" };
+    const match = val.match(/^\[([^,]*),([^\]]*)\]$/);
+    if (!match) return { start: "", end: "" };
     return {
-      start: match[1] ? match[1].replace(/:00Z$/, '') : '',
-      end: match[2] ? match[2].replace(/:00Z$/, '') : '',
-    }
-  }
+      start: match[1] ? match[1].replace(/:00Z$/, "") : "",
+      end: match[2] ? match[2].replace(/:00Z$/, "") : "",
+    };
+  };
 
-  const minPlayers = parseRange(params.minPlayers)
-  const maxPlayers = parseRange(params.maxPlayers)
-  const startDateTime = parseDateRange(params.startDateTime)
-  const endDateTime = parseDateRange(params.endDateTime)
-  const duration = parseRange(params.duration)
-  const roundNumber = parseRange(params.roundNumber)
-  const totalRounds = parseRange(params.totalRounds)
-  const minimumPlayTime = parseRange(params.minimumPlayTime)
-  const cost = parseRange(params.cost)
-  const ticketsAvailable = parseRange(params.ticketsAvailable)
-  const lastModified = parseDateRange(params.lastModified)
+  const minPlayers = parseRange(params.minPlayers);
+  const maxPlayers = parseRange(params.maxPlayers);
+  const startDateTime = parseDateRange(params.startDateTime);
+  const endDateTime = parseDateRange(params.endDateTime);
+  const duration = parseRange(params.duration);
+  const roundNumber = parseRange(params.roundNumber);
+  const totalRounds = parseRange(params.totalRounds);
+  const minimumPlayTime = parseRange(params.minimumPlayTime);
+  const cost = parseRange(params.cost);
+  const ticketsAvailable = parseRange(params.ticketsAvailable);
+  const lastModified = parseDateRange(params.lastModified);
 
   return {
     filter: params.filter,
@@ -669,7 +701,7 @@ export function parseSearchParams(params: SearchParams): SearchFormValues {
     maxPlayersMax: maxPlayers.max || undefined,
     ageRequired: params.ageRequired,
     experienceRequired: params.experienceRequired,
-    materialsProvided: params.materialsProvided === 'true' ? true : undefined,
+    materialsProvided: params.materialsProvided === "true" ? true : undefined,
     startDateTimeStart: startDateTime.start || undefined,
     startDateTimeEnd: startDateTime.end || undefined,
     durationMin: duration.min || undefined,
@@ -679,7 +711,7 @@ export function parseSearchParams(params: SearchParams): SearchFormValues {
     gmNames: params.gmNames,
     website: params.website,
     email: params.email,
-    tournament: params.tournament === 'true' ? true : undefined,
+    tournament: params.tournament === "true" ? true : undefined,
     roundNumberMin: roundNumber.min || undefined,
     roundNumberMax: roundNumber.max || undefined,
     totalRoundsMin: totalRounds.min || undefined,
@@ -697,7 +729,7 @@ export function parseSearchParams(params: SearchParams): SearchFormValues {
     ticketsAvailableMax: ticketsAvailable.max || undefined,
     lastModifiedStart: lastModified.start || undefined,
     lastModifiedEnd: lastModified.end || undefined,
-  }
+  };
 }
 ```
 
@@ -721,6 +753,7 @@ git commit -m "feat: add types, enums, and search param utilities"
 ## Task 4: MSW infrastructure
 
 **Files:**
+
 - Create: `src/test/setup.ts`
 - Create: `src/test/msw/factory.ts`
 - Create: `src/test/msw/handlers.ts`
@@ -730,127 +763,133 @@ git commit -m "feat: add types, enums, and search param utilities"
 - [ ] **Step 1: Create `src/test/msw/factory.ts`**
 
 ```typescript
-import type { Event } from '../../utils/types'
+import type { Event } from "../../utils/types";
 
-let counter = 0
+let counter = 0;
 
-export function makeEvent(overrides: Partial<Event['attributes']> = {}): Event {
-  counter++
+export function makeEvent(overrides: Partial<Event["attributes"]> = {}): Event {
+  counter++;
   return {
     id: String(counter),
-    type: 'events',
+    type: "events",
     attributes: {
-      gameId: `RPG24${String(counter).padStart(6, '0')}`,
+      gameId: `RPG24${String(counter).padStart(6, "0")}`,
       year: 2024,
-      group: 'Test Group',
-      title: 'Test Event',
-      shortDescription: 'A short description.',
-      longDescription: 'A longer description.',
-      eventType: 'RPG',
-      gameSystem: 'D&D',
-      rulesEdition: '5e',
+      group: "Test Group",
+      title: "Test Event",
+      shortDescription: "A short description.",
+      longDescription: "A longer description.",
+      eventType: "RPG",
+      gameSystem: "D&D",
+      rulesEdition: "5e",
       minPlayers: 2,
       maxPlayers: 6,
-      ageRequired: 'everyone',
-      experienceRequired: 'none',
-      materialsProvided: 'Yes',
-      materialsRequired: 'No',
-      materialsRequiredDetails: '',
-      startDateTime: '2024-08-01T10:00:00Z',
+      ageRequired: "everyone",
+      experienceRequired: "none",
+      materialsProvided: "Yes",
+      materialsRequired: "No",
+      materialsRequiredDetails: "",
+      startDateTime: "2024-08-01T10:00:00Z",
       duration: 4,
-      endDateTime: '2024-08-01T14:00:00Z',
-      gmNames: 'Jane Smith',
-      website: '',
-      email: '',
-      tournament: 'No',
+      endDateTime: "2024-08-01T14:00:00Z",
+      gmNames: "Jane Smith",
+      website: "",
+      email: "",
+      tournament: "No",
       roundNumber: 1,
       totalRounds: 1,
       minimumPlayTime: 4,
-      attendeeRegistration: 'open',
+      attendeeRegistration: "open",
       cost: 4,
-      location: 'ICC',
-      roomName: 'Hall A',
-      tableNumber: '1',
-      specialCategory: 'none',
+      location: "ICC",
+      roomName: "Hall A",
+      tableNumber: "1",
+      specialCategory: "none",
       ticketsAvailable: 3,
-      lastModified: '2024-01-01T00:00:00Z',
-      alsoRuns: '',
-      prize: '',
-      rulesComplexity: 'Medium',
+      lastModified: "2024-01-01T00:00:00Z",
+      alsoRuns: "",
+      prize: "",
+      rulesComplexity: "Medium",
       originalOrder: counter,
       ...overrides,
     },
-  }
+  };
 }
 ```
 
 - [ ] **Step 2: Create `src/test/msw/handlers.ts`**
 
 ```typescript
-import { http, HttpResponse } from 'msw'
-import { makeEvent } from './factory'
-import type { EventSearchResponse } from '../../utils/types'
+import { http, HttpResponse } from "msw";
+import { makeEvent } from "./factory";
+import type { EventSearchResponse } from "../../utils/types";
 
 export const handlers = [
-  http.get('/api/events/search', () => {
+  http.get("/api/events/search", () => {
     const response: EventSearchResponse = {
       data: [
-        makeEvent({ gameId: 'RPG24000001', title: 'Test RPG Event' }),
-        makeEvent({ gameId: 'BGM24000001', title: 'Test Board Game', eventType: 'BGM' }),
+        makeEvent({ gameId: "RPG24000001", title: "Test RPG Event" }),
+        makeEvent({
+          gameId: "BGM24000001",
+          title: "Test Board Game",
+          eventType: "BGM",
+        }),
       ],
       meta: { total: 2 },
-      links: { self: '/api/events/search' },
+      links: { self: "/api/events/search" },
       error: null,
-    }
-    return HttpResponse.json(response)
+    };
+    return HttpResponse.json(response);
   }),
-]
+];
 ```
 
 - [ ] **Step 3: Create `src/test/msw/server.ts`**
 
 ```typescript
-import { setupServer } from 'msw/node'
-import { handlers } from './handlers'
+import { setupServer } from "msw/node";
+import { handlers } from "./handlers";
 
-export const server = setupServer(...handlers)
+export const server = setupServer(...handlers);
 ```
 
 - [ ] **Step 4: Create `src/test/msw/browser.ts`**
 
 ```typescript
-import { setupWorker } from 'msw/browser'
-import { handlers } from './handlers'
+import { setupWorker } from "msw/browser";
+import { handlers } from "./handlers";
 
-export const worker = setupWorker(...handlers)
+export const worker = setupWorker(...handlers);
 ```
 
 - [ ] **Step 5: Create `src/test/setup.ts`**
 
 ```typescript
-import '@testing-library/jest-dom'
-import { server } from './msw/server'
+import "@testing-library/jest-dom";
+import { server } from "./msw/server";
 
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }))
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
+beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 ```
 
 - [ ] **Step 6: Create `src/utils/api.ts`**
 
 ```typescript
-import type { EventSearchResponse, SearchParams } from './types'
+import type { EventSearchResponse, SearchParams } from "./types";
 
-export async function fetchEvents(params: SearchParams): Promise<EventSearchResponse> {
-  const url = new URL('/api/events/search', window.location.origin)
+export async function fetchEvents(
+  params: SearchParams,
+): Promise<EventSearchResponse> {
+  const url = new URL("/api/events/search", window.location.origin);
   Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== '') {
-      url.searchParams.set(key, String(value))
+    if (value !== undefined && value !== "") {
+      url.searchParams.set(key, String(value));
     }
-  })
-  const res = await fetch(url.toString())
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json() as Promise<EventSearchResponse>
+  });
+  const res = await fetch(url.toString());
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json() as Promise<EventSearchResponse>;
 }
 ```
 
@@ -874,6 +913,7 @@ git commit -m "feat: add MSW infrastructure and API fetch utility"
 ## Task 5: App entry and routing skeleton
 
 **Files:**
+
 - Create: `src/routes/__root.tsx`
 - Create: `src/routes/index.tsx`
 - Create: `src/routes/event.$id.tsx`
@@ -883,11 +923,11 @@ git commit -m "feat: add MSW infrastructure and API fetch utility"
 - [ ] **Step 1: Create `src/routes/__root.tsx`**
 
 ```tsx
-import { createRootRoute, Outlet } from '@tanstack/react-router'
+import { createRootRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createRootRoute({
   component: () => <Outlet />,
-})
+});
 ```
 
 - [ ] **Step 2: Create `src/routes/index.tsx`**
@@ -895,110 +935,120 @@ export const Route = createRootRoute({
 This is a stub — components will be filled in after they are built in later tasks.
 
 ```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import type { SearchParams } from '../utils/types'
+import { createFileRoute } from "@tanstack/react-router";
+import type { SearchParams } from "../utils/types";
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute("/")({
   validateSearch: (search: Record<string, unknown>): SearchParams => {
     const str = (k: string) =>
-      typeof search[k] === 'string' ? (search[k] as string) : undefined
+      typeof search[k] === "string" ? (search[k] as string) : undefined;
     const num = (k: string) =>
-      typeof search[k] === 'number' ? (search[k] as number) : undefined
+      typeof search[k] === "number" ? (search[k] as number) : undefined;
     return {
-      limit: num('limit'),
-      filter: str('filter'),
-      gameId: str('gameId'),
-      title: str('title'),
-      eventType: str('eventType'),
-      group: str('group'),
-      shortDescription: str('shortDescription'),
-      longDescription: str('longDescription'),
-      gameSystem: str('gameSystem'),
-      rulesEdition: str('rulesEdition'),
-      minPlayers: str('minPlayers'),
-      maxPlayers: str('maxPlayers'),
-      ageRequired: str('ageRequired'),
-      experienceRequired: str('experienceRequired'),
-      materialsProvided: str('materialsProvided'),
-      startDateTime: str('startDateTime'),
-      duration: str('duration'),
-      endDateTime: str('endDateTime'),
-      gmNames: str('gmNames'),
-      website: str('website'),
-      email: str('email'),
-      tournament: str('tournament'),
-      roundNumber: str('roundNumber'),
-      totalRounds: str('totalRounds'),
-      minimumPlayTime: str('minimumPlayTime'),
-      attendeeRegistration: str('attendeeRegistration'),
-      cost: str('cost'),
-      location: str('location'),
-      roomName: str('roomName'),
-      tableNumber: str('tableNumber'),
-      specialCategory: str('specialCategory'),
-      ticketsAvailable: str('ticketsAvailable'),
-      lastModified: str('lastModified'),
-    }
+      limit: num("limit"),
+      filter: str("filter"),
+      gameId: str("gameId"),
+      title: str("title"),
+      eventType: str("eventType"),
+      group: str("group"),
+      shortDescription: str("shortDescription"),
+      longDescription: str("longDescription"),
+      gameSystem: str("gameSystem"),
+      rulesEdition: str("rulesEdition"),
+      minPlayers: str("minPlayers"),
+      maxPlayers: str("maxPlayers"),
+      ageRequired: str("ageRequired"),
+      experienceRequired: str("experienceRequired"),
+      materialsProvided: str("materialsProvided"),
+      startDateTime: str("startDateTime"),
+      duration: str("duration"),
+      endDateTime: str("endDateTime"),
+      gmNames: str("gmNames"),
+      website: str("website"),
+      email: str("email"),
+      tournament: str("tournament"),
+      roundNumber: str("roundNumber"),
+      totalRounds: str("totalRounds"),
+      minimumPlayTime: str("minimumPlayTime"),
+      attendeeRegistration: str("attendeeRegistration"),
+      cost: str("cost"),
+      location: str("location"),
+      roomName: str("roomName"),
+      tableNumber: str("tableNumber"),
+      specialCategory: str("specialCategory"),
+      ticketsAvailable: str("ticketsAvailable"),
+      lastModified: str("lastModified"),
+    };
   },
-  component: () => <main><p>Search coming soon.</p></main>,
-})
+  component: () => (
+    <main>
+      <p>Search coming soon.</p>
+    </main>
+  ),
+});
 ```
 
 - [ ] **Step 3: Create `src/routes/event.$id.tsx`**
 
 ```tsx
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/event/$id')({
+export const Route = createFileRoute("/event/$id")({
   component: () => {
-    const { id } = Route.useParams()
-    return <main><p>Event {id} coming soon.</p></main>
+    const { id } = Route.useParams();
+    return (
+      <main>
+        <p>Event {id} coming soon.</p>
+      </main>
+    );
   },
-})
+});
 ```
 
 - [ ] **Step 4: Create `src/main.tsx`**
 
 ```tsx
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { routeTree } from './routeTree.gen'
-import './index.css'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { routeTree } from "./routeTree.gen";
+import "./index.css";
 
-const queryClient = new QueryClient()
-const router = createRouter({ routeTree })
+const queryClient = new QueryClient();
+const router = createRouter({ routeTree });
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface Register {
-    router: typeof router
+    router: typeof router;
   }
 }
 
 async function enableMocking() {
   if (import.meta.env.DEV) {
-    const { worker } = await import('./test/msw/browser')
-    return worker.start({ onUnhandledRequest: 'bypass' })
+    const { worker } = await import("./test/msw/browser");
+    return worker.start({ onUnhandledRequest: "bypass" });
   }
 }
 
 void enableMocking().then(() => {
-  const root = document.getElementById('root')!
+  const root = document.getElementById("root")!;
   createRoot(root).render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
       </QueryClientProvider>
     </StrictMode>,
-  )
-})
+  );
+});
 ```
 
 - [ ] **Step 5: Create `src/index.css`**
 
 ```css
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -1013,7 +1063,8 @@ table {
   width: 100%;
 }
 
-th, td {
+th,
+td {
   border: 1px solid #ccc;
   padding: 0.25rem 0.5rem;
   text-align: left;
@@ -1064,6 +1115,7 @@ git commit -m "feat: add app entry, routing skeleton, and minimal CSS"
 ## Task 6: useColumnVisibility hook (TDD)
 
 **Files:**
+
 - Create: `src/hooks/useColumnVisibility.test.ts`
 - Create: `src/hooks/useColumnVisibility.ts`
 
@@ -1072,67 +1124,67 @@ git commit -m "feat: add app entry, routing skeleton, and minimal CSS"
 Create `src/hooks/useColumnVisibility.test.ts`:
 
 ```typescript
-import { renderHook, act } from '@testing-library/react'
-import { useColumnVisibility } from './useColumnVisibility'
+import { renderHook, act } from "@testing-library/react";
+import { useColumnVisibility } from "./useColumnVisibility";
 
-const STORAGE_KEY = 'gen-con-buddy-columns'
+const STORAGE_KEY = "gen-con-buddy-columns";
 
 beforeEach(() => {
-  localStorage.clear()
-})
+  localStorage.clear();
+});
 
-test('returns correct defaults on first use', () => {
-  const { result } = renderHook(() => useColumnVisibility())
-  expect(result.current.visibility.title).toBe(true)
-  expect(result.current.visibility.shortDescription).toBe(true)
-  expect(result.current.visibility.minPlayers).toBe(true)
-  expect(result.current.visibility.maxPlayers).toBe(true)
-  expect(result.current.visibility.day).toBe(true)
-  expect(result.current.visibility.startDateTime).toBe(true)
-  expect(result.current.visibility.endDateTime).toBe(true)
-  expect(result.current.visibility.ticketsAvailable).toBe(true)
-  expect(result.current.visibility.gameId).toBe(false)
-  expect(result.current.visibility.longDescription).toBe(false)
-})
+test("returns correct defaults on first use", () => {
+  const { result } = renderHook(() => useColumnVisibility());
+  expect(result.current.visibility.title).toBe(true);
+  expect(result.current.visibility.shortDescription).toBe(true);
+  expect(result.current.visibility.minPlayers).toBe(true);
+  expect(result.current.visibility.maxPlayers).toBe(true);
+  expect(result.current.visibility.day).toBe(true);
+  expect(result.current.visibility.startDateTime).toBe(true);
+  expect(result.current.visibility.endDateTime).toBe(true);
+  expect(result.current.visibility.ticketsAvailable).toBe(true);
+  expect(result.current.visibility.gameId).toBe(false);
+  expect(result.current.visibility.longDescription).toBe(false);
+});
 
-test('toggle flips a column from true to false', () => {
-  const { result } = renderHook(() => useColumnVisibility())
-  expect(result.current.visibility.title).toBe(true)
-
-  act(() => {
-    result.current.toggle('title')
-  })
-
-  expect(result.current.visibility.title).toBe(false)
-})
-
-test('persists visibility state to localStorage', () => {
-  const { result } = renderHook(() => useColumnVisibility())
+test("toggle flips a column from true to false", () => {
+  const { result } = renderHook(() => useColumnVisibility());
+  expect(result.current.visibility.title).toBe(true);
 
   act(() => {
-    result.current.toggle('title')
-  })
+    result.current.toggle("title");
+  });
 
-  const { result: result2 } = renderHook(() => useColumnVisibility())
-  expect(result2.current.visibility.title).toBe(false)
-})
+  expect(result.current.visibility.title).toBe(false);
+});
 
-test('resets to defaults when stored version does not match', () => {
+test("persists visibility state to localStorage", () => {
+  const { result } = renderHook(() => useColumnVisibility());
+
+  act(() => {
+    result.current.toggle("title");
+  });
+
+  const { result: result2 } = renderHook(() => useColumnVisibility());
+  expect(result2.current.visibility.title).toBe(false);
+});
+
+test("resets to defaults when stored version does not match", () => {
   localStorage.setItem(
     STORAGE_KEY,
     JSON.stringify({ version: 9999, visibility: { title: false } }),
-  )
+  );
 
-  const { result } = renderHook(() => useColumnVisibility())
-  expect(result.current.visibility.title).toBe(true)
-})
+  const { result } = renderHook(() => useColumnVisibility());
+  expect(result.current.visibility.title).toBe(true);
+});
 
-test('resets to defaults when stored data is malformed', () => {
-  localStorage.setItem(STORAGE_KEY, 'not-json{{{')
+test("resets to defaults when stored data is malformed", () => {
+  localStorage.setItem(STORAGE_KEY, "not-json{{{");
 
-  const { result } = renderHook(() => useColumnVisibility())
-  expect(result.current.visibility.title).toBe(true)
-})
+  const { result } = renderHook(() => useColumnVisibility());
+  expect(result.current.visibility.title).toBe(true);
+});
 ```
 
 - [ ] **Step 2: Run tests to confirm they fail**
@@ -1146,10 +1198,10 @@ Expected: FAIL — `Cannot find module './useColumnVisibility'`
 - [ ] **Step 3: Create `src/hooks/useColumnVisibility.ts`**
 
 ```typescript
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 
-const STORAGE_KEY = 'gen-con-buddy-columns'
-const VERSION = 0
+const STORAGE_KEY = "gen-con-buddy-columns";
+const VERSION = 0;
 
 const DEFAULTS: Record<string, boolean> = {
   gameId: false,
@@ -1184,38 +1236,43 @@ const DEFAULTS: Record<string, boolean> = {
   specialCategory: false,
   ticketsAvailable: true,
   lastModified: false,
-}
+};
 
 function readFromStorage(): Record<string, boolean> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return { ...DEFAULTS }
-    const parsed: unknown = JSON.parse(raw)
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return { ...DEFAULTS };
+    const parsed: unknown = JSON.parse(raw);
     if (
-      typeof parsed !== 'object' ||
+      typeof parsed !== "object" ||
       parsed === null ||
       (parsed as { version?: unknown }).version !== VERSION
     ) {
-      return { ...DEFAULTS }
+      return { ...DEFAULTS };
     }
-    return (parsed as { version: number; visibility: Record<string, boolean> }).visibility
+    return (parsed as { version: number; visibility: Record<string, boolean> })
+      .visibility;
   } catch {
-    return { ...DEFAULTS }
+    return { ...DEFAULTS };
   }
 }
 
 export function useColumnVisibility() {
-  const [visibility, setVisibility] = useState<Record<string, boolean>>(readFromStorage)
+  const [visibility, setVisibility] =
+    useState<Record<string, boolean>>(readFromStorage);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: VERSION, visibility }))
-  }, [visibility])
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ version: VERSION, visibility }),
+    );
+  }, [visibility]);
 
   const toggle = (column: string) => {
-    setVisibility((prev) => ({ ...prev, [column]: !prev[column] }))
-  }
+    setVisibility((prev) => ({ ...prev, [column]: !prev[column] }));
+  };
 
-  return { visibility, toggle }
+  return { visibility, toggle };
 }
 ```
 
@@ -1239,6 +1296,7 @@ git commit -m "feat: add useColumnVisibility hook"
 ## Task 7: SearchForm component (TDD)
 
 **Files:**
+
 - Create: `src/components/SearchForm/SearchForm.test.tsx`
 - Create: `src/components/SearchForm/SearchForm.tsx`
 
@@ -1247,69 +1305,80 @@ git commit -m "feat: add useColumnVisibility hook"
 Create `src/components/SearchForm/SearchForm.test.tsx`:
 
 ```tsx
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { SearchForm } from './SearchForm'
-import type { SearchFormValues } from '../../utils/types'
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { SearchForm } from "./SearchForm";
+import type { SearchFormValues } from "../../utils/types";
 
-const noop = () => undefined
+const noop = () => undefined;
 
-test('renders the top-level filter and event type fields', () => {
-  render(<SearchForm defaultValues={{}} onSearch={noop} />)
-  expect(screen.getByRole('textbox', { name: 'Search' })).toBeInTheDocument()
-  expect(screen.getByRole('combobox', { name: 'Event Type' })).toBeInTheDocument()
-})
+test("renders the top-level filter and event type fields", () => {
+  render(<SearchForm defaultValues={{}} onSearch={noop} />);
+  expect(screen.getByRole("textbox", { name: "Search" })).toBeInTheDocument();
+  expect(
+    screen.getByRole("combobox", { name: "Event Type" }),
+  ).toBeInTheDocument();
+});
 
-test('renders the Search and Reset buttons', () => {
-  render(<SearchForm defaultValues={{}} onSearch={noop} />)
-  expect(screen.getByRole('button', { name: 'Search' })).toBeInTheDocument()
-  expect(screen.getByRole('button', { name: 'Reset' })).toBeInTheDocument()
-})
+test("renders the Search and Reset buttons", () => {
+  render(<SearchForm defaultValues={{}} onSearch={noop} />);
+  expect(screen.getByRole("button", { name: "Search" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Reset" })).toBeInTheDocument();
+});
 
-test('renders advanced filter fields inside a disclosure', () => {
-  render(<SearchForm defaultValues={{}} onSearch={noop} />)
-  expect(screen.getByRole('textbox', { name: 'Title' })).toBeInTheDocument()
-  expect(screen.getByRole('textbox', { name: 'Game ID' })).toBeInTheDocument()
-  expect(screen.getByRole('textbox', { name: 'Location' })).toBeInTheDocument()
-})
+test("renders advanced filter fields inside a disclosure", () => {
+  render(<SearchForm defaultValues={{}} onSearch={noop} />);
+  expect(screen.getByRole("textbox", { name: "Title" })).toBeInTheDocument();
+  expect(screen.getByRole("textbox", { name: "Game ID" })).toBeInTheDocument();
+  expect(screen.getByRole("textbox", { name: "Location" })).toBeInTheDocument();
+});
 
-test('populates fields from defaultValues', () => {
-  render(<SearchForm defaultValues={{ title: 'Dungeon Crawl' }} onSearch={noop} />)
-  expect(screen.getByRole('textbox', { name: 'Title' })).toHaveValue('Dungeon Crawl')
-})
+test("populates fields from defaultValues", () => {
+  render(
+    <SearchForm defaultValues={{ title: "Dungeon Crawl" }} onSearch={noop} />,
+  );
+  expect(screen.getByRole("textbox", { name: "Title" })).toHaveValue(
+    "Dungeon Crawl",
+  );
+});
 
-test('submits with the title value passed to onSearch', async () => {
-  const user = userEvent.setup()
-  const handleSearch = vi.fn<[SearchFormValues], void>()
-  render(<SearchForm defaultValues={{}} onSearch={handleSearch} />)
+test("submits with the title value passed to onSearch", async () => {
+  const user = userEvent.setup();
+  const handleSearch = vi.fn<[SearchFormValues], void>();
+  render(<SearchForm defaultValues={{}} onSearch={handleSearch} />);
 
-  await user.type(screen.getByRole('textbox', { name: 'Title' }), 'Dragons')
-  await user.click(screen.getByRole('button', { name: 'Search' }))
+  await user.type(screen.getByRole("textbox", { name: "Title" }), "Dragons");
+  await user.click(screen.getByRole("button", { name: "Search" }));
 
-  expect(handleSearch).toHaveBeenCalledOnce()
-  expect(handleSearch.mock.calls[0][0]).toMatchObject({ title: 'Dragons' })
-})
+  expect(handleSearch).toHaveBeenCalledOnce();
+  expect(handleSearch.mock.calls[0][0]).toMatchObject({ title: "Dragons" });
+});
 
-test('submits with the filter (full text search) value', async () => {
-  const user = userEvent.setup()
-  const handleSearch = vi.fn<[SearchFormValues], void>()
-  render(<SearchForm defaultValues={{}} onSearch={handleSearch} />)
+test("submits with the filter (full text search) value", async () => {
+  const user = userEvent.setup();
+  const handleSearch = vi.fn<[SearchFormValues], void>();
+  render(<SearchForm defaultValues={{}} onSearch={handleSearch} />);
 
-  await user.type(screen.getByRole('textbox', { name: 'Search' }), 'fire')
-  await user.click(screen.getByRole('button', { name: 'Search' }))
+  await user.type(screen.getByRole("textbox", { name: "Search" }), "fire");
+  await user.click(screen.getByRole("button", { name: "Search" }));
 
-  expect(handleSearch.mock.calls[0][0]).toMatchObject({ filter: 'fire' })
-})
+  expect(handleSearch.mock.calls[0][0]).toMatchObject({ filter: "fire" });
+});
 
-test('Reset button clears all form fields', async () => {
-  const user = userEvent.setup()
-  render(<SearchForm defaultValues={{ title: 'Dungeon Crawl', filter: 'dragon' }} onSearch={noop} />)
+test("Reset button clears all form fields", async () => {
+  const user = userEvent.setup();
+  render(
+    <SearchForm
+      defaultValues={{ title: "Dungeon Crawl", filter: "dragon" }}
+      onSearch={noop}
+    />,
+  );
 
-  await user.click(screen.getByRole('button', { name: 'Reset' }))
+  await user.click(screen.getByRole("button", { name: "Reset" }));
 
-  expect(screen.getByRole('textbox', { name: 'Title' })).toHaveValue('')
-  expect(screen.getByRole('textbox', { name: 'Search' })).toHaveValue('')
-})
+  expect(screen.getByRole("textbox", { name: "Title" })).toHaveValue("");
+  expect(screen.getByRole("textbox", { name: "Search" })).toHaveValue("");
+});
 ```
 
 - [ ] **Step 2: Run tests to confirm they fail**
@@ -1323,31 +1392,41 @@ Expected: FAIL — `Cannot find module './SearchForm'`
 - [ ] **Step 3: Create `src/components/SearchForm/SearchForm.tsx`**
 
 ```tsx
-import { useForm } from 'react-hook-form'
-import { EVENT_TYPES, AGE_GROUPS, EXP, REGISTRATION, CATEGORY } from '../../utils/enums'
-import type { SearchFormValues } from '../../utils/types'
+import { useForm } from "react-hook-form";
+import {
+  EVENT_TYPES,
+  AGE_GROUPS,
+  EXP,
+  REGISTRATION,
+  CATEGORY,
+} from "../../utils/enums";
+import type { SearchFormValues } from "../../utils/types";
 
 interface SearchFormProps {
-  defaultValues: SearchFormValues
-  onSearch: (values: SearchFormValues) => void
+  defaultValues: SearchFormValues;
+  onSearch: (values: SearchFormValues) => void;
 }
 
 export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
-  const { register, handleSubmit, reset } = useForm<SearchFormValues>({ defaultValues })
+  const { register, handleSubmit, reset } = useForm<SearchFormValues>({
+    defaultValues,
+  });
 
   return (
     <form onSubmit={handleSubmit(onSearch)}>
       <div>
         <label>
           Search
-          <input type="search" {...register('filter')} />
+          <input type="search" {...register("filter")} />
         </label>
         <label>
           Event Type
-          <select {...register('eventType')}>
+          <select {...register("eventType")}>
             <option value="">Any</option>
             {Object.entries(EVENT_TYPES).map(([k, v]) => (
-              <option key={k} value={k}>{v}</option>
+              <option key={k} value={k}>
+                {v}
+              </option>
             ))}
           </select>
         </label>
@@ -1357,43 +1436,69 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
         <summary>Advanced filters</summary>
         <ul>
           <li>
-            <label>Game ID <input type="text" {...register('gameId')} /></label>
+            <label>
+              Game ID <input type="text" {...register("gameId")} />
+            </label>
           </li>
           <li>
-            <label>Title <input type="text" {...register('title')} /></label>
+            <label>
+              Title <input type="text" {...register("title")} />
+            </label>
           </li>
           <li>
-            <label>Group <input type="text" {...register('group')} /></label>
+            <label>
+              Group <input type="text" {...register("group")} />
+            </label>
           </li>
           <li>
-            <label>Short Description <input type="text" {...register('shortDescription')} /></label>
+            <label>
+              Short Description{" "}
+              <input type="text" {...register("shortDescription")} />
+            </label>
           </li>
           <li>
-            <label>Long Description <input type="text" {...register('longDescription')} /></label>
+            <label>
+              Long Description{" "}
+              <input type="text" {...register("longDescription")} />
+            </label>
           </li>
           <li>
-            <label>Game System <input type="text" {...register('gameSystem')} /></label>
+            <label>
+              Game System <input type="text" {...register("gameSystem")} />
+            </label>
           </li>
           <li>
-            <label>Rules Edition <input type="text" {...register('rulesEdition')} /></label>
+            <label>
+              Rules Edition <input type="text" {...register("rulesEdition")} />
+            </label>
           </li>
           <li>
             Min Players:
-            <label>from <input type="number" {...register('minPlayersMin')} /></label>
-            <label>to <input type="number" {...register('minPlayersMax')} /></label>
+            <label>
+              from <input type="number" {...register("minPlayersMin")} />
+            </label>
+            <label>
+              to <input type="number" {...register("minPlayersMax")} />
+            </label>
           </li>
           <li>
             Max Players:
-            <label>from <input type="number" {...register('maxPlayersMin')} /></label>
-            <label>to <input type="number" {...register('maxPlayersMax')} /></label>
+            <label>
+              from <input type="number" {...register("maxPlayersMin")} />
+            </label>
+            <label>
+              to <input type="number" {...register("maxPlayersMax")} />
+            </label>
           </li>
           <li>
             <label>
               Age Required
-              <select {...register('ageRequired')}>
+              <select {...register("ageRequired")}>
                 <option value="">Any</option>
                 {Object.entries(AGE_GROUPS).map(([k, v]) => (
-                  <option key={k} value={k}>{v}</option>
+                  <option key={k} value={k}>
+                    {v}
+                  </option>
                 ))}
               </select>
             </label>
@@ -1401,112 +1506,181 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
           <li>
             <label>
               Experience Required
-              <select {...register('experienceRequired')}>
+              <select {...register("experienceRequired")}>
                 <option value="">Any</option>
                 {Object.entries(EXP).map(([k, v]) => (
-                  <option key={k} value={k}>{v}</option>
+                  <option key={k} value={k}>
+                    {v}
+                  </option>
                 ))}
               </select>
             </label>
           </li>
           <li>
-            <label>Materials Provided <input type="checkbox" {...register('materialsProvided')} /></label>
+            <label>
+              Materials Provided{" "}
+              <input type="checkbox" {...register("materialsProvided")} />
+            </label>
           </li>
           <li>
             Start Date:
-            <label>from <input type="datetime-local" {...register('startDateTimeStart')} /></label>
-            <label>to <input type="datetime-local" {...register('startDateTimeEnd')} /></label>
+            <label>
+              from{" "}
+              <input
+                type="datetime-local"
+                {...register("startDateTimeStart")}
+              />
+            </label>
+            <label>
+              to{" "}
+              <input type="datetime-local" {...register("startDateTimeEnd")} />
+            </label>
           </li>
           <li>
             Duration (hours):
-            <label>from <input type="number" {...register('durationMin')} /></label>
-            <label>to <input type="number" {...register('durationMax')} /></label>
+            <label>
+              from <input type="number" {...register("durationMin")} />
+            </label>
+            <label>
+              to <input type="number" {...register("durationMax")} />
+            </label>
           </li>
           <li>
             End Date:
-            <label>from <input type="datetime-local" {...register('endDateTimeStart')} /></label>
-            <label>to <input type="datetime-local" {...register('endDateTimeEnd')} /></label>
+            <label>
+              from{" "}
+              <input type="datetime-local" {...register("endDateTimeStart")} />
+            </label>
+            <label>
+              to <input type="datetime-local" {...register("endDateTimeEnd")} />
+            </label>
           </li>
           <li>
-            <label>Game Masters <input type="text" {...register('gmNames')} /></label>
+            <label>
+              Game Masters <input type="text" {...register("gmNames")} />
+            </label>
           </li>
           <li>
-            <label>Website <input type="text" {...register('website')} /></label>
+            <label>
+              Website <input type="text" {...register("website")} />
+            </label>
           </li>
           <li>
-            <label>Email <input type="text" {...register('email')} /></label>
+            <label>
+              Email <input type="text" {...register("email")} />
+            </label>
           </li>
           <li>
-            <label>Tournament <input type="checkbox" {...register('tournament')} /></label>
+            <label>
+              Tournament <input type="checkbox" {...register("tournament")} />
+            </label>
           </li>
           <li>
             Round Number:
-            <label>from <input type="number" {...register('roundNumberMin')} /></label>
-            <label>to <input type="number" {...register('roundNumberMax')} /></label>
+            <label>
+              from <input type="number" {...register("roundNumberMin")} />
+            </label>
+            <label>
+              to <input type="number" {...register("roundNumberMax")} />
+            </label>
           </li>
           <li>
             Total Rounds:
-            <label>from <input type="number" {...register('totalRoundsMin')} /></label>
-            <label>to <input type="number" {...register('totalRoundsMax')} /></label>
+            <label>
+              from <input type="number" {...register("totalRoundsMin")} />
+            </label>
+            <label>
+              to <input type="number" {...register("totalRoundsMax")} />
+            </label>
           </li>
           <li>
             Minimum Play Time:
-            <label>from <input type="number" {...register('minimumPlayTimeMin')} /></label>
-            <label>to <input type="number" {...register('minimumPlayTimeMax')} /></label>
+            <label>
+              from <input type="number" {...register("minimumPlayTimeMin")} />
+            </label>
+            <label>
+              to <input type="number" {...register("minimumPlayTimeMax")} />
+            </label>
           </li>
           <li>
             <label>
               Attendee Registration
-              <select {...register('attendeeRegistration')}>
+              <select {...register("attendeeRegistration")}>
                 <option value="">Any</option>
                 {Object.entries(REGISTRATION).map(([k, v]) => (
-                  <option key={k} value={k}>{v}</option>
+                  <option key={k} value={k}>
+                    {v}
+                  </option>
                 ))}
               </select>
             </label>
           </li>
           <li>
             Cost:
-            <label>from <input type="number" {...register('costMin')} /></label>
-            <label>to <input type="number" {...register('costMax')} /></label>
+            <label>
+              from <input type="number" {...register("costMin")} />
+            </label>
+            <label>
+              to <input type="number" {...register("costMax")} />
+            </label>
           </li>
           <li>
-            <label>Location <input type="text" {...register('location')} /></label>
+            <label>
+              Location <input type="text" {...register("location")} />
+            </label>
           </li>
           <li>
-            <label>Room Name <input type="text" {...register('roomName')} /></label>
+            <label>
+              Room Name <input type="text" {...register("roomName")} />
+            </label>
           </li>
           <li>
-            <label>Table <input type="text" {...register('tableNumber')} /></label>
+            <label>
+              Table <input type="text" {...register("tableNumber")} />
+            </label>
           </li>
           <li>
             <label>
               Special Category
-              <select {...register('specialCategory')}>
+              <select {...register("specialCategory")}>
                 <option value="">Any</option>
                 {Object.entries(CATEGORY).map(([k, v]) => (
-                  <option key={k} value={k}>{v}</option>
+                  <option key={k} value={k}>
+                    {v}
+                  </option>
                 ))}
               </select>
             </label>
           </li>
           <li>
             Tickets Available:
-            <label>from <input type="number" {...register('ticketsAvailableMin')} /></label>
-            <label>to <input type="number" {...register('ticketsAvailableMax')} /></label>
+            <label>
+              from <input type="number" {...register("ticketsAvailableMin")} />
+            </label>
+            <label>
+              to <input type="number" {...register("ticketsAvailableMax")} />
+            </label>
           </li>
           <li>
             Last Modified:
-            <label>from <input type="datetime-local" {...register('lastModifiedStart')} /></label>
-            <label>to <input type="datetime-local" {...register('lastModifiedEnd')} /></label>
+            <label>
+              from{" "}
+              <input type="datetime-local" {...register("lastModifiedStart")} />
+            </label>
+            <label>
+              to{" "}
+              <input type="datetime-local" {...register("lastModifiedEnd")} />
+            </label>
           </li>
         </ul>
       </details>
 
       <button type="submit">Search</button>
-      <button type="button" onClick={() => reset({})}>Reset</button>
+      <button type="button" onClick={() => reset({})}>
+        Reset
+      </button>
     </form>
-  )
+  );
 }
 ```
 
@@ -1530,6 +1704,7 @@ git commit -m "feat: add SearchForm component"
 ## Task 8: SearchResults component (TDD)
 
 **Files:**
+
 - Create: `src/components/SearchResults/SearchResults.test.tsx`
 - Create: `src/components/SearchResults/SearchResults.tsx`
 
@@ -1538,125 +1713,135 @@ git commit -m "feat: add SearchForm component"
 Create `src/components/SearchResults/SearchResults.test.tsx`:
 
 ```tsx
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import {
   createRootRoute,
   createRoute,
   createRouter,
   RouterProvider,
   createMemoryHistory,
-} from '@tanstack/react-router'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { http, HttpResponse } from 'msw'
-import { server } from '../../test/msw/server'
-import { makeEvent } from '../../test/msw/factory'
-import { SearchResults } from './SearchResults'
-import type { SearchParams, EventSearchResponse } from '../../utils/types'
+} from "@tanstack/react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { http, HttpResponse } from "msw";
+import { server } from "../../test/msw/server";
+import { makeEvent } from "../../test/msw/factory";
+import { SearchResults } from "./SearchResults";
+import type { SearchParams, EventSearchResponse } from "../../utils/types";
 
 beforeEach(() => {
-  localStorage.clear()
-})
+  localStorage.clear();
+});
 
 function renderSearchResults(searchParams: SearchParams = {}) {
   const rootRoute = createRootRoute({
     component: () => <SearchResults searchParams={searchParams} />,
-  })
+  });
   const eventRoute = createRoute({
     getParentRoute: () => rootRoute,
-    path: '/event/$id',
+    path: "/event/$id",
     component: () => null,
-  })
+  });
   const router = createRouter({
     routeTree: rootRoute.addChildren([eventRoute]),
-    history: createMemoryHistory({ initialEntries: ['/'] }),
-  })
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    history: createMemoryHistory({ initialEntries: ["/"] }),
+  });
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   return render(
     <QueryClientProvider client={client}>
       <RouterProvider router={router} />
     </QueryClientProvider>,
-  )
+  );
 }
 
-test('shows loading state while fetching', () => {
-  renderSearchResults()
-  expect(screen.getByText('Loading...')).toBeInTheDocument()
-})
+test("shows loading state while fetching", () => {
+  renderSearchResults();
+  expect(screen.getByText("Loading...")).toBeInTheDocument();
+});
 
-test('renders a table row for each event', async () => {
-  renderSearchResults()
-  const rows = await screen.findAllByRole('row')
+test("renders a table row for each event", async () => {
+  renderSearchResults();
+  const rows = await screen.findAllByRole("row");
   // 1 header row + 2 data rows (default handler returns 2 events)
-  expect(rows).toHaveLength(3)
-})
+  expect(rows).toHaveLength(3);
+});
 
-test('renders empty state when no events are returned', async () => {
+test("renders empty state when no events are returned", async () => {
   server.use(
-    http.get('/api/events/search', () => {
+    http.get("/api/events/search", () => {
       const response: EventSearchResponse = {
         data: [],
         meta: { total: 0 },
-        links: { self: '' },
+        links: { self: "" },
         error: null,
-      }
-      return HttpResponse.json(response)
+      };
+      return HttpResponse.json(response);
     }),
-  )
-  renderSearchResults()
-  expect(await screen.findByText('No events found.')).toBeInTheDocument()
-})
+  );
+  renderSearchResults();
+  expect(await screen.findByText("No events found.")).toBeInTheDocument();
+});
 
-test('title column is visible by default and shows event title', async () => {
+test("title column is visible by default and shows event title", async () => {
   server.use(
-    http.get('/api/events/search', () => {
+    http.get("/api/events/search", () => {
       const response: EventSearchResponse = {
-        data: [makeEvent({ gameId: 'RPG24000001', title: 'My Favorite RPG' })],
+        data: [makeEvent({ gameId: "RPG24000001", title: "My Favorite RPG" })],
         meta: { total: 1 },
-        links: { self: '' },
+        links: { self: "" },
         error: null,
-      }
-      return HttpResponse.json(response)
+      };
+      return HttpResponse.json(response);
     }),
-  )
-  renderSearchResults()
-  expect(await screen.findByRole('columnheader', { name: 'Title' })).toBeInTheDocument()
-  expect(screen.getByRole('link', { name: 'My Favorite RPG' })).toBeInTheDocument()
-})
+  );
+  renderSearchResults();
+  expect(
+    await screen.findByRole("columnheader", { name: "Title" }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole("link", { name: "My Favorite RPG" }),
+  ).toBeInTheDocument();
+});
 
-test('gameId column is hidden by default', async () => {
-  renderSearchResults()
-  await screen.findAllByRole('row')
-  expect(screen.queryByRole('columnheader', { name: 'Game ID' })).not.toBeInTheDocument()
-})
+test("gameId column is hidden by default", async () => {
+  renderSearchResults();
+  await screen.findAllByRole("row");
+  expect(
+    screen.queryByRole("columnheader", { name: "Game ID" }),
+  ).not.toBeInTheDocument();
+});
 
-test('toggling a column off hides its header', async () => {
-  const user = userEvent.setup()
-  renderSearchResults()
-  await screen.findAllByRole('row')
+test("toggling a column off hides its header", async () => {
+  const user = userEvent.setup();
+  renderSearchResults();
+  await screen.findAllByRole("row");
 
-  const checkbox = screen.getByRole('checkbox', { name: 'Title' })
-  await user.click(checkbox)
+  const checkbox = screen.getByRole("checkbox", { name: "Title" });
+  await user.click(checkbox);
 
-  expect(screen.queryByRole('columnheader', { name: 'Title' })).not.toBeInTheDocument()
-})
+  expect(
+    screen.queryByRole("columnheader", { name: "Title" }),
+  ).not.toBeInTheDocument();
+});
 
-test('event title link points to the event detail route', async () => {
+test("event title link points to the event detail route", async () => {
   server.use(
-    http.get('/api/events/search', () => {
+    http.get("/api/events/search", () => {
       const response: EventSearchResponse = {
-        data: [makeEvent({ gameId: 'RPG24000042', title: 'Dragon Hunt' })],
+        data: [makeEvent({ gameId: "RPG24000042", title: "Dragon Hunt" })],
         meta: { total: 1 },
-        links: { self: '' },
+        links: { self: "" },
         error: null,
-      }
-      return HttpResponse.json(response)
+      };
+      return HttpResponse.json(response);
     }),
-  )
-  renderSearchResults()
-  const link = await screen.findByRole('link', { name: 'Dragon Hunt' })
-  expect(link).toHaveAttribute('href', '/event/RPG24000042')
-})
+  );
+  renderSearchResults();
+  const link = await screen.findByRole("link", { name: "Dragon Hunt" });
+  expect(link).toHaveAttribute("href", "/event/RPG24000042");
+});
 ```
 
 - [ ] **Step 2: Run tests to confirm they fail**
@@ -1670,103 +1855,140 @@ Expected: FAIL — `Cannot find module './SearchResults'`
 - [ ] **Step 3: Create `src/components/SearchResults/SearchResults.tsx`**
 
 ```tsx
-import { useQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
-import { format } from 'date-fns'
-import { useColumnVisibility } from '../../hooks/useColumnVisibility'
-import { fetchEvents } from '../../utils/api'
-import type { SearchParams, Event } from '../../utils/types'
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
+import { format } from "date-fns";
+import { useColumnVisibility } from "../../hooks/useColumnVisibility";
+import { fetchEvents } from "../../utils/api";
+import type { SearchParams, Event } from "../../utils/types";
 
 interface SearchResultsProps {
-  searchParams: SearchParams
+  searchParams: SearchParams;
 }
 
 const COLUMNS = [
-  { key: 'gameId', label: 'Game ID' },
-  { key: 'title', label: 'Title' },
-  { key: 'eventType', label: 'Type' },
-  { key: 'group', label: 'Group' },
-  { key: 'shortDescription', label: 'Short Description' },
-  { key: 'longDescription', label: 'Long Description' },
-  { key: 'gameSystem', label: 'Game System' },
-  { key: 'rulesEdition', label: 'Rules Edition' },
-  { key: 'minPlayers', label: 'Min Players' },
-  { key: 'maxPlayers', label: 'Max Players' },
-  { key: 'ageRequired', label: 'Age Required' },
-  { key: 'experienceRequired', label: 'Experience Required' },
-  { key: 'materialsProvided', label: 'Materials Provided' },
-  { key: 'day', label: 'Day' },
-  { key: 'startDateTime', label: 'Start' },
-  { key: 'duration', label: 'Duration' },
-  { key: 'endDateTime', label: 'End' },
-  { key: 'gmNames', label: 'GMs' },
-  { key: 'website', label: 'Website' },
-  { key: 'email', label: 'Email' },
-  { key: 'tournament', label: 'Tournament' },
-  { key: 'roundNumber', label: 'Round Number' },
-  { key: 'totalRounds', label: 'Total Rounds' },
-  { key: 'minimumPlayTime', label: 'Min Time' },
-  { key: 'attendeeRegistration', label: 'Attendee Registration' },
-  { key: 'cost', label: 'Cost' },
-  { key: 'location', label: 'Location' },
-  { key: 'roomName', label: 'Room' },
-  { key: 'tableNumber', label: 'Table Number' },
-  { key: 'specialCategory', label: 'Special Category' },
-  { key: 'ticketsAvailable', label: 'Tickets Available' },
-  { key: 'lastModified', label: 'Last Modified' },
-] as const
+  { key: "gameId", label: "Game ID" },
+  { key: "title", label: "Title" },
+  { key: "eventType", label: "Type" },
+  { key: "group", label: "Group" },
+  { key: "shortDescription", label: "Short Description" },
+  { key: "longDescription", label: "Long Description" },
+  { key: "gameSystem", label: "Game System" },
+  { key: "rulesEdition", label: "Rules Edition" },
+  { key: "minPlayers", label: "Min Players" },
+  { key: "maxPlayers", label: "Max Players" },
+  { key: "ageRequired", label: "Age Required" },
+  { key: "experienceRequired", label: "Experience Required" },
+  { key: "materialsProvided", label: "Materials Provided" },
+  { key: "day", label: "Day" },
+  { key: "startDateTime", label: "Start" },
+  { key: "duration", label: "Duration" },
+  { key: "endDateTime", label: "End" },
+  { key: "gmNames", label: "GMs" },
+  { key: "website", label: "Website" },
+  { key: "email", label: "Email" },
+  { key: "tournament", label: "Tournament" },
+  { key: "roundNumber", label: "Round Number" },
+  { key: "totalRounds", label: "Total Rounds" },
+  { key: "minimumPlayTime", label: "Min Time" },
+  { key: "attendeeRegistration", label: "Attendee Registration" },
+  { key: "cost", label: "Cost" },
+  { key: "location", label: "Location" },
+  { key: "roomName", label: "Room" },
+  { key: "tableNumber", label: "Table Number" },
+  { key: "specialCategory", label: "Special Category" },
+  { key: "ticketsAvailable", label: "Tickets Available" },
+  { key: "lastModified", label: "Last Modified" },
+] as const;
 
-type ColumnKey = (typeof COLUMNS)[number]['key']
+type ColumnKey = (typeof COLUMNS)[number]["key"];
 
 function EventCell({ col, event }: { col: ColumnKey; event: Event }) {
-  const { attributes: a, attributes: { gameId } } = event
+  const {
+    attributes: a,
+    attributes: { gameId },
+  } = event;
   const link = (text: React.ReactNode) => (
-    <Link to="/event/$id" params={{ id: gameId }}>{text}</Link>
-  )
+    <Link to="/event/$id" params={{ id: gameId }}>
+      {text}
+    </Link>
+  );
   switch (col) {
-    case 'gameId': return <td>{link(a.gameId)}</td>
-    case 'title': return <td>{link(a.title)}</td>
-    case 'eventType': return <td>{a.eventType}</td>
-    case 'group': return <td>{a.group}</td>
-    case 'shortDescription': return <td>{a.shortDescription}</td>
-    case 'longDescription': return <td>{a.longDescription}</td>
-    case 'gameSystem': return <td>{a.gameSystem}</td>
-    case 'rulesEdition': return <td>{a.rulesEdition}</td>
-    case 'minPlayers': return <td>{a.minPlayers}</td>
-    case 'maxPlayers': return <td>{a.maxPlayers}</td>
-    case 'ageRequired': return <td>{a.ageRequired}</td>
-    case 'experienceRequired': return <td>{a.experienceRequired}</td>
-    case 'materialsProvided': return <td>{a.materialsProvided}</td>
-    case 'day': return <td>{format(new Date(a.startDateTime), 'EEEE')}</td>
-    case 'startDateTime': return <td>{format(new Date(a.startDateTime), 'HH:mm')}</td>
-    case 'duration': return <td>{a.duration}</td>
-    case 'endDateTime': return <td>{format(new Date(a.endDateTime), 'HH:mm')}</td>
-    case 'gmNames': return <td>{a.gmNames}</td>
-    case 'website': return <td>{a.website}</td>
-    case 'email': return <td>{a.email}</td>
-    case 'tournament': return <td>{a.tournament}</td>
-    case 'roundNumber': return <td>{a.roundNumber}</td>
-    case 'totalRounds': return <td>{a.totalRounds}</td>
-    case 'minimumPlayTime': return <td>{a.minimumPlayTime}</td>
-    case 'attendeeRegistration': return <td>{a.attendeeRegistration}</td>
-    case 'cost': return <td>${a.cost.toFixed(2)}</td>
-    case 'location': return <td>{a.location}</td>
-    case 'roomName': return <td>{a.roomName}</td>
-    case 'tableNumber': return <td>{a.tableNumber}</td>
-    case 'specialCategory': return <td>{a.specialCategory}</td>
-    case 'ticketsAvailable': return <td>{a.ticketsAvailable}</td>
-    case 'lastModified': return <td>{format(new Date(a.lastModified), 'yyyy-MM-dd')}</td>
+    case "gameId":
+      return <td>{link(a.gameId)}</td>;
+    case "title":
+      return <td>{link(a.title)}</td>;
+    case "eventType":
+      return <td>{a.eventType}</td>;
+    case "group":
+      return <td>{a.group}</td>;
+    case "shortDescription":
+      return <td>{a.shortDescription}</td>;
+    case "longDescription":
+      return <td>{a.longDescription}</td>;
+    case "gameSystem":
+      return <td>{a.gameSystem}</td>;
+    case "rulesEdition":
+      return <td>{a.rulesEdition}</td>;
+    case "minPlayers":
+      return <td>{a.minPlayers}</td>;
+    case "maxPlayers":
+      return <td>{a.maxPlayers}</td>;
+    case "ageRequired":
+      return <td>{a.ageRequired}</td>;
+    case "experienceRequired":
+      return <td>{a.experienceRequired}</td>;
+    case "materialsProvided":
+      return <td>{a.materialsProvided}</td>;
+    case "day":
+      return <td>{format(new Date(a.startDateTime), "EEEE")}</td>;
+    case "startDateTime":
+      return <td>{format(new Date(a.startDateTime), "HH:mm")}</td>;
+    case "duration":
+      return <td>{a.duration}</td>;
+    case "endDateTime":
+      return <td>{format(new Date(a.endDateTime), "HH:mm")}</td>;
+    case "gmNames":
+      return <td>{a.gmNames}</td>;
+    case "website":
+      return <td>{a.website}</td>;
+    case "email":
+      return <td>{a.email}</td>;
+    case "tournament":
+      return <td>{a.tournament}</td>;
+    case "roundNumber":
+      return <td>{a.roundNumber}</td>;
+    case "totalRounds":
+      return <td>{a.totalRounds}</td>;
+    case "minimumPlayTime":
+      return <td>{a.minimumPlayTime}</td>;
+    case "attendeeRegistration":
+      return <td>{a.attendeeRegistration}</td>;
+    case "cost":
+      return <td>${a.cost.toFixed(2)}</td>;
+    case "location":
+      return <td>{a.location}</td>;
+    case "roomName":
+      return <td>{a.roomName}</td>;
+    case "tableNumber":
+      return <td>{a.tableNumber}</td>;
+    case "specialCategory":
+      return <td>{a.specialCategory}</td>;
+    case "ticketsAvailable":
+      return <td>{a.ticketsAvailable}</td>;
+    case "lastModified":
+      return <td>{format(new Date(a.lastModified), "yyyy-MM-dd")}</td>;
   }
 }
 
 export function SearchResults({ searchParams }: SearchResultsProps) {
-  const { visibility, toggle } = useColumnVisibility()
+  const { visibility, toggle } = useColumnVisibility();
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['events', searchParams],
+    queryKey: ["events", searchParams],
     queryFn: () => fetchEvents(searchParams),
-  })
+  });
 
-  const visibleColumns = COLUMNS.filter((col) => visibility[col.key])
+  const visibleColumns = COLUMNS.filter((col) => visibility[col.key]);
 
   return (
     <section>
@@ -1814,7 +2036,7 @@ export function SearchResults({ searchParams }: SearchResultsProps) {
         </table>
       )}
     </section>
-  )
+  );
 }
 ```
 
@@ -1838,6 +2060,7 @@ git commit -m "feat: add SearchResults component"
 ## Task 9: EventDetail component (TDD)
 
 **Files:**
+
 - Create: `src/components/EventDetail/EventDetail.test.tsx`
 - Create: `src/components/EventDetail/EventDetail.tsx`
 
@@ -1846,121 +2069,123 @@ git commit -m "feat: add SearchResults component"
 Create `src/components/EventDetail/EventDetail.test.tsx`:
 
 ```tsx
-import { render, screen } from '@testing-library/react'
+import { render, screen } from "@testing-library/react";
 import {
   createRootRoute,
   createRouter,
   RouterProvider,
   createMemoryHistory,
-} from '@tanstack/react-router'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { http, HttpResponse } from 'msw'
-import { server } from '../../test/msw/server'
-import { makeEvent } from '../../test/msw/factory'
-import { EventDetail } from './EventDetail'
-import type { EventSearchResponse } from '../../utils/types'
+} from "@tanstack/react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { http, HttpResponse } from "msw";
+import { server } from "../../test/msw/server";
+import { makeEvent } from "../../test/msw/factory";
+import { EventDetail } from "./EventDetail";
+import type { EventSearchResponse } from "../../utils/types";
 
 function renderEventDetail(gameId: string) {
   const rootRoute = createRootRoute({
     component: () => <EventDetail gameId={gameId} />,
-  })
+  });
   const router = createRouter({
     routeTree: rootRoute,
-    history: createMemoryHistory({ initialEntries: ['/'] }),
-  })
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    history: createMemoryHistory({ initialEntries: ["/"] }),
+  });
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   return render(
     <QueryClientProvider client={client}>
       <RouterProvider router={router} />
     </QueryClientProvider>,
-  )
+  );
 }
 
-test('shows loading state while fetching', () => {
-  renderEventDetail('RPG24000001')
-  expect(screen.getByText('Loading...')).toBeInTheDocument()
-})
+test("shows loading state while fetching", () => {
+  renderEventDetail("RPG24000001");
+  expect(screen.getByText("Loading...")).toBeInTheDocument();
+});
 
-test('renders event title and gameId after load', async () => {
+test("renders event title and gameId after load", async () => {
   server.use(
-    http.get('/api/events/search', () => {
+    http.get("/api/events/search", () => {
       const response: EventSearchResponse = {
-        data: [makeEvent({ gameId: 'RPG24000001', title: 'Epic Dragon Hunt' })],
+        data: [makeEvent({ gameId: "RPG24000001", title: "Epic Dragon Hunt" })],
         meta: { total: 1 },
-        links: { self: '' },
+        links: { self: "" },
         error: null,
-      }
-      return HttpResponse.json(response)
+      };
+      return HttpResponse.json(response);
     }),
-  )
-  renderEventDetail('RPG24000001')
-  expect(await screen.findByText('Epic Dragon Hunt')).toBeInTheDocument()
-  expect(screen.getByText('RPG24000001')).toBeInTheDocument()
-})
+  );
+  renderEventDetail("RPG24000001");
+  expect(await screen.findByText("Epic Dragon Hunt")).toBeInTheDocument();
+  expect(screen.getByText("RPG24000001")).toBeInTheDocument();
+});
 
-test('renders all key event attributes', async () => {
+test("renders all key event attributes", async () => {
   server.use(
-    http.get('/api/events/search', () => {
+    http.get("/api/events/search", () => {
       const response: EventSearchResponse = {
         data: [
           makeEvent({
-            gameId: 'RPG24000001',
-            title: 'Epic Dragon Hunt',
-            shortDescription: 'Hunt the dragon',
-            location: 'ICC Hall A',
-            gmNames: 'Jane Doe',
+            gameId: "RPG24000001",
+            title: "Epic Dragon Hunt",
+            shortDescription: "Hunt the dragon",
+            location: "ICC Hall A",
+            gmNames: "Jane Doe",
             cost: 4,
           }),
         ],
         meta: { total: 1 },
-        links: { self: '' },
+        links: { self: "" },
         error: null,
-      }
-      return HttpResponse.json(response)
+      };
+      return HttpResponse.json(response);
     }),
-  )
-  renderEventDetail('RPG24000001')
-  await screen.findByText('Epic Dragon Hunt')
-  expect(screen.getByText('Hunt the dragon')).toBeInTheDocument()
-  expect(screen.getByText('ICC Hall A')).toBeInTheDocument()
-  expect(screen.getByText('Jane Doe')).toBeInTheDocument()
-  expect(screen.getByText('$4.00')).toBeInTheDocument()
-})
+  );
+  renderEventDetail("RPG24000001");
+  await screen.findByText("Epic Dragon Hunt");
+  expect(screen.getByText("Hunt the dragon")).toBeInTheDocument();
+  expect(screen.getByText("ICC Hall A")).toBeInTheDocument();
+  expect(screen.getByText("Jane Doe")).toBeInTheDocument();
+  expect(screen.getByText("$4.00")).toBeInTheDocument();
+});
 
-test('shows not-found message when event does not exist', async () => {
+test("shows not-found message when event does not exist", async () => {
   server.use(
-    http.get('/api/events/search', () => {
+    http.get("/api/events/search", () => {
       const response: EventSearchResponse = {
         data: [],
         meta: { total: 0 },
-        links: { self: '' },
+        links: { self: "" },
         error: null,
-      }
-      return HttpResponse.json(response)
+      };
+      return HttpResponse.json(response);
     }),
-  )
-  renderEventDetail('DOESNOTEXIST')
-  expect(await screen.findByText('Event not found.')).toBeInTheDocument()
-})
+  );
+  renderEventDetail("DOESNOTEXIST");
+  expect(await screen.findByText("Event not found.")).toBeInTheDocument();
+});
 
-test('fetches using the provided gameId as a query param', async () => {
-  let capturedUrl: string | undefined
+test("fetches using the provided gameId as a query param", async () => {
+  let capturedUrl: string | undefined;
   server.use(
-    http.get('/api/events/search', ({ request }) => {
-      capturedUrl = request.url
+    http.get("/api/events/search", ({ request }) => {
+      capturedUrl = request.url;
       const response: EventSearchResponse = {
-        data: [makeEvent({ gameId: 'BGM24000099' })],
+        data: [makeEvent({ gameId: "BGM24000099" })],
         meta: { total: 1 },
-        links: { self: '' },
+        links: { self: "" },
         error: null,
-      }
-      return HttpResponse.json(response)
+      };
+      return HttpResponse.json(response);
     }),
-  )
-  renderEventDetail('BGM24000099')
-  await screen.findByRole('term')
-  expect(capturedUrl).toContain('gameId=BGM24000099')
-})
+  );
+  renderEventDetail("BGM24000099");
+  await screen.findByRole("term");
+  expect(capturedUrl).toContain("gameId=BGM24000099");
+});
 ```
 
 - [ ] **Step 2: Run tests to confirm they fail**
@@ -1974,65 +2199,99 @@ Expected: FAIL — `Cannot find module './EventDetail'`
 - [ ] **Step 3: Create `src/components/EventDetail/EventDetail.tsx`**
 
 ```tsx
-import { useQuery } from '@tanstack/react-query'
-import { format } from 'date-fns'
-import { fetchEvents } from '../../utils/api'
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { fetchEvents } from "../../utils/api";
 
 interface EventDetailProps {
-  gameId: string
+  gameId: string;
 }
 
 export function EventDetail({ gameId }: EventDetailProps) {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['event', gameId],
+    queryKey: ["event", gameId],
     queryFn: () => fetchEvents({ gameId, limit: 1 }),
-  })
+  });
 
-  if (isLoading) return <p>Loading...</p>
-  if (isError) return <p>Error loading event.</p>
-  if (!data || data.data.length === 0) return <p>Event not found.</p>
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error loading event.</p>;
+  if (!data || data.data.length === 0) return <p>Event not found.</p>;
 
-  const a = data.data[0].attributes
+  const a = data.data[0].attributes;
 
   return (
     <article>
       <h1>{a.title}</h1>
       <dl>
-        <dt>Game ID</dt><dd>{a.gameId}</dd>
-        <dt>Type</dt><dd>{a.eventType}</dd>
-        <dt>Group</dt><dd>{a.group}</dd>
-        <dt>Short Description</dt><dd>{a.shortDescription}</dd>
-        <dt>Long Description</dt><dd>{a.longDescription}</dd>
-        <dt>Game System</dt><dd>{a.gameSystem}</dd>
-        <dt>Rules Edition</dt><dd>{a.rulesEdition}</dd>
-        <dt>Min Players</dt><dd>{a.minPlayers}</dd>
-        <dt>Max Players</dt><dd>{a.maxPlayers}</dd>
-        <dt>Age Required</dt><dd>{a.ageRequired}</dd>
-        <dt>Experience Required</dt><dd>{a.experienceRequired}</dd>
-        <dt>Materials Provided</dt><dd>{a.materialsProvided}</dd>
-        <dt>Day</dt><dd>{format(new Date(a.startDateTime), 'EEEE')}</dd>
-        <dt>Start</dt><dd>{format(new Date(a.startDateTime), 'HH:mm')}</dd>
-        <dt>Duration</dt><dd>{a.duration} hours</dd>
-        <dt>End</dt><dd>{format(new Date(a.endDateTime), 'HH:mm')}</dd>
-        <dt>GMs</dt><dd>{a.gmNames}</dd>
-        <dt>Website</dt><dd>{a.website || '—'}</dd>
-        <dt>Email</dt><dd>{a.email || '—'}</dd>
-        <dt>Tournament</dt><dd>{a.tournament}</dd>
-        <dt>Round</dt><dd>{a.roundNumber} of {a.totalRounds}</dd>
-        <dt>Min Play Time</dt><dd>{a.minimumPlayTime} hours</dd>
-        <dt>Attendee Registration</dt><dd>{a.attendeeRegistration}</dd>
-        <dt>Cost</dt><dd>${a.cost.toFixed(2)}</dd>
-        <dt>Location</dt><dd>{a.location}</dd>
-        <dt>Room</dt><dd>{a.roomName}</dd>
-        <dt>Table</dt><dd>{a.tableNumber}</dd>
-        <dt>Special Category</dt><dd>{a.specialCategory}</dd>
-        <dt>Tickets Available</dt><dd>{a.ticketsAvailable}</dd>
-        <dt>Rules Complexity</dt><dd>{a.rulesComplexity}</dd>
-        <dt>Prize</dt><dd>{a.prize || '—'}</dd>
-        <dt>Last Modified</dt><dd>{format(new Date(a.lastModified), 'yyyy-MM-dd')}</dd>
+        <dt>Game ID</dt>
+        <dd>{a.gameId}</dd>
+        <dt>Type</dt>
+        <dd>{a.eventType}</dd>
+        <dt>Group</dt>
+        <dd>{a.group}</dd>
+        <dt>Short Description</dt>
+        <dd>{a.shortDescription}</dd>
+        <dt>Long Description</dt>
+        <dd>{a.longDescription}</dd>
+        <dt>Game System</dt>
+        <dd>{a.gameSystem}</dd>
+        <dt>Rules Edition</dt>
+        <dd>{a.rulesEdition}</dd>
+        <dt>Min Players</dt>
+        <dd>{a.minPlayers}</dd>
+        <dt>Max Players</dt>
+        <dd>{a.maxPlayers}</dd>
+        <dt>Age Required</dt>
+        <dd>{a.ageRequired}</dd>
+        <dt>Experience Required</dt>
+        <dd>{a.experienceRequired}</dd>
+        <dt>Materials Provided</dt>
+        <dd>{a.materialsProvided}</dd>
+        <dt>Day</dt>
+        <dd>{format(new Date(a.startDateTime), "EEEE")}</dd>
+        <dt>Start</dt>
+        <dd>{format(new Date(a.startDateTime), "HH:mm")}</dd>
+        <dt>Duration</dt>
+        <dd>{a.duration} hours</dd>
+        <dt>End</dt>
+        <dd>{format(new Date(a.endDateTime), "HH:mm")}</dd>
+        <dt>GMs</dt>
+        <dd>{a.gmNames}</dd>
+        <dt>Website</dt>
+        <dd>{a.website || "—"}</dd>
+        <dt>Email</dt>
+        <dd>{a.email || "—"}</dd>
+        <dt>Tournament</dt>
+        <dd>{a.tournament}</dd>
+        <dt>Round</dt>
+        <dd>
+          {a.roundNumber} of {a.totalRounds}
+        </dd>
+        <dt>Min Play Time</dt>
+        <dd>{a.minimumPlayTime} hours</dd>
+        <dt>Attendee Registration</dt>
+        <dd>{a.attendeeRegistration}</dd>
+        <dt>Cost</dt>
+        <dd>${a.cost.toFixed(2)}</dd>
+        <dt>Location</dt>
+        <dd>{a.location}</dd>
+        <dt>Room</dt>
+        <dd>{a.roomName}</dd>
+        <dt>Table</dt>
+        <dd>{a.tableNumber}</dd>
+        <dt>Special Category</dt>
+        <dd>{a.specialCategory}</dd>
+        <dt>Tickets Available</dt>
+        <dd>{a.ticketsAvailable}</dd>
+        <dt>Rules Complexity</dt>
+        <dd>{a.rulesComplexity}</dd>
+        <dt>Prize</dt>
+        <dd>{a.prize || "—"}</dd>
+        <dt>Last Modified</dt>
+        <dd>{format(new Date(a.lastModified), "yyyy-MM-dd")}</dd>
       </dl>
     </article>
-  )
+  );
 }
 ```
 
@@ -2056,6 +2315,7 @@ git commit -m "feat: add EventDetail component"
 ## Task 10: Wire routes and run full test suite
 
 **Files:**
+
 - Modify: `src/routes/index.tsx`
 - Modify: `src/routes/event.$id.tsx`
 
@@ -2064,92 +2324,95 @@ git commit -m "feat: add EventDetail component"
 Replace the stub `component` and `validateSearch` with the full wiring. The `validateSearch` body is unchanged — only the `component` changes:
 
 ```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { SearchForm } from '../components/SearchForm/SearchForm'
-import { SearchResults } from '../components/SearchResults/SearchResults'
-import { buildSearchParams, parseSearchParams } from '../utils/searchParams'
-import type { SearchFormValues, SearchParams } from '../utils/types'
+import { createFileRoute } from "@tanstack/react-router";
+import { SearchForm } from "../components/SearchForm/SearchForm";
+import { SearchResults } from "../components/SearchResults/SearchResults";
+import { buildSearchParams, parseSearchParams } from "../utils/searchParams";
+import type { SearchFormValues, SearchParams } from "../utils/types";
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute("/")({
   validateSearch: (search: Record<string, unknown>): SearchParams => {
     const str = (k: string) =>
-      typeof search[k] === 'string' ? (search[k] as string) : undefined
+      typeof search[k] === "string" ? (search[k] as string) : undefined;
     const num = (k: string) =>
-      typeof search[k] === 'number' ? (search[k] as number) : undefined
+      typeof search[k] === "number" ? (search[k] as number) : undefined;
     return {
-      limit: num('limit'),
-      filter: str('filter'),
-      gameId: str('gameId'),
-      title: str('title'),
-      eventType: str('eventType'),
-      group: str('group'),
-      shortDescription: str('shortDescription'),
-      longDescription: str('longDescription'),
-      gameSystem: str('gameSystem'),
-      rulesEdition: str('rulesEdition'),
-      minPlayers: str('minPlayers'),
-      maxPlayers: str('maxPlayers'),
-      ageRequired: str('ageRequired'),
-      experienceRequired: str('experienceRequired'),
-      materialsProvided: str('materialsProvided'),
-      startDateTime: str('startDateTime'),
-      duration: str('duration'),
-      endDateTime: str('endDateTime'),
-      gmNames: str('gmNames'),
-      website: str('website'),
-      email: str('email'),
-      tournament: str('tournament'),
-      roundNumber: str('roundNumber'),
-      totalRounds: str('totalRounds'),
-      minimumPlayTime: str('minimumPlayTime'),
-      attendeeRegistration: str('attendeeRegistration'),
-      cost: str('cost'),
-      location: str('location'),
-      roomName: str('roomName'),
-      tableNumber: str('tableNumber'),
-      specialCategory: str('specialCategory'),
-      ticketsAvailable: str('ticketsAvailable'),
-      lastModified: str('lastModified'),
-    }
+      limit: num("limit"),
+      filter: str("filter"),
+      gameId: str("gameId"),
+      title: str("title"),
+      eventType: str("eventType"),
+      group: str("group"),
+      shortDescription: str("shortDescription"),
+      longDescription: str("longDescription"),
+      gameSystem: str("gameSystem"),
+      rulesEdition: str("rulesEdition"),
+      minPlayers: str("minPlayers"),
+      maxPlayers: str("maxPlayers"),
+      ageRequired: str("ageRequired"),
+      experienceRequired: str("experienceRequired"),
+      materialsProvided: str("materialsProvided"),
+      startDateTime: str("startDateTime"),
+      duration: str("duration"),
+      endDateTime: str("endDateTime"),
+      gmNames: str("gmNames"),
+      website: str("website"),
+      email: str("email"),
+      tournament: str("tournament"),
+      roundNumber: str("roundNumber"),
+      totalRounds: str("totalRounds"),
+      minimumPlayTime: str("minimumPlayTime"),
+      attendeeRegistration: str("attendeeRegistration"),
+      cost: str("cost"),
+      location: str("location"),
+      roomName: str("roomName"),
+      tableNumber: str("tableNumber"),
+      specialCategory: str("specialCategory"),
+      ticketsAvailable: str("ticketsAvailable"),
+      lastModified: str("lastModified"),
+    };
   },
   component: SearchPage,
-})
+});
 
 function SearchPage() {
-  const navigate = Route.useNavigate()
-  const search = Route.useSearch()
+  const navigate = Route.useNavigate();
+  const search = Route.useSearch();
 
   const handleSearch = (values: SearchFormValues) => {
-    void navigate({ search: buildSearchParams(values) })
-  }
+    void navigate({ search: buildSearchParams(values) });
+  };
 
   return (
     <main>
       <h1>Gen Con Buddy</h1>
-      <SearchForm defaultValues={parseSearchParams(search)} onSearch={handleSearch} />
+      <SearchForm
+        defaultValues={parseSearchParams(search)}
+        onSearch={handleSearch}
+      />
       <SearchResults searchParams={search} />
     </main>
-  )
+  );
 }
 ```
 
 - [ ] **Step 2: Update `src/routes/event.$id.tsx` to render the real component**
 
 ```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { EventDetail } from '../components/EventDetail/EventDetail'
+import { createFileRoute } from "@tanstack/react-router";
+import { EventDetail } from "../components/EventDetail/EventDetail";
 
-export const Route = createFileRoute('/event/$id')({
+export const Route = createFileRoute("/event/$id")({
   component: EventDetailPage,
-})
+});
 
 function EventDetailPage() {
-  const { id } = Route.useParams()
+  const { id } = Route.useParams();
   return (
     <main>
       <EventDetail gameId={id} />
     </main>
-  )
+  );
 }
 ```
 
@@ -2170,6 +2433,7 @@ npm run dev
 Open the URL printed in the terminal (typically `http://localhost:5173`).
 
 Verify manually:
+
 - Search form renders with "Search" input and "Event Type" dropdown visible
 - "Advanced filters" disclosure expands to show all filter fields
 - Clicking "Search" with no filters loads events from the mock API in the table

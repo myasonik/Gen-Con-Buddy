@@ -11,7 +11,9 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "format": "prettier --write .",
+    "prepare": "husky"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.74.4",
@@ -36,8 +38,11 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.26",
     "globals": "^15.15.0",
+    "husky": "^9.1.7",
     "jsdom": "^25.0.1",
+    "lint-staged": "^16.4.0",
     "msw": "^2.7.3",
+    "prettier": "^3.8.3",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.58.2",
     "vite": "^5.4.14",
@@ -47,5 +52,9 @@
     "workerDirectory": [
       "public"
     ]
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,json,md}": "prettier --write",
+    "*.{ts,tsx,js}": "eslint --fix"
   }
 }
