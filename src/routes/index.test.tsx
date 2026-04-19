@@ -1,4 +1,9 @@
-import { act, render, screen } from '@testing-library/react'
+import { act, render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { http, HttpResponse } from 'msw'
+import { server } from '../test/msw/server'
+import { makeEvent } from '../test/msw/factory'
+import type { EventSearchResponse } from '../utils/types'
 import {
   RouterProvider,
   createRouter,
@@ -48,4 +53,55 @@ test('page param is read from URL', async () => {
 test('limit param is read from URL', async () => {
   await renderSearchPage('/?limit=500')
   expect(screen.queryByText('Loading...')).toBeDefined()
+})
+
+test('navigating to page 2 sends page=1 to API (0-indexed)', async () => {
+  const user = userEvent.setup()
+  let latestUrl: URL | null = null
+  server.use(
+    http.get('/api/events/search', ({ request }) => {
+      latestUrl = new URL(request.url)
+      const response: EventSearchResponse = {
+        data: [makeEvent()],
+        meta: { total: 200 },
+        links: { self: '' },
+        error: null,
+      }
+      return HttpResponse.json(response)
+    }),
+  )
+  await renderSearchPage('/')
+  // wait for initial render and pagination
+  await screen.findAllByRole('navigation', { name: 'Pagination' })
+  latestUrl = null
+  // click Next on the first pagination nav
+  const navs = screen.getAllByRole('navigation', { name: 'Pagination' })
+  await user.click(within(navs[0]).getByRole('button', { name: 'Next' }))
+  // wait for re-render after navigation
+  await screen.findAllByRole('navigation', { name: 'Pagination' })
+  expect(latestUrl!.searchParams.get('page')).toBe('1')
+})
+
+test('navigating back to page 1 omits page from URL and API call', async () => {
+  const user = userEvent.setup()
+  let latestUrl: URL | null = null
+  server.use(
+    http.get('/api/events/search', ({ request }) => {
+      latestUrl = new URL(request.url)
+      const response: EventSearchResponse = {
+        data: [makeEvent()],
+        meta: { total: 200 },
+        links: { self: '' },
+        error: null,
+      }
+      return HttpResponse.json(response)
+    }),
+  )
+  await renderSearchPage('/?page=2')
+  await screen.findAllByRole('navigation', { name: 'Pagination' })
+  latestUrl = null
+  const navs = screen.getAllByRole('navigation', { name: 'Pagination' })
+  await user.click(within(navs[0]).getByRole('button', { name: 'Previous' }))
+  await screen.findAllByRole('navigation', { name: 'Pagination' })
+  expect(latestUrl!.searchParams.has('page')).toBe(false)
 })

@@ -57,7 +57,9 @@ function SearchPage() {
 
   const handleSearch = (values: SearchFormValues) => {
     // Preserve limit across filter changes; page resets to 1 by omission
-    void navigate({ search: { ...buildSearchParams(values), limit: search.limit } })
+    const params = buildSearchParams(values)
+    if (search.limit !== undefined) params.limit = search.limit
+    void navigate({ search: params })
   }
 
   const handleNavigate = (page: number, limit: number) => {
