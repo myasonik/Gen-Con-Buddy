@@ -56,14 +56,25 @@ function SearchPage() {
   const search = Route.useSearch()
 
   const handleSearch = (values: SearchFormValues) => {
-    void navigate({ search: buildSearchParams(values) })
+    // Preserve limit across filter changes; page resets to 1 by omission
+    void navigate({ search: { ...buildSearchParams(values), limit: search.limit } })
+  }
+
+  const handleNavigate = (page: number, limit: number) => {
+    void navigate({
+      search: (prev) => ({
+        ...prev,
+        page: page === 1 ? undefined : page,
+        limit: limit === 100 ? undefined : limit,
+      }),
+    })
   }
 
   return (
     <main>
       <h1>Gen Con Buddy</h1>
       <SearchForm key={JSON.stringify(search)} defaultValues={parseSearchParams(search)} onSearch={handleSearch} />
-      <SearchResults searchParams={search} />
+      <SearchResults searchParams={search} onNavigate={handleNavigate} />
     </main>
   )
 }

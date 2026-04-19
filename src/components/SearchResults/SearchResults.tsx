@@ -3,10 +3,12 @@ import { Link } from '@tanstack/react-router'
 import { format } from 'date-fns'
 import { useColumnVisibility } from '../../hooks/useColumnVisibility'
 import { fetchEvents } from '../../utils/api'
+import { Pagination } from '../Pagination/Pagination'
 import type { SearchParams, Event } from '../../utils/types'
 
 interface SearchResultsProps {
   searchParams: SearchParams
+  onNavigate: (page: number, limit: number) => void
 }
 
 const COLUMNS = [
@@ -91,14 +93,25 @@ function EventCell({ col, event }: { col: ColumnKey; event: Event }) {
   }
 }
 
-export function SearchResults({ searchParams }: SearchResultsProps) {
+export function SearchResults({ searchParams, onNavigate }: SearchResultsProps) {
   const { visibility, toggle, reset } = useColumnVisibility()
+  const page = searchParams.page ?? 1
+  const limit = searchParams.limit ?? 100
   const { data, isLoading, isError } = useQuery({
     queryKey: ['events', searchParams],
     queryFn: () => fetchEvents(searchParams),
   })
 
   const visibleColumns = COLUMNS.filter((col) => visibility[col.key])
+
+  const pagination = data && data.data.length > 0 ? (
+    <Pagination
+      page={page}
+      limit={limit}
+      total={data.meta.total}
+      onNavigate={onNavigate}
+    />
+  ) : null
 
   return (
     <section>
@@ -127,24 +140,28 @@ export function SearchResults({ searchParams }: SearchResultsProps) {
       {isError && <p>Error loading events.</p>}
       {data && data.data.length === 0 && <p>No events found.</p>}
       {data && data.data.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              {visibleColumns.map((col) => (
-                <th key={col.key}>{col.label}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.data.map((event) => (
-              <tr key={event.id}>
+        <>
+          {pagination}
+          <table>
+            <thead>
+              <tr>
                 {visibleColumns.map((col) => (
-                  <EventCell key={col.key} col={col.key} event={event} />
+                  <th key={col.key}>{col.label}</th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {data.data.map((event) => (
+                <tr key={event.id}>
+                  {visibleColumns.map((col) => (
+                    <EventCell key={col.key} col={col.key} event={event} />
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {pagination}
+        </>
       )}
     </section>
   )
