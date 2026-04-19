@@ -194,3 +194,10 @@ test("day tiles are toggle buttons with aria-pressed", async () => {
     "false",
   );
 });
+
+test("day toggle tiles have concept color style properties", async () => {
+  await renderSearchPage();
+  const thuBtn = screen.getByRole("button", { name: "Thu" });
+  expect(thuBtn.style.getPropertyValue("--tile-color")).toBe("#7a4a00");
+  expect(thuBtn.style.getPropertyValue("--tile-color-bg")).toBe("#fdf0d8");
+});
