@@ -56,10 +56,7 @@ function SearchPage() {
   const search = Route.useSearch()
 
   const handleSearch = (values: SearchFormValues) => {
-    // Preserve limit across filter changes; page resets to 1 by omission
-    const params = buildSearchParams(values)
-    if (search.limit !== undefined) params.limit = search.limit
-    void navigate({ search: params })
+    void navigate({ search: (prev) => ({ ...buildSearchParams(values), limit: prev.limit }) })
   }
 
   const handleNavigate = (page: number, limit: number) => {

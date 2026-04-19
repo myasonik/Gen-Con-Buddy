@@ -43,16 +43,38 @@ test('updates form when URL search params change after initial render', async ()
   expect(screen.getByRole('combobox', { name: 'Event Type' })).toHaveValue('RPG')
 })
 
-test('page param is read from URL', async () => {
+test('page param is read from URL without crashing', async () => {
   await renderSearchPage('/?page=3')
-  // SearchResults will request page 3 — confirmed via MSW handler
-  // Just verify page doesn't cause a crash; API call tested in SearchResults tests
-  expect(screen.queryByText('Loading...')).toBeDefined()
+  expect(screen.getByRole('main')).toBeInTheDocument()
 })
 
-test('limit param is read from URL', async () => {
+test('limit param is read from URL without crashing', async () => {
   await renderSearchPage('/?limit=500')
-  expect(screen.queryByText('Loading...')).toBeDefined()
+  expect(screen.getByRole('main')).toBeInTheDocument()
+})
+
+test('submitting a new search resets page to 1', async () => {
+  const user = userEvent.setup()
+  let latestUrl: URL | null = null
+  server.use(
+    http.get('/api/events/search', ({ request }) => {
+      latestUrl = new URL(request.url)
+      const response: EventSearchResponse = {
+        data: [makeEvent()],
+        meta: { total: 200 },
+        links: { self: '' },
+        error: null,
+      }
+      return HttpResponse.json(response)
+    }),
+  )
+  await renderSearchPage('/?page=3')
+  await screen.findAllByRole('navigation', { name: 'Pagination' })
+  latestUrl = null
+  // Submit the search form (clicking Search button resets page)
+  await user.click(screen.getByRole('button', { name: 'Search' }))
+  await screen.findAllByRole('navigation', { name: 'Pagination' })
+  expect(latestUrl!.searchParams.has('page')).toBe(false)
 })
 
 test('navigating to page 2 sends page=1 to API (0-indexed)', async () => {
