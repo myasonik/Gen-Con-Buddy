@@ -67,3 +67,12 @@ test("clicking days chip calls onRemove with 'days'", async () => {
   await user.click(screen.getByRole("button", { name: /Days: Fri, Sat/ }));
   expect(onRemove).toHaveBeenCalledWith("days");
 });
+
+test("renders a list with accessible label when filters are active", () => {
+  render(
+    <ActiveFilters searchParams={{ filter: "dragon" }} onRemove={() => {}} />,
+  );
+  expect(
+    screen.getByRole("list", { name: "Active filters" }),
+  ).toBeInTheDocument();
+});

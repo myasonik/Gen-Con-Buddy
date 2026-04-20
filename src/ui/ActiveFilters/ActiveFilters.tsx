@@ -12,17 +12,18 @@ export function ActiveFilters({ searchParams, onRemove }: ActiveFiltersProps) {
   if (filters.length === 0) return null;
 
   return (
-    <div className={styles.bar} aria-label="Active filters">
+    <ul className={styles.bar} aria-label="Active filters">
       {filters.map(({ key, label }) => (
-        <button
-          key={key}
-          type="button"
-          className={styles.chip}
-          onClick={() => onRemove(key)}
-        >
-          {label} <span aria-hidden="true">×</span>
-        </button>
+        <li key={key}>
+          <button
+            type="button"
+            className={styles.chip}
+            onClick={() => onRemove(key)}
+          >
+            {label} <span aria-hidden="true">×</span>
+          </button>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
