@@ -546,20 +546,25 @@ export function SearchResults({
           {pagination}
         </>
       )}
-      {resizeTarget && (
-        <ColumnResizeDialog
-          columnName={resizeTarget.columnName}
-          currentWidth={resizeTarget.currentWidth}
-          onApply={(width) => {
-            setSizing((prev) => ({
-              ...prev,
-              [resizeTarget.columnId]: width,
-            }));
-            setResizeTarget(null);
-          }}
-          onClose={() => setResizeTarget(null)}
-        />
-      )}
+      {resizeTarget &&
+        (() => {
+          const resizeColumnId = resizeTarget.columnId;
+          return (
+            <ColumnResizeDialog
+              columnName={resizeTarget.columnName}
+              currentWidth={resizeTarget.currentWidth}
+              onApply={(width) => {
+                if (resizeColumnId) {
+                  setSizing((prev) => ({
+                    ...prev,
+                    [resizeColumnId]: width,
+                  }));
+                }
+              }}
+              onClose={() => setResizeTarget(null)}
+            />
+          );
+        })()}
     </section>
   );
 }
