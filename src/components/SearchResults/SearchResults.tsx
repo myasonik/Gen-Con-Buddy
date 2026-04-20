@@ -371,6 +371,10 @@ export function SearchResults({
       />
     ) : null;
 
+  const resizeColumnId = resizeTarget?.columnId;
+  const resizeColumnName = resizeTarget?.columnName;
+  const resizeCurrentWidth = resizeTarget?.currentWidth;
+
   return (
     <section>
       <details className={styles.visibilityPanel}>
@@ -546,25 +550,19 @@ export function SearchResults({
           {pagination}
         </>
       )}
-      {resizeTarget &&
-        (() => {
-          const resizeColumnId = resizeTarget.columnId;
-          return (
-            <ColumnResizeDialog
-              columnName={resizeTarget.columnName}
-              currentWidth={resizeTarget.currentWidth}
-              onApply={(width) => {
-                if (resizeColumnId) {
-                  setSizing((prev) => ({
-                    ...prev,
-                    [resizeColumnId]: width,
-                  }));
-                }
-              }}
-              onClose={() => setResizeTarget(null)}
-            />
-          );
-        })()}
+      {resizeTarget && (
+        <ColumnResizeDialog
+          columnName={resizeColumnName!}
+          currentWidth={resizeCurrentWidth!}
+          onApply={(width) => {
+            setSizing((prev) => ({
+              ...prev,
+              [resizeColumnId!]: width,
+            }));
+          }}
+          onClose={() => setResizeTarget(null)}
+        />
+      )}
     </section>
   );
 }
