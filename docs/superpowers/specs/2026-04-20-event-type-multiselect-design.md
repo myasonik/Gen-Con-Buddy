@@ -2,48 +2,71 @@
 
 **Date:** 2026-04-20
 
-## Summary
+## Overview
 
-Replace the single-select `<select>` for Event Type in the Search form with a typeahead multi-select combobox. Each option displays a colored badge (short code) alongside the full name. Selected items appear as compact short-code chips when the dropdown is closed, and expand to show full names when open.
+Replace the single `<select>` dropdown for Event Type in the Search form with a typeahead multi-select combobox. Each option shows its short code and full name; selections are displayed as colored chips. Colors come from the existing `EVENT_TYPE_COLORS` map.
 
 ## Component Architecture
 
-New `src/ui/EventTypeSelect/EventTypeSelect.tsx` built on `@base-ui/react/combobox`.
+New component: `src/ui/EventTypeSelect/EventTypeSelect.tsx`
 
-- Owns open/closed state and filter string internally
-- Public API: `value: string` (comma-separated codes, e.g. `"RPG,BGM"`) + `onValueChange: (value: string) => void`
-- Accompanied by `EventTypeSelect.module.css` and `EventTypeSelect.test.tsx`
-- Lives in `src/ui/` — it's a self-contained interactive primitive
+- Built on `@base-ui/react/combobox`
+- Manages open/closed state and filter string internally
+- Public API: `value: string` (comma-separated codes, e.g. `"RPG,BGM"`) and `onValueChange: (value: string) => void`
+- Styled via `EventTypeSelect.module.css`
+- Lives in `src/ui/` as a self-contained interactive primitive with its own tests
 
-## UX Behavior
+### Visual behavior
 
-- **Closed state:** selected items render as compact colored chips showing short code only (e.g. `RPG ×`)
-- **Open state:** chips expand to show full name (e.g. `RPG – Role Playing Game ×`); a text input filters the option list
-- **Filter:** matches on both short code and full name (e.g. "RPG" and "role" both surface Role Playing Game)
-- **Option list:** each row shows a colored badge (short code) + full name; selected options are checkmarked
-- **Colors:** sourced from `EVENT_TYPE_COLORS` in `src/utils/conceptColors.ts`
+- **Closed:** selected items render as compact colored chips showing only the short code (e.g. `RPG`, `BGM`). Placeholder text reads "Add type…" when at least one is selected, "Filter types…" when none.
+- **Open:** chips expand to show code + full name (e.g. `RPG – Role Playing Game`). A text input allows filtering. Dropdown lists all 19 types with a colored code badge and full name per row. Already-selected items show a checkmark.
+- **Filtering:** matches on both code (e.g. "RPG") and name (e.g. "role"), case-insensitive.
+- **Colors:** chip and badge colors sourced from `EVENT_TYPE_COLORS` keyed by short code.
 
 ## Data Flow
 
-`SearchFormValues.eventType` stays `string` — comma-separated codes at rest (e.g. `"RPG,BGM,HMN"`). No type change; mirrors the `days` field pattern exactly.
+`SearchFormValues.eventType` remains `string` — comma-separated codes at rest. No type change; mirrors the `days` field pattern.
 
 `SearchForm` wires `EventTypeSelect` the same way it wires `ToggleTileGroup` for days:
 
 ```tsx
 <EventTypeSelect
-  value={eventType}
+  value={eventType ?? ""}
   onValueChange={(v) => setValue("eventType", v)}
 />
 ```
 
-In `api.ts`, the eventType serialization is updated: split comma-separated codes, map each to its full label via `EVENT_TYPES[code]`, rejoin with commas, and send as a single `eventType` query param.
+In `api.ts`, the existing eventType serialization is updated to handle multiple values: split the comma-separated codes, map each to its full label via `EVENT_TYPES[code]`, rejoin with commas, and set as a single `eventType` query param.
 
-## Backend Change (Gen-Con-Buddy-API)
-
-In `internal/event/search.go`, change the EventType case from `NewKeywordSingle` to `NewKeyword` so it accepts comma-separated full labels and generates an Elasticsearch `terms` query instead of `term`.
+> **Note:** Full multi-type filtering requires a corresponding backend change (switching `NewKeywordSingle` → `NewKeyword` for the EventType field in `search.go`). That work is tracked separately. The frontend serialization is already correct for when that change lands.
 
 ## Testing
 
-- `EventTypeSelect.test.tsx`: selecting adds a code, re-selecting removes it, filter narrows by code and name, chips show short codes closed / full names open
-- `SearchForm.test.tsx`: multi-select value flows through to `onSearch` as comma-separated string
-- `api.ts` tests: multiple codes serialize correctly to comma-separated full labels in the URL
+### `EventTypeSelect.test.tsx`
+
+- Selecting an option appends its code to the value string
+- Selecting an already-selected option removes it
+- Filter text narrows options by code
+- Filter text narrows options by name
+- Chips show short codes when closed
+- Chips show full names when open
+- Removing a chip via × deselects that option
+
+### `SearchForm.test.tsx`
+
+- Multi-select value flows through to `onSearch` as a comma-separated string
+
+### `api.ts` tests
+
+- Multiple codes serialize to comma-separated full labels in the URL
+- Single code continues to serialize correctly
+
+## Files Changed
+
+| File                                                | Change                                         |
+| --------------------------------------------------- | ---------------------------------------------- |
+| `src/ui/EventTypeSelect/EventTypeSelect.tsx`        | New component                                  |
+| `src/ui/EventTypeSelect/EventTypeSelect.module.css` | New styles                                     |
+| `src/ui/EventTypeSelect/EventTypeSelect.test.tsx`   | New tests                                      |
+| `src/components/SearchForm/SearchForm.tsx`          | Replace `<select>` with `EventTypeSelect`      |
+| `src/utils/api.ts`                                  | Update eventType serialization for multi-value |
