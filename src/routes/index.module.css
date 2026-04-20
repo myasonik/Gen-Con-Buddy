@@ -3,6 +3,18 @@
   grid-template-columns: var(--size-sidebar) 1fr;
   grid-template-rows: 1fr;
   height: calc(100vh - 72px);
+  transition: grid-template-columns var(--motion-expand);
+}
+
+.shell[data-sidebar-open="false"] {
+  grid-template-columns: 0 1fr;
+}
+
+.resultsToolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
 }
 
 .sidebar {

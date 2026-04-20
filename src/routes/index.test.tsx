@@ -242,3 +242,56 @@ test("eventType column renders a ConceptBadge", async () => {
   await screen.findByRole("table");
   expect(screen.getByText("RPG")).toBeInTheDocument();
 });
+
+test("sidebar toggle button is present in the results area", async () => {
+  await renderSearchPage("/");
+  expect(screen.getByRole("button", { name: /Filters/ })).toBeInTheDocument();
+});
+
+test("sidebar toggle button has aria-expanded=true by default", async () => {
+  localStorage.clear();
+  await renderSearchPage("/");
+  expect(screen.getByRole("button", { name: /Filters/ })).toHaveAttribute(
+    "aria-expanded",
+    "true",
+  );
+});
+
+test("clicking toggle button flips aria-expanded to false", async () => {
+  const user = userEvent.setup();
+  localStorage.clear();
+  await renderSearchPage("/");
+  const btn = screen.getByRole("button", { name: /Filters/ });
+  await user.click(btn);
+  expect(btn).toHaveAttribute("aria-expanded", "false");
+});
+
+test("no active filter chips when no filters are set", async () => {
+  await renderSearchPage("/");
+  expect(screen.queryByRole("button", { name: /Search:/ })).toBeNull();
+});
+
+test("active filter chip appears when filter param is in URL", async () => {
+  await renderSearchPage("/?filter=dragon");
+  expect(
+    screen.getByRole("button", { name: /Search: dragon/ }),
+  ).toBeInTheDocument();
+});
+
+test("clicking a filter chip removes it from the URL", async () => {
+  const user = userEvent.setup();
+  const router = await renderSearchPage("/?filter=dragon&location=Hall+A");
+  expect(
+    screen.getByRole("button", { name: /Search: dragon/ }),
+  ).toBeInTheDocument();
+  await user.click(screen.getByRole("button", { name: /Search: dragon/ }));
+  expect(router.state.location.searchStr).not.toContain("filter=");
+  expect(router.state.location.searchStr).toContain("location=");
+});
+
+test("days active filter chip appears when days param is in URL", async () => {
+  await renderSearchPage("/?days=fri%2Csat");
+  expect(
+    screen.getByRole("button", { name: /Days: Fri, Sat/ }),
+  ).toBeInTheDocument();
+});

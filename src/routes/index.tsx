@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SearchForm } from "../components/SearchForm/SearchForm";
 import { SearchResults } from "../components/SearchResults/SearchResults";
+import { ActiveFilters } from "../ui/ActiveFilters/ActiveFilters";
+import { useSidebarOpen } from "../hooks/useSidebarOpen";
 import { buildSearchParams, parseSearchParams } from "../utils/searchParams";
 import type { SearchFormValues, SearchParams } from "../utils/types";
 import styles from "./index.module.css";
@@ -56,6 +58,7 @@ export const Route = createFileRoute("/")({
 function SearchPage() {
   const navigate = Route.useNavigate();
   const search = Route.useSearch();
+  const [sidebarOpen, toggleSidebar] = useSidebarOpen();
 
   const handleSearch = (values: SearchFormValues) => {
     void navigate({
@@ -83,9 +86,15 @@ function SearchPage() {
     });
   };
 
+  const handleRemoveFilter = (key: keyof SearchParams) => {
+    void navigate({
+      search: (prev) => ({ ...prev, [key]: undefined }),
+    });
+  };
+
   return (
-    <main className={styles.shell}>
-      <div className={styles.sidebar}>
+    <main className={styles.shell} data-sidebar-open={String(sidebarOpen)}>
+      <div id="sidebar" className={styles.sidebar}>
         <SearchForm
           key={JSON.stringify(search)}
           defaultValues={parseSearchParams(search)}
@@ -93,6 +102,17 @@ function SearchPage() {
         />
       </div>
       <div className={styles.results}>
+        <div className={styles.resultsToolbar}>
+          <button
+            type="button"
+            onClick={toggleSidebar}
+            aria-expanded={sidebarOpen}
+            aria-controls="sidebar"
+          >
+            {sidebarOpen ? "◀ Filters" : "▶ Filters"}
+          </button>
+        </div>
+        <ActiveFilters searchParams={search} onRemove={handleRemoveFilter} />
         <SearchResults
           searchParams={search}
           onNavigate={handleNavigate}
