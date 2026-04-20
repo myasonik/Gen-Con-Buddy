@@ -318,19 +318,22 @@ describe("sidebar toggle and active filters", () => {
 
   test("eventType filter produces one chip per code", async () => {
     await renderSearchPage("/?eventType=RPG%2CBGM");
+    const bar = screen.getByRole("list", { name: "Active filters" });
     expect(
-      screen.getByRole("button", { name: "RPG - Role Playing Game" }),
+      within(bar).getByRole("button", { name: "RPG - Role Playing Game" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "BGM - Board Game" }),
+      within(bar).getByRole("button", { name: "BGM - Board Game" }),
     ).toBeInTheDocument();
+    expect(within(bar).queryByRole("button", { name: /Type:/ })).toBeNull();
   });
 
   test("clicking RPG active-filter chip removes RPG but leaves BGM in URL", async () => {
     const user = userEvent.setup();
     const router = await renderSearchPage("/?eventType=RPG%2CBGM");
+    const bar = screen.getByRole("list", { name: "Active filters" });
     await user.click(
-      screen.getByRole("button", { name: "RPG - Role Playing Game" }),
+      within(bar).getByRole("button", { name: "RPG - Role Playing Game" }),
     );
     expect(router.state.location.searchStr).toContain("eventType=BGM");
     expect(router.state.location.searchStr).not.toContain("RPG");
