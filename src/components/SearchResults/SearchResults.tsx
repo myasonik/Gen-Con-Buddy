@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
+import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { fetchEvents } from "../../utils/api";
 import { Pagination } from "../Pagination/Pagination";
 import { announce } from "../../lib/announce";
@@ -37,6 +38,7 @@ const COLUMNS: ColumnDef<Event>[] = [
     id: "dayStripe",
     header: () => null,
     cell: () => null, // rendered specially in the row loop
+    enableResizing: false,
   },
   {
     id: "gameId",
@@ -306,6 +308,7 @@ export function SearchResults({
   onSort,
 }: SearchResultsProps) {
   const { visibility, toggle, reset } = useColumnVisibility();
+  const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
   const page = searchParams.page ?? 1;
   const limit = searchParams.limit ?? 100;
   const { data, isLoading, isError } = useQuery({
@@ -339,9 +342,12 @@ export function SearchResults({
   const table = useReactTable({
     data: data?.data ?? [],
     columns: COLUMNS,
+    columnResizeMode: "onChange",
     state: {
       columnVisibility: visibility,
+      columnSizing: sizing,
     },
+    onColumnSizingChange: setSizing,
     manualSorting: true,
     manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
@@ -376,7 +382,13 @@ export function SearchResults({
               </li>
             ))}
           </ul>
-          <button type="button" onClick={reset}>
+          <button
+            type="button"
+            onClick={() => {
+              reset();
+              resetSizing();
+            }}
+          >
             Reset to defaults
           </button>
         </fieldset>
@@ -431,6 +443,8 @@ export function SearchResults({
                           aria-sort={ariaSort}
                           scope="col"
                           aria-label={label}
+                          className={`${styles.resizableTh}${header.column.getIsResizing() ? ` ${styles.isResizing}` : ""}`}
+                          style={{ width: header.getSize() }}
                         >
                           <button
                             type="button"
@@ -452,6 +466,14 @@ export function SearchResults({
                               </span>
                             )}
                           </button>
+                          {header.column.getCanResize() && (
+                            <div
+                              className={styles.resizeHandle}
+                              onPointerDown={header.getResizeHandler()}
+                              aria-hidden="true"
+                              data-testid="resize-handle"
+                            />
+                          )}
                         </th>
                       );
                     })}
