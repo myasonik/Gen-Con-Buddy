@@ -21,18 +21,16 @@ function captureUrl(): { getUrl: () => URL | null } {
   return { getUrl: () => capturedUrl };
 }
 
-test("serializes single eventType code as full label", async () => {
+test("serializes single eventType code directly", async () => {
   const { getUrl } = captureUrl();
   await fetchEvents({ eventType: "BGM" });
-  expect(getUrl()?.searchParams.get("eventType")).toBe("BGM - Board Game");
+  expect(getUrl()?.searchParams.get("eventType")).toBe("BGM");
 });
 
-test("serializes multiple eventType codes as comma-separated full labels", async () => {
+test("serializes multiple eventType codes as comma-separated", async () => {
   const { getUrl } = captureUrl();
   await fetchEvents({ eventType: "RPG,BGM" });
-  expect(getUrl()?.searchParams.get("eventType")).toBe(
-    "RPG - Role Playing Game,BGM - Board Game",
-  );
+  expect(getUrl()?.searchParams.get("eventType")).toBe("RPG,BGM");
 });
 
 test("omits eventType when value is empty string", async () => {
