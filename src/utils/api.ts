@@ -26,7 +26,11 @@ export async function fetchEvents(
       return;
     }
     if (key === "eventType" && typeof value === "string") {
-      url.searchParams.set(key, EVENT_TYPES[value] ?? value);
+      const labels = value
+        .split(",")
+        .map((code) => EVENT_TYPES[code] ?? code)
+        .join(",");
+      url.searchParams.set(key, labels);
     } else {
       url.searchParams.set(key, String(value));
     }
