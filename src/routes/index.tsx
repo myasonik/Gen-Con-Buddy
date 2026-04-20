@@ -6,6 +6,7 @@ import { Button } from "../ui/Button/Button";
 import { useSidebarOpen } from "../hooks/useSidebarOpen";
 import { buildSearchParams, parseSearchParams } from "../utils/searchParams";
 import type { SearchFormValues, SearchParams } from "../utils/types";
+import type { ActiveFilter } from "../ui/ActiveFilters/getActiveFilters";
 import styles from "./index.module.css";
 
 export const Route = createFileRoute("/")({
@@ -87,10 +88,8 @@ function SearchPage() {
     });
   };
 
-  const handleRemoveFilter = (key: keyof SearchParams) => {
-    void navigate({
-      search: (prev) => ({ ...prev, [key]: undefined }),
-    });
+  const handleRemoveFilter = (filter: ActiveFilter) => {
+    void navigate({ search: (prev) => filter.remove(prev) });
   };
 
   return (

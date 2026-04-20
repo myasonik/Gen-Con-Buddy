@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ActiveFilters } from "./ActiveFilters";
-import type { SearchParams } from "../../utils/types";
+import type { ActiveFilter } from "./getActiveFilters";
 
 test("renders nothing when no filters are active", () => {
   const { container } = render(
@@ -44,7 +44,7 @@ test("each chip is a button containing the label and × character", () => {
   expect(chip).toHaveTextContent("×");
 });
 
-test("clicking a chip calls onRemove with the correct key", async () => {
+test("clicking a chip calls onRemove with the filter object", async () => {
   const user = userEvent.setup();
   const onRemove = vi.fn();
   render(
@@ -54,18 +54,24 @@ test("clicking a chip calls onRemove with the correct key", async () => {
     />,
   );
   await user.click(screen.getByRole("button", { name: /Search: dragon/ }));
-  expect(onRemove).toHaveBeenCalledWith("filter");
   expect(onRemove).toHaveBeenCalledTimes(1);
+  const [filter] = onRemove.mock.calls[0] as [ActiveFilter];
+  expect(filter.label).toBe("Search: dragon");
+  expect(filter.remove({ filter: "dragon", days: "fri" })).toEqual({
+    days: "fri",
+  });
 });
 
-test("clicking days chip calls onRemove with 'days'", async () => {
+test("clicking days chip calls onRemove with filter that clears days", async () => {
   const user = userEvent.setup();
   const onRemove = vi.fn();
   render(
     <ActiveFilters searchParams={{ days: "fri,sat" }} onRemove={onRemove} />,
   );
   await user.click(screen.getByRole("button", { name: /Days: Fri, Sat/ }));
-  expect(onRemove).toHaveBeenCalledWith("days");
+  expect(onRemove).toHaveBeenCalledTimes(1);
+  const [filter] = onRemove.mock.calls[0] as [ActiveFilter];
+  expect(filter.remove({ days: "fri,sat" })).toEqual({});
 });
 
 test("renders a list with accessible label when filters are active", () => {

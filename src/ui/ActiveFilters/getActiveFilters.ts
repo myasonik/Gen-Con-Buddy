@@ -8,8 +8,8 @@ import {
 import type { SearchParams } from "../../utils/types";
 
 export interface ActiveFilter {
-  key: keyof SearchParams;
   label: string;
+  remove: (prev: SearchParams) => SearchParams;
 }
 
 const DAY_LABELS: Record<string, string> = {
@@ -58,7 +58,7 @@ export function getActiveFilters(params: SearchParams): ActiveFilter[] {
   const filters: ActiveFilter[] = [];
 
   const add = (key: keyof SearchParams, label: string) => {
-    filters.push({ key, label });
+    filters.push({ label, remove: (prev) => ({ ...prev, [key]: undefined }) });
   };
 
   if (params.filter) add("filter", `Search: ${params.filter}`);

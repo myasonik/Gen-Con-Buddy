@@ -1,10 +1,11 @@
 import type { SearchParams } from "../../utils/types";
+import type { ActiveFilter } from "./getActiveFilters";
 import { getActiveFilters } from "./getActiveFilters";
 import styles from "./ActiveFilters.module.css";
 
 interface ActiveFiltersProps {
   searchParams: SearchParams;
-  onRemove: (key: keyof SearchParams) => void;
+  onRemove: (filter: ActiveFilter) => void;
 }
 
 export function ActiveFilters({ searchParams, onRemove }: ActiveFiltersProps) {
@@ -13,14 +14,14 @@ export function ActiveFilters({ searchParams, onRemove }: ActiveFiltersProps) {
 
   return (
     <ul className={styles.bar} aria-label="Active filters">
-      {filters.map(({ key, label }) => (
-        <li key={key}>
+      {filters.map((filter) => (
+        <li key={filter.label}>
           <button
             type="button"
             className={styles.chip}
-            onClick={() => onRemove(key)}
+            onClick={() => onRemove(filter)}
           >
-            {label} <span aria-hidden="true">×</span>
+            {filter.label} <span aria-hidden="true">×</span>
           </button>
         </li>
       ))}
