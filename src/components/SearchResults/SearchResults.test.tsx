@@ -461,3 +461,46 @@ test('announces "Sort cleared" when clicking descending column', async () => {
   });
   cleanup();
 });
+
+test("resize handle is rendered on resizable columns", async () => {
+  renderSearchResults();
+  await screen.findAllByRole("row");
+  const handles = screen.getAllByTestId("resize-handle");
+  // dayStripe has no handle; all other visible columns do
+  expect(handles.length).toBeGreaterThan(0);
+});
+
+test("dayStripe column has no resize handle", async () => {
+  renderSearchResults();
+  await screen.findAllByRole("row");
+  // dayStripe th is aria-hidden — query the DOM directly
+  const dayStripes = document.querySelectorAll("th[aria-hidden='true']");
+  dayStripes.forEach((th) => {
+    expect(th.querySelector("[data-testid='resize-handle']")).toBeNull();
+  });
+});
+
+test("pre-seeded localStorage sizing is applied to column width on mount", async () => {
+  localStorage.setItem(
+    "gcb-column-sizing",
+    JSON.stringify({ version: 1, sizing: { title: 300 } }),
+  );
+  renderSearchResults();
+  await screen.findAllByRole("row");
+  const titleTh = screen.getByRole("columnheader", { name: "Title" });
+  expect(titleTh).toHaveStyle({ width: "300px" });
+});
+
+test("Reset to defaults clears column sizing from localStorage", async () => {
+  const user = userEvent.setup();
+  localStorage.setItem(
+    "gcb-column-sizing",
+    JSON.stringify({ version: 1, sizing: { title: 300 } }),
+  );
+  renderSearchResults();
+  await screen.findAllByRole("row");
+
+  await user.click(screen.getByRole("button", { name: "Reset to defaults" }));
+
+  expect(localStorage.getItem("gcb-column-sizing")).toBeNull();
+});
