@@ -46,7 +46,7 @@ test("each chip is a button containing the label and × character", () => {
 
 test("clicking a chip calls onRemove with the filter object", async () => {
   const user = userEvent.setup();
-  const onRemove = vi.fn();
+  const onRemove = vi.fn<[ActiveFilter], void>();
   render(
     <ActiveFilters
       searchParams={{ filter: "dragon", days: "fri" }}
@@ -55,7 +55,8 @@ test("clicking a chip calls onRemove with the filter object", async () => {
   );
   await user.click(screen.getByRole("button", { name: /Search: dragon/ }));
   expect(onRemove).toHaveBeenCalledTimes(1);
-  const [filter] = onRemove.mock.calls[0] as [ActiveFilter];
+  const [filter] = onRemove.mock.calls[0];
+  expect(filter.id).toBe("filter");
   expect(filter.label).toBe("Search: dragon");
   expect(filter.remove({ filter: "dragon", days: "fri" })).toEqual({
     days: "fri",
@@ -64,13 +65,13 @@ test("clicking a chip calls onRemove with the filter object", async () => {
 
 test("clicking days chip calls onRemove with filter that clears days", async () => {
   const user = userEvent.setup();
-  const onRemove = vi.fn();
+  const onRemove = vi.fn<[ActiveFilter], void>();
   render(
     <ActiveFilters searchParams={{ days: "fri,sat" }} onRemove={onRemove} />,
   );
   await user.click(screen.getByRole("button", { name: /Days: Fri, Sat/ }));
   expect(onRemove).toHaveBeenCalledTimes(1);
-  const [filter] = onRemove.mock.calls[0] as [ActiveFilter];
+  const [filter] = onRemove.mock.calls[0];
   expect(filter.remove({ days: "fri,sat" })).toEqual({});
 });
 

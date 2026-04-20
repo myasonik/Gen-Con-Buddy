@@ -13,6 +13,7 @@ test("ignores page, limit, and sort params", () => {
 
 test("filter param produces 'Search:' label and remove clears filter", () => {
   const [chip] = getActiveFilters({ filter: "dragon" });
+  expect(chip.id).toBe("filter");
   expect(chip.label).toBe("Search: dragon");
   expect(chip.remove({ filter: "dragon", title: "foo" })).toEqual({
     title: "foo",
@@ -32,6 +33,7 @@ test("eventType falls back to raw value when code is unknown", () => {
 
 test("ageRequired uses AGE_GROUPS enum for label", () => {
   const [chip] = getActiveFilters({ ageRequired: "21+" });
+  expect(chip.id).toBe("ageRequired");
   expect(chip.label).toBe("Age: 21+");
   expect(chip.remove({ ageRequired: "21+" })).toEqual({});
 });
@@ -59,6 +61,7 @@ test("specialCategory uses CATEGORY enum for label", () => {
 test("days param produces one chip with all days joined (pre-atomic)", () => {
   const result = getActiveFilters({ days: "fri,sat" });
   expect(result).toHaveLength(1);
+  expect(result[0].id).toBe("days");
   expect(result[0].label).toBe("Days: Fri, Sat");
   expect(result[0].remove({ days: "fri,sat" })).toEqual({});
 });
@@ -70,6 +73,7 @@ test("days param with single day", () => {
 
 test("cost range formats with dollar signs", () => {
   const [chip] = getActiveFilters({ cost: "[0,5]" });
+  expect(chip.id).toBe("cost");
   expect(chip.label).toBe("Cost: $0–$5");
   expect(chip.remove({ cost: "[0,5]" })).toEqual({});
 });

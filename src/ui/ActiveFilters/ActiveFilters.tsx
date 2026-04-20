@@ -15,7 +15,7 @@ export function ActiveFilters({ searchParams, onRemove }: ActiveFiltersProps) {
   return (
     <ul className={styles.bar} aria-label="Active filters">
       {filters.map((filter) => (
-        <li key={filter.label}>
+        <li key={filter.id}>
           <button
             type="button"
             className={styles.chip}

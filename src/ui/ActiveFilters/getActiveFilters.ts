@@ -8,6 +8,7 @@ import {
 import type { SearchParams } from "../../utils/types";
 
 export interface ActiveFilter {
+  id: string;
   label: string;
   remove: (prev: SearchParams) => SearchParams;
 }
@@ -58,7 +59,11 @@ export function getActiveFilters(params: SearchParams): ActiveFilter[] {
   const filters: ActiveFilter[] = [];
 
   const add = (key: keyof SearchParams, label: string) => {
-    filters.push({ label, remove: (prev) => ({ ...prev, [key]: undefined }) });
+    filters.push({
+      id: key,
+      label,
+      remove: (prev) => ({ ...prev, [key]: undefined }),
+    });
   };
 
   if (params.filter) add("filter", `Search: ${params.filter}`);
