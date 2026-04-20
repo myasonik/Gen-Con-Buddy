@@ -31,24 +31,27 @@ async function renderSearchPage(initialEntry = "/") {
 
 test("populates eventType dropdown from URL search param on load", async () => {
   await renderSearchPage("/?eventType=BGM");
-  expect(screen.getByRole("combobox", { name: "Event Type" })).toHaveValue(
-    "BGM",
-  );
+  expect(
+    screen.getByRole("button", { name: "Remove BGM" }),
+  ).toBeInTheDocument();
 });
 
 test("updates form when URL search params change after initial render", async () => {
   const router = await renderSearchPage("/?eventType=BGM");
-  expect(screen.getByRole("combobox", { name: "Event Type" })).toHaveValue(
-    "BGM",
-  );
+  expect(
+    screen.getByRole("button", { name: "Remove BGM" }),
+  ).toBeInTheDocument();
 
   await act(async () => {
     await router.navigate({ to: "/", search: { eventType: "RPG" } });
   });
 
-  expect(screen.getByRole("combobox", { name: "Event Type" })).toHaveValue(
-    "RPG",
-  );
+  expect(
+    screen.getByRole("button", { name: "Remove RPG" }),
+  ).toBeInTheDocument();
+  expect(
+    screen.queryByRole("button", { name: "Remove BGM" }),
+  ).not.toBeInTheDocument();
 });
 
 test("page param is read from URL without crashing", async () => {
@@ -241,4 +244,98 @@ test("eventType column renders a ConceptBadge", async () => {
   await renderSearchPage();
   await screen.findByRole("table");
   expect(screen.getByText("RPG")).toBeInTheDocument();
+});
+
+describe("sidebar toggle and active filters", () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  test("sidebar toggle button is present in the results area", async () => {
+    await renderSearchPage("/");
+    expect(screen.getByRole("button", { name: /Filters/ })).toBeInTheDocument();
+  });
+
+  test("sidebar toggle button has aria-expanded=true by default", async () => {
+    await renderSearchPage("/");
+    expect(screen.getByRole("button", { name: /Filters/ })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
+  });
+
+  test("clicking toggle button flips aria-expanded to false", async () => {
+    const user = userEvent.setup();
+    await renderSearchPage("/");
+    const btn = screen.getByRole("button", { name: /Filters/ });
+    await user.click(btn);
+    expect(btn).toHaveAttribute("aria-expanded", "false");
+  });
+
+  test("no active filter chips when no filters are set", async () => {
+    await renderSearchPage("/");
+    expect(screen.queryByRole("button", { name: /Search:/ })).toBeNull();
+  });
+
+  test("active filter chip appears when filter param is in URL", async () => {
+    await renderSearchPage("/?filter=dragon");
+    expect(
+      screen.getByRole("button", { name: /Search: dragon/ }),
+    ).toBeInTheDocument();
+  });
+
+  test("clicking a filter chip removes it from the URL", async () => {
+    const user = userEvent.setup();
+    const router = await renderSearchPage("/?filter=dragon&location=Hall+A");
+    expect(
+      screen.getByRole("button", { name: /Search: dragon/ }),
+    ).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /Search: dragon/ }));
+    expect(router.state.location.searchStr).not.toContain("filter=");
+    expect(router.state.location.searchStr).toContain("location=");
+  });
+
+  test("days filter produces one chip per day", async () => {
+    await renderSearchPage("/?days=fri%2Csat");
+    const bar = screen.getByRole("list", { name: "Active filters" });
+    expect(
+      within(bar).getByRole("button", { name: "Fri" }),
+    ).toBeInTheDocument();
+    expect(
+      within(bar).getByRole("button", { name: "Sat" }),
+    ).toBeInTheDocument();
+    expect(within(bar).queryByRole("button", { name: /Days:/ })).toBeNull();
+  });
+
+  test("clicking Fri chip removes fri but leaves sat in URL", async () => {
+    const user = userEvent.setup();
+    const router = await renderSearchPage("/?days=fri%2Csat");
+    const bar = screen.getByRole("list", { name: "Active filters" });
+    await user.click(within(bar).getByRole("button", { name: "Fri" }));
+    expect(router.state.location.searchStr).toContain("days=sat");
+    expect(router.state.location.searchStr).not.toContain("fri");
+  });
+
+  test("eventType filter produces one chip per code", async () => {
+    await renderSearchPage("/?eventType=RPG%2CBGM");
+    const bar = screen.getByRole("list", { name: "Active filters" });
+    expect(
+      within(bar).getByRole("button", { name: "RPG - Role Playing Game" }),
+    ).toBeInTheDocument();
+    expect(
+      within(bar).getByRole("button", { name: "BGM - Board Game" }),
+    ).toBeInTheDocument();
+    expect(within(bar).queryByRole("button", { name: /Type:/ })).toBeNull();
+  });
+
+  test("clicking RPG active-filter chip removes RPG but leaves BGM in URL", async () => {
+    const user = userEvent.setup();
+    const router = await renderSearchPage("/?eventType=RPG%2CBGM");
+    const bar = screen.getByRole("list", { name: "Active filters" });
+    await user.click(
+      within(bar).getByRole("button", { name: "RPG - Role Playing Game" }),
+    );
+    expect(router.state.location.searchStr).toContain("eventType=BGM");
+    expect(router.state.location.searchStr).not.toContain("RPG");
+  });
 });

@@ -11,7 +11,7 @@
 
   /* Typography */
   --font-display: "IM Fell English", serif;
-  --font-data: "Courier Prime", monospace;
+  --font-body: "IBM Plex Sans", sans-serif;
 
   /* Type scale */
   --text-display: 22px;
@@ -30,7 +30,7 @@
   --space-5: 32px;
 
   /* Sizes */
-  --size-sidebar: 280px;
+  --size-sidebar: 360px;
   --size-detail-max: 800px;
 
   /* Shadow — warm organic cast */

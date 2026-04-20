@@ -83,17 +83,20 @@ test("picks up new defaultValues when re-mounted with a new key", () => {
   const { rerender } = render(
     <SearchForm key="a" defaultValues={{ eventType: "BGM" }} onSearch={noop} />,
   );
-  expect(screen.getByRole("combobox", { name: "Event Type" })).toHaveValue(
-    "BGM",
-  );
+  expect(
+    screen.getByRole("button", { name: "Remove BGM" }),
+  ).toBeInTheDocument();
 
   rerender(
     <SearchForm key="b" defaultValues={{ eventType: "RPG" }} onSearch={noop} />,
   );
 
-  expect(screen.getByRole("combobox", { name: "Event Type" })).toHaveValue(
-    "RPG",
-  );
+  expect(
+    screen.getByRole("button", { name: "Remove RPG" }),
+  ).toBeInTheDocument();
+  expect(
+    screen.queryByRole("button", { name: "Remove BGM" }),
+  ).not.toBeInTheDocument();
 });
 
 const DAYS = ["Wed", "Thu", "Fri", "Sat", "Sun"] as const;

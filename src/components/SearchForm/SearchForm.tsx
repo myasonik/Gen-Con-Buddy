@@ -1,16 +1,11 @@
 import { useForm } from "react-hook-form";
-import {
-  AGE_GROUPS,
-  CATEGORY,
-  EVENT_TYPES,
-  EXP,
-  REGISTRATION,
-} from "../../utils/enums";
+import { AGE_GROUPS, CATEGORY, EXP, REGISTRATION } from "../../utils/enums";
 import type { SearchFormValues } from "../../utils/types";
 import { Button } from "../../ui/Button/Button";
 import { Toggletip } from "../../ui/Toggletip/Toggletip";
 import { ToggleTile, ToggleTileGroup } from "../../ui/ToggleTile/ToggleTile";
 import { DAY_COLORS } from "../../utils/conceptColors";
+import { EventTypeSelect } from "../../ui/EventTypeSelect/EventTypeSelect";
 import styles from "./SearchForm.module.css";
 
 const DAY_FULL: Record<string, string> = {
@@ -89,6 +84,7 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
     useForm<SearchFormValues>({ defaultValues });
 
   const days = watch("days") ?? "";
+  const eventType = watch("eventType") ?? "";
 
   const startDateTimeStart = watch("startDateTimeStart") ?? "";
   const startDateTimeEnd = watch("startDateTimeEnd") ?? "";
@@ -112,17 +108,10 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
                 {...register("filter")}
               />
             </label>
-            <label className={styles.label}>
-              Event Type
-              <select className={styles.select} {...register("eventType")}>
-                <option value="">Any</option>
-                {Object.entries(EVENT_TYPES).map(([k, v]) => (
-                  <option key={k} value={k}>
-                    {v}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <EventTypeSelect
+              value={eventType}
+              onValueChange={(v) => setValue("eventType", v)}
+            />
           </div>
         </fieldset>
 

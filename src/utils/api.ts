@@ -1,5 +1,4 @@
 import { daysToStartDateTime } from "./searchParams";
-import { EVENT_TYPES } from "./enums";
 import type { EventSearchResponse, SearchParams } from "./types";
 
 export async function fetchEvents(
@@ -25,11 +24,7 @@ export async function fetchEvents(
         url.searchParams.set("limit", String(value));
       return;
     }
-    if (key === "eventType" && typeof value === "string") {
-      url.searchParams.set(key, EVENT_TYPES[value] ?? value);
-    } else {
-      url.searchParams.set(key, String(value));
-    }
+    url.searchParams.set(key, String(value));
   });
   const res = await fetch(url.toString());
   if (!res.ok) throw new Error(`HTTP ${res.status}`);

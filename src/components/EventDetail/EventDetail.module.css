@@ -67,7 +67,7 @@
 }
 
 .dd {
-  font-family: var(--font-data);
+  font-family: var(--font-body);
   font-size: 1rem;
   color: var(--color-ink);
   margin: 0;

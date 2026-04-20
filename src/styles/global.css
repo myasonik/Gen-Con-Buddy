@@ -15,7 +15,7 @@ html {
 body {
   background: transparent; /* html provides the parchment + grain */
   color: var(--color-ink);
-  font-family: var(--font-data);
+  font-family: var(--font-body);
   margin: 0;
   min-height: 100vh;
 }
