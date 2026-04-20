@@ -1,0 +1,71 @@
+/* Absolutely positioned within the resizable <th> (which has position: relative) */
+.trigger {
+  position: absolute;
+  right: 6px; /* sits left of the 4px drag handle */
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 2px;
+  cursor: pointer;
+  color: var(--color-parchment);
+  opacity: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  transition: opacity var(--motion-hover);
+}
+
+/* Show on header hover or when the popover is open */
+:global(th):hover .trigger,
+.trigger:focus-visible,
+.triggerOpen {
+  opacity: 1;
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 1px;
+}
+
+.popup {
+  background: var(--color-parchment-light);
+  border: 2px solid var(--color-bark);
+  box-shadow: var(--shadow-panel);
+  display: flex;
+  flex-direction: column;
+  min-width: 148px;
+  z-index: var(--z-popover);
+}
+
+.action {
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--color-bark-light);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-label);
+  font-style: italic;
+  color: var(--color-ink);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+
+.action:last-child {
+  border-bottom: none;
+}
+
+.action:hover {
+  background: color-mix(
+    in srgb,
+    var(--color-bark-light) 20%,
+    var(--color-parchment-light)
+  );
+}
+
+.action[aria-pressed="true"] {
+  color: var(--color-bark);
+  font-weight: bold;
+}
