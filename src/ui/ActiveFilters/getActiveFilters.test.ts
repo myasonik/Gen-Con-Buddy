@@ -80,6 +80,11 @@ test("cost range with only min", () => {
   expect(result).toEqual([{ key: "cost", label: "Cost: $3–" }]);
 });
 
+test("cost range with only max", () => {
+  const result = getActiveFilters({ cost: "[,5]" });
+  expect(result).toEqual([{ key: "cost", label: "Cost: –$5" }]);
+});
+
 test("minPlayers range formats without dollar signs", () => {
   const result = getActiveFilters({ minPlayers: "[2,6]" });
   expect(result).toEqual([{ key: "minPlayers", label: "Min players: 2–6" }]);
@@ -88,6 +93,11 @@ test("minPlayers range formats without dollar signs", () => {
 test("duration range formats with hrs suffix", () => {
   const result = getActiveFilters({ duration: "[1,4]" });
   expect(result).toEqual([{ key: "duration", label: "Duration: 1–4 hrs" }]);
+});
+
+test("duration range with only max", () => {
+  const result = getActiveFilters({ duration: "[,4]" });
+  expect(result).toEqual([{ key: "duration", label: "Duration: –4 hrs" }]);
 });
 
 test("startDateTime date range formats dates", () => {
