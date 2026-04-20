@@ -49,7 +49,10 @@ export function ColumnResizeDialog({
             <button
               type="button"
               className={`${styles.button} ${styles.primaryButton}`}
-              onClick={() => onApply(Number(value))}
+              onClick={() => {
+                onApply(Number(value));
+                onClose();
+              }}
             >
               Apply
             </button>
