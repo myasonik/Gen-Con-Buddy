@@ -46,7 +46,7 @@ test("each chip is a button containing the label and × character", () => {
 
 test("clicking a chip calls onRemove with the filter object", async () => {
   const user = userEvent.setup();
-  const onRemove = vi.fn<[ActiveFilter], void>();
+  const onRemove = vi.fn<(filter: ActiveFilter) => void>();
   render(
     <ActiveFilters
       searchParams={{ filter: "dragon", days: "fri" }}
@@ -65,7 +65,7 @@ test("clicking a chip calls onRemove with the filter object", async () => {
 
 test("clicking Fri chip calls onRemove with filter that leaves Sat", async () => {
   const user = userEvent.setup();
-  const onRemove = vi.fn<[ActiveFilter], void>();
+  const onRemove = vi.fn<(filter: ActiveFilter) => void>();
   render(
     <ActiveFilters searchParams={{ days: "fri,sat" }} onRemove={onRemove} />,
   );

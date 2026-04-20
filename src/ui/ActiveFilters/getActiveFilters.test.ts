@@ -1,5 +1,4 @@
 import { getActiveFilters } from "./getActiveFilters";
-import type { SearchParams } from "../../utils/types";
 
 test("returns empty array when no filters are set", () => {
   expect(getActiveFilters({})).toEqual([]);
