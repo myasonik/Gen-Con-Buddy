@@ -101,7 +101,7 @@ export function getActiveFilters(params: SearchParams): ActiveFilter[] {
       `Materials details: ${params.materialsRequiredDetails}`,
     );
   if (params.days) {
-    for (const code of params.days.split(",")) {
+    for (const code of params.days.split(",").filter(Boolean)) {
       const label = DAY_LABELS[code] ?? code;
       filters.push({
         id: `days:${code}`,

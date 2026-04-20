@@ -82,6 +82,12 @@ test("days chip remove clears param when it was the last day", () => {
   expect(wed.remove({ days: "wed" })).toEqual({});
 });
 
+test("days chip skips empty segment from trailing comma", () => {
+  const result = getActiveFilters({ days: "fri," });
+  expect(result).toHaveLength(1);
+  expect(result[0].id).toBe("days:fri");
+});
+
 test("cost range formats with dollar signs", () => {
   const [chip] = getActiveFilters({ cost: "[0,5]" });
   expect(chip.id).toBe("cost");
