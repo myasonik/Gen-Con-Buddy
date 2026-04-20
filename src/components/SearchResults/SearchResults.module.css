@@ -133,3 +133,27 @@
     transform: scale(1);
   }
 }
+
+/* Column resize handle */
+.resizableTh {
+  position: relative;
+}
+
+.resizeHandle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  cursor: col-resize;
+  background: transparent;
+  opacity: 0;
+  transition: opacity 100ms;
+  user-select: none;
+}
+
+.resizableTh:hover .resizeHandle,
+.isResizing .resizeHandle {
+  opacity: 1;
+  background: var(--color-gold);
+}
