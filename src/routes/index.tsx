@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SearchForm } from "../components/SearchForm/SearchForm";
 import { SearchResults } from "../components/SearchResults/SearchResults";
 import { ActiveFilters } from "../ui/ActiveFilters/ActiveFilters";
+import { Button } from "../ui/Button/Button";
 import { useSidebarOpen } from "../hooks/useSidebarOpen";
 import { buildSearchParams, parseSearchParams } from "../utils/searchParams";
 import type { SearchFormValues, SearchParams } from "../utils/types";
@@ -103,14 +104,14 @@ function SearchPage() {
       </div>
       <div className={styles.results}>
         <div className={styles.resultsToolbar}>
-          <button
-            type="button"
+          <Button
+            variant="secondary"
             onClick={toggleSidebar}
             aria-expanded={sidebarOpen}
             aria-controls="sidebar"
           >
             {sidebarOpen ? "◀ Filters" : "▶ Filters"}
-          </button>
+          </Button>
         </div>
         <ActiveFilters searchParams={search} onRemove={handleRemoveFilter} />
         <SearchResults

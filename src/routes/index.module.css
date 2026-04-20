@@ -10,6 +10,10 @@
   grid-template-columns: 0 1fr;
 }
 
+.shell[data-sidebar-open="false"] .sidebar {
+  visibility: hidden;
+}
+
 .resultsToolbar {
   display: flex;
   align-items: center;
