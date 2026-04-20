@@ -315,4 +315,24 @@ describe("sidebar toggle and active filters", () => {
     expect(router.state.location.searchStr).toContain("days=sat");
     expect(router.state.location.searchStr).not.toContain("fri");
   });
+
+  test("eventType filter produces one chip per code", async () => {
+    await renderSearchPage("/?eventType=RPG%2CBGM");
+    expect(
+      screen.getByRole("button", { name: "RPG - Role Playing Game" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "BGM - Board Game" }),
+    ).toBeInTheDocument();
+  });
+
+  test("clicking RPG active-filter chip removes RPG but leaves BGM in URL", async () => {
+    const user = userEvent.setup();
+    const router = await renderSearchPage("/?eventType=RPG%2CBGM");
+    await user.click(
+      screen.getByRole("button", { name: "RPG - Role Playing Game" }),
+    );
+    expect(router.state.location.searchStr).toContain("eventType=BGM");
+    expect(router.state.location.searchStr).not.toContain("RPG");
+  });
 });

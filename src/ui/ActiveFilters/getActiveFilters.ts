@@ -69,11 +69,22 @@ export function getActiveFilters(params: SearchParams): ActiveFilter[] {
   if (params.filter) add("filter", `Search: ${params.filter}`);
   if (params.gameId) add("gameId", `Game ID: ${params.gameId}`);
   if (params.title) add("title", `Title: ${params.title}`);
-  if (params.eventType)
-    add(
-      "eventType",
-      `Type: ${EVENT_TYPES[params.eventType] ?? params.eventType}`,
-    );
+  if (params.eventType) {
+    for (const code of params.eventType.split(",").filter(Boolean)) {
+      const label = EVENT_TYPES[code] ?? code;
+      filters.push({
+        id: `eventType:${code}`,
+        label,
+        remove: (prev) => {
+          const remaining = (prev.eventType ?? "")
+            .split(",")
+            .filter((c) => c !== code)
+            .join(",");
+          return { ...prev, eventType: remaining || undefined };
+        },
+      });
+    }
+  }
   if (params.group) add("group", `Group: ${params.group}`);
   if (params.shortDescription)
     add("shortDescription", `Short desc: ${params.shortDescription}`);

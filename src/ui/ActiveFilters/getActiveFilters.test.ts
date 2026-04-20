@@ -20,15 +20,39 @@ test("filter param produces 'Search:' label and remove clears filter", () => {
   });
 });
 
-test("eventType param uses EVENT_TYPES enum for label", () => {
-  const [chip] = getActiveFilters({ eventType: "RPG" });
-  expect(chip.label).toBe("Type: RPG - Role Playing Game");
-  expect(chip.remove({ eventType: "RPG" })).toEqual({});
+test("eventType param produces one chip per code", () => {
+  const result = getActiveFilters({ eventType: "RPG,BGM" });
+  expect(result).toHaveLength(2);
+  expect(result[0].id).toBe("eventType:RPG");
+  expect(result[0].label).toBe("RPG - Role Playing Game");
+  expect(result[1].id).toBe("eventType:BGM");
+  expect(result[1].label).toBe("BGM - Board Game");
+});
+
+test("eventType chip remove leaves other codes intact", () => {
+  const [rpg] = getActiveFilters({ eventType: "RPG,BGM" });
+  expect(rpg.remove({ eventType: "RPG,BGM", title: "foo" })).toEqual({
+    eventType: "BGM",
+    title: "foo",
+  });
+});
+
+test("eventType chip remove clears param when it was the last code", () => {
+  const [rpg] = getActiveFilters({ eventType: "RPG" });
+  expect(rpg.id).toBe("eventType:RPG");
+  expect(rpg.remove({ eventType: "RPG" })).toEqual({});
 });
 
 test("eventType falls back to raw value when code is unknown", () => {
   const [chip] = getActiveFilters({ eventType: "XYZ" });
-  expect(chip.label).toBe("Type: XYZ");
+  expect(chip.id).toBe("eventType:XYZ");
+  expect(chip.label).toBe("XYZ");
+});
+
+test("eventType chip skips empty segment from trailing comma", () => {
+  const result = getActiveFilters({ eventType: "RPG," });
+  expect(result).toHaveLength(1);
+  expect(result[0].id).toBe("eventType:RPG");
 });
 
 test("ageRequired uses AGE_GROUPS enum for label", () => {
