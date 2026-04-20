@@ -101,11 +101,20 @@ export function getActiveFilters(params: SearchParams): ActiveFilter[] {
       `Materials details: ${params.materialsRequiredDetails}`,
     );
   if (params.days) {
-    const labels = params.days
-      .split(",")
-      .map((d) => DAY_LABELS[d] ?? d)
-      .join(", ");
-    add("days", `Days: ${labels}`);
+    for (const code of params.days.split(",")) {
+      const label = DAY_LABELS[code] ?? code;
+      filters.push({
+        id: `days:${code}`,
+        label,
+        remove: (prev) => {
+          const remaining = (prev.days ?? "")
+            .split(",")
+            .filter((d) => d !== code)
+            .join(",");
+          return { ...prev, days: remaining || undefined };
+        },
+      });
+    }
   }
   if (params.startDateTime)
     add("startDateTime", fmtDateRange(params.startDateTime, "Start: "));

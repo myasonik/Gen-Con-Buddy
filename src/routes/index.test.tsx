@@ -295,10 +295,24 @@ describe("sidebar toggle and active filters", () => {
     expect(router.state.location.searchStr).toContain("location=");
   });
 
-  test("days active filter chip appears when days param is in URL", async () => {
+  test("days filter produces one chip per day", async () => {
     await renderSearchPage("/?days=fri%2Csat");
+    const bar = screen.getByRole("list", { name: "Active filters" });
     expect(
-      screen.getByRole("button", { name: /Days: Fri, Sat/ }),
+      within(bar).getByRole("button", { name: "Fri" }),
     ).toBeInTheDocument();
+    expect(
+      within(bar).getByRole("button", { name: "Sat" }),
+    ).toBeInTheDocument();
+    expect(within(bar).queryByRole("button", { name: /Days:/ })).toBeNull();
+  });
+
+  test("clicking Fri chip removes fri but leaves sat in URL", async () => {
+    const user = userEvent.setup();
+    const router = await renderSearchPage("/?days=fri%2Csat");
+    const bar = screen.getByRole("list", { name: "Active filters" });
+    await user.click(within(bar).getByRole("button", { name: "Fri" }));
+    expect(router.state.location.searchStr).toContain("days=sat");
+    expect(router.state.location.searchStr).not.toContain("fri");
   });
 });

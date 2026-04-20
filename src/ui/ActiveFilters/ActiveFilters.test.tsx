@@ -63,16 +63,19 @@ test("clicking a chip calls onRemove with the filter object", async () => {
   });
 });
 
-test("clicking days chip calls onRemove with filter that clears days", async () => {
+test("clicking Fri chip calls onRemove with filter that leaves Sat", async () => {
   const user = userEvent.setup();
   const onRemove = vi.fn<[ActiveFilter], void>();
   render(
     <ActiveFilters searchParams={{ days: "fri,sat" }} onRemove={onRemove} />,
   );
-  await user.click(screen.getByRole("button", { name: /Days: Fri, Sat/ }));
+  expect(screen.getByRole("button", { name: "Fri" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Sat" })).toBeInTheDocument();
+  await user.click(screen.getByRole("button", { name: "Fri" }));
   expect(onRemove).toHaveBeenCalledTimes(1);
   const [filter] = onRemove.mock.calls[0];
-  expect(filter.remove({ days: "fri,sat" })).toEqual({});
+  expect(filter.id).toBe("days:fri");
+  expect(filter.remove({ days: "fri,sat" })).toEqual({ days: "sat" });
 });
 
 test("renders a list with accessible label when filters are active", () => {

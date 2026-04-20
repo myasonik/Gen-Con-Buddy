@@ -58,17 +58,28 @@ test("specialCategory uses CATEGORY enum for label", () => {
   expect(chip.label).toBe("Category: Premier Event");
 });
 
-test("days param produces one chip with all days joined (pre-atomic)", () => {
+test("days param produces one chip per day", () => {
   const result = getActiveFilters({ days: "fri,sat" });
-  expect(result).toHaveLength(1);
-  expect(result[0].id).toBe("days");
-  expect(result[0].label).toBe("Days: Fri, Sat");
-  expect(result[0].remove({ days: "fri,sat" })).toEqual({});
+  expect(result).toHaveLength(2);
+  expect(result[0].id).toBe("days:fri");
+  expect(result[0].label).toBe("Fri");
+  expect(result[1].id).toBe("days:sat");
+  expect(result[1].label).toBe("Sat");
 });
 
-test("days param with single day", () => {
-  const [chip] = getActiveFilters({ days: "wed" });
-  expect(chip.label).toBe("Days: Wed");
+test("days chip remove leaves other days intact", () => {
+  const [fri] = getActiveFilters({ days: "fri,sat" });
+  expect(fri.remove({ days: "fri,sat", title: "foo" })).toEqual({
+    days: "sat",
+    title: "foo",
+  });
+});
+
+test("days chip remove clears param when it was the last day", () => {
+  const [wed] = getActiveFilters({ days: "wed" });
+  expect(wed.id).toBe("days:wed");
+  expect(wed.label).toBe("Wed");
+  expect(wed.remove({ days: "wed" })).toEqual({});
 });
 
 test("cost range formats with dollar signs", () => {
@@ -118,10 +129,10 @@ test("plain string params show their value", () => {
   expect(getActiveFilters({ gmNames: "Bob" })[0].label).toBe("GM: Bob");
 });
 
-test("multiple params produce one entry each", () => {
+test("multiple params: filter and days produce correct chips", () => {
   const result = getActiveFilters({ filter: "dragon", days: "fri" });
   expect(result).toHaveLength(2);
   const labels = result.map((r) => r.label);
   expect(labels).toContain("Search: dragon");
-  expect(labels).toContain("Days: Fri");
+  expect(labels).toContain("Fri");
 });
