@@ -31,24 +31,27 @@ async function renderSearchPage(initialEntry = "/") {
 
 test("populates eventType dropdown from URL search param on load", async () => {
   await renderSearchPage("/?eventType=BGM");
-  expect(screen.getByRole("combobox", { name: "Event Type" })).toHaveValue(
-    "BGM",
-  );
+  expect(
+    screen.getByRole("button", { name: "Remove BGM" }),
+  ).toBeInTheDocument();
 });
 
 test("updates form when URL search params change after initial render", async () => {
   const router = await renderSearchPage("/?eventType=BGM");
-  expect(screen.getByRole("combobox", { name: "Event Type" })).toHaveValue(
-    "BGM",
-  );
+  expect(
+    screen.getByRole("button", { name: "Remove BGM" }),
+  ).toBeInTheDocument();
 
   await act(async () => {
     await router.navigate({ to: "/", search: { eventType: "RPG" } });
   });
 
-  expect(screen.getByRole("combobox", { name: "Event Type" })).toHaveValue(
-    "RPG",
-  );
+  expect(
+    screen.getByRole("button", { name: "Remove RPG" }),
+  ).toBeInTheDocument();
+  expect(
+    screen.queryByRole("button", { name: "Remove BGM" }),
+  ).not.toBeInTheDocument();
 });
 
 test("page param is read from URL without crashing", async () => {
