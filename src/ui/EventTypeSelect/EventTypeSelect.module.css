@@ -31,13 +31,6 @@
   outline-offset: 2px;
 }
 
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1);
-  align-items: center;
-}
-
 .chip {
   display: inline-flex;
   align-items: center;

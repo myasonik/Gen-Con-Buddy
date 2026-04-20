@@ -69,10 +69,10 @@ export function EventTypeSelect({
                   : undefined
               }
             >
-              <span className={styles.chipLabel}>
+              <span>
                 {code}
                 {open && (
-                  <span className={styles.chipFullName}>
+                  <span>
                     {" \u2013 "}
                     {EVENT_TYPES[code]?.replace(/^[A-Z]+ - /, "")}
                   </span>
@@ -107,22 +107,11 @@ export function EventTypeSelect({
         <Combobox.List className={styles.list}>
           {filteredOptions.map(({ code, name }) => {
             const colors = EVENT_TYPE_COLORS[code];
-            // Break substring match: "Non-Historical Miniatures" would otherwise match
-            // `/Historical Miniatures/`. Insert ZWSP (U+200B) into longer names that
-            // contain another item's name as a suffix.
-            const safeLabel =
-              name.includes("Historical Miniatures") &&
-              name !== "Historical Miniatures"
-                ? name.replace(
-                    "Historical Miniatures",
-                    "Historical\u200b Miniatures",
-                  )
-                : name;
             return (
               <Combobox.Item
                 key={code}
                 value={code}
-                aria-label={safeLabel}
+                aria-label={name}
                 className={styles.item}
               >
                 <span

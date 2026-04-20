@@ -98,7 +98,7 @@ test("filter text narrows options by name", async () => {
   await user.type(screen.getByRole("combobox", { name: "Event Type" }), "mini");
 
   expect(
-    screen.getByRole("option", { name: /Historical Miniatures/ }),
+    screen.getByRole("option", { name: "Historical Miniatures" }),
   ).toBeInTheDocument();
   expect(
     screen.queryByRole("option", { name: /Board Game/ }),
