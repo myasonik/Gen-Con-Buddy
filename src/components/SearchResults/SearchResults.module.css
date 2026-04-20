@@ -138,6 +138,7 @@
 /* Column resize handle */
 .resizableTh {
   position: relative;
+  padding-right: 26px;
 }
 
 .resizeHandle {

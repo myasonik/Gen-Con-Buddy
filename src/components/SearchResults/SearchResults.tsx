@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -9,6 +10,8 @@ import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
+import { ColumnActionsPopover } from "./ColumnActionsPopover";
+import { ColumnResizeDialog } from "./ColumnResizeDialog";
 import { fetchEvents } from "../../utils/api";
 import { Pagination } from "../Pagination/Pagination";
 import { announce } from "../../lib/announce";
@@ -309,6 +312,11 @@ export function SearchResults({
 }: SearchResultsProps) {
   const { visibility, toggle, reset } = useColumnVisibility();
   const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
+  const [resizeTarget, setResizeTarget] = useState<{
+    columnId: string;
+    columnName: string;
+    currentWidth: number;
+  } | null>(null);
   const page = searchParams.page ?? 1;
   const limit = searchParams.limit ?? 100;
   const { data, isLoading, isError } = useQuery({
@@ -467,6 +475,21 @@ export function SearchResults({
                             )}
                           </button>
                           {header.column.getCanResize() && (
+                            <ColumnActionsPopover
+                              sortField={sortField}
+                              activeSortField={activeSortField}
+                              activeSortDir={activeSortDir}
+                              onSort={onSort}
+                              onOpenResize={() =>
+                                setResizeTarget({
+                                  columnId: header.column.id,
+                                  columnName: label,
+                                  currentWidth: header.getSize(),
+                                })
+                              }
+                            />
+                          )}
+                          {header.column.getCanResize() && (
                             <div
                               className={styles.resizeHandle}
                               onPointerDown={header.getResizeHandler()}
@@ -522,6 +545,20 @@ export function SearchResults({
           </div>
           {pagination}
         </>
+      )}
+      {resizeTarget && (
+        <ColumnResizeDialog
+          columnName={resizeTarget.columnName}
+          currentWidth={resizeTarget.currentWidth}
+          onApply={(width) => {
+            setSizing((prev) => ({
+              ...prev,
+              [resizeTarget.columnId]: width,
+            }));
+            setResizeTarget(null);
+          }}
+          onClose={() => setResizeTarget(null)}
+        />
       )}
     </section>
   );

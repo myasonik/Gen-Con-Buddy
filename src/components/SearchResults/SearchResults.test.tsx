@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import {
@@ -503,4 +503,51 @@ test("Reset to defaults clears column sizing from localStorage", async () => {
   await user.click(screen.getByRole("button", { name: "Reset to defaults" }));
 
   expect(localStorage.getItem("gcb-column-sizing")).toBeNull();
+});
+
+test("actions button is present on resizable columns", async () => {
+  renderSearchResults();
+  await screen.findAllByRole("row");
+  const actionButtons = screen.getAllByRole("button", {
+    name: "Column actions",
+  });
+  expect(actionButtons.length).toBeGreaterThan(0);
+});
+
+test("actions button is absent on dayStripe column", async () => {
+  renderSearchResults();
+  await screen.findAllByRole("row");
+  const dayStripes = document.querySelectorAll("th[aria-hidden='true']");
+  dayStripes.forEach((th) => {
+    expect(th.querySelector("[aria-label='Column actions']")).toBeNull();
+  });
+});
+
+test("clicking Resize… on a column opens the resize dialog", async () => {
+  const user = userEvent.setup();
+  renderSearchResults();
+  await screen.findAllByRole("row");
+  const titleTh = screen.getByRole("columnheader", { name: "Title" });
+  await user.click(
+    within(titleTh).getByRole("button", { name: "Column actions" }),
+  );
+  await user.click(screen.getByRole("button", { name: "Resize…" }));
+  expect(screen.getByRole("dialog")).toBeInTheDocument();
+});
+
+test("submitting resize dialog updates column width in localStorage", async () => {
+  const user = userEvent.setup();
+  renderSearchResults();
+  await screen.findAllByRole("row");
+  const titleTh = screen.getByRole("columnheader", { name: "Title" });
+  await user.click(
+    within(titleTh).getByRole("button", { name: "Column actions" }),
+  );
+  await user.click(screen.getByRole("button", { name: "Resize…" }));
+  const input = screen.getByRole("spinbutton", { name: "Width (px)" });
+  await user.clear(input);
+  await user.type(input, "400");
+  await user.click(screen.getByRole("button", { name: "Apply" }));
+  const stored = JSON.parse(localStorage.getItem("gcb-column-sizing")!);
+  expect(stored).toEqual({ version: 1, sizing: { title: 400 } });
 });
