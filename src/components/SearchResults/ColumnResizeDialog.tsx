@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useId } from "react";
 import { Dialog } from "@base-ui/react/dialog";
 import styles from "./ColumnResizeDialog.module.css";
 
@@ -16,6 +16,7 @@ export function ColumnResizeDialog({
   onClose,
 }: ColumnResizeDialogProps) {
   const [value, setValue] = useState(String(currentWidth));
+  const inputId = useId();
 
   return (
     <Dialog.Root
@@ -31,11 +32,11 @@ export function ColumnResizeDialog({
             Resize {columnName}
           </Dialog.Title>
           <div className={styles.field}>
-            <label htmlFor="resize-width-input" className={styles.label}>
+            <label htmlFor={inputId} className={styles.label}>
               Width (px)
             </label>
             <input
-              id="resize-width-input"
+              id={inputId}
               type="number"
               className={styles.input}
               value={value}
