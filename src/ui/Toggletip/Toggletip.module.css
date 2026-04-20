@@ -18,7 +18,7 @@
   background: var(--color-parchment-light);
   border: 2px solid var(--color-bark);
   padding: var(--space-2);
-  font-family: var(--font-data);
+  font-family: var(--font-body);
   font-size: var(--text-small);
   color: var(--color-ink);
   min-width: 200px;

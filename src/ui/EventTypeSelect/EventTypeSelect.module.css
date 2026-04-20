@@ -98,7 +98,7 @@
   box-shadow: var(--shadow-panel);
   max-height: 240px;
   overflow-y: auto;
-  min-width: 100%;
+  width: max-content;
 }
 
 .item {

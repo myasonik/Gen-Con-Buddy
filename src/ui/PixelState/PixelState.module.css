@@ -27,7 +27,7 @@
 }
 
 .subtext {
-  font-family: var(--font-data);
+  font-family: var(--font-body);
   font-size: var(--text-body);
   color: var(--color-bark);
   margin: 0;

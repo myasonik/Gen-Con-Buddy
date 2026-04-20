@@ -11,7 +11,7 @@
 
   /* Typography */
   --font-display: "IM Fell English", serif;
-  --font-data: "Courier Prime", monospace;
+  --font-body: "IBM Plex Sans", sans-serif;
 
   /* Type scale */
   --text-display: 22px;
