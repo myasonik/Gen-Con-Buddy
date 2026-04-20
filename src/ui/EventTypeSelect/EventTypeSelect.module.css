@@ -1,0 +1,153 @@
+.root {
+  position: relative;
+  margin-bottom: var(--space-2);
+}
+
+.label {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--text-label);
+  font-style: italic;
+  color: var(--color-bark);
+  margin-bottom: var(--space-1);
+  letter-spacing: 0.03em;
+}
+
+.inputGroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-parchment-light);
+  border: 1px solid var(--color-bark-light);
+  border-radius: 3px;
+  cursor: text;
+  min-height: 34px;
+}
+
+.inputGroup:focus-within {
+  outline: 2px solid var(--color-bark-dark);
+  outline-offset: 2px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 1px var(--space-1) 1px var(--space-2);
+  border-radius: 4px;
+  border: 1.5px solid var(--chip-color, var(--color-bark));
+  background: var(--chip-bg, var(--color-parchment));
+  font-family: var(--font-display);
+  font-size: var(--text-badge);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--chip-color, var(--color-bark));
+  white-space: nowrap;
+}
+
+.chipRemove {
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0 2px;
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.6;
+}
+
+.chipRemove:hover {
+  opacity: 1;
+}
+
+.input {
+  flex: 1;
+  min-width: 80px;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  color: var(--color-ink);
+  padding: 0;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.trigger {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--color-bark-light);
+  padding: 0 var(--space-1);
+  font-size: 14px;
+  line-height: 1;
+}
+
+
+.list {
+  position: absolute;
+  z-index: var(--z-popover);
+  padding: var(--space-1) 0;
+  background: var(--color-parchment-light);
+  border: 1px solid var(--color-bark-light);
+  border-radius: 3px;
+  box-shadow: var(--shadow-panel);
+  max-height: 240px;
+  overflow-y: auto;
+  min-width: 100%;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  color: var(--color-ink);
+}
+
+.item[data-highlighted] {
+  background: var(--color-parchment);
+}
+
+.itemBadge {
+  display: inline-block;
+  padding: 1px var(--space-1);
+  border-radius: 4px;
+  border: 1.5px solid var(--chip-color, var(--color-bark));
+  background: var(--chip-bg, var(--color-parchment));
+  color: var(--chip-color, var(--color-bark));
+  font-family: var(--font-display);
+  font-size: var(--text-badge);
+  font-style: italic;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.itemName {
+  flex: 1;
+}
+
+.itemIndicator {
+  display: none;
+  color: var(--color-bark);
+  font-size: 12px;
+}
+
+.item[data-selected] .itemIndicator {
+  display: inline;
+}
