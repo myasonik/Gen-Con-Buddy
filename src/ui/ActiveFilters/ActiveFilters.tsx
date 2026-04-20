@@ -1,3 +1,4 @@
+import React from "react";
 import type { SearchParams } from "../../utils/types";
 import type { ActiveFilter } from "./getActiveFilters";
 import { getActiveFilters } from "./getActiveFilters";
@@ -19,6 +20,14 @@ export function ActiveFilters({ searchParams, onRemove }: ActiveFiltersProps) {
           <button
             type="button"
             className={styles.chip}
+            style={
+              filter.colors
+                ? ({
+                    "--chip-color": filter.colors.color,
+                    "--chip-bg": filter.colors.bg,
+                  } as React.CSSProperties)
+                : undefined
+            }
             onClick={() => onRemove(filter)}
           >
             {filter.label} <span aria-hidden="true">×</span>

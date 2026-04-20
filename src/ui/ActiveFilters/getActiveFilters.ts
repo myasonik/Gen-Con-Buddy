@@ -5,11 +5,17 @@ import {
   EXP,
   REGISTRATION,
 } from "../../utils/enums";
+import {
+  DAY_COLORS,
+  EVENT_TYPE_COLORS,
+  type ConceptColor,
+} from "../../utils/conceptColors";
 import type { SearchParams } from "../../utils/types";
 
 export interface ActiveFilter {
   id: string;
   label: string;
+  colors?: ConceptColor;
   remove: (prev: SearchParams) => SearchParams;
 }
 
@@ -19,6 +25,14 @@ const DAY_LABELS: Record<string, string> = {
   fri: "Fri",
   sat: "Sat",
   sun: "Sun",
+};
+
+const DAY_FULL_NAMES: Record<string, string> = {
+  wed: "Wednesday",
+  thu: "Thursday",
+  fri: "Friday",
+  sat: "Saturday",
+  sun: "Sunday",
 };
 
 function parseRange(val: string): { min: string; max: string } | null {
@@ -75,6 +89,7 @@ export function getActiveFilters(params: SearchParams): ActiveFilter[] {
       filters.push({
         id: `eventType:${code}`,
         label,
+        colors: EVENT_TYPE_COLORS[code],
         remove: (prev) => {
           const remaining = (prev.eventType ?? "")
             .split(",")
@@ -117,6 +132,7 @@ export function getActiveFilters(params: SearchParams): ActiveFilter[] {
       filters.push({
         id: `days:${code}`,
         label,
+        colors: DAY_COLORS[DAY_FULL_NAMES[code] ?? ""],
         remove: (prev) => {
           const remaining = (prev.days ?? "")
             .split(",")

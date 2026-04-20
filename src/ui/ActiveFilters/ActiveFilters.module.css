@@ -12,9 +12,9 @@
   align-items: center;
   gap: var(--space-1);
   padding: var(--space-1) var(--space-2);
-  background: var(--color-bark-light);
-  color: var(--color-ink);
-  border: 1px solid var(--color-bark);
+  background: var(--chip-bg, var(--color-bark-light));
+  color: var(--chip-color, var(--color-ink));
+  border: 1px solid var(--chip-color, var(--color-bark));
   border-radius: 999px;
   font-family: var(--font-body);
   font-size: var(--text-small);
@@ -23,8 +23,8 @@
 }
 
 .chip:hover {
-  background: var(--color-bark);
-  color: var(--color-parchment);
+  background: var(--chip-color, var(--color-bark));
+  color: var(--chip-bg, var(--color-parchment));
 }
 
 .chip:focus-visible {
