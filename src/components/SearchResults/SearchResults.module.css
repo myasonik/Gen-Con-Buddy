@@ -11,6 +11,7 @@
 .tableWrapper table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
   font-family: var(--font-data);
 }
 
@@ -153,7 +154,7 @@
 }
 
 .resizableTh:hover .resizeHandle,
-.isResizing .resizeHandle {
+.resizableTh.isResizing .resizeHandle {
   opacity: 1;
   background: var(--color-gold);
 }
