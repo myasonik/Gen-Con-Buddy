@@ -1,4 +1,3 @@
-/* Absolutely positioned within the resizable <th> (which has position: relative) */
 .trigger {
   position: absolute;
   right: 6px; /* sits left of the 4px drag handle */
