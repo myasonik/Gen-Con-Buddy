@@ -10,4 +10,5 @@
 .tooltip {
   z-index: var(--z-popover);
   min-width: 200px;
+  background-color: canvas;
 }

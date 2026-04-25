@@ -66,6 +66,7 @@
   max-height: 240px;
   overflow-y: auto;
   width: max-content;
+  background-color: canvas;
 }
 
 .item {

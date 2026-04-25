@@ -19,7 +19,6 @@ import type { SearchParams, Event } from "../../utils/types";
 import { PixelState } from "../../ui/PixelState/PixelState";
 import { ConceptBadge } from "../../ui/Badge/Badge";
 import { Pawn } from "../../ui/icons/Pawn";
-import { DAY_COLORS } from "../../utils/conceptColors";
 import { EXP } from "../../utils/enums";
 import styles from "./SearchResults.module.css";
 
@@ -509,11 +508,6 @@ export function SearchResults({
               </thead>
               <tbody>
                 {table.getRowModel().rows.map((row) => {
-                  const dayName = format(
-                    new Date(row.original.attributes.startDateTime),
-                    "EEEE",
-                  );
-                  const dayColors = DAY_COLORS[dayName];
                   return (
                     <tr key={row.id}>
                       {row.getVisibleCells().map((cell) => {
@@ -522,11 +516,6 @@ export function SearchResults({
                             <td
                               key={cell.id}
                               className={styles.dayStripe}
-                              style={
-                                dayColors
-                                  ? { background: dayColors.color }
-                                  : undefined
-                              }
                               aria-hidden="true"
                               data-testid="day-stripe"
                             />

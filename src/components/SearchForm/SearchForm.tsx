@@ -4,17 +4,8 @@ import type { SearchFormValues } from "../../utils/types";
 import { Button } from "../../ui/Button/Button";
 import { Toggletip } from "../../ui/Toggletip/Toggletip";
 import { ToggleTile, ToggleTileGroup } from "../../ui/ToggleTile/ToggleTile";
-import { DAY_COLORS } from "../../utils/conceptColors";
 import { EventTypeSelect } from "../../ui/EventTypeSelect/EventTypeSelect";
 import styles from "./SearchForm.module.css";
-
-const DAY_FULL: Record<string, string> = {
-  wed: "Wednesday",
-  thu: "Thursday",
-  fri: "Friday",
-  sat: "Saturday",
-  sun: "Sunday",
-};
 
 const EMPTY_VALUES: SearchFormValues = {
   filter: "",
@@ -136,25 +127,11 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
               disabled={daysDisabled}
               className={styles.dayTiles}
             >
-              {DAY_KEYS.map((key) => {
-                const colors = DAY_COLORS[DAY_FULL[key]];
-                return (
-                  <ToggleTile
-                    key={key}
-                    value={key}
-                    style={
-                      colors
-                        ? ({
-                            "--tile-color": colors.color,
-                            "--tile-color-bg": colors.bg,
-                          } as React.CSSProperties)
-                        : undefined
-                    }
-                  >
-                    {DAY_LABELS[key]}
-                  </ToggleTile>
-                );
-              })}
+              {DAY_KEYS.map((key) => (
+                <ToggleTile key={key} value={key}>
+                  {DAY_LABELS[key]}
+                </ToggleTile>
+              ))}
             </ToggleTileGroup>
           </div>
         </fieldset>

@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Combobox } from "@base-ui/react/combobox";
 import { EVENT_TYPES } from "../../utils/enums";
-import { EVENT_TYPE_COLORS } from "../../utils/conceptColors";
 import styles from "./EventTypeSelect.module.css";
 
 export interface EventTypeSelectProps {
@@ -53,48 +52,31 @@ export function EventTypeSelect({
         Event Type
       </label>
       <Combobox.InputGroup className={styles.inputGroup}>
-        {selectedCodes.map((code) => {
-          const colors = EVENT_TYPE_COLORS[code];
-          return (
-            <div
-              key={code}
-              data-testid="chip"
-              className={styles.chip}
-              style={
-                colors
-                  ? ({
-                      "--chip-color": colors.color,
-                      "--chip-bg": colors.bg,
-                    } as React.CSSProperties)
-                  : undefined
-              }
+        {selectedCodes.map((code) => (
+          <div key={code} data-testid="chip" className={styles.chip}>
+            <span>
+              {code}
+              {open && (
+                <span>
+                  {" – "}
+                  {EVENT_TYPES[code]?.replace(/^[A-Z]+ - /, "")}
+                </span>
+              )}
+            </span>
+            <button
+              type="button"
+              className={styles.chipRemove}
+              aria-label={`Remove ${code}`}
+              onClick={() => removeCode(code)}
             >
-              <span>
-                {code}
-                {open && (
-                  <span>
-                    {" \u2013 "}
-                    {EVENT_TYPES[code]?.replace(/^[A-Z]+ - /, "")}
-                  </span>
-                )}
-              </span>
-              <button
-                type="button"
-                className={styles.chipRemove}
-                aria-label={`Remove ${code}`}
-                onClick={() => removeCode(code)}
-              >
-                ×
-              </button>
-            </div>
-          );
-        })}
+              ×
+            </button>
+          </div>
+        ))}
         <Combobox.Input
           id="event-type-input"
           className={styles.input}
-          placeholder={
-            selectedCodes.length > 0 ? "Add type\u2026" : "Filter types\u2026"
-          }
+          placeholder={selectedCodes.length > 0 ? "Add type…" : "Filter types…"}
         />
         <Combobox.Trigger
           className={styles.trigger}
@@ -105,36 +87,22 @@ export function EventTypeSelect({
       </Combobox.InputGroup>
       {open && (
         <Combobox.List className={styles.list}>
-          {filteredOptions.map(({ code, name }) => {
-            const colors = EVENT_TYPE_COLORS[code];
-            return (
-              <Combobox.Item
-                key={code}
-                value={code}
-                aria-label={name}
-                className={styles.item}
-              >
-                <span
-                  aria-hidden
-                  className={styles.itemBadge}
-                  style={
-                    colors
-                      ? ({
-                          "--chip-color": colors.color,
-                          "--chip-bg": colors.bg,
-                        } as React.CSSProperties)
-                      : undefined
-                  }
-                >
-                  {code}
-                </span>
-                <span className={styles.itemName}>{name}</span>
-                <Combobox.ItemIndicator className={styles.itemIndicator}>
-                  ✓
-                </Combobox.ItemIndicator>
-              </Combobox.Item>
-            );
-          })}
+          {filteredOptions.map(({ code, name }) => (
+            <Combobox.Item
+              key={code}
+              value={code}
+              aria-label={name}
+              className={styles.item}
+            >
+              <span aria-hidden className={styles.itemBadge}>
+                {code}
+              </span>
+              <span className={styles.itemName}>{name}</span>
+              <Combobox.ItemIndicator className={styles.itemIndicator}>
+                ✓
+              </Combobox.ItemIndicator>
+            </Combobox.Item>
+          ))}
         </Combobox.List>
       )}
     </Combobox.Root>
