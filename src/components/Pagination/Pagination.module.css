@@ -14,57 +14,8 @@
   justify-content: flex-end;
 }
 
-.navButton {
-  font-size: var(--text-label);
-}
-
-.pageButton {
-  min-width: 40px;
-  font-size: var(--text-label);
-  padding: var(--space-1) var(--space-2);
-}
-
-.activePage {
-  background: var(--color-bark) !important;
-  color: var(--color-gold) !important;
-  cursor: default;
-}
-
-.pageLabel {
-  font-family: var(--font-body);
-  font-size: 1rem;
-  color: var(--color-bark-dark);
-  padding: 0 var(--space-2);
-}
-
-.ellipsis {
-  font-family: var(--font-body);
-  color: var(--color-bark-light);
-  padding: 0 var(--space-1);
-}
-
 .summary {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--color-bark-dark);
-}
-
-.perPageLabel {
-  font-family: var(--font-pixel);
-  font-size: var(--text-badge);
-  color: var(--color-bark);
-}
-
-.perPageSelect {
-  background: var(--color-parchment);
-  border: 2px solid var(--color-bark);
-  border-radius: 0;
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--color-ink);
-  padding: var(--space-1) var(--space-2);
-  margin-left: var(--space-2);
 }
