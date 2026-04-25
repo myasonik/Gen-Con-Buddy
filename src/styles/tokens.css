@@ -1,27 +1,5 @@
 /* ─── Design Tokens ──────────────────────────────────────────────────────── */
 :root {
-  /* Colors */
-  --color-parchment: #f5e6c8;
-  --color-parchment-light: #fff9ee;
-  --color-bark: #8b4513;
-  --color-bark-dark: #5c3317;
-  --color-bark-light: #d4a76a;
-  --color-ink: #3b1e0a;
-  --color-gold: #c9a84c;
-
-  /* Typography */
-  --font-display: "IM Fell English", serif;
-  --font-body: "IBM Plex Sans", sans-serif;
-
-  /* Type scale */
-  --text-display: 22px;
-  --text-heading: 18px;
-  --text-label: 14px;
-  --text-badge: 11px;
-  --text-icon: 48px;
-  --text-body: 16px;
-  --text-small: 14px;
-
   /* Spacing — 8px grid */
   --space-1: 4px;
   --space-2: 8px;
@@ -32,11 +10,6 @@
   /* Sizes */
   --size-sidebar: 360px;
   --size-detail-max: 800px;
-
-  /* Shadow — warm organic cast */
-  --shadow-panel: 2px 3px 8px rgba(59, 30, 10, 0.18);
-  --shadow-button: 1px 2px 5px rgba(59, 30, 10, 0.25);
-  --shadow-button-active: 0px 1px 2px rgba(59, 30, 10, 0.2);
 
   /* Motion */
   --motion-press: 30ms linear;
@@ -49,32 +22,6 @@
   --z-header: 20;
   --z-popover: 30;
   --z-modal: 40;
-
-  /* Event type family colors */
-  --color-type-roleplay: #5c3a7a;
-  --color-type-roleplay-bg: #f0eaf7;
-  --color-type-board: #2a5c3a;
-  --color-type-board-bg: #e8f2ea;
-  --color-type-mini: #1a3d5c;
-  --color-type-mini-bg: #e4edf5;
-  --color-type-electronic: #7a4a00;
-  --color-type-electronic-bg: #fdf0d8;
-  --color-type-learning: #1a5c5c;
-  --color-type-learning-bg: #e4f2f2;
-  --color-type-entertainment: #7a2040;
-  --color-type-entertainment-bg: #f5e4ea;
-
-  /* Convention day colors */
-  --color-day-wed: #4a3570;
-  --color-day-wed-bg: #edeaf7;
-  --color-day-thu: #7a4a00;
-  --color-day-thu-bg: #fdf0d8;
-  --color-day-fri: #2a5c3a;
-  --color-day-fri-bg: #e8f2ea;
-  --color-day-sat: #1a3d5c;
-  --color-day-sat-bg: #e4edf5;
-  --color-day-sun: #7a2040;
-  --color-day-sun-bg: #f5e4ea;
 
   /* interpolate-size: allow <details> height: auto transitions */
   interpolate-size: allow-keywords;
