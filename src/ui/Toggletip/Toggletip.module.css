@@ -1,26 +1,13 @@
 .button {
-  font-family: var(--font-pixel);
-  font-size: var(--text-badge);
-  background: var(--color-parchment);
-  border: 2px solid var(--color-bark);
-  color: var(--color-bark);
-  padding: var(--space-1) var(--space-2);
   cursor: pointer;
 }
 
 .button:focus-visible {
-  outline: 2px solid var(--color-bark-dark);
+  outline: 2px solid;
   outline-offset: 2px;
 }
 
 .tooltip {
   z-index: var(--z-popover);
-  background: var(--color-parchment-light);
-  border: 2px solid var(--color-bark);
-  padding: var(--space-2);
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  color: var(--color-ink);
   min-width: 200px;
-  box-shadow: var(--shadow-panel);
 }
