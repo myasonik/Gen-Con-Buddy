@@ -1,7 +1,6 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(59, 30, 10, 0.35);
   z-index: calc(var(--z-modal) - 1);
 }
 
@@ -10,19 +9,12 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: var(--color-parchment-light);
-  border: 2px solid var(--color-bark);
-  box-shadow: var(--shadow-panel);
   padding: var(--space-4);
   min-width: 260px;
   z-index: var(--z-modal);
 }
 
 .title {
-  font-family: var(--font-display);
-  font-size: var(--text-heading);
-  font-style: italic;
-  color: var(--color-bark);
   margin: 0 0 var(--space-3);
 }
 
@@ -33,25 +25,13 @@
   margin-bottom: var(--space-4);
 }
 
-.label {
-  font-family: var(--font-display);
-  font-size: var(--text-label);
-  font-style: italic;
-  color: var(--color-ink);
-}
-
 .input {
-  font-family: var(--font-data);
-  font-size: var(--text-small);
-  border: 2px solid var(--color-bark);
   padding: var(--space-1) var(--space-2);
-  background: var(--color-parchment);
-  color: var(--color-ink);
   width: 100%;
 }
 
 .input:focus {
-  outline: 2px solid var(--color-gold);
+  outline: 2px solid;
   outline-offset: 1px;
 }
 
@@ -62,26 +42,6 @@
 }
 
 .button {
-  font-family: var(--font-display);
-  font-size: var(--text-label);
-  font-style: italic;
-  background: var(--color-parchment);
-  border: 2px solid var(--color-bark);
-  color: var(--color-bark);
-  padding: var(--space-1) var(--space-3);
   cursor: pointer;
-}
-
-.button:hover {
-  background: var(--color-bark-light);
-  color: var(--color-parchment-light);
-}
-
-.primaryButton {
-  background: var(--color-bark);
-  color: var(--color-parchment-light);
-}
-
-.primaryButton:hover {
-  background: var(--color-bark-dark);
+  padding: var(--space-1) var(--space-3);
 }
