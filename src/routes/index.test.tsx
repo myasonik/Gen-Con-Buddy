@@ -205,31 +205,6 @@ test("day toggle tiles have no concept color style properties", async () => {
   expect(thuBtn.style.getPropertyValue("--tile-color-bg")).toBe("");
 });
 
-test("results table rows include a day stripe cell", async () => {
-  server.use(
-    http.get("/api/events/search", () =>
-      HttpResponse.json({
-        data: [
-          makeEvent({
-            eventType: "RPG",
-            experienceRequired:
-              "None (You've never played before - rules will be taught)",
-            startDateTime: "2025-08-07T10:00:00-05:00", // Thursday
-          }),
-        ],
-        meta: { total: 1 },
-        links: { self: "" },
-        error: null,
-      }),
-    ),
-  );
-  await renderSearchPage();
-  await screen.findByRole("table");
-  expect(
-    document.querySelector('[data-testid="day-stripe"]'),
-  ).toBeInTheDocument();
-});
-
 test("eventType column renders a ConceptBadge", async () => {
   server.use(
     http.get("/api/events/search", () =>

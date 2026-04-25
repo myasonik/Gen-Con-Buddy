@@ -37,12 +37,6 @@ interface SearchResultsProps {
 
 const COLUMNS: ColumnDef<Event>[] = [
   {
-    id: "dayStripe",
-    header: () => null,
-    cell: () => null, // rendered specially in the row loop
-    enableResizing: false,
-  },
-  {
     id: "gameId",
     header: "Game ID",
     meta: { sortField: "gameId" },
@@ -380,7 +374,7 @@ export function SearchResults({
         <summary>Customize columns</summary>
         <fieldset>
           <ul>
-            {COLUMNS.filter((col) => col.id !== "dayStripe").map((col) => (
+            {COLUMNS.map((col) => (
               <li key={col.id}>
                 <label>
                   <input
@@ -429,15 +423,6 @@ export function SearchResults({
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => {
-                      if (header.column.id === "dayStripe") {
-                        return (
-                          <th
-                            key={header.id}
-                            className={styles.dayStripe}
-                            aria-hidden="true"
-                          />
-                        );
-                      }
                       const sortField = header.column.columnDef.meta?.sortField;
                       const label = header.column.columnDef.header as string;
                       const isActive =
@@ -510,26 +495,14 @@ export function SearchResults({
                 {table.getRowModel().rows.map((row) => {
                   return (
                     <tr key={row.id}>
-                      {row.getVisibleCells().map((cell) => {
-                        if (cell.column.id === "dayStripe") {
-                          return (
-                            <td
-                              key={cell.id}
-                              className={styles.dayStripe}
-                              aria-hidden="true"
-                              data-testid="day-stripe"
-                            />
-                          );
-                        }
-                        return (
-                          <td key={cell.id}>
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )}
-                          </td>
-                        );
-                      })}
+                      {row.getVisibleCells().map((cell) => (
+                        <td key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </td>
+                      ))}
                     </tr>
                   );
                 })}
