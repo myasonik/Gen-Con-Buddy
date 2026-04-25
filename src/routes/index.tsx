@@ -94,6 +94,13 @@ function SearchPage() {
 
   return (
     <main className={styles.shell} data-sidebar-open={String(sidebarOpen)}>
+      <div
+        className={styles.backdrop}
+        onClick={() => {
+          if (sidebarOpen) toggleSidebar();
+        }}
+        aria-hidden="true"
+      />
       <div id="sidebar" className={styles.sidebar}>
         <SearchForm
           key={JSON.stringify(search)}

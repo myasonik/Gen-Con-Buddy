@@ -6,14 +6,7 @@ export const Route = createRootRoute({
   component: () => (
     <>
       <header role="banner" className={styles.header}>
-        <Meeple
-          className={styles.headerMeeple}
-          frontFill="var(--color-parchment)"
-          shadowFill="rgba(0,0,0,0.35)"
-          stroke="var(--color-parchment)"
-          strokeWidth={8}
-          aria-hidden="true"
-        />
+        <Meeple className={styles.headerMeeple} aria-hidden="true" />
         <div>
           <p className={styles.headerTitle}>Gen Con Buddy</p>
           <p className={styles.headerSubtitle}>
