@@ -1,5 +1,5 @@
 .tableWrapper {
-  overflow-x: auto;
+  overflow-x: scroll;
 }
 
 .tableWrapper table {

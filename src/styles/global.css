@@ -24,14 +24,23 @@ body {
 }
 
 /* ─── Scrollbars ─────────────────────────────────────────────────────────── */
-/* Switches WebKit from overlay to classic scrollbars so they're always visible */
+/* Classic (non-overlay) scrollbars, always visible when content overflows */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
+::-webkit-scrollbar-thumb {
+  background-color: CanvasText;
+}
+
+::-webkit-scrollbar-track {
+  background-color: Canvas;
+}
+
 * {
   scrollbar-width: thin;
+  scrollbar-color: CanvasText Canvas;
 }
 
 /* ─── Reduced Motion ─────────────────────────────────────────────────────── */

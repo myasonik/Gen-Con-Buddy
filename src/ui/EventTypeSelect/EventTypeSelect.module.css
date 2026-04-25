@@ -16,6 +16,7 @@
   padding: var(--space-1) var(--space-2);
   cursor: text;
   min-height: 34px;
+  border: 1px solid;
 }
 
 .inputGroup:focus-within {
@@ -64,9 +65,10 @@
   z-index: var(--z-popover);
   padding: var(--space-1) 0;
   max-height: 240px;
-  overflow-y: auto;
+  overflow-y: scroll;
   width: max-content;
   background-color: canvas;
+  border: 1px solid;
 }
 
 .item {

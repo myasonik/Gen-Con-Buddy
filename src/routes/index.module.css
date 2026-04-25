@@ -27,7 +27,7 @@
 }
 
 .results {
-  overflow: auto;
+  overflow-y: scroll;
   padding: var(--space-3);
 }
 
@@ -56,7 +56,7 @@
     bottom: 0;
     width: min(80vw, var(--size-sidebar));
     z-index: var(--z-modal);
-    overflow-y: auto;
+    overflow-y: scroll;
     transform: translateX(-100%);
     transition: transform var(--motion-expand);
   }
