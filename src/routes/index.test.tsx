@@ -272,6 +272,18 @@ describe("sidebar toggle and active filters", () => {
     expect(btn).toHaveAttribute("aria-expanded", "false");
   });
 
+  test("clicking the backdrop closes the sidebar", async () => {
+    const user = userEvent.setup();
+    await renderSearchPage("/");
+    const btn = screen.getByRole("button", { name: /Filters/ });
+    expect(btn).toHaveAttribute("aria-expanded", "true");
+    // The backdrop is the first child of <main> — aria-hidden, not in a11y tree
+    const backdrop = document.querySelector("main")
+      ?.firstElementChild as HTMLElement;
+    await user.click(backdrop);
+    expect(btn).toHaveAttribute("aria-expanded", "false");
+  });
+
   test("no active filter chips when no filters are set", async () => {
     await renderSearchPage("/");
     expect(screen.queryByRole("button", { name: /Search:/ })).toBeNull();

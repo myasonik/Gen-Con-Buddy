@@ -96,9 +96,7 @@ function SearchPage() {
     <main className={styles.shell} data-sidebar-open={String(sidebarOpen)}>
       <div
         className={styles.backdrop}
-        onClick={() => {
-          if (sidebarOpen) toggleSidebar();
-        }}
+        onClick={toggleSidebar}
         aria-hidden="true"
       />
       <div id="sidebar" className={styles.sidebar}>
