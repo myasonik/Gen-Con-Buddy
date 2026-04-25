@@ -89,7 +89,6 @@
 
 .itemIndicator {
   display: none;
-  font-size: 12px;
 }
 
 .item[data-selected] .itemIndicator {
