@@ -16,10 +16,14 @@
   cursor: not-allowed;
 }
 
-.meepleSlot {
-  width: 12px;
-  height: 16px;
-  flex-shrink: 0;
+.tile::before {
+  content: "";
+  display: inline-block;
+  width: 1em;
+}
+
+.tile[aria-pressed="true"]::before {
+  content: "♟";
 }
 
 .group {
