@@ -19,3 +19,11 @@
   align-items: center;
   gap: var(--space-3);
 }
+
+.pageButton {
+  min-width: 40px;
+}
+
+.activePage {
+  cursor: default;
+}
