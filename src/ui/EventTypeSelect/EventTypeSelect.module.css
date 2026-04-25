@@ -67,6 +67,7 @@
   max-height: 240px;
   overflow-y: scroll;
   width: max-content;
+  max-width: 100%;
   background-color: canvas;
   border: 1px solid;
 }
@@ -88,6 +89,10 @@
 
 .itemName {
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .itemIndicator {
