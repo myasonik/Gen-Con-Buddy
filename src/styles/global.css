@@ -23,6 +23,17 @@ body {
   border: 0;
 }
 
+/* ─── Scrollbars ─────────────────────────────────────────────────────────── */
+/* Switches WebKit from overlay to classic scrollbars so they're always visible */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+* {
+  scrollbar-width: thin;
+}
+
 /* ─── Reduced Motion ─────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *,
