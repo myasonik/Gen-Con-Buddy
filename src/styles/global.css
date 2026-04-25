@@ -23,6 +23,14 @@ body {
   border: 0;
 }
 
+/* ─── Form Controls ──────────────────────────────────────────────────────── */
+/* Normalize input/select/textarea border so all form controls match */
+input,
+select,
+textarea {
+  border: 1px solid;
+}
+
 /* ─── Scrollbars ─────────────────────────────────────────────────────────── */
 /* Classic (non-overlay) scrollbars, always visible when content overflows */
 ::-webkit-scrollbar {
