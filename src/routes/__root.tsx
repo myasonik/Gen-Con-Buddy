@@ -8,10 +8,8 @@ export const Route = createRootRoute({
       <header role="banner" className={styles.header}>
         <Meeple className={styles.headerMeeple} aria-hidden="true" />
         <div>
-          <p className={styles.headerTitle}>Gen Con Buddy</p>
-          <p className={styles.headerSubtitle}>
-            your guide to the best four days in gaming
-          </p>
+          <p>Gen Con Buddy</p>
+          <p>your guide to the best four days in gaming</p>
         </div>
       </header>
       <Outlet />
