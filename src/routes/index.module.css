@@ -1,7 +1,13 @@
+.page {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100dvh;
+}
+
 .shell {
   display: grid;
   grid-template-columns: var(--size-sidebar) 1fr;
-  height: calc(100vh - 72px);
+  overflow: hidden;
   transition: grid-template-columns var(--motion-expand);
 }
 
@@ -23,7 +29,7 @@
 .sidebar {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: scroll;
 }
 
 .results {
@@ -44,9 +50,13 @@
 }
 
 @media (max-width: 768px) {
+  .page {
+    height: auto;
+    min-height: 100dvh;
+  }
+
   .shell {
     display: block;
-    height: auto;
   }
 
   .sidebar {
