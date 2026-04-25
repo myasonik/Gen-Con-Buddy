@@ -37,74 +37,77 @@ export function EventTypeSelect({
   }
 
   return (
-    <Combobox.Root
-      multiple
-      value={selectedCodes}
-      onValueChange={(codes) => onValueChange(codes.join(","))}
-      onOpenChange={(isOpen) => {
-        setOpen(isOpen);
-        if (!isOpen) setFilterText("");
-      }}
-      onInputValueChange={(text) => setFilterText(text)}
-      className={styles.root}
-    >
-      <label htmlFor="event-type-input" className={styles.label}>
-        Event Type
-      </label>
-      <Combobox.InputGroup className={styles.inputGroup}>
-        {selectedCodes.map((code) => (
-          <div key={code} data-testid="chip" className={styles.chip}>
-            <span>
-              {code}
-              {open && (
-                <span>
-                  {" – "}
-                  {EVENT_TYPES[code]?.replace(/^[A-Z]+ - /, "")}
-                </span>
-              )}
-            </span>
-            <button
-              type="button"
-              className={styles.chipRemove}
-              aria-label={`Remove ${code}`}
-              onClick={() => removeCode(code)}
-            >
-              ×
-            </button>
-          </div>
-        ))}
-        <Combobox.Input
-          id="event-type-input"
-          className={styles.input}
-          placeholder={selectedCodes.length > 0 ? "Add type…" : "Filter types…"}
-        />
-        <Combobox.Trigger
-          className={styles.trigger}
-          aria-label="Toggle event type list"
-        >
-          ▾
-        </Combobox.Trigger>
-      </Combobox.InputGroup>
-      {open && (
-        <Combobox.List className={styles.list}>
-          {filteredOptions.map(({ code, name }) => (
-            <Combobox.Item
-              key={code}
-              value={code}
-              aria-label={name}
-              className={styles.item}
-            >
-              <span aria-hidden className={styles.itemBadge}>
+    <div className={styles.root}>
+      <Combobox.Root
+        multiple
+        value={selectedCodes}
+        onValueChange={(codes) => onValueChange(codes.join(","))}
+        onOpenChange={(isOpen) => {
+          setOpen(isOpen);
+          if (!isOpen) setFilterText("");
+        }}
+        onInputValueChange={(text) => setFilterText(text)}
+      >
+        <label htmlFor="event-type-input" className={styles.label}>
+          Event Type
+        </label>
+        <Combobox.InputGroup className={styles.inputGroup}>
+          {selectedCodes.map((code) => (
+            <div key={code} data-testid="chip" className={styles.chip}>
+              <span>
                 {code}
+                {open && (
+                  <span>
+                    {" – "}
+                    {EVENT_TYPES[code]?.replace(/^[A-Z]+ - /, "")}
+                  </span>
+                )}
               </span>
-              <span className={styles.itemName}>{name}</span>
-              <Combobox.ItemIndicator className={styles.itemIndicator}>
-                ✓
-              </Combobox.ItemIndicator>
-            </Combobox.Item>
+              <button
+                type="button"
+                className={styles.chipRemove}
+                aria-label={`Remove ${code}`}
+                onClick={() => removeCode(code)}
+              >
+                ×
+              </button>
+            </div>
           ))}
-        </Combobox.List>
-      )}
-    </Combobox.Root>
+          <Combobox.Input
+            id="event-type-input"
+            className={styles.input}
+            placeholder={
+              selectedCodes.length > 0 ? "Add type…" : "Filter types…"
+            }
+          />
+          <Combobox.Trigger
+            className={styles.trigger}
+            aria-label="Toggle event type list"
+          >
+            ▾
+          </Combobox.Trigger>
+        </Combobox.InputGroup>
+        {open && (
+          <Combobox.List className={styles.list}>
+            {filteredOptions.map(({ code, name }) => (
+              <Combobox.Item
+                key={code}
+                value={code}
+                aria-label={name}
+                className={styles.item}
+              >
+                <span aria-hidden className={styles.itemBadge}>
+                  {code}
+                </span>
+                <span className={styles.itemName}>{name}</span>
+                <Combobox.ItemIndicator className={styles.itemIndicator}>
+                  ✓
+                </Combobox.ItemIndicator>
+              </Combobox.Item>
+            ))}
+          </Combobox.List>
+        )}
+      </Combobox.Root>
+    </div>
   );
 }
