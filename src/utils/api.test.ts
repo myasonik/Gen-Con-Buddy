@@ -62,7 +62,7 @@ test('fetchChangelogList sends limit param', async () => {
     }),
   )
   await fetchChangelogList(10)
-  expect((capturedUrl as unknown as URL).searchParams.get('limit')).toBe('10')
+  expect(capturedUrl!.searchParams.get('limit')).toBe('10')
 })
 
 test('fetchChangelogList throws on HTTP error', async () => {
@@ -101,7 +101,7 @@ test('fetchChangelogEntry sends id param', async () => {
     }),
   )
   await fetchChangelogEntry('entry-1')
-  expect((capturedUrl as unknown as URL).searchParams.get('id')).toBe('entry-1')
+  expect(capturedUrl!.searchParams.get('id')).toBe('entry-1')
 })
 
 test('fetchChangelogEntry throws on HTTP error', async () => {
