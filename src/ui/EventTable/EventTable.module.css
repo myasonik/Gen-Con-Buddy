@@ -1,0 +1,128 @@
+.tableWrapper {
+  overflow-x: scroll;
+}
+
+.tableWrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.tableWrapper table thead th {
+  white-space: nowrap;
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid;
+}
+
+.thContent {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  overflow: hidden;
+}
+
+.sortButton {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+.sortButton:hover {
+  opacity: 0.8;
+}
+
+.tableWrapper table tbody tr:nth-child(odd) {
+  background: var(--color-parchment-light);
+}
+
+.tableWrapper table tbody tr:nth-child(even) {
+  background: var(--color-parchment);
+}
+
+.tableWrapper table tbody tr {
+  transition: background-color var(--motion-hover);
+}
+
+.tableWrapper table tbody tr:hover {
+  background: color-mix(in srgb, var(--color-bark-light) 30%, var(--color-parchment-light));
+}
+
+.tableWrapper table td {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid;
+}
+
+/* Column visibility panel */
+.visibilityPanel {
+  margin-bottom: var(--space-3);
+}
+
+.visibilityPanel summary {
+  cursor: pointer;
+  padding: var(--space-2) var(--space-3);
+  display: inline-block;
+  margin-bottom: var(--space-2);
+}
+
+.visibilityPanel details::details-content {
+  height: 0;
+  overflow: hidden;
+  transition:
+    height var(--motion-expand),
+    content-visibility var(--motion-expand) allow-discrete;
+}
+
+.visibilityPanel details[open]::details-content {
+  height: auto;
+}
+
+.sortIndicator {
+  display: inline-block;
+}
+
+/* Column resize handle */
+.resizableTh {
+  position: relative;
+  padding-right: 28px;
+}
+
+.resizeHandle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 24px;
+  cursor: col-resize;
+  background: transparent;
+  user-select: none;
+}
+
+.resizeHandle::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: transparent;
+  opacity: 0;
+  transition: opacity 100ms;
+}
+
+.resizableTh:hover .resizeHandle::after,
+.resizableTh.isResizing .resizeHandle::after {
+  opacity: 1;
+  background: var(--color-gold);
+}
+
+@media (max-width: 768px) {
+  .resizableTh,
+  .resizeHandle {
+    display: none;
+  }
+}
