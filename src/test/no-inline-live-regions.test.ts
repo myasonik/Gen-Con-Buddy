@@ -1,10 +1,11 @@
 import { RuleTester } from 'eslint'
+import type { Rule } from 'eslint'
 import * as parser from '@typescript-eslint/parser'
 import { describe, it } from 'vitest'
 
 const noInlineLiveRegions = {
   meta: { type: 'problem' as const, schema: [] },
-  create(context: Parameters<(typeof import('eslint').Rule.RuleModule)['create']>[0]) {
+  create(context: Rule.RuleContext) {
     return {
       JSXAttribute(node: import('eslint').Rule.Node) {
         const attr = node as unknown as {

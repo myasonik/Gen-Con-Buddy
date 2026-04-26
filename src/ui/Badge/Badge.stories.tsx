@@ -20,7 +20,7 @@ export const Outline: Story = {
   args: { variant: 'outline', children: 'free' },
 }
 
-const { stories, Grid } = makeMatrix(meta, { variant: BADGE_VARIANTS }, { children: 'ticketed' })
+const { Grid } = makeMatrix(meta, { variant: BADGE_VARIANTS }, { children: 'ticketed' })
 
 export const AllVariants: Story = { render: Grid }
 

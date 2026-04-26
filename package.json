@@ -8,6 +8,7 @@
     "start": "concurrently -n api,web -c cyan,green \"sh -c 'cd ../Gen-Con-Buddy-API && set -a && source .env && ./bin/gcb api'\" \"vite\"",
     "start:prod": "VITE_API_URL=https://web-production-e0d43.up.railway.app vite",
     "build": "tsc -b && vite build",
+    "typecheck": "tsc -b --noEmit",
     "preview": "vite preview",
     "lint": "oxlint . && eslint .",
     "test": "vitest run",

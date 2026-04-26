@@ -33,7 +33,7 @@ test('populates fields from defaultValues', () => {
 
 test('submits with the title value passed to onSearch', async () => {
   const user = userEvent.setup()
-  const handleSearch = vi.fn<[SearchFormValues], void>()
+  const handleSearch = vi.fn<(values: SearchFormValues) => void>()
   render(<SearchForm defaultValues={{}} onSearch={handleSearch} />)
 
   await user.type(screen.getByRole('textbox', { name: 'Title' }), 'Dragons')
@@ -45,7 +45,7 @@ test('submits with the title value passed to onSearch', async () => {
 
 test('submits with the filter (full text search) value', async () => {
   const user = userEvent.setup()
-  const handleSearch = vi.fn<[SearchFormValues], void>()
+  const handleSearch = vi.fn<(values: SearchFormValues) => void>()
   render(<SearchForm defaultValues={{}} onSearch={handleSearch} />)
 
   await user.type(screen.getByRole('textbox', { name: 'Search' }), 'fire')
@@ -89,7 +89,7 @@ test('renders day tiles as toggle buttons in the DAYS fieldset', () => {
 
 test('clicking a day tile submits the correct days value', async () => {
   const user = userEvent.setup()
-  const handleSearch = vi.fn<[SearchFormValues], void>()
+  const handleSearch = vi.fn<(values: SearchFormValues) => void>()
   render(<SearchForm defaultValues={{}} onSearch={handleSearch} />)
 
   await user.click(screen.getByRole('button', { name: 'Thu' }))
@@ -100,7 +100,7 @@ test('clicking a day tile submits the correct days value', async () => {
 
 test('clicking multiple day tiles submits comma-separated days', async () => {
   const user = userEvent.setup()
-  const handleSearch = vi.fn<[SearchFormValues], void>()
+  const handleSearch = vi.fn<(values: SearchFormValues) => void>()
   render(<SearchForm defaultValues={{}} onSearch={handleSearch} />)
 
   await user.click(screen.getByRole('button', { name: 'Wed' }))

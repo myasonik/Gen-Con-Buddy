@@ -44,7 +44,7 @@ export function makeMatrix<TMeta extends Meta<any>>(
     stories[key] = {
       name,
       args: { ...defaults, ...combo } as StoryObj<TMeta>['args'],
-    }
+    } as StoryObj<TMeta>
   }
 
   function Grid() {
