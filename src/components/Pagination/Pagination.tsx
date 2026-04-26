@@ -88,7 +88,7 @@ export function Pagination({
         </Button>
       </div>
       <div className={styles.summary}>
-        {total.toLocaleString()} events • {limit} per page
+        {total.toLocaleString()} events
         <label className={styles.perPageLabel}>
           Per page
           <select

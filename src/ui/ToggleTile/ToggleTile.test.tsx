@@ -49,10 +49,11 @@ describe("ToggleTile", () => {
     expect(handleChange).not.toHaveBeenCalled();
   });
 
-  it("renders an aria-hidden meeple SVG inside the tile", () => {
+  it("renders no icon when unpressed", () => {
     render(<ToggleTile>Thu</ToggleTile>);
-    const btn = screen.getByRole("button", { name: "Thu" });
-    expect(btn.querySelector("svg[aria-hidden='true']")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Thu" }).querySelector("svg"),
+    ).not.toBeInTheDocument();
   });
 });
 

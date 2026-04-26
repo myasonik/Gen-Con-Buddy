@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Combobox } from "@base-ui/react/combobox";
 import { EVENT_TYPES } from "../../utils/enums";
-import { EVENT_TYPE_COLORS } from "../../utils/conceptColors";
 import styles from "./EventTypeSelect.module.css";
 
 export interface EventTypeSelectProps {
@@ -38,42 +37,28 @@ export function EventTypeSelect({
   }
 
   return (
-    <Combobox.Root
-      multiple
-      value={selectedCodes}
-      onValueChange={(codes) => onValueChange(codes.join(","))}
-      onOpenChange={(isOpen) => {
-        setOpen(isOpen);
-        if (!isOpen) setFilterText("");
-      }}
-      onInputValueChange={(text) => setFilterText(text)}
-      className={styles.root}
-    >
-      <label htmlFor="event-type-input" className={styles.label}>
-        Event Type
-      </label>
-      <Combobox.InputGroup className={styles.inputGroup}>
-        {selectedCodes.map((code) => {
-          const colors = EVENT_TYPE_COLORS[code];
-          return (
-            <div
-              key={code}
-              data-testid="chip"
-              className={styles.chip}
-              style={
-                colors
-                  ? ({
-                      "--chip-color": colors.color,
-                      "--chip-bg": colors.bg,
-                    } as React.CSSProperties)
-                  : undefined
-              }
-            >
+    <div className={styles.root}>
+      <Combobox.Root
+        multiple
+        value={selectedCodes}
+        onValueChange={(codes) => onValueChange(codes.join(","))}
+        onOpenChange={(isOpen) => {
+          setOpen(isOpen);
+          if (!isOpen) setFilterText("");
+        }}
+        onInputValueChange={(text) => setFilterText(text)}
+      >
+        <label htmlFor="event-type-input" className={styles.label}>
+          Event Type
+        </label>
+        <Combobox.InputGroup className={styles.inputGroup}>
+          {selectedCodes.map((code) => (
+            <div key={code} data-testid="chip" className={styles.chip}>
               <span>
                 {code}
                 {open && (
                   <span>
-                    {" \u2013 "}
+                    {" – "}
                     {EVENT_TYPES[code]?.replace(/^[A-Z]+ - /, "")}
                   </span>
                 )}
@@ -87,45 +72,31 @@ export function EventTypeSelect({
                 ×
               </button>
             </div>
-          );
-        })}
-        <Combobox.Input
-          id="event-type-input"
-          className={styles.input}
-          placeholder={
-            selectedCodes.length > 0 ? "Add type\u2026" : "Filter types\u2026"
-          }
-        />
-        <Combobox.Trigger
-          className={styles.trigger}
-          aria-label="Toggle event type list"
-        >
-          ▾
-        </Combobox.Trigger>
-      </Combobox.InputGroup>
-      {open && (
-        <Combobox.List className={styles.list}>
-          {filteredOptions.map(({ code, name }) => {
-            const colors = EVENT_TYPE_COLORS[code];
-            return (
+          ))}
+          <Combobox.Input
+            id="event-type-input"
+            className={styles.input}
+            placeholder={
+              selectedCodes.length > 0 ? "Add type…" : "Filter types…"
+            }
+          />
+          <Combobox.Trigger
+            className={styles.trigger}
+            aria-label="Toggle event type list"
+          >
+            ▾
+          </Combobox.Trigger>
+        </Combobox.InputGroup>
+        {open && (
+          <Combobox.List className={styles.list}>
+            {filteredOptions.map(({ code, name }) => (
               <Combobox.Item
                 key={code}
                 value={code}
                 aria-label={name}
                 className={styles.item}
               >
-                <span
-                  aria-hidden
-                  className={styles.itemBadge}
-                  style={
-                    colors
-                      ? ({
-                          "--chip-color": colors.color,
-                          "--chip-bg": colors.bg,
-                        } as React.CSSProperties)
-                      : undefined
-                  }
-                >
+                <span aria-hidden className={styles.itemBadge}>
                   {code}
                 </span>
                 <span className={styles.itemName}>{name}</span>
@@ -133,10 +104,10 @@ export function EventTypeSelect({
                   ✓
                 </Combobox.ItemIndicator>
               </Combobox.Item>
-            );
-          })}
-        </Combobox.List>
-      )}
-    </Combobox.Root>
+            ))}
+          </Combobox.List>
+        )}
+      </Combobox.Root>
+    </div>
   );
 }

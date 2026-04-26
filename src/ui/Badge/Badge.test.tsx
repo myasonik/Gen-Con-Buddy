@@ -88,25 +88,25 @@ describe("ConceptBadge", () => {
     expect(screen.getByText("None")).toBeInTheDocument();
   });
 
-  it("applies roleplay color custom properties for RPG", () => {
+  it("applies no inline color styles for any eventType value", () => {
     const { container } = render(
       <ConceptBadge concept="eventType" value="RPG" />,
     );
     const el = container.firstChild as HTMLElement;
-    expect(el.style.getPropertyValue("--concept-color")).toBe("#5c3a7a");
-    expect(el.style.getPropertyValue("--concept-bg")).toBe("#f0eaf7");
+    expect(el.style.getPropertyValue("--concept-color")).toBe("");
+    expect(el.style.getPropertyValue("--concept-bg")).toBe("");
   });
 
-  it("applies Thursday color custom properties for day", () => {
+  it("applies no inline color styles for any day value", () => {
     const { container } = render(
       <ConceptBadge concept="day" value="Thursday" />,
     );
     const el = container.firstChild as HTMLElement;
-    expect(el.style.getPropertyValue("--concept-color")).toBe("#7a4a00");
-    expect(el.style.getPropertyValue("--concept-bg")).toBe("#fdf0d8");
+    expect(el.style.getPropertyValue("--concept-color")).toBe("");
+    expect(el.style.getPropertyValue("--concept-bg")).toBe("");
   });
 
-  it("applies no inline style for an unknown value", () => {
+  it("applies no inline color styles for an unknown value", () => {
     const { container } = render(
       <ConceptBadge concept="eventType" value="UNKNOWN" />,
     );

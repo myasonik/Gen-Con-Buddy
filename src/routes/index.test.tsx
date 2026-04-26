@@ -198,36 +198,11 @@ test("day tiles are toggle buttons with aria-pressed", async () => {
   );
 });
 
-test("day toggle tiles have concept color style properties", async () => {
+test("day toggle tiles have no concept color style properties", async () => {
   await renderSearchPage();
   const thuBtn = screen.getByRole("button", { name: "Thu" });
-  expect(thuBtn.style.getPropertyValue("--tile-color")).toBe("#7a4a00");
-  expect(thuBtn.style.getPropertyValue("--tile-color-bg")).toBe("#fdf0d8");
-});
-
-test("results table rows include a day stripe cell", async () => {
-  server.use(
-    http.get("/api/events/search", () =>
-      HttpResponse.json({
-        data: [
-          makeEvent({
-            eventType: "RPG",
-            experienceRequired:
-              "None (You've never played before - rules will be taught)",
-            startDateTime: "2025-08-07T10:00:00-05:00", // Thursday
-          }),
-        ],
-        meta: { total: 1 },
-        links: { self: "" },
-        error: null,
-      }),
-    ),
-  );
-  await renderSearchPage();
-  await screen.findByRole("table");
-  expect(
-    document.querySelector('[data-testid="day-stripe"]'),
-  ).toBeInTheDocument();
+  expect(thuBtn.style.getPropertyValue("--tile-color")).toBe("");
+  expect(thuBtn.style.getPropertyValue("--tile-color-bg")).toBe("");
 });
 
 test("eventType column renders a ConceptBadge", async () => {
@@ -269,6 +244,18 @@ describe("sidebar toggle and active filters", () => {
     await renderSearchPage("/");
     const btn = screen.getByRole("button", { name: /Filters/ });
     await user.click(btn);
+    expect(btn).toHaveAttribute("aria-expanded", "false");
+  });
+
+  test("clicking the backdrop closes the sidebar", async () => {
+    const user = userEvent.setup();
+    await renderSearchPage("/");
+    const btn = screen.getByRole("button", { name: /Filters/ });
+    expect(btn).toHaveAttribute("aria-expanded", "true");
+    // The backdrop is the first child of <main> — aria-hidden, not in a11y tree
+    const backdrop = document.querySelector("main")
+      ?.firstElementChild as HTMLElement;
+    await user.click(backdrop);
     expect(btn).toHaveAttribute("aria-expanded", "false");
   });
 

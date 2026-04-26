@@ -115,5 +115,5 @@ test("does not show truncation notice when results are within backend limit", ()
 
 test("shows total events and per-page count summary", () => {
   render(<Pagination page={1} limit={100} total={247} onNavigate={vi.fn()} />);
-  expect(screen.getByText("247 events • 100 per page")).toBeInTheDocument();
+  expect(screen.getByText("247 events")).toBeInTheDocument();
 });

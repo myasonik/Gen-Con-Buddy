@@ -10,27 +10,9 @@
   padding: var(--space-3);
 }
 
-/* Board-tile fieldset panel */
 .fieldset {
-  border: 2px solid var(--color-bark);
-  border-radius: 4px;
   margin: 0 0 var(--space-3) 0;
   padding: 0;
-  box-shadow: var(--shadow-panel);
-}
-
-.legend {
-  display: block;
-  width: 100%;
-  background: var(--color-bark);
-  border-bottom: 2px solid var(--color-gold);
-  border-radius: 2px 2px 0 0;
-  font-family: var(--font-display);
-  font-size: var(--text-label);
-  font-style: italic;
-  color: var(--color-parchment);
-  padding: var(--space-1) var(--space-3);
-  letter-spacing: 0.04em;
 }
 
 .fieldsetBody {
@@ -39,44 +21,29 @@
 
 .label {
   display: block;
-  font-family: var(--font-display);
-  font-size: var(--text-label);
-  font-style: italic;
-  color: var(--color-bark);
   margin-bottom: var(--space-1);
-  letter-spacing: 0.03em;
 }
 
 .input,
 .select {
   display: block;
   width: 100%;
-  background: var(--color-parchment-light);
-  border: 1px solid var(--color-bark-light);
-  border-radius: 3px;
-  font-family: var(--font-body);
-  font-size: 1rem;
   padding: var(--space-1) var(--space-2);
-  color: var(--color-ink);
   margin-top: var(--space-1);
   margin-bottom: var(--space-2);
 }
 
-.input:focus,
-.select:focus {
-  outline: 2px solid var(--color-bark-dark);
+.input:focus-visible,
+.select:focus-visible {
+  outline: 2px solid;
   outline-offset: 2px;
 }
 
 .input:disabled {
-  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .rangeGroup {
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--color-bark-dark);
   margin-bottom: var(--space-3);
 }
 
@@ -87,12 +54,9 @@
   margin-top: var(--space-1);
 }
 
-/* Sticky action buttons */
 .buttonBar {
   position: sticky;
   bottom: 0;
-  background: var(--color-parchment-light);
-  border-top: 2px solid var(--color-bark-light);
   padding: var(--space-3);
   margin-top: auto;
   display: flex;

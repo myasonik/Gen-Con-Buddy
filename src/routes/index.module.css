@@ -1,8 +1,13 @@
+.page {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100dvh;
+}
+
 .shell {
   display: grid;
   grid-template-columns: var(--size-sidebar) 1fr;
-  grid-template-rows: 1fr;
-  height: calc(100vh - 72px);
+  overflow: hidden;
   transition: grid-template-columns var(--motion-expand);
 }
 
@@ -24,50 +29,65 @@
 .sidebar {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  border-right: 2px solid var(--color-bark-light);
-  box-shadow: var(--shadow-panel);
-  background-color: var(--color-parchment-light);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23fff9ee'/%3E%3Crect x='0' y='0' width='1' height='1' fill='%23d4a76a' opacity='0.12'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%23d4a76a' opacity='0.12'/%3E%3C/svg%3E");
+  overflow-y: scroll;
 }
 
 .results {
-  overflow: auto;
+  overflow-y: scroll;
   padding: var(--space-3);
 }
 
 .header {
-  background: var(--color-bark-dark);
-  border-bottom: 3px solid var(--color-gold);
-  grid-column: 1 / -1;
-  padding: var(--space-2) var(--space-4);
-  z-index: var(--z-header);
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
 }
 
-.headerMeeple {
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
+/* backdrop is desktop-invisible; shown by mobile media query */
+.backdrop {
+  display: none;
 }
 
-.headerTitle {
-  font-family: var(--font-display);
-  font-size: var(--text-display);
-  font-style: italic;
-  color: var(--color-parchment);
-  letter-spacing: 0.05em;
-  margin: 0;
-  line-height: 1;
-}
+@media (max-width: 768px) {
+  .page {
+    height: auto;
+    min-height: 100dvh;
+  }
 
-.headerSubtitle {
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-style: italic;
-  color: var(--color-gold);
-  margin: 2px 0 0;
-  letter-spacing: 0.05em;
+  .shell {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(80vw, var(--size-sidebar));
+    z-index: var(--z-modal);
+    overflow-y: scroll;
+    transform: translateX(-100%);
+    transition: transform var(--motion-expand);
+  }
+
+  .shell[data-sidebar-open="true"] .sidebar {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .shell[data-sidebar-open="false"] .sidebar {
+    visibility: hidden;
+  }
+
+  .backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: calc(var(--z-modal) - 1);
+  }
+
+  .shell[data-sidebar-open="true"] .backdrop {
+    display: block;
+  }
 }

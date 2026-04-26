@@ -12,22 +12,10 @@
   align-items: center;
   gap: var(--space-1);
   padding: var(--space-1) var(--space-2);
-  background: var(--chip-bg, var(--color-bark-light));
-  color: var(--chip-color, var(--color-ink));
-  border: 1px solid var(--chip-color, var(--color-bark));
-  border-radius: 999px;
-  font-family: var(--font-body);
-  font-size: var(--text-small);
   cursor: pointer;
-  transition: background var(--motion-hover);
-}
-
-.chip:hover {
-  background: var(--chip-color, var(--color-bark));
-  color: var(--chip-bg, var(--color-parchment));
 }
 
 .chip:focus-visible {
-  outline: 2px solid var(--color-bark-dark);
+  outline: 2px solid;
   outline-offset: 2px;
 }
