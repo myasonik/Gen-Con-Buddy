@@ -13,7 +13,7 @@ export function ChangelogPage() {
     isError,
   } = useQuery({
     queryKey: ["changelog", "list"],
-    queryFn: fetchChangelogList,
+    queryFn: () => fetchChangelogList(),
   });
 
   useEffect(() => {
