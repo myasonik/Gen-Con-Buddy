@@ -22,13 +22,6 @@ import { Pawn } from "../../ui/icons/Pawn";
 import { EXP } from "../../utils/enums";
 import styles from "./SearchResults.module.css";
 
-// Extend TanStack Table's ColumnMeta to include our sortField
-declare module "@tanstack/react-table" {
-  interface ColumnMeta<TData, TValue> {
-    sortField?: string;
-  }
-}
-
 interface SearchResultsProps {
   searchParams: SearchParams;
   onNavigate: (page: number, limit: number) => void;
