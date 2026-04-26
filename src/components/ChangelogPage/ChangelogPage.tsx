@@ -1,43 +1,48 @@
-import { useEffect, useState } from "react";
-import { fetchChangelogList } from "../../utils/api";
-import type { ChangelogSummary } from "../../utils/types";
-import { useChangelogPrefetch } from "./useChangelogPrefetch";
+import { useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchChangelogList, fetchChangelogEntry } from "../../utils/api";
 import { ChangelogRow } from "./ChangelogRow";
 import { PixelState } from "../../ui/PixelState/PixelState";
 import styles from "./ChangelogPage.module.css";
 
 export function ChangelogPage() {
-  const [summaries, setSummaries] = useState<ChangelogSummary[]>([]);
-  const [listState, setListState] = useState<"loading" | "error" | "done">(
-    "loading",
-  );
-  const { getEntry, openEntry } = useChangelogPrefetch(summaries);
+  const queryClient = useQueryClient();
+  const {
+    data: summaries = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["changelog", "list"],
+    queryFn: fetchChangelogList,
+  });
 
   useEffect(() => {
-    fetchChangelogList()
-      .then((res) => {
-        if (res.error) {
-          setListState("error");
-        } else {
-          setSummaries(res.entries ?? []);
-          setListState("done");
-        }
-      })
-      .catch(() => setListState("error"));
-  }, []);
+    if (summaries.length > 0) {
+      void queryClient.prefetchQuery({
+        queryKey: ["changelog", "entry", summaries[0].id],
+        queryFn: () => fetchChangelogEntry(summaries[0].id),
+      });
+    }
+  }, [summaries, queryClient]);
+
+  const handleOpen = (index: number) => {
+    const next = summaries[index + 1];
+    if (next) {
+      void queryClient.prefetchQuery({
+        queryKey: ["changelog", "entry", next.id],
+        queryFn: () => fetchChangelogEntry(next.id),
+      });
+    }
+  };
 
   return (
     <main className={styles.page}>
-      {listState === "loading" && (
-        <PixelState variant="loading" text="LOADING CHANGELOG…" />
-      )}
-      {listState === "error" && (
-        <p>Could not load changelog. Try refreshing.</p>
-      )}
-      {listState === "done" && summaries.length === 0 && (
+      {isLoading && <PixelState variant="loading" text="LOADING CHANGELOG…" />}
+      {isError && <p>Could not load changelog. Try refreshing.</p>}
+      {!isLoading && !isError && summaries.length === 0 && (
         <p>No changelog entries yet.</p>
       )}
-      {listState === "done" && summaries.length > 0 && (
+      {summaries.length > 0 && (
         <>
           <h1 className={styles.heading}>Changelog</h1>
           <section>
@@ -45,8 +50,7 @@ export function ChangelogPage() {
               <ChangelogRow
                 key={summary.id}
                 summary={summary}
-                entry={getEntry(summary.id)}
-                onOpen={() => openEntry(i)}
+                onOpen={() => handleOpen(i)}
               />
             ))}
           </section>

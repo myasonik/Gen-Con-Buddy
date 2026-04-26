@@ -1,8 +1,12 @@
 .row {
-  border: 1px solid var(--color-bark-light);
+  border: 1px solid #ccc;
   border-radius: 4px;
   margin-bottom: var(--space-2);
-  background: var(--color-parchment-light);
+  background: #fff;
+}
+
+.row:nth-child(even) {
+  background: #f5f5f5;
 }
 
 .row::details-content {
@@ -24,6 +28,11 @@
   padding: var(--space-3) var(--space-4);
   cursor: pointer;
   list-style: none;
+  transition: background var(--motion-hover);
+}
+
+.summary:hover {
+  background: #ddd;
 }
 
 .summary::-webkit-details-marker {
@@ -34,7 +43,7 @@
   font-family: var(--font-display);
   font-style: italic;
   font-size: var(--text-label);
-  color: var(--color-ink);
+  color: #000;
   flex: 1;
 }
 
@@ -42,5 +51,5 @@
   display: flex;
   gap: var(--space-3);
   font-size: var(--text-label);
-  color: var(--color-bark);
+  color: #666;
 }

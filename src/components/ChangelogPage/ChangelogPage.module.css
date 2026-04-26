@@ -1,13 +1,9 @@
 .page {
   padding: var(--space-4);
-  max-width: var(--size-detail-max);
-  margin: 0 auto;
 }
 
 .heading {
-  font-family: var(--font-display);
-  font-size: var(--text-heading);
   font-style: italic;
-  color: var(--color-ink);
+  color: #000;
   margin-bottom: var(--space-4);
 }

@@ -4,7 +4,7 @@
   border: none;
   padding: 2px;
   cursor: pointer;
-  color: var(--color-parchment);
+  color: inherit;
   display: inline-flex;
   align-items: center;
   justify-content: center;

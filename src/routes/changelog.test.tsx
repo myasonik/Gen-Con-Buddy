@@ -9,6 +9,7 @@ import {
   createMemoryHistory,
   Outlet,
 } from "@tanstack/react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { server } from "../test/msw/server";
 import {
   makeChangelogSummary,
@@ -26,6 +27,9 @@ beforeEach(() => {
 });
 
 async function renderChangelogPage() {
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   const rootRoute = createRootRoute({ component: () => <Outlet /> });
   const changelogRoute = createRoute({
     getParentRoute: () => rootRoute,
@@ -42,7 +46,11 @@ async function renderChangelogPage() {
     history: createMemoryHistory({ initialEntries: ["/changelog"] }),
   });
   await act(async () => {
-    render(<RouterProvider router={router} />);
+    render(
+      <QueryClientProvider client={client}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>,
+    );
   });
 }
 

@@ -13,6 +13,7 @@
   text-align: left;
   padding: var(--space-2) var(--space-3);
   border: 1px solid;
+  min-width: max-content;
 }
 
 .thContent {
@@ -85,43 +86,38 @@
   display: inline-block;
 }
 
-/* Column resize handle */
-.resizableTh {
-  position: relative;
-  padding-right: 28px;
-}
-
+/* Column resize handle — portaled to document.body, anchor-positioned to <th> */
 .resizeHandle {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
+  position: fixed;
+  left: anchor(right);
+  top: anchor(top);
+  height: anchor-size(height);
   width: 24px;
+  transform: translateX(-50%);
   cursor: col-resize;
   background: transparent;
   user-select: none;
+  z-index: var(--z-sticky);
 }
 
 .resizeHandle::after {
   content: '';
   position: absolute;
-  right: 0;
+  left: 10px;
   top: 0;
   height: 100%;
   width: 4px;
-  background: transparent;
-  opacity: 0;
+  background: currentColor;
+  opacity: 0.15;
   transition: opacity 100ms;
 }
 
-.resizableTh:hover .resizeHandle::after,
-.resizableTh.isResizing .resizeHandle::after {
+.resizeHandle:hover::after,
+.resizeHandle[data-resizing]::after {
   opacity: 1;
-  background: var(--color-gold);
 }
 
 @media (max-width: 768px) {
-  .resizableTh,
   .resizeHandle {
     display: none;
   }

@@ -1,22 +1,31 @@
+import { useState } from "react";
 import { format } from "date-fns";
-import type { ChangelogEntry, ChangelogSummary } from "../../utils/types";
+import { useQuery } from "@tanstack/react-query";
+import type { ChangelogSummary } from "../../utils/types";
+import { fetchChangelogEntry } from "../../utils/api";
 import { ChangelogEntryPanel } from "./ChangelogEntryPanel";
 import styles from "./ChangelogRow.module.css";
 
-type EntryValue = ChangelogEntry | "loading" | "error" | undefined;
-
 interface ChangelogRowProps {
   summary: ChangelogSummary;
-  entry: EntryValue;
   onOpen: () => void;
 }
 
-export function ChangelogRow({ summary, entry, onOpen }: ChangelogRowProps) {
+export function ChangelogRow({ summary, onOpen }: ChangelogRowProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const { data: entry, isError } = useQuery({
+    queryKey: ["changelog", "entry", summary.id],
+    queryFn: () => fetchChangelogEntry(summary.id),
+    enabled: isOpen,
+  });
+
   return (
     <details
       className={styles.row}
       onToggle={(e) => {
-        if ((e.currentTarget as HTMLDetailsElement).open) onOpen();
+        const open = (e.currentTarget as HTMLDetailsElement).open;
+        setIsOpen(open);
+        if (open) onOpen();
       }}
     >
       <summary className={styles.summary}>
@@ -29,7 +38,7 @@ export function ChangelogRow({ summary, entry, onOpen }: ChangelogRowProps) {
           <span>{summary.deletedCount} deleted</span>
         </span>
       </summary>
-      <ChangelogEntryPanel entry={entry} />
+      <ChangelogEntryPanel entry={isError ? "error" : entry} />
     </details>
   );
 }

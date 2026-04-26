@@ -465,19 +465,15 @@ test('announces "Sort cleared" when clicking descending column', async () => {
 test("resize handle is rendered on resizable columns", async () => {
   renderSearchResults();
   await screen.findAllByRole("row");
-  const handles = screen.getAllByTestId("resize-handle");
-  // dayStripe has no handle; all other visible columns do
+  const handles = screen.getAllByTestId(/^resize-handle-/);
   expect(handles.length).toBeGreaterThan(0);
 });
 
-test("dayStripe column has no resize handle", async () => {
+test("each visible column header has a resize handle", async () => {
   renderSearchResults();
-  await screen.findAllByRole("row");
-  // dayStripe th is aria-hidden — query the DOM directly
-  const dayStripes = document.querySelectorAll("th[aria-hidden='true']");
-  dayStripes.forEach((th) => {
-    expect(th.querySelector("[data-testid='resize-handle']")).toBeNull();
-  });
+  const headers = await screen.findAllByRole("columnheader");
+  const handles = screen.getAllByTestId(/^resize-handle-/);
+  expect(handles.length).toBe(headers.length);
 });
 
 test("pre-seeded localStorage sizing is applied to column width on mount", async () => {
