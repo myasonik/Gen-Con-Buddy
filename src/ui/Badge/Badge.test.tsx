@@ -1,7 +1,8 @@
+import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { Badge, BoolBadge, ConceptBadge } from './Badge'
 
-describe('Badge', () => {
+describe('badge', () => {
   it('renders children', () => {
     render(<Badge>ticketed</Badge>)
     expect(screen.getByText('ticketed')).toBeInTheDocument()
@@ -23,9 +24,9 @@ describe('Badge', () => {
   })
 })
 
-describe('BoolBadge', () => {
+describe('boolBadge', () => {
   it('shows ✓ for true', () => {
-    render(<BoolBadge value={true} />)
+    render(<BoolBadge value />)
     expect(screen.getByText('✓')).toBeInTheDocument()
   })
 
@@ -55,7 +56,7 @@ describe('BoolBadge', () => {
   })
 
   it("shows sr-only 'yes' for true", () => {
-    render(<BoolBadge value={true} />)
+    render(<BoolBadge value />)
     expect(screen.getByText('yes')).toBeInTheDocument()
   })
 
@@ -65,7 +66,7 @@ describe('BoolBadge', () => {
   })
 })
 
-describe('ConceptBadge', () => {
+describe('conceptBadge', () => {
   it('renders the value as text when no children given', () => {
     render(<ConceptBadge concept="eventType" value="RPG" />)
     expect(screen.getByText('RPG')).toBeInTheDocument()

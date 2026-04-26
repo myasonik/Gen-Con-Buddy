@@ -5,7 +5,7 @@ import { ChangelogRow } from './ChangelogRow'
 import { PixelState } from '../../ui/PixelState/PixelState'
 import styles from './ChangelogPage.module.css'
 
-export function ChangelogPage() {
+export function ChangelogPage(): JSX.Element {
   const queryClient = useQueryClient()
   const {
     data: summaries = [],
@@ -25,7 +25,7 @@ export function ChangelogPage() {
     }
   }, [summaries, queryClient])
 
-  const handleOpen = (index: number) => {
+  const handleOpen = (index: number): void => {
     const next = summaries[index + 1]
     if (next) {
       void queryClient.prefetchQuery({

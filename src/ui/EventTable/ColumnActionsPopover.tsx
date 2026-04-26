@@ -16,11 +16,12 @@ export function ColumnActionsPopover({
   activeSortDir,
   onSort,
   onOpenResize,
-}: ColumnActionsPopoverProps) {
+}: ColumnActionsPopoverProps): JSX.Element {
   const [open, setOpen] = useState(false)
 
-  const isSortedAsc = !!sortField && activeSortField === sortField && activeSortDir === 'asc'
-  const isSortedDesc = !!sortField && activeSortField === sortField && activeSortDir === 'desc'
+  const isSortedAsc = Boolean(sortField) && activeSortField === sortField && activeSortDir === 'asc'
+  const isSortedDesc =
+    Boolean(sortField) && activeSortField === sortField && activeSortDir === 'desc'
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>

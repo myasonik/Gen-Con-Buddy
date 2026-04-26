@@ -1,3 +1,4 @@
+import { expect, test, beforeEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useColumnSizing } from './useColumnSizing'
 
@@ -9,7 +10,7 @@ beforeEach(() => {
 
 test('returns empty sizing on first use', () => {
   const { result } = renderHook(() => useColumnSizing())
-  expect(result.current.sizing).toEqual({})
+  expect(result.current.sizing).toStrictEqual({})
 })
 
 test('setSizing with a value updates state', () => {
@@ -19,7 +20,7 @@ test('setSizing with a value updates state', () => {
     result.current.setSizing({ title: 300 })
   })
 
-  expect(result.current.sizing).toEqual({ title: 300 })
+  expect(result.current.sizing).toStrictEqual({ title: 300 })
 })
 
 test('setSizing with an updater function updates state', () => {
@@ -32,7 +33,7 @@ test('setSizing with an updater function updates state', () => {
     result.current.setSizing((prev) => ({ ...prev, gameId: 100 }))
   })
 
-  expect(result.current.sizing).toEqual({ title: 200, gameId: 100 })
+  expect(result.current.sizing).toStrictEqual({ title: 200, gameId: 100 })
 })
 
 test('persists sizing to localStorage', () => {
@@ -42,8 +43,8 @@ test('persists sizing to localStorage', () => {
     result.current.setSizing({ title: 300 })
   })
 
-  const stored = JSON.parse(localStorage.getItem(STORAGE_KEY)!)
-  expect(stored).toEqual({ version: 1, sizing: { title: 300 } })
+  const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}')
+  expect(stored).toStrictEqual({ version: 1, sizing: { title: 300 } })
 })
 
 test('loads sizing from localStorage on mount', () => {
@@ -53,21 +54,21 @@ test('loads sizing from localStorage on mount', () => {
   )
 
   const { result } = renderHook(() => useColumnSizing())
-  expect(result.current.sizing).toEqual({ title: 300, gameId: 150 })
+  expect(result.current.sizing).toStrictEqual({ title: 300, gameId: 150 })
 })
 
 test('returns empty sizing when stored version does not match', () => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 9999, sizing: { title: 300 } }))
 
   const { result } = renderHook(() => useColumnSizing())
-  expect(result.current.sizing).toEqual({})
+  expect(result.current.sizing).toStrictEqual({})
 })
 
 test('returns empty sizing when localStorage is malformed', () => {
   localStorage.setItem(STORAGE_KEY, 'not-json{{{')
 
   const { result } = renderHook(() => useColumnSizing())
-  expect(result.current.sizing).toEqual({})
+  expect(result.current.sizing).toStrictEqual({})
 })
 
 test('reset clears sizing state and removes localStorage key', () => {
@@ -77,12 +78,12 @@ test('reset clears sizing state and removes localStorage key', () => {
     result.current.setSizing({ title: 300 })
   })
 
-  expect(result.current.sizing).toEqual({ title: 300 })
+  expect(result.current.sizing).toStrictEqual({ title: 300 })
 
   act(() => {
     result.current.reset()
   })
 
-  expect(result.current.sizing).toEqual({})
+  expect(result.current.sizing).toStrictEqual({})
   expect(localStorage.getItem(STORAGE_KEY)).toBeNull()
 })

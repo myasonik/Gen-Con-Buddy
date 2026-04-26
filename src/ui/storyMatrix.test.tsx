@@ -3,7 +3,7 @@ import React from 'react'
 import { cartesian, makeMatrix } from './storyMatrix'
 import type { Meta } from '@storybook/react-vite'
 
-const StubComponent = ({ children }: { children?: React.ReactNode }) => (
+const StubComponent = ({ children }: { children?: React.ReactNode }): JSX.Element => (
   <button type="button">{children}</button>
 )
 
@@ -21,11 +21,11 @@ describe('cartesian', () => {
   })
 
   it('returns a single empty object for empty axes', () => {
-    expect(cartesian({})).toEqual([{}])
+    expect(cartesian({})).toStrictEqual([{}])
   })
 
   it('handles a single axis', () => {
-    expect(cartesian({ variant: ['x', 'y'] as const })).toEqual([
+    expect(cartesian({ variant: ['x', 'y'] as const })).toStrictEqual([
       { variant: 'x' },
       { variant: 'y' },
     ])
@@ -83,11 +83,11 @@ describe('makeMatrix', () => {
 
   it('returns a Grid render function', () => {
     const { Grid } = makeMatrix(meta, { variant: ['primary'] as const })
-    expect(typeof Grid).toBe('function')
+    expectTypeOf(Grid).toBeFunction()
   })
 
   it('throws when meta.component is undefined', () => {
-    expect(() => makeMatrix({} as Meta<any>, { variant: ['x'] as const })).toThrow(
+    expect(() => makeMatrix({} as Meta<unknown>, { variant: ['x'] as const })).toThrow(
       'makeMatrix requires meta.component to be defined',
     )
   })

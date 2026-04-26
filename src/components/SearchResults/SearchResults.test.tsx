@@ -1,6 +1,6 @@
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { vi } from 'vitest'
+import { vi, expect, test, beforeEach } from 'vitest'
 import {
   createRootRoute,
   createRoute,
@@ -16,7 +16,7 @@ import { SearchResults } from './SearchResults'
 import type { SearchParams, EventSearchResponse } from '../../utils/types'
 import { __reset } from '../../lib/announce'
 
-function setupLiveRegions() {
+function setupLiveRegions(): () => void {
   const polite = document.createElement('div')
   polite.id = 'live-polite'
   polite.setAttribute('aria-live', 'polite')
@@ -44,9 +44,9 @@ beforeEach(() => {
 
 function renderSearchResults(
   searchParams: SearchParams = {},
-  onNavigate = vi.fn(),
-  onSort = vi.fn(),
-) {
+  onNavigate = vi.fn<(page: number, limit: number) => void>(),
+  onSort = vi.fn<(sort: string | undefined) => void>(),
+): ReturnType<typeof render> {
   const rootRoute = createRootRoute({
     component: () => (
       <SearchResults searchParams={searchParams} onNavigate={onNavigate} onSort={onSort} />
@@ -73,7 +73,7 @@ function renderSearchResults(
 
 test('shows loading state while fetching', async () => {
   renderSearchResults()
-  expect(await screen.findByText('LOADING QUESTS...')).toBeInTheDocument()
+  await expect(screen.findByText('LOADING QUESTS...')).resolves.toBeInTheDocument()
 })
 
 test('renders a table row for each event', async () => {
@@ -96,7 +96,7 @@ test('renders empty state when no events are returned', async () => {
     }),
   )
   renderSearchResults()
-  expect(await screen.findByText('NO QUESTS FOUND')).toBeInTheDocument()
+  await expect(screen.findByText('NO QUESTS FOUND')).resolves.toBeInTheDocument()
 })
 
 test('title column is visible by default and shows event title', async () => {
@@ -112,7 +112,7 @@ test('title column is visible by default and shows event title', async () => {
     }),
   )
   renderSearchResults()
-  expect(await screen.findByRole('columnheader', { name: 'Title' })).toBeInTheDocument()
+  await expect(screen.findByRole('columnheader', { name: 'Title' })).resolves.toBeInTheDocument()
   expect(screen.getByRole('link', { name: 'My Favorite RPG' })).toBeInTheDocument()
 })
 
@@ -198,6 +198,7 @@ test('sends page as 0-indexed when page > 1', async () => {
   )
   renderSearchResults({ page: 2 })
   await screen.findAllByRole('row')
+  // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(capturedUrl!.searchParams.get('page')).toBe('1')
 })
 
@@ -217,6 +218,7 @@ test('omits page param when page is 1', async () => {
   )
   renderSearchResults({ page: 1 })
   await screen.findAllByRole('row')
+  // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(capturedUrl!.searchParams.has('page')).toBe(false)
 })
 
@@ -236,6 +238,7 @@ test('omits limit param when limit is 100', async () => {
   )
   renderSearchResults({ limit: 100 })
   await screen.findAllByRole('row')
+  // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(capturedUrl!.searchParams.has('limit')).toBe(false)
 })
 
@@ -255,6 +258,7 @@ test('sends limit param when limit is not 100', async () => {
   )
   renderSearchResults({ limit: 500 })
   await screen.findAllByRole('row')
+  // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(capturedUrl!.searchParams.get('limit')).toBe('500')
 })
 
@@ -290,7 +294,7 @@ test('does not render pagination when no events found', async () => {
 
 test('calls onNavigate when Next is clicked', async () => {
   const user = userEvent.setup()
-  const onNavigate = vi.fn()
+  const onNavigate = vi.fn<(page: number, limit: number) => void>()
   server.use(
     http.get('/api/events/search', () => {
       const response: EventSearchResponse = {
@@ -325,6 +329,7 @@ test('sends sort param to API when provided in searchParams', async () => {
   )
   renderSearchResults({ sort: 'startDateTime.asc' })
   await screen.findAllByRole('row')
+  // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(capturedUrl!.searchParams.get('sort')).toBe('startDateTime.asc')
 })
 
@@ -344,6 +349,7 @@ test('omits sort param from API when not in searchParams', async () => {
   )
   renderSearchResults({})
   await screen.findAllByRole('row')
+  // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(capturedUrl!.searchParams.has('sort')).toBe(false)
 })
 
@@ -367,8 +373,8 @@ test('active descending column has aria-sort="descending"', async () => {
 
 test('clicking unsorted column calls onSort with field.asc', async () => {
   const user = userEvent.setup()
-  const onSort = vi.fn()
-  renderSearchResults({}, vi.fn(), onSort)
+  const onSort = vi.fn<(sort: string | undefined) => void>()
+  renderSearchResults({}, vi.fn<(page: number, limit: number) => void>(), onSort)
   await screen.findAllByRole('row')
   await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
   expect(onSort).toHaveBeenCalledWith('title.asc')
@@ -376,8 +382,8 @@ test('clicking unsorted column calls onSort with field.asc', async () => {
 
 test('clicking ascending column calls onSort with field.desc', async () => {
   const user = userEvent.setup()
-  const onSort = vi.fn()
-  renderSearchResults({ sort: 'title.asc' }, vi.fn(), onSort)
+  const onSort = vi.fn<(sort: string | undefined) => void>()
+  renderSearchResults({ sort: 'title.asc' }, vi.fn<(page: number, limit: number) => void>(), onSort)
   await screen.findAllByRole('row')
   await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
   expect(onSort).toHaveBeenCalledWith('title.desc')
@@ -385,8 +391,12 @@ test('clicking ascending column calls onSort with field.desc', async () => {
 
 test('clicking descending column calls onSort with undefined (clears sort)', async () => {
   const user = userEvent.setup()
-  const onSort = vi.fn()
-  renderSearchResults({ sort: 'title.desc' }, vi.fn(), onSort)
+  const onSort = vi.fn<(sort: string | undefined) => void>()
+  renderSearchResults(
+    { sort: 'title.desc' },
+    vi.fn<(page: number, limit: number) => void>(),
+    onSort,
+  )
   await screen.findAllByRole('row')
   await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
   expect(onSort).toHaveBeenCalledWith(undefined)
@@ -401,7 +411,11 @@ test('day column has aria-sort="ascending" when sorted by startDateTime ascendin
 test('announces "Sorted by Title, ascending" when clicking unsorted column', async () => {
   const user = userEvent.setup()
   const cleanup = setupLiveRegions()
-  renderSearchResults({}, vi.fn(), vi.fn())
+  renderSearchResults(
+    {},
+    vi.fn<(page: number, limit: number) => void>(),
+    vi.fn<(sort: string | undefined) => void>(),
+  )
   await screen.findAllByRole('row')
   await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
   await waitFor(() => {
@@ -413,7 +427,11 @@ test('announces "Sorted by Title, ascending" when clicking unsorted column', asy
 test('announces "Sorted by Title, descending" when clicking ascending column', async () => {
   const user = userEvent.setup()
   const cleanup = setupLiveRegions()
-  renderSearchResults({ sort: 'title.asc' }, vi.fn(), vi.fn())
+  renderSearchResults(
+    { sort: 'title.asc' },
+    vi.fn<(page: number, limit: number) => void>(),
+    vi.fn<(sort: string | undefined) => void>(),
+  )
   await screen.findAllByRole('row')
   await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
   await waitFor(() => {
@@ -425,7 +443,11 @@ test('announces "Sorted by Title, descending" when clicking ascending column', a
 test('announces "Sort cleared" when clicking descending column', async () => {
   const user = userEvent.setup()
   const cleanup = setupLiveRegions()
-  renderSearchResults({ sort: 'title.desc' }, vi.fn(), vi.fn())
+  renderSearchResults(
+    { sort: 'title.desc' },
+    vi.fn<(page: number, limit: number) => void>(),
+    vi.fn<(sort: string | undefined) => void>(),
+  )
   await screen.findAllByRole('row')
   await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
   await waitFor(() => {
@@ -445,7 +467,7 @@ test('each visible column header has a resize handle', async () => {
   renderSearchResults()
   const headers = await screen.findAllByRole('columnheader')
   const handles = screen.getAllByTestId(/^resize-handle-/)
-  expect(handles.length).toBe(headers.length)
+  expect(handles).toHaveLength(headers.length)
 })
 
 test('pre-seeded localStorage sizing is applied to column width on mount', async () => {
@@ -456,7 +478,7 @@ test('pre-seeded localStorage sizing is applied to column width on mount', async
   expect(titleTh).toHaveStyle({ width: '300px' })
 })
 
-test('Reset to defaults clears column sizing from localStorage', async () => {
+test('reset to defaults clears column sizing from localStorage', async () => {
   const user = userEvent.setup()
   localStorage.setItem('gcb-column-sizing', JSON.stringify({ version: 1, sizing: { title: 300 } }))
   renderSearchResults()
@@ -506,6 +528,6 @@ test('submitting resize dialog updates column width in localStorage', async () =
   await user.clear(input)
   await user.type(input, '400')
   await user.click(screen.getByRole('button', { name: 'Apply' }))
-  const stored = JSON.parse(localStorage.getItem('gcb-column-sizing')!)
-  expect(stored).toEqual({ version: 1, sizing: { title: 400 } })
+  const stored = JSON.parse(localStorage.getItem('gcb-column-sizing') ?? '{}')
+  expect(stored).toStrictEqual({ version: 1, sizing: { title: 400 } })
 })

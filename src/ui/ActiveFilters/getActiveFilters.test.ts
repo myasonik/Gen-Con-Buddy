@@ -1,18 +1,19 @@
+import { expect, test } from 'vitest'
 import { getActiveFilters } from './getActiveFilters'
 
 test('returns empty array when no filters are set', () => {
-  expect(getActiveFilters({})).toEqual([])
+  expect(getActiveFilters({})).toStrictEqual([])
 })
 
 test('ignores page, limit, and sort params', () => {
-  expect(getActiveFilters({ page: 2, limit: 100, sort: 'title.asc' })).toEqual([])
+  expect(getActiveFilters({ page: 2, limit: 100, sort: 'title.asc' })).toStrictEqual([])
 })
 
 test("filter param produces 'Search:' label and remove clears filter", () => {
   const [chip] = getActiveFilters({ filter: 'dragon' })
   expect(chip.id).toBe('filter')
   expect(chip.label).toBe('Search: dragon')
-  expect(chip.remove({ filter: 'dragon', title: 'foo' })).toEqual({
+  expect(chip.remove({ filter: 'dragon', title: 'foo' })).toStrictEqual({
     title: 'foo',
   })
 })
@@ -28,7 +29,7 @@ test('eventType param produces one chip per code', () => {
 
 test('eventType chip remove leaves other codes intact', () => {
   const [rpg] = getActiveFilters({ eventType: 'RPG,BGM' })
-  expect(rpg.remove({ eventType: 'RPG,BGM', title: 'foo' })).toEqual({
+  expect(rpg.remove({ eventType: 'RPG,BGM', title: 'foo' })).toStrictEqual({
     eventType: 'BGM',
     title: 'foo',
   })
@@ -37,7 +38,7 @@ test('eventType chip remove leaves other codes intact', () => {
 test('eventType chip remove clears param when it was the last code', () => {
   const [rpg] = getActiveFilters({ eventType: 'RPG' })
   expect(rpg.id).toBe('eventType:RPG')
-  expect(rpg.remove({ eventType: 'RPG' })).toEqual({})
+  expect(rpg.remove({ eventType: 'RPG' })).toStrictEqual({})
 })
 
 test('eventType falls back to raw value when code is unknown', () => {
@@ -56,7 +57,7 @@ test('ageRequired uses AGE_GROUPS enum for label', () => {
   const [chip] = getActiveFilters({ ageRequired: '21+' })
   expect(chip.id).toBe('ageRequired')
   expect(chip.label).toBe('Age: 21+')
-  expect(chip.remove({ ageRequired: '21+' })).toEqual({})
+  expect(chip.remove({ ageRequired: '21+' })).toStrictEqual({})
 })
 
 test('experienceRequired uses EXP enum for label', () => {
@@ -89,7 +90,7 @@ test('days param produces one chip per day', () => {
 
 test('days chip remove leaves other days intact', () => {
   const [fri] = getActiveFilters({ days: 'fri,sat' })
-  expect(fri.remove({ days: 'fri,sat', title: 'foo' })).toEqual({
+  expect(fri.remove({ days: 'fri,sat', title: 'foo' })).toStrictEqual({
     days: 'sat',
     title: 'foo',
   })
@@ -99,7 +100,7 @@ test('days chip remove clears param when it was the last day', () => {
   const [wed] = getActiveFilters({ days: 'wed' })
   expect(wed.id).toBe('days:wed')
   expect(wed.label).toBe('Wed')
-  expect(wed.remove({ days: 'wed' })).toEqual({})
+  expect(wed.remove({ days: 'wed' })).toStrictEqual({})
 })
 
 test('days chip skips empty segment from trailing comma', () => {
@@ -112,7 +113,7 @@ test('cost range formats with dollar signs', () => {
   const [chip] = getActiveFilters({ cost: '[0,5]' })
   expect(chip.id).toBe('cost')
   expect(chip.label).toBe('Cost: $0–$5')
-  expect(chip.remove({ cost: '[0,5]' })).toEqual({})
+  expect(chip.remove({ cost: '[0,5]' })).toStrictEqual({})
 })
 
 test('cost range with only min', () => {

@@ -1,3 +1,4 @@
+import { expect, test, beforeEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useColumnVisibility } from './useColumnVisibility'
 

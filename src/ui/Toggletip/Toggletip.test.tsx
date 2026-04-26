@@ -1,8 +1,9 @@
+import { expect, describe, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Toggletip } from './Toggletip'
 
-describe('Toggletip', () => {
+describe('toggletip', () => {
   it('renders a ? button with the given aria-label', () => {
     render(<Toggletip label="Why are day filters disabled?" message="Because reasons" />)
     expect(

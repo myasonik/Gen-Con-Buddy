@@ -11,7 +11,7 @@ interface ChangelogRowProps {
   onOpen: () => void
 }
 
-export function ChangelogRow({ summary, onOpen }: ChangelogRowProps) {
+export function ChangelogRow({ summary, onOpen }: ChangelogRowProps): JSX.Element {
   const [isOpen, setIsOpen] = useState(false)
   const { data: entry, isError } = useQuery({
     queryKey: ['changelog', 'entry', summary.id],
@@ -23,9 +23,11 @@ export function ChangelogRow({ summary, onOpen }: ChangelogRowProps) {
     <details
       className={styles.row}
       onToggle={(e) => {
-        const open = (e.currentTarget as HTMLDetailsElement).open
+        const { open } = e.currentTarget as HTMLDetailsElement
         setIsOpen(open)
-        if (open) onOpen()
+        if (open) {
+          onOpen()
+        }
       }}
     >
       <summary className={styles.summary}>

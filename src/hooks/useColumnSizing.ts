@@ -7,7 +7,9 @@ const VERSION = 1
 function readFromStorage(): ColumnSizingState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return {}
+    if (!raw) {
+      return {}
+    }
     const parsed: unknown = JSON.parse(raw)
     if (
       typeof parsed !== 'object' ||
@@ -22,26 +24,30 @@ function readFromStorage(): ColumnSizingState {
   }
 }
 
-export function useColumnSizing() {
-  const [sizing, setSizingState] = useState<ColumnSizingState>(readFromStorage)
+export function useColumnSizing(): {
+  sizing: ColumnSizingState
+  setSizing: OnChangeFn<ColumnSizingState>
+  reset: () => void
+} {
+  const [sizingState, setSizingState] = useState<ColumnSizingState>(readFromStorage)
 
   useEffect(() => {
-    if (Object.keys(sizing).length === 0) {
+    if (Object.keys(sizingState).length === 0) {
       localStorage.removeItem(STORAGE_KEY)
     } else {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: VERSION, sizing }))
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: VERSION, sizing: sizingState }))
     }
-  }, [sizing])
+  }, [sizingState])
 
-  const setSizing: OnChangeFn<ColumnSizingState> = (updaterOrValue) => {
+  const setSizing: OnChangeFn<ColumnSizingState> = (updaterOrValue): void => {
     setSizingState((prev) =>
       typeof updaterOrValue === 'function' ? updaterOrValue(prev) : updaterOrValue,
     )
   }
 
-  const reset = () => {
+  const reset = (): void => {
     setSizingState({})
   }
 
-  return { sizing, setSizing, reset }
+  return { sizing: sizingState, setSizing, reset }
 }

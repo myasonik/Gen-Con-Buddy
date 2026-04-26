@@ -1,16 +1,18 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { vi } from 'vitest'
+import { vi, expect, test } from 'vitest'
 import { ColumnActionsPopover } from './ColumnActionsPopover'
 
-function renderPopover(overrides: Partial<React.ComponentProps<typeof ColumnActionsPopover>> = {}) {
+function renderPopover(
+  overrides: Partial<React.ComponentProps<typeof ColumnActionsPopover>> = {},
+): ReturnType<typeof render> {
   return render(
     <ColumnActionsPopover
       sortField="title"
       activeSortField={undefined}
       activeSortDir={undefined}
-      onSort={vi.fn()}
-      onOpenResize={vi.fn()}
+      onSort={vi.fn<(sort: string | undefined) => void>()}
+      onOpenResize={vi.fn<() => void>()}
       {...overrides}
     />,
   )
@@ -30,7 +32,7 @@ test('opens popover with sort and resize actions when clicked', async () => {
   expect(screen.getByRole('button', { name: 'Resize…' })).toBeInTheDocument()
 })
 
-test('Sort ascending has aria-pressed=false when column is unsorted', async () => {
+test('sort ascending has aria-pressed=false when column is unsorted', async () => {
   const user = userEvent.setup()
   renderPopover({ activeSortField: undefined })
   await user.click(screen.getByRole('button', { name: 'Column actions' }))
@@ -40,7 +42,7 @@ test('Sort ascending has aria-pressed=false when column is unsorted', async () =
   )
 })
 
-test('Sort ascending has aria-pressed=true when column is sorted ascending', async () => {
+test('sort ascending has aria-pressed=true when column is sorted ascending', async () => {
   const user = userEvent.setup()
   renderPopover({ activeSortField: 'title', activeSortDir: 'asc' })
   await user.click(screen.getByRole('button', { name: 'Column actions' }))
@@ -50,7 +52,7 @@ test('Sort ascending has aria-pressed=true when column is sorted ascending', asy
   )
 })
 
-test('Sort descending has aria-pressed=true when column is sorted descending', async () => {
+test('sort descending has aria-pressed=true when column is sorted descending', async () => {
   const user = userEvent.setup()
   renderPopover({ activeSortField: 'title', activeSortDir: 'desc' })
   await user.click(screen.getByRole('button', { name: 'Column actions' }))
@@ -62,7 +64,7 @@ test('Sort descending has aria-pressed=true when column is sorted descending', a
 
 test('clicking Sort ascending when unsorted calls onSort with field.asc', async () => {
   const user = userEvent.setup()
-  const onSort = vi.fn()
+  const onSort = vi.fn<(sort: string | undefined) => void>()
   renderPopover({ onSort })
   await user.click(screen.getByRole('button', { name: 'Column actions' }))
   await user.click(screen.getByRole('button', { name: 'Sort ascending' }))
@@ -71,7 +73,7 @@ test('clicking Sort ascending when unsorted calls onSort with field.asc', async 
 
 test('clicking Sort ascending when already ascending calls onSort with undefined', async () => {
   const user = userEvent.setup()
-  const onSort = vi.fn()
+  const onSort = vi.fn<(sort: string | undefined) => void>()
   renderPopover({ activeSortField: 'title', activeSortDir: 'asc', onSort })
   await user.click(screen.getByRole('button', { name: 'Column actions' }))
   await user.click(screen.getByRole('button', { name: 'Sort ascending' }))
@@ -80,7 +82,7 @@ test('clicking Sort ascending when already ascending calls onSort with undefined
 
 test('clicking Sort descending when ascending calls onSort with field.desc', async () => {
   const user = userEvent.setup()
-  const onSort = vi.fn()
+  const onSort = vi.fn<(sort: string | undefined) => void>()
   renderPopover({ activeSortField: 'title', activeSortDir: 'asc', onSort })
   await user.click(screen.getByRole('button', { name: 'Column actions' }))
   await user.click(screen.getByRole('button', { name: 'Sort descending' }))
@@ -89,7 +91,7 @@ test('clicking Sort descending when ascending calls onSort with field.desc', asy
 
 test('clicking Resize… calls onOpenResize', async () => {
   const user = userEvent.setup()
-  const onOpenResize = vi.fn()
+  const onOpenResize = vi.fn<() => void>()
   renderPopover({ onOpenResize })
   await user.click(screen.getByRole('button', { name: 'Column actions' }))
   await user.click(screen.getByRole('button', { name: 'Resize…' }))

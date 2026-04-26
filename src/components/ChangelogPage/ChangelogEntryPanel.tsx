@@ -8,7 +8,7 @@ interface ChangelogEntryPanelProps {
   entry: EntryValue
 }
 
-export function ChangelogEntryPanel({ entry }: ChangelogEntryPanelProps) {
+export function ChangelogEntryPanel({ entry }: ChangelogEntryPanelProps): JSX.Element {
   if (entry === undefined || entry === 'loading') {
     return (
       <p className={styles.status} aria-busy="true">

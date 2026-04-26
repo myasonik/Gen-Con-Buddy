@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { vi } from 'vitest'
+import { vi, expect, test } from 'vitest'
 import { ColumnResizeDialog } from './ColumnResizeDialog'
 
 test('renders with the column name in the heading', () => {
@@ -8,8 +8,8 @@ test('renders with the column name in the heading', () => {
     <ColumnResizeDialog
       columnName="Title"
       currentWidth={150}
-      onApply={vi.fn()}
-      onClose={vi.fn()}
+      onApply={vi.fn<(width: number) => void>()}
+      onClose={vi.fn<() => void>()}
     />,
   )
   expect(screen.getByRole('heading', { name: 'Resize Title' })).toBeInTheDocument()
@@ -20,8 +20,8 @@ test('pre-fills the number input with currentWidth', () => {
     <ColumnResizeDialog
       columnName="Title"
       currentWidth={200}
-      onApply={vi.fn()}
-      onClose={vi.fn()}
+      onApply={vi.fn<(width: number) => void>()}
+      onClose={vi.fn<() => void>()}
     />,
   )
   expect(screen.getByRole('spinbutton', { name: 'Width (px)' })).toHaveValue(200)
@@ -29,13 +29,13 @@ test('pre-fills the number input with currentWidth', () => {
 
 test('clicking Apply calls onApply with the parsed number value', async () => {
   const user = userEvent.setup()
-  const onApply = vi.fn()
+  const onApply = vi.fn<(width: number) => void>()
   render(
     <ColumnResizeDialog
       columnName="Title"
       currentWidth={150}
       onApply={onApply}
-      onClose={vi.fn()}
+      onClose={vi.fn<() => void>()}
     />,
   )
   const input = screen.getByRole('spinbutton', { name: 'Width (px)' })
@@ -47,8 +47,8 @@ test('clicking Apply calls onApply with the parsed number value', async () => {
 
 test('clicking Cancel calls onClose without calling onApply', async () => {
   const user = userEvent.setup()
-  const onApply = vi.fn()
-  const onClose = vi.fn()
+  const onApply = vi.fn<(width: number) => void>()
+  const onClose = vi.fn<() => void>()
   render(
     <ColumnResizeDialog
       columnName="Title"

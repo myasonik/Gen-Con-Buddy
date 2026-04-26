@@ -6,7 +6,7 @@ interface ToggletipProps {
   message: string
 }
 
-export function Toggletip({ label, message }: ToggletipProps) {
+export function Toggletip({ label, message }: ToggletipProps): JSX.Element {
   return (
     <Popover.Root>
       <Popover.Trigger aria-label={label} className={styles.button}>

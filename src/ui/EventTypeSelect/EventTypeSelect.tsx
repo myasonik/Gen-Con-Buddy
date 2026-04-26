@@ -14,7 +14,7 @@ const OPTIONS = Object.entries(EVENT_TYPES).map(([code, label]) => ({
   name: label.replace(/^[A-Z]+ - /, ''),
 }))
 
-export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps) {
+export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps): JSX.Element {
   const [open, setOpen] = useState(false)
   const [filterText, setFilterText] = useState('')
   const filter = Combobox.useFilter()
@@ -27,7 +27,7 @@ export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps) 
       )
     : OPTIONS
 
-  function removeCode(code: string) {
+  function removeCode(code: string): void {
     onValueChange(selectedCodes.filter((c) => c !== code).join(','))
   }
 
@@ -39,7 +39,9 @@ export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps) 
         onValueChange={(codes) => onValueChange(codes.join(','))}
         onOpenChange={(isOpen) => {
           setOpen(isOpen)
-          if (!isOpen) setFilterText('')
+          if (!isOpen) {
+            setFilterText('')
+          }
         }}
         onInputValueChange={(text) => setFilterText(text)}
       >

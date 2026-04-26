@@ -5,7 +5,7 @@ export const Route = createFileRoute('/event/$id')({
   component: EventDetailPage,
 })
 
-function EventDetailPage() {
+function EventDetailPage(): JSX.Element {
   const { id } = Route.useParams()
   return (
     <main>

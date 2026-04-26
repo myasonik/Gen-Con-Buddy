@@ -10,7 +10,7 @@ interface BadgeProps {
   className?: string
 }
 
-export function Badge({ children, variant = 'filled', className }: BadgeProps) {
+export function Badge({ children, variant = 'filled', className }: BadgeProps): JSX.Element {
   return (
     <span
       data-variant={variant}
@@ -28,7 +28,7 @@ export interface ConceptBadgeProps {
   className?: string
 }
 
-export function ConceptBadge({ value, children, className }: ConceptBadgeProps) {
+export function ConceptBadge({ value, children, className }: ConceptBadgeProps): JSX.Element {
   return (
     <span className={[styles.conceptBadge, className].filter(Boolean).join(' ')}>
       {children ?? value}
@@ -41,7 +41,7 @@ interface BoolBadgeProps {
   className?: string
 }
 
-export function BoolBadge({ value, className }: BoolBadgeProps) {
+export function BoolBadge({ value, className }: BoolBadgeProps): JSX.Element {
   const isYes = value === true || (typeof value === 'string' && value.toLowerCase() === 'yes')
   // Gen Con API returns "Yes"/"No" strings; true/false booleans also accepted
   return (

@@ -1,3 +1,4 @@
+import { expect, test, beforeEach } from 'vitest'
 import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
@@ -19,7 +20,7 @@ beforeEach(() => {
   localStorage.clear()
 })
 
-async function renderChangelogPage() {
+async function renderChangelogPage(): Promise<void> {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   })
@@ -63,7 +64,7 @@ test('renders a summary row for each changelog entry', async () => {
     ),
   )
   await renderChangelogPage()
-  expect(await screen.findByText(/3 created/)).toBeInTheDocument()
+  await expect(screen.findByText(/3 created/)).resolves.toBeInTheDocument()
   expect(screen.getByText(/1 updated/)).toBeInTheDocument()
   expect(screen.getByText(/0 deleted/)).toBeInTheDocument()
 })
@@ -75,13 +76,13 @@ test('shows empty state when no entries returned', async () => {
     ),
   )
   await renderChangelogPage()
-  expect(await screen.findByText('No changelog entries yet.')).toBeInTheDocument()
+  await expect(screen.findByText('No changelog entries yet.')).resolves.toBeInTheDocument()
 })
 
 test('shows error state when list fetch fails', async () => {
   server.use(http.get('/api/changelog/list', () => new HttpResponse(null, { status: 500 })))
   await renderChangelogPage()
-  expect(await screen.findByText(/could not load changelog/i)).toBeInTheDocument()
+  await expect(screen.findByText(/could not load changelog/i)).resolves.toBeInTheDocument()
 })
 
 test('expanding a row fetches and displays the event table', async () => {
@@ -112,7 +113,7 @@ test('expanding a row fetches and displays the event table', async () => {
   )
   await renderChangelogPage()
   await user.click(await screen.findByText(/1 created/))
-  expect(await screen.findByText('Dragon Hunt')).toBeInTheDocument()
+  await expect(screen.findByText('Dragon Hunt')).resolves.toBeInTheDocument()
 })
 
 test('shows entry error message when entry fetch fails', async () => {
@@ -127,7 +128,7 @@ test('shows entry error message when entry fetch fails', async () => {
   )
   await renderChangelogPage()
   await user.click(await screen.findByText(/2 created/))
-  expect(await screen.findByText(/could not load this entry/i)).toBeInTheDocument()
+  await expect(screen.findByText(/could not load this entry/i)).resolves.toBeInTheDocument()
 })
 
 test('does not render section headers for empty event groups', async () => {
@@ -158,7 +159,7 @@ test('does not render section headers for empty event groups', async () => {
   )
   await renderChangelogPage()
   await user.click(await screen.findByText(/1 created/))
-  expect(await screen.findByText('Created (1)')).toBeInTheDocument()
+  await expect(screen.findByText('Created (1)')).resolves.toBeInTheDocument()
   expect(screen.queryByText('Updated (0)')).not.toBeInTheDocument()
   expect(screen.queryByText('Deleted (0)')).not.toBeInTheDocument()
 })

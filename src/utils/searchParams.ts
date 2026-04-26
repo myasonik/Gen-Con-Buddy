@@ -20,13 +20,21 @@ export function daysToStartDateTime(days: string): string | undefined {
 export function buildSearchParams(values: SearchFormValues): SearchParams {
   const params: SearchParams = {}
 
-  const set = (key: keyof SearchParams, val: string | number | undefined | boolean) => {
-    if (val === undefined || val === '' || val === false) return
+  const set = (key: keyof SearchParams, val: string | number | undefined | boolean): void => {
+    if (val === undefined || val === '' || val === false) {
+      return
+    }
     ;(params as Record<string, unknown>)[key] = val
   }
 
-  const setRange = (key: keyof SearchParams, min: string | undefined, max: string | undefined) => {
-    if (!min && !max) return
+  const setRange = (
+    key: keyof SearchParams,
+    min: string | undefined,
+    max: string | undefined,
+  ): void => {
+    if (!min && !max) {
+      return
+    }
     ;(params as Record<string, unknown>)[key] = `[${min ?? ''},${max ?? ''}]`
   }
 
@@ -34,8 +42,10 @@ export function buildSearchParams(values: SearchFormValues): SearchParams {
     key: keyof SearchParams,
     start: string | undefined,
     end: string | undefined,
-  ) => {
-    if (!start && !end) return
+  ): void => {
+    if (!start && !end) {
+      return
+    }
     const s = start ? `${start}:00Z` : ''
     const e = end ? `${end}:00Z` : ''
     ;(params as Record<string, unknown>)[key] = `[${s},${e}]`
@@ -87,18 +97,26 @@ export function parseSearchParams(params: SearchParams): SearchFormValues {
   const parseRange = (
     val: string | undefined,
   ): { min: string | undefined; max: string | undefined } => {
-    if (val === undefined) return { min: undefined, max: undefined }
+    if (val === undefined) {
+      return { min: undefined, max: undefined }
+    }
     const match = val.match(/^\[([^,]*),([^\]]*)\]$/)
-    if (!match) return { min: undefined, max: undefined }
+    if (!match) {
+      return { min: undefined, max: undefined }
+    }
     return { min: match[1], max: match[2] }
   }
 
   const parseDateRange = (
     val: string | undefined,
   ): { start: string | undefined; end: string | undefined } => {
-    if (val === undefined) return { start: undefined, end: undefined }
+    if (val === undefined) {
+      return { start: undefined, end: undefined }
+    }
     const match = val.match(/^\[([^,]*),([^\]]*)\]$/)
-    if (!match) return { start: undefined, end: undefined }
+    if (!match) {
+      return { start: undefined, end: undefined }
+    }
     return {
       start: match[1] ? match[1].replace(/:00Z$/, '') : '',
       end: match[2] ? match[2].replace(/:00Z$/, '') : '',

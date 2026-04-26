@@ -44,7 +44,9 @@ const DEFAULTS: Record<string, boolean> = {
 function readFromStorage(): Record<string, boolean> {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return { ...DEFAULTS }
+    if (!raw) {
+      return { ...DEFAULTS }
+    }
     const parsed: unknown = JSON.parse(raw)
     if (
       typeof parsed !== 'object' ||
@@ -59,18 +61,22 @@ function readFromStorage(): Record<string, boolean> {
   }
 }
 
-export function useColumnVisibility() {
+export function useColumnVisibility(): {
+  visibility: Record<string, boolean>
+  toggle: (column: string) => void
+  reset: () => void
+} {
   const [visibility, setVisibility] = useState<Record<string, boolean>>(readFromStorage)
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: VERSION, visibility }))
   }, [visibility])
 
-  const toggle = (column: string) => {
+  const toggle = (column: string): void => {
     setVisibility((prev) => ({ ...prev, [column]: !prev[column] }))
   }
 
-  const reset = () => {
+  const reset = (): void => {
     setVisibility({ ...DEFAULTS })
   }
 

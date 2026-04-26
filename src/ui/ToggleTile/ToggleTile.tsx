@@ -3,7 +3,7 @@ import { Toggle } from '@base-ui/react/toggle'
 import { ToggleGroup } from '@base-ui/react/toggle-group'
 import styles from './ToggleTile.module.css'
 
-export interface ToggleTileProps extends Toggle.Props {}
+export type ToggleTileProps = Toggle.Props
 
 export const ToggleTile = React.forwardRef<HTMLButtonElement, ToggleTileProps>(function ToggleTile(
   { className, children, ...props },
@@ -16,9 +16,13 @@ export const ToggleTile = React.forwardRef<HTMLButtonElement, ToggleTileProps>(f
   )
 })
 
-export interface ToggleTileGroupProps extends ToggleGroup.Props {}
+export type ToggleTileGroupProps = ToggleGroup.Props
 
-export function ToggleTileGroup({ className, multiple = true, ...props }: ToggleTileGroupProps) {
+export function ToggleTileGroup({
+  className,
+  multiple = true,
+  ...props
+}: ToggleTileGroupProps): JSX.Element {
   return (
     <ToggleGroup
       multiple={multiple}

@@ -1,3 +1,4 @@
+import { expect, test, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { EventTypeSelect } from './EventTypeSelect'
@@ -36,7 +37,7 @@ test('chips expand to show full name when dropdown is open', async () => {
 
 test('selecting an option calls onValueChange with that code', async () => {
   const user = userEvent.setup()
-  const handleChange = vi.fn()
+  const handleChange = vi.fn<(value: string) => void>()
   render(<EventTypeSelect value="" onValueChange={handleChange} />)
 
   await user.click(screen.getByRole('combobox', { name: 'Event Type' }))
@@ -47,7 +48,7 @@ test('selecting an option calls onValueChange with that code', async () => {
 
 test('selecting a second option appends it to the value', async () => {
   const user = userEvent.setup()
-  const handleChange = vi.fn()
+  const handleChange = vi.fn<(value: string) => void>()
   render(<EventTypeSelect value="RPG" onValueChange={handleChange} />)
 
   await user.click(screen.getByRole('combobox', { name: 'Event Type' }))
@@ -58,7 +59,7 @@ test('selecting a second option appends it to the value', async () => {
 
 test('selecting an already-selected option removes it from the value', async () => {
   const user = userEvent.setup()
-  const handleChange = vi.fn()
+  const handleChange = vi.fn<(value: string) => void>()
   render(<EventTypeSelect value="RPG,BGM" onValueChange={handleChange} />)
 
   await user.click(screen.getByRole('combobox', { name: 'Event Type' }))
@@ -91,7 +92,7 @@ test('filter text narrows options by name', async () => {
 
 test('removing a chip calls onValueChange without that code', async () => {
   const user = userEvent.setup()
-  const handleChange = vi.fn()
+  const handleChange = vi.fn<(value: string) => void>()
   render(<EventTypeSelect value="RPG,BGM" onValueChange={handleChange} />)
 
   await user.click(screen.getByRole('button', { name: 'Remove RPG' }))

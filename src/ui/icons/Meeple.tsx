@@ -17,7 +17,7 @@ export function Meeple({
   strokeWidth = 8,
   className,
   'aria-hidden': ariaHidden,
-}: MeepleProps) {
+}: MeepleProps): JSX.Element {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

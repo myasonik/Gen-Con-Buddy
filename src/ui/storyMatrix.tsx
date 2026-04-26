@@ -24,7 +24,7 @@ export function cartesian<T extends AxisValues>(axes: T): Combo<T>[] {
   return result as Combo<T>[]
 }
 
-export function makeMatrix<TMeta extends Meta<any>>(
+export function makeMatrix<TMeta extends Meta<unknown>>(
   meta: TMeta,
   axes: AxisValues,
   defaults?: Record<string, unknown>,
@@ -33,7 +33,9 @@ export function makeMatrix<TMeta extends Meta<any>>(
   Grid: () => React.JSX.Element
 } {
   const combos = cartesian(axes)
-  if (!meta.component) throw new Error('makeMatrix requires meta.component to be defined')
+  if (!meta.component) {
+    throw new Error('makeMatrix requires meta.component to be defined')
+  }
   const Component = meta.component as React.ComponentType<Record<string, unknown>>
 
   const stories: Record<string, StoryObj<TMeta>> = {}
@@ -47,7 +49,7 @@ export function makeMatrix<TMeta extends Meta<any>>(
     } as StoryObj<TMeta>
   }
 
-  function Grid() {
+  function Grid(): JSX.Element {
     return (
       <div
         style={{

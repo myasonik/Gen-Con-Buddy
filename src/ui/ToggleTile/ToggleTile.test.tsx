@@ -1,8 +1,9 @@
+import { vi, describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ToggleTile, ToggleTileGroup } from './ToggleTile'
 
-describe('ToggleTile', () => {
+describe('toggleTile', () => {
   it('renders as a button with the given label', () => {
     render(<ToggleTile>Wed</ToggleTile>)
     expect(screen.getByRole('button', { name: 'Wed' })).toBeInTheDocument()
@@ -24,14 +25,14 @@ describe('ToggleTile', () => {
   })
 
   it('calls onPressedChange when clicked', async () => {
-    const handleChange = vi.fn()
+    const handleChange = vi.fn<(pressed: boolean) => void>()
     render(<ToggleTile onPressedChange={handleChange}>Sun</ToggleTile>)
     await userEvent.click(screen.getByRole('button', { name: 'Sun' }))
-    expect(handleChange).toHaveBeenCalledOnce()
+    expect(handleChange).toHaveBeenCalledTimes(1)
   })
 
   it('does not call onPressedChange when disabled', async () => {
-    const handleChange = vi.fn()
+    const handleChange = vi.fn<(pressed: boolean) => void>()
     render(
       <ToggleTile disabled onPressedChange={handleChange}>
         Wed
@@ -49,7 +50,7 @@ describe('ToggleTile', () => {
   })
 })
 
-describe('ToggleTileGroup', () => {
+describe('toggleTileGroup', () => {
   it('marks pressed tiles via value prop', () => {
     render(
       <ToggleTileGroup value={['wed']} onValueChange={() => {}}>
@@ -62,14 +63,14 @@ describe('ToggleTileGroup', () => {
   })
 
   it('calls onValueChange when a tile is clicked', async () => {
-    const handleChange = vi.fn()
+    const handleChange = vi.fn<(value: string[]) => void>()
     render(
       <ToggleTileGroup value={[]} onValueChange={handleChange}>
         <ToggleTile value="wed">Wed</ToggleTile>
       </ToggleTileGroup>,
     )
     await userEvent.click(screen.getByRole('button', { name: 'Wed' }))
-    expect(handleChange).toHaveBeenCalledOnce()
+    expect(handleChange).toHaveBeenCalledTimes(1)
   })
 
   it('navigates between tiles with arrow keys', async () => {

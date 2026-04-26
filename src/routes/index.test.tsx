@@ -1,3 +1,4 @@
+import { test, describe, expect, beforeEach } from 'vitest'
 import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
@@ -8,6 +9,7 @@ import { RouterProvider, createRouter, createMemoryHistory } from '@tanstack/rea
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { routeTree } from '../routeTree.gen'
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 async function renderSearchPage(initialEntry = '/') {
   const history = createMemoryHistory({ initialEntries: [initialEntry] })
   const router = createRouter({ routeTree, history })
@@ -73,6 +75,7 @@ test('submitting a new search resets page to 1', async () => {
   // Submit the search form (clicking Search button resets page)
   await user.click(screen.getByRole('button', { name: '▶ Search' }))
   await screen.findAllByRole('navigation', { name: 'Pagination' })
+  // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(latestUrl!.searchParams.has('page')).toBe(false)
 })
 
@@ -100,6 +103,7 @@ test('navigating to page 2 sends page=1 to API (0-indexed)', async () => {
   await user.click(within(navs[0]).getByRole('button', { name: 'Next ▶' }))
   // wait for re-render after navigation
   await screen.findAllByRole('navigation', { name: 'Pagination' })
+  // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(latestUrl!.searchParams.get('page')).toBe('1')
 })
 
@@ -128,7 +132,9 @@ test('clicking a sort column header updates the URL with sort param and resets p
   latestUrl = null
   await user.click(screen.getByRole('button', { name: 'Sort by Start' }))
   await screen.findAllByRole('navigation', { name: 'Pagination' })
+  // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(latestUrl!.searchParams.has('page')).toBe(false)
+  // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(latestUrl!.searchParams.get('sort')).toBe('startDateTime.asc')
 })
 
@@ -165,6 +171,7 @@ test('navigating back to page 1 omits page from URL and API call', async () => {
   const navs = screen.getAllByRole('navigation', { name: 'Pagination' })
   await user.click(within(navs[0]).getByRole('button', { name: '◀ Previous' }))
   await screen.findAllByRole('navigation', { name: 'Pagination' })
+  // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(latestUrl!.searchParams.has('page')).toBe(false)
 })
 
@@ -211,17 +218,17 @@ describe('sidebar toggle and active filters', () => {
     localStorage.clear()
   })
 
-  test('sidebar toggle button is present in the results area', async () => {
+  it('sidebar toggle button is present in the results area', async () => {
     await renderSearchPage('/')
     expect(screen.getByRole('button', { name: /Filters/ })).toBeInTheDocument()
   })
 
-  test('sidebar toggle button has aria-expanded=true by default', async () => {
+  it('sidebar toggle button has aria-expanded=true by default', async () => {
     await renderSearchPage('/')
     expect(screen.getByRole('button', { name: /Filters/ })).toHaveAttribute('aria-expanded', 'true')
   })
 
-  test('clicking toggle button flips aria-expanded to false', async () => {
+  it('clicking toggle button flips aria-expanded to false', async () => {
     const user = userEvent.setup()
     await renderSearchPage('/')
     const btn = screen.getByRole('button', { name: /Filters/ })
@@ -229,7 +236,7 @@ describe('sidebar toggle and active filters', () => {
     expect(btn).toHaveAttribute('aria-expanded', 'false')
   })
 
-  test('clicking the backdrop closes the sidebar', async () => {
+  it('clicking the backdrop closes the sidebar', async () => {
     const user = userEvent.setup()
     await renderSearchPage('/')
     const btn = screen.getByRole('button', { name: /Filters/ })
@@ -240,17 +247,17 @@ describe('sidebar toggle and active filters', () => {
     expect(btn).toHaveAttribute('aria-expanded', 'false')
   })
 
-  test('no active filter chips when no filters are set', async () => {
+  it('no active filter chips when no filters are set', async () => {
     await renderSearchPage('/')
     expect(screen.queryByRole('button', { name: /Search:/ })).toBeNull()
   })
 
-  test('active filter chip appears when filter param is in URL', async () => {
+  it('active filter chip appears when filter param is in URL', async () => {
     await renderSearchPage('/?filter=dragon')
     expect(screen.getByRole('button', { name: /Search: dragon/ })).toBeInTheDocument()
   })
 
-  test('clicking a filter chip removes it from the URL', async () => {
+  it('clicking a filter chip removes it from the URL', async () => {
     const user = userEvent.setup()
     const router = await renderSearchPage('/?filter=dragon&location=Hall+A')
     expect(screen.getByRole('button', { name: /Search: dragon/ })).toBeInTheDocument()
@@ -259,7 +266,7 @@ describe('sidebar toggle and active filters', () => {
     expect(router.state.location.searchStr).toContain('location=')
   })
 
-  test('days filter produces one chip per day', async () => {
+  it('days filter produces one chip per day', async () => {
     await renderSearchPage('/?days=fri%2Csat')
     const bar = screen.getByRole('list', { name: 'Active filters' })
     expect(within(bar).getByRole('button', { name: 'Fri' })).toBeInTheDocument()
@@ -267,7 +274,7 @@ describe('sidebar toggle and active filters', () => {
     expect(within(bar).queryByRole('button', { name: /Days:/ })).toBeNull()
   })
 
-  test('clicking Fri chip removes fri but leaves sat in URL', async () => {
+  it('clicking Fri chip removes fri but leaves sat in URL', async () => {
     const user = userEvent.setup()
     const router = await renderSearchPage('/?days=fri%2Csat')
     const bar = screen.getByRole('list', { name: 'Active filters' })
@@ -276,7 +283,7 @@ describe('sidebar toggle and active filters', () => {
     expect(router.state.location.searchStr).not.toContain('fri')
   })
 
-  test('eventType filter produces one chip per code', async () => {
+  it('eventType filter produces one chip per code', async () => {
     await renderSearchPage('/?eventType=RPG%2CBGM')
     const bar = screen.getByRole('list', { name: 'Active filters' })
     expect(within(bar).getByRole('button', { name: 'RPG - Role Playing Game' })).toBeInTheDocument()
@@ -284,7 +291,7 @@ describe('sidebar toggle and active filters', () => {
     expect(within(bar).queryByRole('button', { name: /Type:/ })).toBeNull()
   })
 
-  test('clicking RPG active-filter chip removes RPG but leaves BGM in URL', async () => {
+  it('clicking RPG active-filter chip removes RPG but leaves BGM in URL', async () => {
     const user = userEvent.setup()
     const router = await renderSearchPage('/?eventType=RPG%2CBGM')
     const bar = screen.getByRole('list', { name: 'Active filters' })

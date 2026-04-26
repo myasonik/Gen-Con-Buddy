@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { announce, __reset } from './announce'
 
-function setupNodes() {
+function setupNodes(): { polite: HTMLDivElement; assertive: HTMLDivElement } {
   const polite = document.createElement('div')
   polite.id = 'live-polite'
   const assertive = document.createElement('div')
@@ -12,8 +12,8 @@ function setupNodes() {
 }
 
 describe('announce', () => {
-  let polite: HTMLDivElement
-  let assertive: HTMLDivElement
+  let polite: HTMLDivElement = document.createElement('div')
+  let assertive: HTMLDivElement = document.createElement('div')
 
   beforeEach(() => {
     const nodes = setupNodes()

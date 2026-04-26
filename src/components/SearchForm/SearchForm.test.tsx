@@ -1,9 +1,10 @@
+import { vi, test, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { SearchForm } from './SearchForm'
 import type { SearchFormValues } from '../../utils/types'
 
-const noop = () => undefined
+const noop = (): undefined => undefined
 
 test('renders the top-level filter and event type fields', () => {
   render(<SearchForm defaultValues={{}} onSearch={noop} />)
@@ -39,7 +40,7 @@ test('submits with the title value passed to onSearch', async () => {
   await user.type(screen.getByRole('textbox', { name: 'Title' }), 'Dragons')
   await user.click(screen.getByRole('button', { name: '▶ Search' }))
 
-  expect(handleSearch).toHaveBeenCalledOnce()
+  expect(handleSearch).toHaveBeenCalledTimes(1)
   expect(handleSearch.mock.calls[0][0]).toMatchObject({ title: 'Dragons' })
 })
 
@@ -54,7 +55,7 @@ test('submits with the filter (full text search) value', async () => {
   expect(handleSearch.mock.calls[0][0]).toMatchObject({ filter: 'fire' })
 })
 
-test('Reset button clears all form fields', async () => {
+test('reset button clears all form fields', async () => {
   const user = userEvent.setup()
   render(
     <SearchForm defaultValues={{ title: 'Dungeon Crawl', filter: 'dragon' }} onSearch={noop} />,
@@ -117,7 +118,7 @@ test('populates day tiles from defaultValues using aria-pressed', () => {
   expect(screen.getByRole('button', { name: 'Wed' })).toHaveAttribute('aria-pressed', 'false')
 })
 
-test('Reset button clears day tiles', async () => {
+test('reset button clears day tiles', async () => {
   const user = userEvent.setup()
   render(<SearchForm defaultValues={{ days: 'thu' }} onSearch={noop} />)
 

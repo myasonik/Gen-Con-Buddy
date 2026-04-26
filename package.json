@@ -10,7 +10,7 @@
     "build": "tsc -b && vite build",
     "typecheck": "tsc -b --noEmit",
     "preview": "vite preview",
-    "lint": "oxlint . && eslint .",
+    "lint": "oxlint --ignore-path .oxlintignore -c .oxlintrc.json . && eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
     "format": "prettier --write .",

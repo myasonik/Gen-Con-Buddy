@@ -70,7 +70,7 @@ interface SearchFormProps {
   onSearch: (values: SearchFormValues) => void
 }
 
-export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
+export function SearchForm({ defaultValues, onSearch }: SearchFormProps): JSX.Element {
   const { register, handleSubmit, reset, watch, setValue } = useForm<SearchFormValues>({
     defaultValues,
   })
@@ -80,8 +80,8 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
 
   const startDateTimeStart = watch('startDateTimeStart') ?? ''
   const startDateTimeEnd = watch('startDateTimeEnd') ?? ''
-  const startDateActive = !!(startDateTimeStart || startDateTimeEnd)
-  const daysActive = !!(days && days.length > 0)
+  const startDateActive = Boolean(startDateTimeStart || startDateTimeEnd)
+  const daysActive = Boolean(days && days.length > 0)
   const daysDisabled = startDateActive
   const startDateDisabled = daysActive
 

@@ -1,3 +1,4 @@
+import { expect, test, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ActiveFilters } from './ActiveFilters'
@@ -36,10 +37,10 @@ test('clicking a chip calls onRemove with the filter object', async () => {
   render(<ActiveFilters searchParams={{ filter: 'dragon', days: 'fri' }} onRemove={onRemove} />)
   await user.click(screen.getByRole('button', { name: /Search: dragon/ }))
   expect(onRemove).toHaveBeenCalledTimes(1)
-  const [filter] = onRemove.mock.calls[0]
+  const [[filter]] = onRemove.mock.calls
   expect(filter.id).toBe('filter')
   expect(filter.label).toBe('Search: dragon')
-  expect(filter.remove({ filter: 'dragon', days: 'fri' })).toEqual({
+  expect(filter.remove({ filter: 'dragon', days: 'fri' })).toStrictEqual({
     days: 'fri',
   })
 })
@@ -52,9 +53,9 @@ test('clicking Fri chip calls onRemove with filter that leaves Sat', async () =>
   expect(screen.getByRole('button', { name: 'Sat' })).toBeInTheDocument()
   await user.click(screen.getByRole('button', { name: 'Fri' }))
   expect(onRemove).toHaveBeenCalledTimes(1)
-  const [filter] = onRemove.mock.calls[0]
+  const [[filter]] = onRemove.mock.calls
   expect(filter.id).toBe('days:fri')
-  expect(filter.remove({ days: 'fri,sat' })).toEqual({ days: 'sat' })
+  expect(filter.remove({ days: 'fri,sat' })).toStrictEqual({ days: 'sat' })
 })
 
 test('renders a list with accessible label when filters are active', () => {

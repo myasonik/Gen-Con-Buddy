@@ -1,8 +1,9 @@
+import { afterEach, describe, expect, it } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import { PixelState } from './PixelState'
 import { __reset } from '../../lib/announce'
 
-function setupLiveRegions() {
+function setupLiveRegions(): () => void {
   const polite = document.createElement('div')
   polite.id = 'live-polite'
   polite.setAttribute('aria-live', 'polite')
@@ -23,7 +24,7 @@ afterEach(() => {
   __reset()
 })
 
-describe('PixelState', () => {
+describe('pixelState', () => {
   it('renders loading text for loading variant', () => {
     render(<PixelState variant="loading" text="LOADING QUESTS..." />)
     expect(screen.getByText('LOADING QUESTS...')).toBeInTheDocument()

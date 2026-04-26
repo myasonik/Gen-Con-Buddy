@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import {
   createRootRoute,
@@ -12,7 +13,7 @@ import { makeEvent } from '../../test/msw/factory'
 import { EventDetail } from './EventDetail'
 import type { EventSearchResponse } from '../../utils/types'
 
-function renderEventDetail(gameId: string) {
+function renderEventDetail(gameId: string): ReturnType<typeof render> {
   const rootRoute = createRootRoute({
     component: () => <EventDetail gameId={gameId} />,
   })
@@ -32,7 +33,7 @@ function renderEventDetail(gameId: string) {
 
 test('shows loading state while fetching', async () => {
   renderEventDetail('RPG24000001')
-  expect(await screen.findByText('LOADING QUEST...')).toBeInTheDocument()
+  await expect(screen.findByText('LOADING QUEST...')).resolves.toBeInTheDocument()
 })
 
 test('renders event title and gameId after load', async () => {
@@ -48,7 +49,7 @@ test('renders event title and gameId after load', async () => {
     }),
   )
   renderEventDetail('RPG24000001')
-  expect(await screen.findByText('Epic Dragon Hunt')).toBeInTheDocument()
+  await expect(screen.findByText('Epic Dragon Hunt')).resolves.toBeInTheDocument()
   expect(screen.getByText('RPG24000001')).toBeInTheDocument()
 })
 
@@ -94,11 +95,11 @@ test('shows not-found message when event does not exist', async () => {
     }),
   )
   renderEventDetail('DOESNOTEXIST')
-  expect(await screen.findByText('EVENT NOT FOUND')).toBeInTheDocument()
+  await expect(screen.findByText('EVENT NOT FOUND')).resolves.toBeInTheDocument()
 })
 
 test('fetches using the provided gameId as a query param', async () => {
-  let capturedUrl: string | undefined
+  let capturedUrl: string | undefined = undefined
   server.use(
     http.get('/api/events/search', ({ request }) => {
       capturedUrl = request.url

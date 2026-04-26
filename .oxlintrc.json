@@ -1,14 +1,77 @@
 {
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript"],
-  "env": {
-    "browser": true,
-    "es2020": true
+  "categories": {
+    "suspicious": "error",
+    "style": "error"
   },
   "rules": {
     "no-nested-ternary": "error",
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "typescript/no-non-null-assertion": "error",
+    "typescript/no-floating-promises": "error",
+    "typescript/no-explicit-any": "error",
+    "typescript/explicit-function-return-type": "error",
+    "typescript/explicit-module-boundary-types": "error",
+    "typescript/no-empty-object-type": "error",
+    "typescript/no-import-type-side-effects": "error",
+    "react-hooks/exhaustive-deps": "error",
+    "react/button-has-type": "error",
+    "react/jsx-no-constructed-context-values": "error",
+    "react/no-danger": "error",
+    "vitest/require-mock-type-parameters": "error",
+    "new-cap": "error",
+    "react/react-in-jsx-scope": "off",
+    "sort-keys": "off",
+    "no-null": "off",
+    "no-magic-numbers": "off",
+    "id-length": "off",
+    "unicorn/filename-case": "off",
+    "no-ternary": "off",
+    "react/jsx-max-depth": "off",
+    "react/jsx-props-no-spreading": "off",
+    "capitalized-comments": "off",
+    "func-style": "off",
+    "jest/no-hooks": "off",
+    "jest/no-conditional-expect": "error",
+    "jest/no-untyped-mock-factory": "off",
+    "jest/require-top-level-describe": "off",
+    "jest/prefer-ending-with-an-expect": "off",
+    "jest/max-expects": "off",
+    "jest/require-hook": "off",
+    "jest/no-duplicate-hooks": "off",
+    "jest/prefer-importing-jest-globals": "off",
+    "vitest/prefer-describe-function-title": "off",
+    "vitest/no-importing-vitest-globals": "off",
+    "vitest/prefer-importing-vitest-globals": "off",
+    "vitest/prefer-import-in-mock": "off",
+    "vitest/prefer-called-with": "error",
+    "vitest/prefer-called-times": "error",
+    "vitest/prefer-called-once": "off",
+    "vitest/prefer-strict-boolean-matchers": "error",
+    "vitest/prefer-to-be-truthy": "off",
+    "vitest/prefer-to-be-falsy": "off",
+    "max-statements": "off",
+    "sort-imports": "off",
+    "typescript/consistent-type-imports": "error"
   },
-  "ignorePatterns": ["dist", "public/mockServiceWorker.js", "src/routeTree.gen.ts"]
+  "plugins": ["react", "typescript", "react-hooks", "jsx-a11y", "vitest"],
+  "env": { "browser": true },
+  "overrides": [
+    {
+      "files": ["src/lib/announce.ts", "src/main.tsx"],
+      "rules": {
+        "jest/require-hook": "off"
+      }
+    },
+    {
+      "files": ["src/ui/Button/Button.tsx"],
+      "rules": {
+        "react/button-has-type": "off"
+      }
+    },
+    {
+      "files": ["vite.config.ts"],
+      "rules": {
+        "new-cap": "off"
+      }
+    }
+  ]
 }

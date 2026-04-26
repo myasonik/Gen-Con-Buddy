@@ -6,7 +6,7 @@ interface PawnProps {
   'aria-hidden'?: true | 'true'
 }
 
-export function Pawn({ className, style, 'aria-hidden': ariaHidden }: PawnProps) {
+export function Pawn({ className, style, 'aria-hidden': ariaHidden }: PawnProps): JSX.Element {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

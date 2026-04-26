@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { EVENT_TYPE_COLORS, DAY_COLORS, EXPERIENCE_COLORS } from './conceptColors'
 
 const ALL_EVENT_TYPE_CODES = [
@@ -22,7 +23,7 @@ const ALL_EVENT_TYPE_CODES = [
   'ZED',
 ] as const
 
-describe('EVENT_TYPE_COLORS', () => {
+describe('eVENT_TYPE_COLORS', () => {
   it.each(ALL_EVENT_TYPE_CODES)('maps %s to a color entry', (code) => {
     expect(EVENT_TYPE_COLORS[code]).toMatchObject({
       color: expect.stringMatching(/^#[0-9a-f]{6}$/),
@@ -31,23 +32,23 @@ describe('EVENT_TYPE_COLORS', () => {
   })
 
   it('maps RPG, LRP, TDA to the roleplay family', () => {
-    expect(EVENT_TYPE_COLORS['RPG']).toEqual(EVENT_TYPE_COLORS['LRP'])
-    expect(EVENT_TYPE_COLORS['RPG']).toEqual(EVENT_TYPE_COLORS['TDA'])
+    expect(EVENT_TYPE_COLORS['RPG']).toStrictEqual(EVENT_TYPE_COLORS['LRP'])
+    expect(EVENT_TYPE_COLORS['RPG']).toStrictEqual(EVENT_TYPE_COLORS['TDA'])
     expect(EVENT_TYPE_COLORS['RPG'].color).toBe('#5c3a7a')
   })
 
   it('maps BGM, CGM, TCG to the board & card family', () => {
-    expect(EVENT_TYPE_COLORS['BGM']).toEqual(EVENT_TYPE_COLORS['CGM'])
+    expect(EVENT_TYPE_COLORS['BGM']).toStrictEqual(EVENT_TYPE_COLORS['CGM'])
     expect(EVENT_TYPE_COLORS['BGM'].color).toBe('#2a5c3a')
   })
 
   it('maps HMN, NMN, MHE to the miniatures family', () => {
-    expect(EVENT_TYPE_COLORS['HMN']).toEqual(EVENT_TYPE_COLORS['NMN'])
+    expect(EVENT_TYPE_COLORS['HMN']).toStrictEqual(EVENT_TYPE_COLORS['NMN'])
     expect(EVENT_TYPE_COLORS['HMN'].color).toBe('#1a3d5c')
   })
 })
 
-describe('DAY_COLORS', () => {
+describe('dAY_COLORS', () => {
   it.each(['Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])(
     'maps %s to a color entry',
     (day) => {
@@ -63,7 +64,7 @@ describe('DAY_COLORS', () => {
   })
 })
 
-describe('EXPERIENCE_COLORS', () => {
+describe('eXPERIENCE_COLORS', () => {
   it('maps the full None string to green', () => {
     expect(
       EXPERIENCE_COLORS["None (You've never played before - rules will be taught)"].color,

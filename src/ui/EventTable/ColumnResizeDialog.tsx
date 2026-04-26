@@ -14,15 +14,17 @@ export function ColumnResizeDialog({
   currentWidth,
   onApply,
   onClose,
-}: ColumnResizeDialogProps) {
+}: ColumnResizeDialogProps): JSX.Element {
   const [value, setValue] = useState(String(currentWidth))
   const inputId = useId()
 
   return (
     <Dialog.Root
-      open={true}
+      open
       onOpenChange={(open) => {
-        if (!open) onClose()
+        if (!open) {
+          onClose()
+        }
       }}
     >
       <Dialog.Portal>

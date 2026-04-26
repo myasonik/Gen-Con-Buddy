@@ -11,7 +11,11 @@ interface SearchResultsProps {
   onSort: (sort: string | undefined) => void
 }
 
-export function SearchResults({ searchParams, onNavigate, onSort }: SearchResultsProps) {
+export function SearchResults({
+  searchParams,
+  onNavigate,
+  onSort,
+}: SearchResultsProps): JSX.Element {
   const page = searchParams.page ?? 1
   const limit = searchParams.limit ?? 100
   const { data, isLoading, isError } = useQuery({
@@ -19,8 +23,8 @@ export function SearchResults({ searchParams, onNavigate, onSort }: SearchResult
     queryFn: () => fetchEvents(searchParams),
   })
 
-  let activeSortField: string | undefined
-  let activeSortDir: 'asc' | 'desc' | undefined
+  let activeSortField: string | undefined = undefined
+  let activeSortDir: 'asc' | 'desc' | undefined = undefined
   if (searchParams.sort) {
     const [field, dir] = searchParams.sort.split('.')
     if (field && (dir === 'asc' || dir === 'desc')) {

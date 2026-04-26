@@ -25,7 +25,7 @@ const { Grid } = makeMatrix(meta, { variant: BADGE_VARIANTS }, { children: 'tick
 export const AllVariants: Story = { render: Grid }
 
 export const BoolTrue: StoryObj = {
-  render: () => <BoolBadge value={true} />,
+  render: () => <BoolBadge value />,
 }
 
 export const BoolFalse: StoryObj = {

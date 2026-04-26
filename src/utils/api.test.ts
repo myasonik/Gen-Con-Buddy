@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest'
 import { http, HttpResponse } from 'msw'
 import { server } from '../test/msw/server'
 import { fetchEvents, fetchChangelogList, fetchChangelogEntry } from './api'
@@ -50,7 +51,7 @@ test('fetchChangelogList returns summaries on success', async () => {
     ),
   )
   const result = await fetchChangelogList()
-  expect(result).toEqual([summary])
+  expect(result).toStrictEqual([summary])
 })
 
 test('fetchChangelogList sends limit param', async () => {
@@ -62,6 +63,7 @@ test('fetchChangelogList sends limit param', async () => {
     }),
   )
   await fetchChangelogList(10)
+  // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(capturedUrl!.searchParams.get('limit')).toBe('10')
 })
 
@@ -87,7 +89,7 @@ test('fetchChangelogEntry returns entry on success', async () => {
     http.get('/api/changelog/fetch', () => HttpResponse.json<FetchChangelogResponse>({ entry })),
   )
   const result = await fetchChangelogEntry('entry-1')
-  expect(result).toEqual(entry)
+  expect(result).toStrictEqual(entry)
 })
 
 test('fetchChangelogEntry sends id param', async () => {
@@ -101,6 +103,7 @@ test('fetchChangelogEntry sends id param', async () => {
     }),
   )
   await fetchChangelogEntry('entry-1')
+  // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(capturedUrl!.searchParams.get('id')).toBe('entry-1')
 })
 

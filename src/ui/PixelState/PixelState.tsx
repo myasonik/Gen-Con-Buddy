@@ -9,7 +9,7 @@ interface PixelStateProps {
   subtext?: string
 }
 
-export function PixelState({ variant, text, subtext }: PixelStateProps) {
+export function PixelState({ variant, text, subtext }: PixelStateProps): JSX.Element {
   useEffect(() => {
     announce(text, variant === 'error' ? 'assertive' : 'polite')
   }, [variant, text])

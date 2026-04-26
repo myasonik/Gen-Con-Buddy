@@ -5,8 +5,8 @@ import {
   getCoreRowModel,
   getSortedRowModel,
   flexRender,
+  type SortingState,
 } from '@tanstack/react-table'
-import type { SortingState } from '@tanstack/react-table'
 import { useColumnVisibility } from '../../hooks/useColumnVisibility'
 import { useColumnSizing } from '../../hooks/useColumnSizing'
 import { ColumnActionsPopover } from './ColumnActionsPopover'
@@ -23,7 +23,12 @@ interface EventTableProps {
   onSort?: (sort: string | undefined) => void
 }
 
-export function EventTable({ events, activeSortField, activeSortDir, onSort }: EventTableProps) {
+export function EventTable({
+  events,
+  activeSortField,
+  activeSortDir,
+  onSort,
+}: EventTableProps): JSX.Element {
   const { visibility, toggle, reset } = useColumnVisibility()
   const { sizing, setSizing, reset: resetSizing } = useColumnSizing()
   // Unique prefix so anchor names don't collide when multiple EventTable instances are on the page
@@ -35,21 +40,21 @@ export function EventTable({ events, activeSortField, activeSortDir, onSort }: E
   } | null>(null)
   const [internalSorting, setInternalSorting] = useState<SortingState>([])
 
-  let effectiveSortField: string | undefined
+  let effectiveSortField: string | undefined = undefined
   if (onSort) {
     effectiveSortField = activeSortField
   } else if (internalSorting.length > 0) {
     effectiveSortField = SORT_FIELD_BY_COL_ID.get(internalSorting[0].id) ?? internalSorting[0].id
   }
 
-  let effectiveSortDir: 'asc' | 'desc' | undefined
+  let effectiveSortDir: 'asc' | 'desc' | undefined = undefined
   if (onSort) {
     effectiveSortDir = activeSortDir
   } else if (internalSorting.length > 0) {
     effectiveSortDir = internalSorting[0].desc ? 'desc' : 'asc'
   }
 
-  const handleHeaderSortClick = (sortField: string, label: string) => {
+  const handleHeaderSortClick = (sortField: string, label: string): void => {
     if (onSort) {
       if (effectiveSortField !== sortField) {
         onSort(`${sortField}.asc`)
@@ -76,11 +81,14 @@ export function EventTable({ events, activeSortField, activeSortDir, onSort }: E
     }
   }
 
-  const handlePopoverSort = (s: string | undefined, label: string) => {
+  const handlePopoverSort = (s: string | undefined, label: string): void => {
     if (onSort) {
       onSort(s)
-      if (s) announce(`Sorted by ${label}, ${s.endsWith('.asc') ? 'ascending' : 'descending'}`)
-      else announce('Sort cleared')
+      if (s) {
+        announce(`Sorted by ${label}, ${s.endsWith('.asc') ? 'ascending' : 'descending'}`)
+      } else {
+        announce('Sort cleared')
+      }
     } else {
       if (s === undefined) {
         setInternalSorting([])
@@ -107,7 +115,7 @@ export function EventTable({ events, activeSortField, activeSortDir, onSort }: E
     },
     onColumnSizingChange: setSizing,
     onSortingChange: setInternalSorting,
-    manualSorting: !!onSort,
+    manualSorting: Boolean(onSort),
     manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -128,8 +136,12 @@ export function EventTable({ events, activeSortField, activeSortDir, onSort }: E
                 <label>
                   <input
                     type="checkbox"
-                    checked={!!visibility[col.id!]}
-                    onChange={() => toggle(col.id!)}
+                    checked={col.id !== undefined && Boolean(visibility[col.id])}
+                    onChange={() => {
+                      if (col.id !== undefined) {
+                        toggle(col.id)
+                      }
+                    }}
                   />
                   {col.header as string}
                 </label>
@@ -156,7 +168,7 @@ export function EventTable({ events, activeSortField, activeSortDir, onSort }: E
                 {headerGroup.headers.map((header) => {
                   const sortField = header.column.columnDef.meta?.sortField
                   const label = header.column.columnDef.header as string
-                  const isActive = !!sortField && effectiveSortField === sortField
+                  const isActive = Boolean(sortField) && effectiveSortField === sortField
                   let ariaSort: 'ascending' | 'descending' | 'none' = 'none'
                   if (isActive) {
                     ariaSort = effectiveSortDir === 'asc' ? 'ascending' : 'descending'

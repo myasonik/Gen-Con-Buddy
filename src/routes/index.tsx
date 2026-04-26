@@ -11,8 +11,10 @@ import styles from './index.module.css'
 
 export const Route = createFileRoute('/')({
   validateSearch: (search: Record<string, unknown>): SearchParams => {
-    const str = (k: string) => (typeof search[k] === 'string' ? (search[k] as string) : undefined)
-    const num = (k: string) => (typeof search[k] === 'number' ? (search[k] as number) : undefined)
+    const str = (k: string): string | undefined =>
+      typeof search[k] === 'string' ? (search[k] as string) : undefined
+    const num = (k: string): number | undefined =>
+      typeof search[k] === 'number' ? (search[k] as number) : undefined
     return {
       limit: num('limit'),
       page: num('page'),
@@ -55,18 +57,18 @@ export const Route = createFileRoute('/')({
   component: SearchPage,
 })
 
-function SearchPage() {
+function SearchPage(): JSX.Element {
   const navigate = Route.useNavigate()
   const search = Route.useSearch()
   const [sidebarOpen, toggleSidebar] = useSidebarOpen()
 
-  const handleSearch = (values: SearchFormValues) => {
+  const handleSearch = (values: SearchFormValues): void => {
     void navigate({
       search: (prev) => ({ ...buildSearchParams(values), limit: prev.limit }),
     })
   }
 
-  const handleNavigate = (page: number, limit: number) => {
+  const handleNavigate = (page: number, limit: number): void => {
     void navigate({
       search: (prev) => ({
         ...prev,
@@ -76,7 +78,7 @@ function SearchPage() {
     })
   }
 
-  const handleSort = (sort: string | undefined) => {
+  const handleSort = (sort: string | undefined): void => {
     void navigate({
       search: (prev) => ({
         ...prev,
@@ -86,7 +88,7 @@ function SearchPage() {
     })
   }
 
-  const handleRemoveFilter = (filter: ActiveFilter) => {
+  const handleRemoveFilter = (filter: ActiveFilter): void => {
     void navigate({ search: (prev) => filter.remove(prev) })
   }
 

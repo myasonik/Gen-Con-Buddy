@@ -11,7 +11,7 @@ interface EventDetailProps {
   gameId: string
 }
 
-export function EventDetail({ gameId }: EventDetailProps) {
+export function EventDetail({ gameId }: EventDetailProps): JSX.Element {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['event', gameId],
     queryFn: () => fetchEvents({ gameId, limit: 1 }),

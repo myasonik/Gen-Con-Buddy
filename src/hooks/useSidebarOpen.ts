@@ -5,8 +5,12 @@ const STORAGE_KEY = 'sidebarOpen'
 function readFromStorage(): boolean {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw === 'false') return false
-    if (raw === 'true') return true
+    if (raw === 'false') {
+      return false
+    }
+    if (raw === 'true') {
+      return true
+    }
     return true
   } catch {
     return true
@@ -20,7 +24,7 @@ export function useSidebarOpen(): [boolean, () => void] {
     localStorage.setItem(STORAGE_KEY, String(open))
   }, [open])
 
-  const toggle = () => setOpen((prev) => !prev)
+  const toggle = (): void => setOpen((prev) => !prev)
 
   return [open, toggle]
 }

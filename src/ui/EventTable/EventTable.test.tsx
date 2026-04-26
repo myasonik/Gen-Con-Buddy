@@ -1,3 +1,4 @@
+import { expect, test, beforeEach } from 'vitest'
 import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {
@@ -15,7 +16,7 @@ beforeEach(() => {
   localStorage.clear()
 })
 
-async function renderEventTable(events: Event[] = [makeEvent()]) {
+async function renderEventTable(events: Event[] = [makeEvent()]): Promise<void> {
   const rootRoute = createRootRoute({
     component: () => <EventTable events={events} />,
   })

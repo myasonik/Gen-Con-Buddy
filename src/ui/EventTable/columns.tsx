@@ -255,8 +255,13 @@ export const COLUMNS: ColumnDef<Event>[] = [
   },
 ]
 
-export const SORT_FIELD_BY_COL_ID = new Map(COLUMNS.map((c) => [c.id!, c.meta?.sortField]))
+export const SORT_FIELD_BY_COL_ID = new Map(
+  COLUMNS.filter((c) => c.id !== undefined).map((c) => [c.id as string, c.meta?.sortField]),
+)
 
 export const COL_ID_BY_SORT_FIELD = new Map(
-  COLUMNS.filter((c) => c.meta?.sortField).map((c) => [c.meta!.sortField!, c.id!]),
+  COLUMNS.filter((c) => c.meta?.sortField && c.id !== undefined).map((c) => [
+    c.meta?.sortField as string,
+    c.id as string,
+  ]),
 )

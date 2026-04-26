@@ -1,3 +1,4 @@
+import { vi, describe, expect, it } from 'vitest'
 import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {
@@ -9,7 +10,7 @@ import {
 } from '@tanstack/react-router'
 import { Button } from './Button'
 
-async function renderWithRouter(ui: React.ReactNode) {
+async function renderWithRouter(ui: React.ReactNode): Promise<void> {
   const rootRoute = createRootRoute({ component: () => <>{ui}</> })
   const router = createRouter({
     routeTree: rootRoute,
@@ -21,7 +22,7 @@ async function renderWithRouter(ui: React.ReactNode) {
   })
 }
 
-describe('Button', () => {
+describe('button', () => {
   it('renders children', () => {
     render(<Button>Click me</Button>)
     expect(screen.getByRole('button', { name: 'Click me' })).toBeInTheDocument()
@@ -43,14 +44,14 @@ describe('Button', () => {
   })
 
   it('calls onClick when clicked', async () => {
-    const handleClick = vi.fn()
+    const handleClick = vi.fn<() => void>()
     render(<Button onClick={handleClick}>Click me</Button>)
     await userEvent.click(screen.getByRole('button'))
-    expect(handleClick).toHaveBeenCalledOnce()
+    expect(handleClick).toHaveBeenCalledTimes(1)
   })
 
   it('does not call onClick when disabled', async () => {
-    const handleClick = vi.fn()
+    const handleClick = vi.fn<() => void>()
     render(
       <Button disabled onClick={handleClick}>
         Disabled
@@ -63,7 +64,7 @@ describe('Button', () => {
   })
 })
 
-describe('Button render prop', () => {
+describe('button render prop', () => {
   it('renders as a link when given a Link render element', async () => {
     await renderWithRouter(<Button render={<Link to="/" />}>Back</Button>)
     expect(screen.getByRole('link', { name: 'Back' })).toBeInTheDocument()

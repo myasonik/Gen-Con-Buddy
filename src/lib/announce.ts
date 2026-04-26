@@ -6,14 +6,15 @@ const nodeId: Record<Priority, string> = {
 }
 
 let busy = false
-const queue: Array<{ message: string; priority: Priority }> = []
+const queue: { message: string; priority: Priority }[] = []
 
-function drainQueue() {
+function drainQueue(): void {
   if (queue.length === 0) {
     busy = false
     return
   }
   busy = true
+  // oxlint-disable-next-line typescript/no-non-null-assertion
   const { message, priority } = queue.shift()!
   const node = document.getElementById(nodeId[priority])
   if (!node) {
@@ -29,7 +30,9 @@ function drainQueue() {
 
 export function announce(message: string, priority: Priority = 'polite'): void {
   queue.push({ message, priority })
-  if (!busy) drainQueue()
+  if (!busy) {
+    drainQueue()
+  }
 }
 
 // Test-only: resets internal queue/busy state between test runs.
