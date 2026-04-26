@@ -1,0 +1,32 @@
+.status {
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-bark);
+}
+
+.panel {
+  padding: var(--space-2) 0;
+}
+
+.group {
+  margin-bottom: var(--space-3);
+}
+
+.group summary {
+  cursor: pointer;
+  padding: var(--space-2) var(--space-4);
+  font-weight: 600;
+  font-size: var(--text-label);
+  color: var(--color-ink);
+}
+
+.group::details-content {
+  height: 0;
+  overflow: hidden;
+  transition:
+    height var(--motion-expand),
+    content-visibility var(--motion-expand) allow-discrete;
+}
+
+.group[open]::details-content {
+  height: auto;
+}
