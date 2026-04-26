@@ -1,6 +1,10 @@
 import { http, HttpResponse } from "msw";
-import { makeEvent } from "./factory";
-import type { EventSearchResponse } from "../../utils/types";
+import type {
+  EventSearchResponse,
+  ListChangelogsResponse,
+  FetchChangelogResponse,
+} from "../../utils/types";
+import { makeEvent, makeChangelogSummary, makeChangelogEntry } from "./factory";
 
 export const handlers = [
   http.get("/api/events/search", () => {
@@ -16,6 +20,18 @@ export const handlers = [
       meta: { total: 2 },
       links: { self: "/api/events/search" },
       error: null,
+    };
+    return HttpResponse.json(response);
+  }),
+  http.get("/api/changelog/list", () => {
+    const response: ListChangelogsResponse = {
+      entries: [makeChangelogSummary({ id: "entry-1" })],
+    };
+    return HttpResponse.json(response);
+  }),
+  http.get("/api/changelog/fetch", () => {
+    const response: FetchChangelogResponse = {
+      entry: makeChangelogEntry({ id: "entry-1" }),
     };
     return HttpResponse.json(response);
   }),

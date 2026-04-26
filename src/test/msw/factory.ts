@@ -1,4 +1,8 @@
-import type { Event } from "../../utils/types";
+import type {
+  Event,
+  ChangelogSummary,
+  ChangelogEntry,
+} from "../../utils/types";
 
 let counter = 0;
 
@@ -49,4 +53,31 @@ export function makeEvent(overrides: Partial<Event["attributes"]> = {}): Event {
       ...overrides,
     },
   };
+}
+
+export function makeChangelogSummary(
+  overrides: Partial<ChangelogSummary> = {},
+): ChangelogSummary {
+  counter++;
+  return {
+    id: `entry-${counter}`,
+    date: "2026-04-25T12:00:00Z",
+    createdCount: 2,
+    updatedCount: 1,
+    deletedCount: 0,
+    ...overrides,
+  };
+}
+
+export function makeChangelogEntry(
+  overrides: Partial<ChangelogEntry> = {},
+): ChangelogEntry {
+  const base: ChangelogEntry = {
+    id: `entry-${counter}`,
+    date: "2026-04-25T12:00:00Z",
+    createdEvents: [makeEvent()],
+    updatedEvents: [],
+    deletedEvents: [],
+  };
+  return { ...base, ...overrides };
 }
