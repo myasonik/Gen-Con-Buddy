@@ -91,3 +91,21 @@
     display: block;
   }
 }
+
+.nav {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.nav a {
+  color: var(--color-gold);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--text-label);
+  text-decoration: none;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+}
