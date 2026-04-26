@@ -30,10 +30,7 @@ New component: `src/ui/EventTypeSelect/EventTypeSelect.tsx`
 `SearchForm` wires `EventTypeSelect` the same way it wires `ToggleTileGroup` for days:
 
 ```tsx
-<EventTypeSelect
-  value={eventType ?? ""}
-  onValueChange={(v) => setValue("eventType", v)}
-/>
+<EventTypeSelect value={eventType ?? ''} onValueChange={(v) => setValue('eventType', v)} />
 ```
 
 In `api.ts`, the existing eventType serialization is updated to handle multiple values: split the comma-separated codes, map each to its full label via `EVENT_TYPES[code]`, rejoin with commas, and set as a single `eventType` query param.

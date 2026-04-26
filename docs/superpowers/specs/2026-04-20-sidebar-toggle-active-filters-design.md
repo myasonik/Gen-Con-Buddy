@@ -29,7 +29,7 @@ The shell `<main>` receives a `data-sidebar-open` boolean attribute. CSS handles
 .shell {
   grid-template-columns: var(--size-sidebar) 1fr;
 }
-.shell[data-sidebar-open="false"] {
+.shell[data-sidebar-open='false'] {
   grid-template-columns: 0 1fr;
 }
 ```
@@ -51,9 +51,7 @@ Located at `src/ui/ActiveFilters/getActiveFilters.ts`.
 Signature:
 
 ```ts
-function getActiveFilters(
-  params: SearchParams,
-): { key: keyof SearchParams; label: string }[];
+function getActiveFilters(params: SearchParams): { key: keyof SearchParams; label: string }[]
 ```
 
 Maps each non-empty `SearchParams` key to a human-readable label. Uses existing enum maps (`EVENT_TYPES`, `AGE_GROUPS`, `EXP`, `REGISTRATION`, `CATEGORY`) for display values. Examples:
@@ -76,8 +74,8 @@ Props:
 
 ```ts
 interface ActiveFiltersProps {
-  searchParams: SearchParams;
-  onRemove: (key: keyof SearchParams) => void;
+  searchParams: SearchParams
+  onRemove: (key: keyof SearchParams) => void
 }
 ```
 
@@ -89,8 +87,8 @@ Renders nothing when `getActiveFilters(searchParams)` returns an empty array. Ot
 
 ```ts
 const handleRemoveFilter = (key: keyof SearchParams) => {
-  void navigate({ search: (prev) => ({ ...prev, [key]: undefined }) });
-};
+  void navigate({ search: (prev) => ({ ...prev, [key]: undefined }) })
+}
 ```
 
 `<ActiveFilters>` is placed at the top of the `.results` column, above `<SearchResults>`.

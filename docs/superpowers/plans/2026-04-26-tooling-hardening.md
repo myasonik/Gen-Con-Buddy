@@ -292,27 +292,27 @@
   ```tsx
   // Before
   export function MyComponent({ name }: Props) {
-    return <div>{name}</div>;
+    return <div>{name}</div>
   }
 
   // After
   export function MyComponent({ name }: Props): JSX.Element {
-    return <div>{name}</div>;
+    return <div>{name}</div>
   }
   ```
 
   ```ts
   // Before
   const fetchData = async (id: string) => {
-    const res = await api.get(id);
-    return res.data;
-  };
+    const res = await api.get(id)
+    return res.data
+  }
 
   // After
   const fetchData = async (id: string): Promise<Data> => {
-    const res = await api.get(id);
-    return res.data;
-  };
+    const res = await api.get(id)
+    return res.data
+  }
   ```
 
   For React components, use `JSX.Element` (single element), `React.ReactNode` (anything renderable), or `null`.
@@ -325,16 +325,16 @@
 
   ```ts
   // Before
-  import { Event, SearchParams } from "../utils/types";
+  import { Event, SearchParams } from '../utils/types'
 
   // After
-  import type { Event, SearchParams } from "../utils/types";
+  import type { Event, SearchParams } from '../utils/types'
   ```
 
   If an import mixes values and types, use inline `type` for the type-only members:
 
   ```ts
-  import { someFunction, type SomeType } from "./module";
+  import { someFunction, type SomeType } from './module'
   ```
 
 - [ ] **Step 7: Fix `typescript/no-explicit-any` violations**
@@ -355,11 +355,11 @@
 
   ```ts
   // Before
-  const value = map.get(key)!;
+  const value = map.get(key)!
 
   // After
-  const value = map.get(key);
-  if (!value) throw new Error(`Missing key: ${key}`);
+  const value = map.get(key)
+  if (!value) throw new Error(`Missing key: ${key}`)
   ```
 
   Exception: `announce.ts` already has a `!` that may need a targeted oxlint-disable comment if the null case is genuinely impossible. Check each case.
@@ -384,13 +384,13 @@
 
   ```ts
   // Before
-  someAsyncFunction();
+  someAsyncFunction()
 
   // After — if you need the result
-  await someAsyncFunction();
+  await someAsyncFunction()
 
   // After — if you explicitly don't care about the result
-  void someAsyncFunction();
+  void someAsyncFunction()
   ```
 
   In React event handlers that are themselves synchronous, use `void`:

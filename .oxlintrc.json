@@ -10,9 +10,5 @@
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn"
   },
-  "ignorePatterns": [
-    "dist",
-    "public/mockServiceWorker.js",
-    "src/routeTree.gen.ts"
-  ]
+  "ignorePatterns": ["dist", "public/mockServiceWorker.js", "src/routeTree.gen.ts"]
 }

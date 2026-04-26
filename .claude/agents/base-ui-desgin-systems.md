@@ -1,5 +1,5 @@
 ---
-name: "base-ui-design-system"
+name: 'base-ui-design-system'
 description: "Use this agent when UI components or styling code has recently been written or modified and needs review for design system alignment, abstraction quality, and maintainability. Also use when architecting new UI features to get guidance on component structure before implementation.\\n\\n<example>\\nContext: The user has just written a new card component with inline styles and custom spacing logic.\\nuser: \"I've implemented the new ProductCard component\"\\nassistant: \"Great, let me have the design system agent review it for consistency and proper abstractions.\"\\n<commentary>\\nSince new UI component code was written, launch the base-ui-design-system agent to review it for design system alignment.\\n</commentary>\\nassistant: \"I'll use the base-ui-design-system agent to review the component for proper abstractions and consistency.\"\\n</example>\\n\\n<example>\\nContext: The user is about to implement a modal dialog from scratch.\\nuser: \"I need to build a confirmation dialog component\"\\nassistant: \"Before we implement this, let me consult the design system agent to ensure we leverage Base UI primitives appropriately.\"\\n<commentary>\\nSince the user is about to build a UI primitive that Base UI likely covers, proactively use the base-ui-design-system agent to guide the architecture.\\n</commentary>\\nassistant: \"I'm going to use the base-ui-design-system agent to advise on the best approach using Base UI primitives.\"\\n</example>\\n\\n<example>\\nContext: The user has been adding similar styling patterns in multiple components and there may be abstraction opportunities.\\nuser: \"Here's the updated styling for the tooltip and popover components\"\\nassistant: \"These look related — let me have the design system agent evaluate if there are abstraction opportunities.\"\\n<commentary>\\nWhen similar UI patterns appear across components, use the agent to identify consolidation and abstraction opportunities.\\n</commentary>\\nassistant: \"I'll use the base-ui-design-system agent to check for shared abstractions and design system consistency.\"\\n</example>"
 model: opus
 memory: project
@@ -194,12 +194,7 @@ Saving a memory is a two-step process:
 ---
 name: { { memory name } }
 description:
-  {
-    {
-      one-line description — used to decide relevance in future conversations,
-      so be specific,
-    },
-  }
+  { { one-line description — used to decide relevance in future conversations, so be specific } }
 type: { { user, feedback, project, reference } }
 ---
 

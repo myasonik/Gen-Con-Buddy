@@ -96,72 +96,65 @@ git commit -m "chore: add @base-ui-components/react; allow headless primitives i
 Replace the entire contents of `src/ui/Toggletip/Toggletip.test.tsx`:
 
 ```tsx
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { Toggletip } from "./Toggletip";
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Toggletip } from './Toggletip'
 
-describe("Toggletip", () => {
-  it("renders a ? button with the given aria-label", () => {
-    render(
-      <Toggletip
-        label="Why are day filters disabled?"
-        message="Because reasons"
-      />,
-    );
+describe('Toggletip', () => {
+  it('renders a ? button with the given aria-label', () => {
+    render(<Toggletip label="Why are day filters disabled?" message="Because reasons" />)
     expect(
-      screen.getByRole("button", { name: "Why are day filters disabled?" }),
-    ).toBeInTheDocument();
-  });
+      screen.getByRole('button', { name: 'Why are day filters disabled?' }),
+    ).toBeInTheDocument()
+  })
 
-  it("does not show tooltip initially", () => {
-    render(<Toggletip label="Why?" message="Because" />);
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
-  });
+  it('does not show tooltip initially', () => {
+    render(<Toggletip label="Why?" message="Because" />)
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
 
-  it("shows tooltip content when button is clicked", async () => {
-    render(<Toggletip label="Why?" message="Clear the day checkboxes" />);
-    await userEvent.click(screen.getByRole("button", { name: "Why?" }));
-    expect(screen.getByRole("tooltip")).toHaveTextContent(
-      "Clear the day checkboxes",
-    );
-  });
+  it('shows tooltip content when button is clicked', async () => {
+    render(<Toggletip label="Why?" message="Clear the day checkboxes" />)
+    await userEvent.click(screen.getByRole('button', { name: 'Why?' }))
+    expect(screen.getByRole('tooltip')).toHaveTextContent('Clear the day checkboxes')
+  })
 
-  it("hides tooltip when button is clicked a second time", async () => {
-    render(<Toggletip label="Why?" message="Because" />);
-    const btn = screen.getByRole("button", { name: "Why?" });
-    await userEvent.click(btn);
-    await userEvent.click(btn);
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
-  });
+  it('hides tooltip when button is clicked a second time', async () => {
+    render(<Toggletip label="Why?" message="Because" />)
+    const btn = screen.getByRole('button', { name: 'Why?' })
+    await userEvent.click(btn)
+    await userEvent.click(btn)
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
 
-  it("hides tooltip on Escape key", async () => {
-    render(<Toggletip label="Why?" message="Because" />);
-    await userEvent.click(screen.getByRole("button", { name: "Why?" }));
-    await userEvent.keyboard("{Escape}");
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
-  });
+  it('hides tooltip on Escape key', async () => {
+    render(<Toggletip label="Why?" message="Because" />)
+    await userEvent.click(screen.getByRole('button', { name: 'Why?' }))
+    await userEvent.keyboard('{Escape}')
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
 
-  it("hides tooltip when clicking outside", async () => {
+  it('hides tooltip when clicking outside', async () => {
     render(
       <div>
         <Toggletip label="Why?" message="Because" />
         <button type="button">Outside</button>
       </div>,
-    );
-    await userEvent.click(screen.getByRole("button", { name: "Why?" }));
-    expect(screen.getByRole("tooltip")).toBeInTheDocument();
-    await userEvent.click(screen.getByRole("button", { name: "Outside" }));
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
-  });
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Why?' }))
+    expect(screen.getByRole('tooltip')).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Outside' }))
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
 
-  it("sets aria-expanded on trigger when open", async () => {
-    render(<Toggletip label="Why?" message="Because" />);
-    const btn = screen.getByRole("button", { name: "Why?" });
-    expect(btn).toHaveAttribute("aria-expanded", "false");
-    await userEvent.click(btn);
-    expect(btn).toHaveAttribute("aria-expanded", "true");
-  });
-});
+  it('sets aria-expanded on trigger when open', async () => {
+    render(<Toggletip label="Why?" message="Because" />)
+    const btn = screen.getByRole('button', { name: 'Why?' })
+    expect(btn).toHaveAttribute('aria-expanded', 'false')
+    await userEvent.click(btn)
+    expect(btn).toHaveAttribute('aria-expanded', 'true')
+  })
+})
 ```
 
 - [ ] **Step 2: Run tests to confirm failures**
@@ -174,12 +167,12 @@ Expected: FAIL — "hides tooltip when clicking outside" and "sets aria-expanded
 Replace the entire contents of `src/ui/Toggletip/Toggletip.tsx`:
 
 ```tsx
-import { Popover } from "@base-ui-components/react/popover";
-import styles from "./Toggletip.module.css";
+import { Popover } from '@base-ui-components/react/popover'
+import styles from './Toggletip.module.css'
 
 interface ToggletipProps {
-  label: string;
-  message: string;
+  label: string
+  message: string
 }
 
 export function Toggletip({ label, message }: ToggletipProps) {
@@ -190,16 +183,13 @@ export function Toggletip({ label, message }: ToggletipProps) {
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner sideOffset={4}>
-          <Popover.Popup
-            render={<span role="tooltip" />}
-            className={styles.tooltip}
-          >
+          <Popover.Popup render={<span role="tooltip" />} className={styles.tooltip}>
             {message}
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>
     </Popover.Root>
-  );
+  )
 }
 ```
 
@@ -275,111 +265,99 @@ git commit -m "feat(Toggletip): migrate to Base UI Popover — portaled, positio
 Replace the entire contents of `src/ui/ToggleTile/ToggleTile.test.tsx`:
 
 ```tsx
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { ToggleTile, ToggleTileGroup } from "./ToggleTile";
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { ToggleTile, ToggleTileGroup } from './ToggleTile'
 
-describe("ToggleTile", () => {
-  it("renders as a button with the given label", () => {
-    render(<ToggleTile>Wed</ToggleTile>);
-    expect(screen.getByRole("button", { name: "Wed" })).toBeInTheDocument();
-  });
+describe('ToggleTile', () => {
+  it('renders as a button with the given label', () => {
+    render(<ToggleTile>Wed</ToggleTile>)
+    expect(screen.getByRole('button', { name: 'Wed' })).toBeInTheDocument()
+  })
 
   it("has aria-pressed='false' by default", () => {
-    render(<ToggleTile>Thu</ToggleTile>);
-    expect(screen.getByRole("button", { name: "Thu" })).toHaveAttribute(
-      "aria-pressed",
-      "false",
-    );
-  });
+    render(<ToggleTile>Thu</ToggleTile>)
+    expect(screen.getByRole('button', { name: 'Thu' })).toHaveAttribute('aria-pressed', 'false')
+  })
 
   it("has aria-pressed='true' when pressed", () => {
-    render(<ToggleTile pressed>Fri</ToggleTile>);
-    expect(screen.getByRole("button", { name: "Fri" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-  });
+    render(<ToggleTile pressed>Fri</ToggleTile>)
+    expect(screen.getByRole('button', { name: 'Fri' })).toHaveAttribute('aria-pressed', 'true')
+  })
 
-  it("is disabled when disabled prop is set", () => {
-    render(<ToggleTile disabled>Sat</ToggleTile>);
-    expect(screen.getByRole("button", { name: "Sat" })).toBeDisabled();
-  });
+  it('is disabled when disabled prop is set', () => {
+    render(<ToggleTile disabled>Sat</ToggleTile>)
+    expect(screen.getByRole('button', { name: 'Sat' })).toBeDisabled()
+  })
 
-  it("calls onPressedChange when clicked", async () => {
-    const handleChange = vi.fn();
-    render(<ToggleTile onPressedChange={handleChange}>Sun</ToggleTile>);
-    await userEvent.click(screen.getByRole("button", { name: "Sun" }));
-    expect(handleChange).toHaveBeenCalledOnce();
-  });
+  it('calls onPressedChange when clicked', async () => {
+    const handleChange = vi.fn()
+    render(<ToggleTile onPressedChange={handleChange}>Sun</ToggleTile>)
+    await userEvent.click(screen.getByRole('button', { name: 'Sun' }))
+    expect(handleChange).toHaveBeenCalledOnce()
+  })
 
-  it("does not call onPressedChange when disabled", async () => {
-    const handleChange = vi.fn();
+  it('does not call onPressedChange when disabled', async () => {
+    const handleChange = vi.fn()
     render(
       <ToggleTile disabled onPressedChange={handleChange}>
         Wed
       </ToggleTile>,
-    );
-    await userEvent.click(screen.getByRole("button", { name: "Wed" }), {
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Wed' }), {
       pointerEventsCheck: 0,
-    });
-    expect(handleChange).not.toHaveBeenCalled();
-  });
-});
+    })
+    expect(handleChange).not.toHaveBeenCalled()
+  })
+})
 
-describe("ToggleTileGroup", () => {
-  it("marks pressed tiles via value prop", () => {
+describe('ToggleTileGroup', () => {
+  it('marks pressed tiles via value prop', () => {
     render(
-      <ToggleTileGroup value={["wed"]} onValueChange={() => {}}>
+      <ToggleTileGroup value={['wed']} onValueChange={() => {}}>
         <ToggleTile value="wed">Wed</ToggleTile>
         <ToggleTile value="thu">Thu</ToggleTile>
       </ToggleTileGroup>,
-    );
-    expect(screen.getByRole("button", { name: "Wed" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-    expect(screen.getByRole("button", { name: "Thu" })).toHaveAttribute(
-      "aria-pressed",
-      "false",
-    );
-  });
+    )
+    expect(screen.getByRole('button', { name: 'Wed' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('button', { name: 'Thu' })).toHaveAttribute('aria-pressed', 'false')
+  })
 
-  it("calls onValueChange when a tile is clicked", async () => {
-    const handleChange = vi.fn();
+  it('calls onValueChange when a tile is clicked', async () => {
+    const handleChange = vi.fn()
     render(
       <ToggleTileGroup value={[]} onValueChange={handleChange}>
         <ToggleTile value="wed">Wed</ToggleTile>
       </ToggleTileGroup>,
-    );
-    await userEvent.click(screen.getByRole("button", { name: "Wed" }));
-    expect(handleChange).toHaveBeenCalledOnce();
-  });
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Wed' }))
+    expect(handleChange).toHaveBeenCalledOnce()
+  })
 
-  it("navigates between tiles with arrow keys", async () => {
+  it('navigates between tiles with arrow keys', async () => {
     render(
       <ToggleTileGroup value={[]} onValueChange={() => {}}>
         <ToggleTile value="wed">Wed</ToggleTile>
         <ToggleTile value="thu">Thu</ToggleTile>
         <ToggleTile value="fri">Fri</ToggleTile>
       </ToggleTileGroup>,
-    );
-    screen.getByRole("button", { name: "Wed" }).focus();
-    await userEvent.keyboard("{ArrowRight}");
-    expect(screen.getByRole("button", { name: "Thu" })).toHaveFocus();
-  });
+    )
+    screen.getByRole('button', { name: 'Wed' }).focus()
+    await userEvent.keyboard('{ArrowRight}')
+    expect(screen.getByRole('button', { name: 'Thu' })).toHaveFocus()
+  })
 
-  it("disables all tiles when group is disabled", () => {
+  it('disables all tiles when group is disabled', () => {
     render(
       <ToggleTileGroup value={[]} onValueChange={() => {}} disabled>
         <ToggleTile value="wed">Wed</ToggleTile>
         <ToggleTile value="thu">Thu</ToggleTile>
       </ToggleTileGroup>,
-    );
-    expect(screen.getByRole("button", { name: "Wed" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "Thu" })).toBeDisabled();
-  });
-});
+    )
+    expect(screen.getByRole('button', { name: 'Wed' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Thu' })).toBeDisabled()
+  })
+})
 ```
 
 - [ ] **Step 2: Run tests to confirm failures**
@@ -392,24 +370,25 @@ Expected: FAIL — `ToggleTileGroup` is not exported, `pressed` prop doesn't exi
 Replace the entire contents of `src/ui/ToggleTile/ToggleTile.tsx`:
 
 ```tsx
-import React from "react";
-import { Toggle } from "@base-ui-components/react/toggle";
-import { ToggleGroup } from "@base-ui-components/react/toggle-group";
-import styles from "./ToggleTile.module.css";
+import React from 'react'
+import { Toggle } from '@base-ui-components/react/toggle'
+import { ToggleGroup } from '@base-ui-components/react/toggle-group'
+import styles from './ToggleTile.module.css'
 
 export interface ToggleTileProps extends Toggle.Root.Props {}
 
-export const ToggleTile = React.forwardRef<HTMLButtonElement, ToggleTileProps>(
-  function ToggleTile({ className, ...props }, ref) {
-    return (
-      <Toggle.Root
-        ref={ref}
-        className={[styles.tile, className].filter(Boolean).join(" ")}
-        {...props}
-      />
-    );
-  },
-);
+export const ToggleTile = React.forwardRef<HTMLButtonElement, ToggleTileProps>(function ToggleTile(
+  { className, ...props },
+  ref,
+) {
+  return (
+    <Toggle.Root
+      ref={ref}
+      className={[styles.tile, className].filter(Boolean).join(' ')}
+      {...props}
+    />
+  )
+})
 
 export interface ToggleTileGroupProps extends ToggleGroup.Root.Props {}
 
@@ -417,10 +396,10 @@ export function ToggleTileGroup({ className, ...props }: ToggleTileGroupProps) {
   return (
     <ToggleGroup.Root
       toggleMultiple
-      className={[styles.group, className].filter(Boolean).join(" ")}
+      className={[styles.group, className].filter(Boolean).join(' ')}
       {...props}
     />
-  );
+  )
 }
 ```
 
@@ -497,13 +476,13 @@ Read `src/components/SearchForm/SearchForm.tsx`. Make these changes:
 1. Add `ToggleTileGroup` to the ToggleTile import:
 
 ```tsx
-import { ToggleTile, ToggleTileGroup } from "../../ui/ToggleTile/ToggleTile";
+import { ToggleTile, ToggleTileGroup } from '../../ui/ToggleTile/ToggleTile'
 ```
 
 2. Remove the `selectedDays` Set and `handleDayChange` function. The `days` watch stays:
 
 ```tsx
-const days = watch("days") ?? "";
+const days = watch('days') ?? ''
 // Remove: const selectedDays = new Set(days ? days.split(",") : []);
 // Remove: const handleDayChange = (key: string, checked: boolean) => { ... };
 ```
@@ -512,10 +491,8 @@ const days = watch("days") ?? "";
 
 ```tsx
 <ToggleTileGroup
-  value={days ? days.split(",") : []}
-  onValueChange={(v) =>
-    setValue("days", DAY_KEYS.filter((d) => v.includes(d)).join(","))
-  }
+  value={days ? days.split(',') : []}
+  onValueChange={(v) => setValue('days', DAY_KEYS.filter((d) => v.includes(d)).join(','))}
   disabled={daysDisabled}
   className={styles.dayTiles}
 >
@@ -560,21 +537,17 @@ git commit -m "feat(ToggleTile): migrate to Base UI Toggle + ToggleTileGroup wit
 Replace the `describe("LinkButton", ...)` block at the bottom of `src/ui/Button/Button.test.tsx` with:
 
 ```tsx
-describe("Button render prop", () => {
-  it("renders as a link when given a Link render element", async () => {
-    await renderWithRouter(<Button render={<Link to="/" />}>Back</Button>);
-    expect(screen.getByRole("link", { name: "Back" })).toBeInTheDocument();
-  });
+describe('Button render prop', () => {
+  it('renders as a link when given a Link render element', async () => {
+    await renderWithRouter(<Button render={<Link to="/" />}>Back</Button>)
+    expect(screen.getByRole('link', { name: 'Back' })).toBeInTheDocument()
+  })
 
-  it("navigates to the given route via render prop", async () => {
-    await renderWithRouter(
-      <Button render={<Link to="/" />}>Back to results</Button>,
-    );
-    expect(
-      screen.getByRole("link", { name: "Back to results" }),
-    ).toHaveAttribute("href", "/");
-  });
-});
+  it('navigates to the given route via render prop', async () => {
+    await renderWithRouter(<Button render={<Link to="/" />}>Back to results</Button>)
+    expect(screen.getByRole('link', { name: 'Back to results' })).toHaveAttribute('href', '/')
+  })
+})
 ```
 
 Also add `Link` to the import at the top of the test file (it may already be imported via the `renderWithRouter` setup — check the file):
@@ -586,7 +559,7 @@ import {
   createRouter,
   RouterProvider,
   createMemoryHistory,
-} from "@tanstack/react-router";
+} from '@tanstack/react-router'
 ```
 
 - [ ] **Step 2: Run tests to confirm failure**
@@ -599,31 +572,30 @@ Expected: FAIL — "renders as a link when given a Link render element" fails be
 Replace the entire contents of `src/ui/Button/Button.tsx`:
 
 ```tsx
-import React from "react";
-import { Button as BaseButton } from "@base-ui-components/react/button";
-import type { ButtonProps as BaseButtonProps } from "@base-ui-components/react/button";
-import styles from "./Button.module.css";
+import React from 'react'
+import { Button as BaseButton } from '@base-ui-components/react/button'
+import type { ButtonProps as BaseButtonProps } from '@base-ui-components/react/button'
+import styles from './Button.module.css'
 
-export const BUTTON_VARIANTS = ["primary", "secondary"] as const;
-export type ButtonVariant = (typeof BUTTON_VARIANTS)[number];
+export const BUTTON_VARIANTS = ['primary', 'secondary'] as const
+export type ButtonVariant = (typeof BUTTON_VARIANTS)[number]
 
 interface ButtonProps extends BaseButtonProps {
-  variant?: ButtonVariant;
+  variant?: ButtonVariant
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  function Button({ variant = "primary", className, ...props }, ref) {
-    return (
-      <BaseButton
-        ref={ref}
-        className={[styles.button, styles[variant], className]
-          .filter(Boolean)
-          .join(" ")}
-        {...props}
-      />
-    );
-  },
-);
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  { variant = 'primary', className, ...props },
+  ref,
+) {
+  return (
+    <BaseButton
+      ref={ref}
+      className={[styles.button, styles[variant], className].filter(Boolean).join(' ')}
+      {...props}
+    />
+  )
+})
 ```
 
 `LinkButton` is deleted — use `<Button render={<Link to="..." />}>` instead.
@@ -631,7 +603,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Note on types: `BaseButtonProps` is the props type from `@base-ui-components/react/button`. It includes the `render` prop. If the package doesn't export `ButtonProps` directly, use the alternative:
 
 ```tsx
-import { Button as BaseButton } from "@base-ui-components/react/button";
+import { Button as BaseButton } from '@base-ui-components/react/button'
 // Use ComponentPropsWithRef<typeof BaseButton> if ButtonProps is not exported
 ```
 
@@ -644,14 +616,14 @@ Read `src/components/EventDetail/EventDetail.tsx`. Find the `LinkButton` import 
 Replace:
 
 ```tsx
-import { LinkButton } from "../../ui/Button/Button";
+import { LinkButton } from '../../ui/Button/Button'
 ```
 
 With (add `Link` import if not present):
 
 ```tsx
-import { Button } from "../../ui/Button/Button";
-import { Link } from "@tanstack/react-router";
+import { Button } from '../../ui/Button/Button'
+import { Link } from '@tanstack/react-router'
 ```
 
 Replace the `<LinkButton>` usage:
@@ -665,11 +637,7 @@ Replace the `<LinkButton>` usage:
 With:
 
 ```tsx
-<Button
-  render={<Link to="/" />}
-  variant="secondary"
-  className={styles.backLink}
->
+<Button render={<Link to="/" />} variant="secondary" className={styles.backLink}>
   ◀ Back to results
 </Button>
 ```
@@ -707,116 +675,102 @@ git commit -m "feat(Button): use Base UI render prop for polymorphism; delete Li
 Replace the entire contents of `src/ui/PixelState/PixelState.test.tsx`:
 
 ```tsx
-import { render, screen, waitFor } from "@testing-library/react";
-import { PixelState } from "./PixelState";
-import { __reset } from "../../lib/announce";
+import { render, screen, waitFor } from '@testing-library/react'
+import { PixelState } from './PixelState'
+import { __reset } from '../../lib/announce'
 
 function setupLiveRegions() {
-  const polite = document.createElement("div");
-  polite.id = "live-polite";
-  polite.setAttribute("aria-live", "polite");
-  document.body.appendChild(polite);
+  const polite = document.createElement('div')
+  polite.id = 'live-polite'
+  polite.setAttribute('aria-live', 'polite')
+  document.body.appendChild(polite)
 
-  const assertive = document.createElement("div");
-  assertive.id = "live-assertive";
-  assertive.setAttribute("aria-live", "assertive");
-  document.body.appendChild(assertive);
+  const assertive = document.createElement('div')
+  assertive.id = 'live-assertive'
+  assertive.setAttribute('aria-live', 'assertive')
+  document.body.appendChild(assertive)
 
   return () => {
-    polite.remove();
-    assertive.remove();
-  };
+    polite.remove()
+    assertive.remove()
+  }
 }
 
 afterEach(() => {
-  __reset();
-});
+  __reset()
+})
 
-describe("PixelState", () => {
-  it("renders loading text for loading variant", () => {
-    render(<PixelState variant="loading" text="LOADING QUESTS..." />);
-    expect(screen.getByText("LOADING QUESTS...")).toBeInTheDocument();
-  });
+describe('PixelState', () => {
+  it('renders loading text for loading variant', () => {
+    render(<PixelState variant="loading" text="LOADING QUESTS..." />)
+    expect(screen.getByText('LOADING QUESTS...')).toBeInTheDocument()
+  })
 
-  it("does not show die icon for loading variant", () => {
-    render(<PixelState variant="loading" text="LOADING QUESTS..." />);
-    expect(screen.queryByText("⚄")).not.toBeInTheDocument();
-  });
+  it('does not show die icon for loading variant', () => {
+    render(<PixelState variant="loading" text="LOADING QUESTS..." />)
+    expect(screen.queryByText('⚄')).not.toBeInTheDocument()
+  })
 
-  it("renders die icon and text for empty variant", () => {
+  it('renders die icon and text for empty variant', () => {
     render(
-      <PixelState
-        variant="empty"
-        text="NO QUESTS FOUND"
-        subtext="Try broadening your search."
-      />,
-    );
-    expect(screen.getByText("NO QUESTS FOUND")).toBeInTheDocument();
-    expect(screen.getByText("Try broadening your search.")).toBeInTheDocument();
-    expect(screen.getByText("⚄")).toBeInTheDocument();
-  });
+      <PixelState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />,
+    )
+    expect(screen.getByText('NO QUESTS FOUND')).toBeInTheDocument()
+    expect(screen.getByText('Try broadening your search.')).toBeInTheDocument()
+    expect(screen.getByText('⚄')).toBeInTheDocument()
+  })
 
-  it("renders error text and subtext for error variant", () => {
+  it('renders error text and subtext for error variant', () => {
     render(
       <PixelState
         variant="error"
         text="QUEST FAILED"
         subtext="Unable to load events. Please try again."
       />,
-    );
-    expect(screen.getByText("QUEST FAILED")).toBeInTheDocument();
-    expect(
-      screen.getByText("Unable to load events. Please try again."),
-    ).toBeInTheDocument();
-  });
+    )
+    expect(screen.getByText('QUEST FAILED')).toBeInTheDocument()
+    expect(screen.getByText('Unable to load events. Please try again.')).toBeInTheDocument()
+  })
 
-  it("shows a progress bar for the loading variant", () => {
-    render(<PixelState variant="loading" text="Loading..." />);
-    expect(screen.getByTestId("progress-bar")).toBeInTheDocument();
-  });
+  it('shows a progress bar for the loading variant', () => {
+    render(<PixelState variant="loading" text="Loading..." />)
+    expect(screen.getByTestId('progress-bar')).toBeInTheDocument()
+  })
 
-  it("does not show subtext element when subtext not provided", () => {
-    const { rerender } = render(
-      <PixelState variant="loading" text="LOADING..." subtext="hint" />,
-    );
-    expect(screen.getByText("hint")).toBeInTheDocument();
-    rerender(<PixelState variant="loading" text="LOADING..." />);
-    expect(screen.queryByText("hint")).not.toBeInTheDocument();
-  });
+  it('does not show subtext element when subtext not provided', () => {
+    const { rerender } = render(<PixelState variant="loading" text="LOADING..." subtext="hint" />)
+    expect(screen.getByText('hint')).toBeInTheDocument()
+    rerender(<PixelState variant="loading" text="LOADING..." />)
+    expect(screen.queryByText('hint')).not.toBeInTheDocument()
+  })
 
-  it("announces loading text politely", async () => {
-    const cleanup = setupLiveRegions();
-    render(<PixelState variant="loading" text="LOADING QUESTS..." />);
+  it('announces loading text politely', async () => {
+    const cleanup = setupLiveRegions()
+    render(<PixelState variant="loading" text="LOADING QUESTS..." />)
     await waitFor(() => {
-      expect(document.getElementById("live-polite")?.textContent).toBe(
-        "LOADING QUESTS...",
-      );
-    });
-    cleanup();
-  });
+      expect(document.getElementById('live-polite')?.textContent).toBe('LOADING QUESTS...')
+    })
+    cleanup()
+  })
 
-  it("announces error text assertively", async () => {
-    const cleanup = setupLiveRegions();
-    render(<PixelState variant="error" text="QUEST FAILED" />);
+  it('announces error text assertively', async () => {
+    const cleanup = setupLiveRegions()
+    render(<PixelState variant="error" text="QUEST FAILED" />)
     await waitFor(() => {
-      expect(document.getElementById("live-assertive")?.textContent).toBe(
-        "QUEST FAILED",
-      );
-    });
-    cleanup();
-  });
+      expect(document.getElementById('live-assertive')?.textContent).toBe('QUEST FAILED')
+    })
+    cleanup()
+  })
 
-  it("announces empty text politely", async () => {
-    const cleanup = setupLiveRegions();
-    render(<PixelState variant="empty" text="NO QUESTS FOUND" />);
+  it('announces empty text politely', async () => {
+    const cleanup = setupLiveRegions()
+    render(<PixelState variant="empty" text="NO QUESTS FOUND" />)
     await waitFor(() => {
-      expect(document.getElementById("live-polite")?.textContent).toBe(
-        "NO QUESTS FOUND",
-      );
-    });
-    cleanup();
-  });
-});
+      expect(document.getElementById('live-polite')?.textContent).toBe('NO QUESTS FOUND')
+    })
+    cleanup()
+  })
+})
 ```
 
 - [ ] **Step 2: Run tests to confirm failures**
@@ -829,34 +783,34 @@ Expected: FAIL — the three announcement tests fail because `PixelState` doesn'
 Replace the entire contents of `src/ui/PixelState/PixelState.tsx`:
 
 ```tsx
-import { useEffect } from "react";
-import { announce } from "../../lib/announce";
-import styles from "./PixelState.module.css";
+import { useEffect } from 'react'
+import { announce } from '../../lib/announce'
+import styles from './PixelState.module.css'
 
 interface PixelStateProps {
-  variant: "loading" | "empty" | "error";
-  text: string;
-  subtext?: string;
+  variant: 'loading' | 'empty' | 'error'
+  text: string
+  subtext?: string
 }
 
 export function PixelState({ variant, text, subtext }: PixelStateProps) {
   useEffect(() => {
-    announce(text, variant === "error" ? "assertive" : "polite");
-  }, [variant, text]);
+    announce(text, variant === 'error' ? 'assertive' : 'polite')
+  }, [variant, text])
 
   return (
     <div className={styles.state}>
-      {variant === "loading" && (
+      {variant === 'loading' && (
         <div className={styles.progressBar} data-testid="progress-bar">
           <div className={styles.progressFill} />
         </div>
       )}
-      {variant === "empty" && (
+      {variant === 'empty' && (
         <div className={styles.die} aria-hidden="true">
           ⚄
         </div>
       )}
-      {variant === "error" && (
+      {variant === 'error' && (
         <div className={styles.die} aria-hidden="true">
           ✗
         </div>
@@ -864,7 +818,7 @@ export function PixelState({ variant, text, subtext }: PixelStateProps) {
       <p className={styles.text}>{text}</p>
       {subtext && <p className={styles.subtext}>{subtext}</p>}
     </div>
-  );
+  )
 }
 ```
 
@@ -903,47 +857,47 @@ In `src/ui/Badge/Badge.test.tsx`, find and replace the BoolBadge tests to assert
 Replace the entire `describe("BoolBadge", ...)` block:
 
 ```tsx
-describe("BoolBadge", () => {
-  it("shows ✓ glyph for true", () => {
-    render(<BoolBadge value={true} />);
-    expect(screen.getByText("✓")).toBeInTheDocument();
-  });
+describe('BoolBadge', () => {
+  it('shows ✓ glyph for true', () => {
+    render(<BoolBadge value={true} />)
+    expect(screen.getByText('✓')).toBeInTheDocument()
+  })
 
   it("shows sr-only 'yes' for true", () => {
-    render(<BoolBadge value={true} />);
-    expect(screen.getByText("yes")).toBeInTheDocument();
-  });
+    render(<BoolBadge value={true} />)
+    expect(screen.getByText('yes')).toBeInTheDocument()
+  })
 
   it("shows ✓ for 'yes' string (case-insensitive)", () => {
-    render(<BoolBadge value="yes" />);
-    expect(screen.getByText("✓")).toBeInTheDocument();
-  });
+    render(<BoolBadge value="yes" />)
+    expect(screen.getByText('✓')).toBeInTheDocument()
+  })
 
   it("shows ✓ for 'Yes' (capitalized)", () => {
-    render(<BoolBadge value="Yes" />);
-    expect(screen.getByText("✓")).toBeInTheDocument();
-  });
+    render(<BoolBadge value="Yes" />)
+    expect(screen.getByText('✓')).toBeInTheDocument()
+  })
 
-  it("shows — glyph for false", () => {
-    render(<BoolBadge value={false} />);
-    expect(screen.getByText("—")).toBeInTheDocument();
-  });
+  it('shows — glyph for false', () => {
+    render(<BoolBadge value={false} />)
+    expect(screen.getByText('—')).toBeInTheDocument()
+  })
 
   it("shows sr-only 'no' for false", () => {
-    render(<BoolBadge value={false} />);
-    expect(screen.getByText("no")).toBeInTheDocument();
-  });
+    render(<BoolBadge value={false} />)
+    expect(screen.getByText('no')).toBeInTheDocument()
+  })
 
   it("shows — for 'no' string", () => {
-    render(<BoolBadge value="no" />);
-    expect(screen.getByText("—")).toBeInTheDocument();
-  });
+    render(<BoolBadge value="no" />)
+    expect(screen.getByText('—')).toBeInTheDocument()
+  })
 
-  it("shows — for empty string", () => {
-    render(<BoolBadge value="" />);
-    expect(screen.getByText("—")).toBeInTheDocument();
-  });
-});
+  it('shows — for empty string', () => {
+    render(<BoolBadge value="" />)
+    expect(screen.getByText('—')).toBeInTheDocument()
+  })
+})
 ```
 
 - [ ] **Step 2: Run tests to confirm failures**
@@ -957,20 +911,14 @@ Replace the `BoolBadge` function in `src/ui/Badge/Badge.tsx`:
 
 ```tsx
 export function BoolBadge({ value, className }: BoolBadgeProps) {
-  const isYes =
-    value === true ||
-    (typeof value === "string" && value.toLowerCase() === "yes");
+  const isYes = value === true || (typeof value === 'string' && value.toLowerCase() === 'yes')
   // Gen Con API returns "Yes"/"No" strings; true/false booleans also accepted
   return (
-    <span
-      className={[isYes ? styles.boolYes : styles.boolNo, className]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      <span aria-hidden="true">{isYes ? "✓" : "—"}</span>
-      <span className="sr-only">{isYes ? "yes" : "no"}</span>
+    <span className={[isYes ? styles.boolYes : styles.boolNo, className].filter(Boolean).join(' ')}>
+      <span aria-hidden="true">{isYes ? '✓' : '—'}</span>
+      <span className="sr-only">{isYes ? 'yes' : 'no'}</span>
     </span>
-  );
+  )
 }
 ```
 

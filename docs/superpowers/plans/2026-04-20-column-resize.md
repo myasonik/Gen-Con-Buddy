@@ -34,97 +34,94 @@
 Create `src/hooks/useColumnSizing.test.ts`:
 
 ```ts
-import { renderHook, act } from "@testing-library/react";
-import { useColumnSizing } from "./useColumnSizing";
+import { renderHook, act } from '@testing-library/react'
+import { useColumnSizing } from './useColumnSizing'
 
-const STORAGE_KEY = "gcb-column-sizing";
+const STORAGE_KEY = 'gcb-column-sizing'
 
 beforeEach(() => {
-  localStorage.clear();
-});
+  localStorage.clear()
+})
 
-test("returns empty sizing on first use", () => {
-  const { result } = renderHook(() => useColumnSizing());
-  expect(result.current.sizing).toEqual({});
-});
+test('returns empty sizing on first use', () => {
+  const { result } = renderHook(() => useColumnSizing())
+  expect(result.current.sizing).toEqual({})
+})
 
-test("setSizing with a value updates state", () => {
-  const { result } = renderHook(() => useColumnSizing());
-
-  act(() => {
-    result.current.setSizing({ title: 300 });
-  });
-
-  expect(result.current.sizing).toEqual({ title: 300 });
-});
-
-test("setSizing with an updater function updates state", () => {
-  const { result } = renderHook(() => useColumnSizing());
+test('setSizing with a value updates state', () => {
+  const { result } = renderHook(() => useColumnSizing())
 
   act(() => {
-    result.current.setSizing({ title: 200 });
-  });
-  act(() => {
-    result.current.setSizing((prev) => ({ ...prev, gameId: 100 }));
-  });
+    result.current.setSizing({ title: 300 })
+  })
 
-  expect(result.current.sizing).toEqual({ title: 200, gameId: 100 });
-});
+  expect(result.current.sizing).toEqual({ title: 300 })
+})
 
-test("persists sizing to localStorage", () => {
-  const { result } = renderHook(() => useColumnSizing());
+test('setSizing with an updater function updates state', () => {
+  const { result } = renderHook(() => useColumnSizing())
 
   act(() => {
-    result.current.setSizing({ title: 300 });
-  });
+    result.current.setSizing({ title: 200 })
+  })
+  act(() => {
+    result.current.setSizing((prev) => ({ ...prev, gameId: 100 }))
+  })
 
-  const stored = JSON.parse(localStorage.getItem(STORAGE_KEY)!);
-  expect(stored).toEqual({ version: 1, sizing: { title: 300 } });
-});
+  expect(result.current.sizing).toEqual({ title: 200, gameId: 100 })
+})
 
-test("loads sizing from localStorage on mount", () => {
+test('persists sizing to localStorage', () => {
+  const { result } = renderHook(() => useColumnSizing())
+
+  act(() => {
+    result.current.setSizing({ title: 300 })
+  })
+
+  const stored = JSON.parse(localStorage.getItem(STORAGE_KEY)!)
+  expect(stored).toEqual({ version: 1, sizing: { title: 300 } })
+})
+
+test('loads sizing from localStorage on mount', () => {
   localStorage.setItem(
     STORAGE_KEY,
     JSON.stringify({ version: 1, sizing: { title: 300, gameId: 150 } }),
-  );
+  )
 
-  const { result } = renderHook(() => useColumnSizing());
-  expect(result.current.sizing).toEqual({ title: 300, gameId: 150 });
-});
+  const { result } = renderHook(() => useColumnSizing())
+  expect(result.current.sizing).toEqual({ title: 300, gameId: 150 })
+})
 
-test("returns empty sizing when stored version does not match", () => {
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify({ version: 9999, sizing: { title: 300 } }),
-  );
+test('returns empty sizing when stored version does not match', () => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 9999, sizing: { title: 300 } }))
 
-  const { result } = renderHook(() => useColumnSizing());
-  expect(result.current.sizing).toEqual({});
-});
+  const { result } = renderHook(() => useColumnSizing())
+  expect(result.current.sizing).toEqual({})
+})
 
-test("returns empty sizing when localStorage is malformed", () => {
-  localStorage.setItem(STORAGE_KEY, "not-json{{{");
+test('returns empty sizing when localStorage is malformed', () => {
+  localStorage.setItem(STORAGE_KEY, 'not-json{{{')
 
-  const { result } = renderHook(() => useColumnSizing());
-  expect(result.current.sizing).toEqual({});
-});
+  const { result } = renderHook(() => useColumnSizing())
+  expect(result.current.sizing).toEqual({})
+})
 
-test("reset clears sizing state and removes localStorage key", () => {
-  const { result } = renderHook(() => useColumnSizing());
+test('reset clears sizing state and removes localStorage key', () => {
+  const { result } = renderHook(() => useColumnSizing())
 
   act(() => {
-    result.current.setSizing({ title: 300 });
-  });
+    result.current.setSizing({ title: 300 })
+  })
 
-  expect(result.current.sizing).toEqual({ title: 300 });
+  expect(result.current.sizing).toEqual({ title: 300 })
 
   act(() => {
-    result.current.reset();
-  });
+    result.current.reset()
+  })
 
-  expect(result.current.sizing).toEqual({});
-  expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
-});
+  expect(result.current.sizing).toEqual({})
+  expect(localStorage.getItem(STORAGE_KEY)).toBeNull()
+})
 ```
 
 - [ ] **Step 2: Run the tests to verify they fail**
@@ -140,57 +137,52 @@ Expected: FAIL — `useColumnSizing` does not exist.
 Create `src/hooks/useColumnSizing.ts`:
 
 ```ts
-import { useState, useEffect } from "react";
-import type { ColumnSizingState, OnChangeFn } from "@tanstack/react-table";
+import { useState, useEffect } from 'react'
+import type { ColumnSizingState, OnChangeFn } from '@tanstack/react-table'
 
-const STORAGE_KEY = "gcb-column-sizing";
-const VERSION = 1;
+const STORAGE_KEY = 'gcb-column-sizing'
+const VERSION = 1
 
 function readFromStorage(): ColumnSizingState {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return {};
-    const parsed: unknown = JSON.parse(raw);
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return {}
+    const parsed: unknown = JSON.parse(raw)
     if (
-      typeof parsed !== "object" ||
+      typeof parsed !== 'object' ||
       parsed === null ||
       (parsed as { version?: unknown }).version !== VERSION
     ) {
-      return {};
+      return {}
     }
-    return (parsed as { version: number; sizing: ColumnSizingState }).sizing;
+    return (parsed as { version: number; sizing: ColumnSizingState }).sizing
   } catch {
-    return {};
+    return {}
   }
 }
 
 export function useColumnSizing() {
-  const [sizing, setSizingState] = useState<ColumnSizingState>(readFromStorage);
+  const [sizing, setSizingState] = useState<ColumnSizingState>(readFromStorage)
 
   useEffect(() => {
     if (Object.keys(sizing).length === 0) {
-      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(STORAGE_KEY)
     } else {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({ version: VERSION, sizing }),
-      );
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: VERSION, sizing }))
     }
-  }, [sizing]);
+  }, [sizing])
 
   const setSizing: OnChangeFn<ColumnSizingState> = (updaterOrValue) => {
     setSizingState((prev) =>
-      typeof updaterOrValue === "function"
-        ? updaterOrValue(prev)
-        : updaterOrValue,
-    );
-  };
+      typeof updaterOrValue === 'function' ? updaterOrValue(prev) : updaterOrValue,
+    )
+  }
 
   const reset = () => {
-    setSizingState({});
-  };
+    setSizingState({})
+  }
 
-  return { sizing, setSizing, reset };
+  return { sizing, setSizing, reset }
 }
 ```
 
@@ -290,7 +282,7 @@ Change it to:
 At the top of `SearchResults.tsx`, after the `useColumnVisibility` import, add:
 
 ```ts
-import { useColumnSizing } from "../../hooks/useColumnSizing";
+import { useColumnSizing } from '../../hooks/useColumnSizing'
 ```
 
 - [ ] **Step 3: Instantiate the hook and wire it into `useReactTable`**
@@ -298,7 +290,7 @@ import { useColumnSizing } from "../../hooks/useColumnSizing";
 After the existing `const { visibility, toggle, reset } = useColumnVisibility();` line, add:
 
 ```ts
-const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
+const { sizing, setSizing, reset: resetSizing } = useColumnSizing()
 ```
 
 Update `useReactTable` to include sizing config. Change the `useReactTable` call from:
@@ -313,7 +305,7 @@ const table = useReactTable({
   manualSorting: true,
   manualPagination: true,
   getCoreRowModel: getCoreRowModel(),
-});
+})
 ```
 
 To:
@@ -322,7 +314,7 @@ To:
 const table = useReactTable({
   data: data?.data ?? [],
   columns: COLUMNS,
-  columnResizeMode: "onChange",
+  columnResizeMode: 'onChange',
   state: {
     columnVisibility: visibility,
     columnSizing: sizing,
@@ -331,7 +323,7 @@ const table = useReactTable({
   manualSorting: true,
   manualPagination: true,
   getCoreRowModel: getCoreRowModel(),
-});
+})
 ```
 
 - [ ] **Step 4: Update the Reset button to also reset sizing**
@@ -350,8 +342,8 @@ Change it to:
 <button
   type="button"
   onClick={() => {
-    reset();
-    resetSizing();
+    reset()
+    resetSizing()
   }}
 >
   Reset to defaults
@@ -373,12 +365,12 @@ return (
       {flexRender(header.column.columnDef.header, header.getContext())}
       {isActive && (
         <span aria-hidden="true" className={styles.sortIndicator}>
-          {activeSortDir === "asc" ? " ▲" : " ▼"}
+          {activeSortDir === 'asc' ? ' ▲' : ' ▼'}
         </span>
       )}
     </button>
   </th>
-);
+)
 ```
 
 To:
@@ -390,7 +382,7 @@ return (
     aria-sort={ariaSort}
     scope="col"
     aria-label={label}
-    className={`${styles.resizableTh}${header.column.getIsResizing() ? ` ${styles.isResizing}` : ""}`}
+    className={`${styles.resizableTh}${header.column.getIsResizing() ? ` ${styles.isResizing}` : ''}`}
     style={{ width: header.getSize() }}
   >
     <button
@@ -401,7 +393,7 @@ return (
       {flexRender(header.column.columnDef.header, header.getContext())}
       {isActive && (
         <span aria-hidden="true" className={styles.sortIndicator}>
-          {activeSortDir === "asc" ? " ▲" : " ▼"}
+          {activeSortDir === 'asc' ? ' ▲' : ' ▼'}
         </span>
       )}
     </button>
@@ -414,7 +406,7 @@ return (
       />
     )}
   </th>
-);
+)
 ```
 
 - [ ] **Step 6: Verify the app compiles with no TypeScript errors**
@@ -445,48 +437,42 @@ git commit -m "feat(SearchResults): wire column resizing with TanStack Table and
 Append to the end of `src/components/SearchResults/SearchResults.test.tsx`:
 
 ```ts
-test("resize handle is rendered on resizable columns", async () => {
-  renderSearchResults();
-  await screen.findAllByRole("row");
-  const handles = screen.getAllByTestId("resize-handle");
+test('resize handle is rendered on resizable columns', async () => {
+  renderSearchResults()
+  await screen.findAllByRole('row')
+  const handles = screen.getAllByTestId('resize-handle')
   // dayStripe has no handle; all other visible columns do
-  expect(handles.length).toBeGreaterThan(0);
-});
+  expect(handles.length).toBeGreaterThan(0)
+})
 
-test("dayStripe column has no resize handle", async () => {
-  renderSearchResults();
-  await screen.findAllByRole("row");
+test('dayStripe column has no resize handle', async () => {
+  renderSearchResults()
+  await screen.findAllByRole('row')
   // dayStripe th is aria-hidden — query the DOM directly
-  const dayStripes = document.querySelectorAll("th[aria-hidden='true']");
+  const dayStripes = document.querySelectorAll("th[aria-hidden='true']")
   dayStripes.forEach((th) => {
-    expect(th.querySelector("[data-testid='resize-handle']")).toBeNull();
-  });
-});
+    expect(th.querySelector("[data-testid='resize-handle']")).toBeNull()
+  })
+})
 
-test("pre-seeded localStorage sizing is applied to column width on mount", async () => {
-  localStorage.setItem(
-    "gcb-column-sizing",
-    JSON.stringify({ version: 1, sizing: { title: 300 } }),
-  );
-  renderSearchResults();
-  await screen.findAllByRole("row");
-  const titleTh = screen.getByRole("columnheader", { name: "Title" });
-  expect(titleTh).toHaveStyle({ width: "300px" });
-});
+test('pre-seeded localStorage sizing is applied to column width on mount', async () => {
+  localStorage.setItem('gcb-column-sizing', JSON.stringify({ version: 1, sizing: { title: 300 } }))
+  renderSearchResults()
+  await screen.findAllByRole('row')
+  const titleTh = screen.getByRole('columnheader', { name: 'Title' })
+  expect(titleTh).toHaveStyle({ width: '300px' })
+})
 
-test("Reset to defaults clears column sizing from localStorage", async () => {
-  const user = userEvent.setup();
-  localStorage.setItem(
-    "gcb-column-sizing",
-    JSON.stringify({ version: 1, sizing: { title: 300 } }),
-  );
-  renderSearchResults();
-  await screen.findAllByRole("row");
+test('Reset to defaults clears column sizing from localStorage', async () => {
+  const user = userEvent.setup()
+  localStorage.setItem('gcb-column-sizing', JSON.stringify({ version: 1, sizing: { title: 300 } }))
+  renderSearchResults()
+  await screen.findAllByRole('row')
 
-  await user.click(screen.getByRole("button", { name: "Reset to defaults" }));
+  await user.click(screen.getByRole('button', { name: 'Reset to defaults' }))
 
-  expect(localStorage.getItem("gcb-column-sizing")).toBeNull();
-});
+  expect(localStorage.getItem('gcb-column-sizing')).toBeNull()
+})
 ```
 
 - [ ] **Step 2: Run the new tests**

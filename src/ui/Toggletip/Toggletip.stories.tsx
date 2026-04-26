@@ -1,24 +1,23 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Toggletip } from "./Toggletip";
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Toggletip } from './Toggletip'
 
 const meta = {
-  title: "UI/Toggletip",
+  title: 'UI/Toggletip',
   component: Toggletip,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   args: {
-    label: "Why is this disabled?",
-    message: "Clear the day checkboxes above to use custom date fields.",
+    label: 'Why is this disabled?',
+    message: 'Clear the day checkboxes above to use custom date fields.',
   },
-} satisfies Meta<typeof Toggletip>;
+} satisfies Meta<typeof Toggletip>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
-export const Default: Story = {};
+export const Default: Story = {}
 
 export const LongMessage: Story = {
   args: {
-    message:
-      "Results are capped at 10,000 events. Narrow your search to see more pages.",
+    message: 'Results are capped at 10,000 events. Narrow your search to see more pages.',
   },
-};
+}

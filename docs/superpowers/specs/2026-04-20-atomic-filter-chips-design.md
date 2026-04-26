@@ -10,8 +10,8 @@ Each value in a multi-value search param gets its own removable chip in the acti
 
 ```ts
 export interface ActiveFilter {
-  label: string;
-  remove: (prev: SearchParams) => SearchParams;
+  label: string
+  remove: (prev: SearchParams) => SearchParams
 }
 ```
 
@@ -24,7 +24,7 @@ Three cases:
 **Single-value params** (e.g. `title`, `gameSystem`, `location`, all range params): one chip per param. `remove` clears the whole param.
 
 ```ts
-remove: (prev) => ({ ...prev, title: undefined });
+remove: (prev) => ({ ...prev, title: undefined })
 ```
 
 **CSV params** (`days`, `eventType`): split on comma, produce one chip per value. Each chip's `remove` filters only its own value out of the comma-separated string, clearing the param entirely when the last value is removed.
@@ -33,11 +33,11 @@ remove: (prev) => ({ ...prev, title: undefined });
 // days = "fri,sat" → two chips
 remove: (prev) => {
   const remaining = prev
-    .days!.split(",")
-    .filter((d) => d !== "fri")
-    .join(",");
-  return { ...prev, days: remaining || undefined };
-};
+    .days!.split(',')
+    .filter((d) => d !== 'fri')
+    .join(',')
+  return { ...prev, days: remaining || undefined }
+}
 ```
 
 **Range params** (`cost`, `duration`, `startDateTime`, etc.): commas inside `[min,max]` are part of the syntax, not value separators. These remain single chips. `remove` clears the whole param.
@@ -50,8 +50,8 @@ remove: (prev) => {
 
 ```tsx
 interface ActiveFiltersProps {
-  searchParams: SearchParams;
-  onRemove: (filter: ActiveFilter) => void;
+  searchParams: SearchParams
+  onRemove: (filter: ActiveFilter) => void
 }
 ```
 
@@ -69,8 +69,8 @@ React list `key` uses `label` — naturally unique since each chip has a distinc
 
 ```ts
 const handleRemoveFilter = (filter: ActiveFilter) => {
-  void navigate({ search: (prev) => filter.remove(prev) });
-};
+  void navigate({ search: (prev) => filter.remove(prev) })
+}
 ```
 
 No other files change. All splitting logic lives in `getActiveFilters`.

@@ -1,39 +1,34 @@
-import { useState } from "react";
-import { Combobox } from "@base-ui/react/combobox";
-import { EVENT_TYPES } from "../../utils/enums";
-import styles from "./EventTypeSelect.module.css";
+import { useState } from 'react'
+import { Combobox } from '@base-ui/react/combobox'
+import { EVENT_TYPES } from '../../utils/enums'
+import styles from './EventTypeSelect.module.css'
 
 export interface EventTypeSelectProps {
-  value: string;
-  onValueChange: (value: string) => void;
+  value: string
+  onValueChange: (value: string) => void
 }
 
 const OPTIONS = Object.entries(EVENT_TYPES).map(([code, label]) => ({
   code,
   label,
-  name: label.replace(/^[A-Z]+ - /, ""),
-}));
+  name: label.replace(/^[A-Z]+ - /, ''),
+}))
 
-export function EventTypeSelect({
-  value,
-  onValueChange,
-}: EventTypeSelectProps) {
-  const [open, setOpen] = useState(false);
-  const [filterText, setFilterText] = useState("");
-  const filter = Combobox.useFilter();
+export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps) {
+  const [open, setOpen] = useState(false)
+  const [filterText, setFilterText] = useState('')
+  const filter = Combobox.useFilter()
 
-  const selectedCodes = value ? value.split(",") : [];
+  const selectedCodes = value ? value.split(',') : []
 
   const filteredOptions = filterText
     ? OPTIONS.filter(
-        ({ code, name }) =>
-          filter.contains(code, filterText) ||
-          filter.contains(name, filterText),
+        ({ code, name }) => filter.contains(code, filterText) || filter.contains(name, filterText),
       )
-    : OPTIONS;
+    : OPTIONS
 
   function removeCode(code: string) {
-    onValueChange(selectedCodes.filter((c) => c !== code).join(","));
+    onValueChange(selectedCodes.filter((c) => c !== code).join(','))
   }
 
   return (
@@ -41,10 +36,10 @@ export function EventTypeSelect({
       <Combobox.Root
         multiple
         value={selectedCodes}
-        onValueChange={(codes) => onValueChange(codes.join(","))}
+        onValueChange={(codes) => onValueChange(codes.join(','))}
         onOpenChange={(isOpen) => {
-          setOpen(isOpen);
-          if (!isOpen) setFilterText("");
+          setOpen(isOpen)
+          if (!isOpen) setFilterText('')
         }}
         onInputValueChange={(text) => setFilterText(text)}
       >
@@ -58,8 +53,8 @@ export function EventTypeSelect({
                 {code}
                 {open && (
                   <span>
-                    {" – "}
-                    {EVENT_TYPES[code]?.replace(/^[A-Z]+ - /, "")}
+                    {' – '}
+                    {EVENT_TYPES[code]?.replace(/^[A-Z]+ - /, '')}
                   </span>
                 )}
               </span>
@@ -76,38 +71,26 @@ export function EventTypeSelect({
           <Combobox.Input
             id="event-type-input"
             className={styles.input}
-            placeholder={
-              selectedCodes.length > 0 ? "Add type…" : "Filter types…"
-            }
+            placeholder={selectedCodes.length > 0 ? 'Add type…' : 'Filter types…'}
           />
-          <Combobox.Trigger
-            className={styles.trigger}
-            aria-label="Toggle event type list"
-          >
+          <Combobox.Trigger className={styles.trigger} aria-label="Toggle event type list">
             ▾
           </Combobox.Trigger>
         </Combobox.InputGroup>
         {open && (
           <Combobox.List className={styles.list}>
             {filteredOptions.map(({ code, name }) => (
-              <Combobox.Item
-                key={code}
-                value={code}
-                aria-label={name}
-                className={styles.item}
-              >
+              <Combobox.Item key={code} value={code} aria-label={name} className={styles.item}>
                 <span aria-hidden className={styles.itemBadge}>
                   {code}
                 </span>
                 <span className={styles.itemName}>{name}</span>
-                <Combobox.ItemIndicator className={styles.itemIndicator}>
-                  ✓
-                </Combobox.ItemIndicator>
+                <Combobox.ItemIndicator className={styles.itemIndicator}>✓</Combobox.ItemIndicator>
               </Combobox.Item>
             ))}
           </Combobox.List>
         )}
       </Combobox.Root>
     </div>
-  );
+  )
 }

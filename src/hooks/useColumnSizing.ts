@@ -1,52 +1,47 @@
-import { useState, useEffect } from "react";
-import type { ColumnSizingState, OnChangeFn } from "@tanstack/react-table";
+import { useState, useEffect } from 'react'
+import type { ColumnSizingState, OnChangeFn } from '@tanstack/react-table'
 
-const STORAGE_KEY = "gcb-column-sizing";
-const VERSION = 1;
+const STORAGE_KEY = 'gcb-column-sizing'
+const VERSION = 1
 
 function readFromStorage(): ColumnSizingState {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return {};
-    const parsed: unknown = JSON.parse(raw);
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return {}
+    const parsed: unknown = JSON.parse(raw)
     if (
-      typeof parsed !== "object" ||
+      typeof parsed !== 'object' ||
       parsed === null ||
       (parsed as { version?: unknown }).version !== VERSION
     ) {
-      return {};
+      return {}
     }
-    return (parsed as { version: number; sizing: ColumnSizingState }).sizing;
+    return (parsed as { version: number; sizing: ColumnSizingState }).sizing
   } catch {
-    return {};
+    return {}
   }
 }
 
 export function useColumnSizing() {
-  const [sizing, setSizingState] = useState<ColumnSizingState>(readFromStorage);
+  const [sizing, setSizingState] = useState<ColumnSizingState>(readFromStorage)
 
   useEffect(() => {
     if (Object.keys(sizing).length === 0) {
-      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(STORAGE_KEY)
     } else {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({ version: VERSION, sizing }),
-      );
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: VERSION, sizing }))
     }
-  }, [sizing]);
+  }, [sizing])
 
   const setSizing: OnChangeFn<ColumnSizingState> = (updaterOrValue) => {
     setSizingState((prev) =>
-      typeof updaterOrValue === "function"
-        ? updaterOrValue(prev)
-        : updaterOrValue,
-    );
-  };
+      typeof updaterOrValue === 'function' ? updaterOrValue(prev) : updaterOrValue,
+    )
+  }
 
   const reset = () => {
-    setSizingState({});
-  };
+    setSizingState({})
+  }
 
-  return { sizing, setSizing, reset };
+  return { sizing, setSizing, reset }
 }

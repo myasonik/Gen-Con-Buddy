@@ -13,6 +13,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "prepare": "husky",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"

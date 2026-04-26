@@ -1,24 +1,24 @@
-import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { Link } from "@tanstack/react-router";
-import { fetchEvents } from "../../utils/api";
-import { Button } from "../../ui/Button/Button";
-import { PixelState } from "../../ui/PixelState/PixelState";
-import { Badge, BoolBadge } from "../../ui/Badge/Badge";
-import styles from "./EventDetail.module.css";
+import { useQuery } from '@tanstack/react-query'
+import { format } from 'date-fns'
+import { Link } from '@tanstack/react-router'
+import { fetchEvents } from '../../utils/api'
+import { Button } from '../../ui/Button/Button'
+import { PixelState } from '../../ui/PixelState/PixelState'
+import { Badge, BoolBadge } from '../../ui/Badge/Badge'
+import styles from './EventDetail.module.css'
 
 interface EventDetailProps {
-  gameId: string;
+  gameId: string
 }
 
 export function EventDetail({ gameId }: EventDetailProps) {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["event", gameId],
+    queryKey: ['event', gameId],
     queryFn: () => fetchEvents({ gameId, limit: 1 }),
-  });
+  })
 
   if (isLoading) {
-    return <PixelState variant="loading" text="LOADING QUEST..." />;
+    return <PixelState variant="loading" text="LOADING QUEST..." />
   }
   if (isError) {
     return (
@@ -27,27 +27,19 @@ export function EventDetail({ gameId }: EventDetailProps) {
         text="QUEST FAILED"
         subtext="Unable to load event. Please try again."
       />
-    );
+    )
   }
   if (!data || data.data.length === 0) {
     return (
-      <PixelState
-        variant="empty"
-        text="EVENT NOT FOUND"
-        subtext="This quest does not exist."
-      />
-    );
+      <PixelState variant="empty" text="EVENT NOT FOUND" subtext="This quest does not exist." />
+    )
   }
 
-  const a = data.data[0].attributes;
+  const a = data.data[0].attributes
 
   return (
     <article className={styles.article}>
-      <Button
-        render={<Link to="/" />}
-        variant="secondary"
-        className={styles.backLink}
-      >
+      <Button render={<Link to="/" />} variant="secondary" className={styles.backLink}>
         ← Back to results
       </Button>
 
@@ -131,21 +123,15 @@ export function EventDetail({ gameId }: EventDetailProps) {
           <dl className={styles.dl}>
             <div className={styles.dlItem}>
               <dt className={styles.dt}>Day</dt>
-              <dd className={styles.dd}>
-                {format(new Date(a.startDateTime), "EEEE")}
-              </dd>
+              <dd className={styles.dd}>{format(new Date(a.startDateTime), 'EEEE')}</dd>
             </div>
             <div className={styles.dlItem}>
               <dt className={styles.dt}>Start</dt>
-              <dd className={styles.dd}>
-                {format(new Date(a.startDateTime), "HH:mm")}
-              </dd>
+              <dd className={styles.dd}>{format(new Date(a.startDateTime), 'HH:mm')}</dd>
             </div>
             <div className={styles.dlItem}>
               <dt className={styles.dt}>End</dt>
-              <dd className={styles.dd}>
-                {format(new Date(a.endDateTime), "HH:mm")}
-              </dd>
+              <dd className={styles.dd}>{format(new Date(a.endDateTime), 'HH:mm')}</dd>
             </div>
             <div className={styles.dlItem}>
               <dt className={styles.dt}>Duration</dt>
@@ -174,11 +160,7 @@ export function EventDetail({ gameId }: EventDetailProps) {
             <div className={styles.dlItem}>
               <dt className={styles.dt}>Attendee Registration</dt>
               <dd className={styles.dd}>
-                <Badge
-                  variant={
-                    a.attendeeRegistration === "ticketed" ? "filled" : "outline"
-                  }
-                >
+                <Badge variant={a.attendeeRegistration === 'ticketed' ? 'filled' : 'outline'}>
                   {a.attendeeRegistration}
                 </Badge>
               </dd>
@@ -214,21 +196,19 @@ export function EventDetail({ gameId }: EventDetailProps) {
             </div>
             <div className={styles.dlItem}>
               <dt className={styles.dt}>Website</dt>
-              <dd className={styles.dd}>{a.website || "—"}</dd>
+              <dd className={styles.dd}>{a.website || '—'}</dd>
             </div>
             <div className={styles.dlItem}>
               <dt className={styles.dt}>Email</dt>
-              <dd className={styles.dd}>{a.email || "—"}</dd>
+              <dd className={styles.dd}>{a.email || '—'}</dd>
             </div>
             <div className={styles.dlItem}>
               <dt className={styles.dt}>Last Modified</dt>
-              <dd className={styles.dd}>
-                {format(new Date(a.lastModified), "yyyy-MM-dd")}
-              </dd>
+              <dd className={styles.dd}>{format(new Date(a.lastModified), 'yyyy-MM-dd')}</dd>
             </div>
           </dl>
         </section>
       </div>
     </article>
-  );
+  )
 }

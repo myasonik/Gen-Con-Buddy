@@ -36,48 +36,46 @@
 Create `src/utils/api.test.ts`:
 
 ```ts
-import { http, HttpResponse } from "msw";
-import { server } from "../test/msw/server";
-import { fetchEvents } from "./api";
-import type { EventSearchResponse } from "./types";
+import { http, HttpResponse } from 'msw'
+import { server } from '../test/msw/server'
+import { fetchEvents } from './api'
+import type { EventSearchResponse } from './types'
 
 const EMPTY_RESPONSE: EventSearchResponse = {
   data: [],
   meta: { total: 0 },
-  links: { self: "/api/events/search" },
+  links: { self: '/api/events/search' },
   error: null,
-};
-
-function captureUrl(): { getUrl: () => URL | null } {
-  let capturedUrl: URL | null = null;
-  server.use(
-    http.get("/api/events/search", ({ request }) => {
-      capturedUrl = new URL(request.url);
-      return HttpResponse.json(EMPTY_RESPONSE);
-    }),
-  );
-  return { getUrl: () => capturedUrl };
 }
 
-test("serializes single eventType code as full label", async () => {
-  const { getUrl } = captureUrl();
-  await fetchEvents({ eventType: "BGM" });
-  expect(getUrl()?.searchParams.get("eventType")).toBe("BGM - Board Game");
-});
+function captureUrl(): { getUrl: () => URL | null } {
+  let capturedUrl: URL | null = null
+  server.use(
+    http.get('/api/events/search', ({ request }) => {
+      capturedUrl = new URL(request.url)
+      return HttpResponse.json(EMPTY_RESPONSE)
+    }),
+  )
+  return { getUrl: () => capturedUrl }
+}
 
-test("serializes multiple eventType codes as comma-separated full labels", async () => {
-  const { getUrl } = captureUrl();
-  await fetchEvents({ eventType: "RPG,BGM" });
-  expect(getUrl()?.searchParams.get("eventType")).toBe(
-    "RPG - Role Playing Game,BGM - Board Game",
-  );
-});
+test('serializes single eventType code as full label', async () => {
+  const { getUrl } = captureUrl()
+  await fetchEvents({ eventType: 'BGM' })
+  expect(getUrl()?.searchParams.get('eventType')).toBe('BGM - Board Game')
+})
 
-test("omits eventType when value is empty string", async () => {
-  const { getUrl } = captureUrl();
-  await fetchEvents({ eventType: "" });
-  expect(getUrl()?.searchParams.has("eventType")).toBe(false);
-});
+test('serializes multiple eventType codes as comma-separated full labels', async () => {
+  const { getUrl } = captureUrl()
+  await fetchEvents({ eventType: 'RPG,BGM' })
+  expect(getUrl()?.searchParams.get('eventType')).toBe('RPG - Role Playing Game,BGM - Board Game')
+})
+
+test('omits eventType when value is empty string', async () => {
+  const { getUrl } = captureUrl()
+  await fetchEvents({ eventType: '' })
+  expect(getUrl()?.searchParams.has('eventType')).toBe(false)
+})
 ```
 
 - [ ] **Step 2: Run tests to verify they fail**
@@ -93,20 +91,20 @@ Expected: FAIL — "serializes multiple eventType codes" fails because `EVENT_TY
 In `src/utils/api.ts`, replace lines 28–30:
 
 ```ts
-if (key === "eventType" && typeof value === "string") {
-  url.searchParams.set(key, EVENT_TYPES[value] ?? value);
+if (key === 'eventType' && typeof value === 'string') {
+  url.searchParams.set(key, EVENT_TYPES[value] ?? value)
 }
 ```
 
 with:
 
 ```ts
-if (key === "eventType" && typeof value === "string") {
+if (key === 'eventType' && typeof value === 'string') {
   const labels = value
-    .split(",")
+    .split(',')
     .map((code) => EVENT_TYPES[code] ?? code)
-    .join(",");
-  url.searchParams.set(key, labels);
+    .join(',')
+  url.searchParams.set(key, labels)
 }
 ```
 
@@ -138,122 +136,104 @@ git commit -m "feat(api): serialize multiple eventType codes as comma-separated 
 Create `src/ui/EventTypeSelect/EventTypeSelect.test.tsx`:
 
 ```tsx
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { EventTypeSelect } from "./EventTypeSelect";
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { EventTypeSelect } from './EventTypeSelect'
 
-test("renders the Event Type label and combobox input", () => {
-  render(<EventTypeSelect value="" onValueChange={() => {}} />);
-  expect(
-    screen.getByRole("combobox", { name: "Event Type" }),
-  ).toBeInTheDocument();
-});
+test('renders the Event Type label and combobox input', () => {
+  render(<EventTypeSelect value="" onValueChange={() => {}} />)
+  expect(screen.getByRole('combobox', { name: 'Event Type' })).toBeInTheDocument()
+})
 
-test("shows no chip remove buttons when value is empty", () => {
-  render(<EventTypeSelect value="" onValueChange={() => {}} />);
-  expect(
-    screen.queryByRole("button", { name: /^Remove/ }),
-  ).not.toBeInTheDocument();
-});
+test('shows no chip remove buttons when value is empty', () => {
+  render(<EventTypeSelect value="" onValueChange={() => {}} />)
+  expect(screen.queryByRole('button', { name: /^Remove/ })).not.toBeInTheDocument()
+})
 
-test("shows short code chips for selected values when closed", () => {
-  render(<EventTypeSelect value="RPG,BGM" onValueChange={() => {}} />);
-  const rpgRemove = screen.getByRole("button", { name: "Remove RPG" });
-  const bgmRemove = screen.getByRole("button", { name: "Remove BGM" });
-  expect(rpgRemove.closest("[data-testid=chip]")).toHaveTextContent("RPG");
-  expect(rpgRemove.closest("[data-testid=chip]")).not.toHaveTextContent(
-    "Role Playing Game",
-  );
-  expect(bgmRemove.closest("[data-testid=chip]")).toHaveTextContent("BGM");
-  expect(bgmRemove.closest("[data-testid=chip]")).not.toHaveTextContent(
-    "Board Game",
-  );
-});
+test('shows short code chips for selected values when closed', () => {
+  render(<EventTypeSelect value="RPG,BGM" onValueChange={() => {}} />)
+  const rpgRemove = screen.getByRole('button', { name: 'Remove RPG' })
+  const bgmRemove = screen.getByRole('button', { name: 'Remove BGM' })
+  expect(rpgRemove.closest('[data-testid=chip]')).toHaveTextContent('RPG')
+  expect(rpgRemove.closest('[data-testid=chip]')).not.toHaveTextContent('Role Playing Game')
+  expect(bgmRemove.closest('[data-testid=chip]')).toHaveTextContent('BGM')
+  expect(bgmRemove.closest('[data-testid=chip]')).not.toHaveTextContent('Board Game')
+})
 
-test("chips expand to show full name when dropdown is open", async () => {
-  const user = userEvent.setup();
-  render(<EventTypeSelect value="RPG" onValueChange={() => {}} />);
+test('chips expand to show full name when dropdown is open', async () => {
+  const user = userEvent.setup()
+  render(<EventTypeSelect value="RPG" onValueChange={() => {}} />)
 
-  await user.click(screen.getByRole("combobox", { name: "Event Type" }));
+  await user.click(screen.getByRole('combobox', { name: 'Event Type' }))
 
-  const rpgRemove = screen.getByRole("button", { name: "Remove RPG" });
-  expect(rpgRemove.closest("[data-testid=chip]")).toHaveTextContent(
-    "Role Playing Game",
-  );
-});
+  const rpgRemove = screen.getByRole('button', { name: 'Remove RPG' })
+  expect(rpgRemove.closest('[data-testid=chip]')).toHaveTextContent('Role Playing Game')
+})
 
-test("selecting an option calls onValueChange with that code", async () => {
-  const user = userEvent.setup();
-  const handleChange = vi.fn();
-  render(<EventTypeSelect value="" onValueChange={handleChange} />);
+test('selecting an option calls onValueChange with that code', async () => {
+  const user = userEvent.setup()
+  const handleChange = vi.fn()
+  render(<EventTypeSelect value="" onValueChange={handleChange} />)
 
-  await user.click(screen.getByRole("combobox", { name: "Event Type" }));
-  await user.click(screen.getByRole("option", { name: /Board Game/ }));
+  await user.click(screen.getByRole('combobox', { name: 'Event Type' }))
+  await user.click(screen.getByRole('option', { name: /Board Game/ }))
 
-  expect(handleChange).toHaveBeenCalledWith("BGM");
-});
+  expect(handleChange).toHaveBeenCalledWith('BGM')
+})
 
-test("selecting a second option appends it to the value", async () => {
-  const user = userEvent.setup();
-  const handleChange = vi.fn();
-  render(<EventTypeSelect value="RPG" onValueChange={handleChange} />);
+test('selecting a second option appends it to the value', async () => {
+  const user = userEvent.setup()
+  const handleChange = vi.fn()
+  render(<EventTypeSelect value="RPG" onValueChange={handleChange} />)
 
-  await user.click(screen.getByRole("combobox", { name: "Event Type" }));
-  await user.click(screen.getByRole("option", { name: /Board Game/ }));
+  await user.click(screen.getByRole('combobox', { name: 'Event Type' }))
+  await user.click(screen.getByRole('option', { name: /Board Game/ }))
 
-  expect(handleChange).toHaveBeenCalledWith("RPG,BGM");
-});
+  expect(handleChange).toHaveBeenCalledWith('RPG,BGM')
+})
 
-test("selecting an already-selected option removes it from the value", async () => {
-  const user = userEvent.setup();
-  const handleChange = vi.fn();
-  render(<EventTypeSelect value="RPG,BGM" onValueChange={handleChange} />);
+test('selecting an already-selected option removes it from the value', async () => {
+  const user = userEvent.setup()
+  const handleChange = vi.fn()
+  render(<EventTypeSelect value="RPG,BGM" onValueChange={handleChange} />)
 
-  await user.click(screen.getByRole("combobox", { name: "Event Type" }));
-  await user.click(screen.getByRole("option", { name: /Board Game/ }));
+  await user.click(screen.getByRole('combobox', { name: 'Event Type' }))
+  await user.click(screen.getByRole('option', { name: /Board Game/ }))
 
-  expect(handleChange).toHaveBeenCalledWith("RPG");
-});
+  expect(handleChange).toHaveBeenCalledWith('RPG')
+})
 
-test("filter text narrows options by code", async () => {
-  const user = userEvent.setup();
-  render(<EventTypeSelect value="" onValueChange={() => {}} />);
+test('filter text narrows options by code', async () => {
+  const user = userEvent.setup()
+  render(<EventTypeSelect value="" onValueChange={() => {}} />)
 
-  await user.click(screen.getByRole("combobox", { name: "Event Type" }));
-  await user.type(screen.getByRole("combobox", { name: "Event Type" }), "RPG");
+  await user.click(screen.getByRole('combobox', { name: 'Event Type' }))
+  await user.type(screen.getByRole('combobox', { name: 'Event Type' }), 'RPG')
 
-  expect(
-    screen.getByRole("option", { name: /Role Playing Game/ }),
-  ).toBeInTheDocument();
-  expect(
-    screen.queryByRole("option", { name: /Board Game/ }),
-  ).not.toBeInTheDocument();
-});
+  expect(screen.getByRole('option', { name: /Role Playing Game/ })).toBeInTheDocument()
+  expect(screen.queryByRole('option', { name: /Board Game/ })).not.toBeInTheDocument()
+})
 
-test("filter text narrows options by name", async () => {
-  const user = userEvent.setup();
-  render(<EventTypeSelect value="" onValueChange={() => {}} />);
+test('filter text narrows options by name', async () => {
+  const user = userEvent.setup()
+  render(<EventTypeSelect value="" onValueChange={() => {}} />)
 
-  await user.click(screen.getByRole("combobox", { name: "Event Type" }));
-  await user.type(screen.getByRole("combobox", { name: "Event Type" }), "mini");
+  await user.click(screen.getByRole('combobox', { name: 'Event Type' }))
+  await user.type(screen.getByRole('combobox', { name: 'Event Type' }), 'mini')
 
-  expect(
-    screen.getByRole("option", { name: /Historical Miniatures/ }),
-  ).toBeInTheDocument();
-  expect(
-    screen.queryByRole("option", { name: /Board Game/ }),
-  ).not.toBeInTheDocument();
-});
+  expect(screen.getByRole('option', { name: /Historical Miniatures/ })).toBeInTheDocument()
+  expect(screen.queryByRole('option', { name: /Board Game/ })).not.toBeInTheDocument()
+})
 
-test("removing a chip calls onValueChange without that code", async () => {
-  const user = userEvent.setup();
-  const handleChange = vi.fn();
-  render(<EventTypeSelect value="RPG,BGM" onValueChange={handleChange} />);
+test('removing a chip calls onValueChange without that code', async () => {
+  const user = userEvent.setup()
+  const handleChange = vi.fn()
+  render(<EventTypeSelect value="RPG,BGM" onValueChange={handleChange} />)
 
-  await user.click(screen.getByRole("button", { name: "Remove RPG" }));
+  await user.click(screen.getByRole('button', { name: 'Remove RPG' }))
 
-  expect(handleChange).toHaveBeenCalledWith("BGM");
-});
+  expect(handleChange).toHaveBeenCalledWith('BGM')
+})
 ```
 
 - [ ] **Step 2: Run tests to verify they all fail**
@@ -435,49 +415,44 @@ Create `src/ui/EventTypeSelect/EventTypeSelect.module.css`:
 Create `src/ui/EventTypeSelect/EventTypeSelect.tsx`:
 
 ```tsx
-import React, { useState } from "react";
-import { Combobox } from "@base-ui/react/combobox";
-import { EVENT_TYPES } from "../../utils/enums";
-import { EVENT_TYPE_COLORS } from "../../utils/conceptColors";
-import styles from "./EventTypeSelect.module.css";
+import React, { useState } from 'react'
+import { Combobox } from '@base-ui/react/combobox'
+import { EVENT_TYPES } from '../../utils/enums'
+import { EVENT_TYPE_COLORS } from '../../utils/conceptColors'
+import styles from './EventTypeSelect.module.css'
 
 export interface EventTypeSelectProps {
-  value: string;
-  onValueChange: (value: string) => void;
+  value: string
+  onValueChange: (value: string) => void
 }
 
 const OPTIONS = Object.entries(EVENT_TYPES).map(([code, label]) => ({
   code,
   label,
-  name: label.replace(/^[A-Z]+ - /, ""),
-}));
+  name: label.replace(/^[A-Z]+ - /, ''),
+}))
 
-export function EventTypeSelect({
-  value,
-  onValueChange,
-}: EventTypeSelectProps) {
-  const [open, setOpen] = useState(false);
-  const [filterText, setFilterText] = useState("");
-  const filter = Combobox.useFilter();
+export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps) {
+  const [open, setOpen] = useState(false)
+  const [filterText, setFilterText] = useState('')
+  const filter = Combobox.useFilter()
 
-  const selectedCodes = value ? value.split(",") : [];
+  const selectedCodes = value ? value.split(',') : []
 
   const filteredOptions = filterText
     ? OPTIONS.filter(
-        ({ code, name }) =>
-          filter.contains(code, filterText) ||
-          filter.contains(name, filterText),
+        ({ code, name }) => filter.contains(code, filterText) || filter.contains(name, filterText),
       )
-    : OPTIONS;
+    : OPTIONS
 
   return (
     <Combobox.Root
       multiple
       value={selectedCodes}
-      onValueChange={(codes) => onValueChange(codes.join(","))}
+      onValueChange={(codes) => onValueChange(codes.join(','))}
       onOpenChange={(isOpen) => {
-        setOpen(isOpen);
-        if (!isOpen) setFilterText("");
+        setOpen(isOpen)
+        if (!isOpen) setFilterText('')
       }}
       onInputValueChange={(text) => setFilterText(text)}
       className={styles.root}
@@ -486,7 +461,7 @@ export function EventTypeSelect({
       <Combobox.InputGroup className={styles.inputGroup}>
         <Combobox.Chips className={styles.chips}>
           {selectedCodes.map((code) => {
-            const colors = EVENT_TYPE_COLORS[code];
+            const colors = EVENT_TYPE_COLORS[code]
             return (
               <Combobox.Chip
                 key={code}
@@ -495,8 +470,8 @@ export function EventTypeSelect({
                 style={
                   colors
                     ? ({
-                        "--chip-color": colors.color,
-                        "--chip-bg": colors.bg,
+                        '--chip-color': colors.color,
+                        '--chip-bg': colors.bg,
                       } as React.CSSProperties)
                     : undefined
                 }
@@ -505,31 +480,23 @@ export function EventTypeSelect({
                   {code}
                   {open && (
                     <span className={styles.chipFullName}>
-                      {" \u2013 "}
-                      {EVENT_TYPES[code]?.replace(/^[A-Z]+ - /, "")}
+                      {' \u2013 '}
+                      {EVENT_TYPES[code]?.replace(/^[A-Z]+ - /, '')}
                     </span>
                   )}
                 </span>
-                <Combobox.ChipRemove
-                  className={styles.chipRemove}
-                  aria-label={`Remove ${code}`}
-                >
+                <Combobox.ChipRemove className={styles.chipRemove} aria-label={`Remove ${code}`}>
                   ×
                 </Combobox.ChipRemove>
               </Combobox.Chip>
-            );
+            )
           })}
         </Combobox.Chips>
         <Combobox.Input
           className={styles.input}
-          placeholder={
-            selectedCodes.length > 0 ? "Add type\u2026" : "Filter types\u2026"
-          }
+          placeholder={selectedCodes.length > 0 ? 'Add type\u2026' : 'Filter types\u2026'}
         />
-        <Combobox.Trigger
-          className={styles.trigger}
-          aria-label="Toggle event type list"
-        >
+        <Combobox.Trigger className={styles.trigger} aria-label="Toggle event type list">
           ▾
         </Combobox.Trigger>
       </Combobox.InputGroup>
@@ -538,20 +505,16 @@ export function EventTypeSelect({
           <Combobox.Popup className={styles.popup}>
             <Combobox.List className={styles.list}>
               {filteredOptions.map(({ code, name }) => {
-                const colors = EVENT_TYPE_COLORS[code];
+                const colors = EVENT_TYPE_COLORS[code]
                 return (
-                  <Combobox.Item
-                    key={code}
-                    value={code}
-                    className={styles.item}
-                  >
+                  <Combobox.Item key={code} value={code} className={styles.item}>
                     <span
                       className={styles.itemBadge}
                       style={
                         colors
                           ? ({
-                              "--chip-color": colors.color,
-                              "--chip-bg": colors.bg,
+                              '--chip-color': colors.color,
+                              '--chip-bg': colors.bg,
                             } as React.CSSProperties)
                           : undefined
                       }
@@ -563,14 +526,14 @@ export function EventTypeSelect({
                       ✓
                     </Combobox.ItemIndicator>
                   </Combobox.Item>
-                );
+                )
               })}
             </Combobox.List>
           </Combobox.Popup>
         </Combobox.Positioner>
       </Combobox.Portal>
     </Combobox.Root>
-  );
+  )
 }
 ```
 
@@ -605,28 +568,25 @@ In `src/components/SearchForm/SearchForm.tsx`, make these three changes:
 **a) Replace the enums import** — remove `EVENT_TYPES` since it's no longer needed in this file:
 
 ```tsx
-import { AGE_GROUPS, CATEGORY, EXP, REGISTRATION } from "../../utils/enums";
+import { AGE_GROUPS, CATEGORY, EXP, REGISTRATION } from '../../utils/enums'
 ```
 
 **b) Add EventTypeSelect import** after the existing ui imports:
 
 ```tsx
-import { EventTypeSelect } from "../../ui/EventTypeSelect/EventTypeSelect";
+import { EventTypeSelect } from '../../ui/EventTypeSelect/EventTypeSelect'
 ```
 
 **c) Add `eventType` to the watched values** — after line 91 (`const days = watch("days") ?? "";`):
 
 ```tsx
-const eventType = watch("eventType") ?? "";
+const eventType = watch('eventType') ?? ''
 ```
 
 **d) Replace the Event Type label+select block** (the entire `<label>` wrapping the `<select>`) with:
 
 ```tsx
-<EventTypeSelect
-  value={eventType}
-  onValueChange={(v) => setValue("eventType", v)}
-/>
+<EventTypeSelect value={eventType} onValueChange={(v) => setValue('eventType', v)} />
 ```
 
 - [ ] **Step 2: Run the SearchForm test suite to find breakage**
@@ -642,25 +602,17 @@ Expected: One test fails — "picks up new defaultValues when re-mounted with a 
 Replace the test "picks up new defaultValues when re-mounted with a new key":
 
 ```tsx
-test("picks up new defaultValues when re-mounted with a new key", () => {
+test('picks up new defaultValues when re-mounted with a new key', () => {
   const { rerender } = render(
-    <SearchForm key="a" defaultValues={{ eventType: "BGM" }} onSearch={noop} />,
-  );
-  expect(
-    screen.getByRole("button", { name: "Remove BGM" }),
-  ).toBeInTheDocument();
+    <SearchForm key="a" defaultValues={{ eventType: 'BGM' }} onSearch={noop} />,
+  )
+  expect(screen.getByRole('button', { name: 'Remove BGM' })).toBeInTheDocument()
 
-  rerender(
-    <SearchForm key="b" defaultValues={{ eventType: "RPG" }} onSearch={noop} />,
-  );
+  rerender(<SearchForm key="b" defaultValues={{ eventType: 'RPG' }} onSearch={noop} />)
 
-  expect(
-    screen.getByRole("button", { name: "Remove RPG" }),
-  ).toBeInTheDocument();
-  expect(
-    screen.queryByRole("button", { name: "Remove BGM" }),
-  ).not.toBeInTheDocument();
-});
+  expect(screen.getByRole('button', { name: 'Remove RPG' })).toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: 'Remove BGM' })).not.toBeInTheDocument()
+})
 ```
 
 - [ ] **Step 4: Run the full test suite**

@@ -1,6 +1,6 @@
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
-import indexStyles from "./index.module.css";
-import rootStyles from "./__root.module.css";
+import { createRootRoute, Link, Outlet } from '@tanstack/react-router'
+import indexStyles from './index.module.css'
+import rootStyles from './__root.module.css'
 
 export const Route = createRootRoute({
   component: () => (
@@ -16,4 +16,4 @@ export const Route = createRootRoute({
       <Outlet />
     </div>
   ),
-});
+})

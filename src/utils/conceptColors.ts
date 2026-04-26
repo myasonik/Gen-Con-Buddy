@@ -1,16 +1,16 @@
 export interface ConceptColor {
-  color: string;
-  bg: string;
+  color: string
+  bg: string
 }
 
 // These values mirror the CSS tokens in src/styles/tokens.css (--color-type-*, --color-day-*).
 // If a token color changes, update both files.
-const ROLEPLAY: ConceptColor = { color: "#5c3a7a", bg: "#f0eaf7" };
-const BOARD_CARD: ConceptColor = { color: "#2a5c3a", bg: "#e8f2ea" };
-const MINIATURES: ConceptColor = { color: "#1a3d5c", bg: "#e4edf5" };
-const ELECTRONIC: ConceptColor = { color: "#7a4a00", bg: "#fdf0d8" };
-const LEARNING: ConceptColor = { color: "#1a5c5c", bg: "#e4f2f2" };
-const ENTERTAINMENT: ConceptColor = { color: "#7a2040", bg: "#f5e4ea" };
+const ROLEPLAY: ConceptColor = { color: '#5c3a7a', bg: '#f0eaf7' }
+const BOARD_CARD: ConceptColor = { color: '#2a5c3a', bg: '#e8f2ea' }
+const MINIATURES: ConceptColor = { color: '#1a3d5c', bg: '#e4edf5' }
+const ELECTRONIC: ConceptColor = { color: '#7a4a00', bg: '#fdf0d8' }
+const LEARNING: ConceptColor = { color: '#1a5c5c', bg: '#e4f2f2' }
+const ENTERTAINMENT: ConceptColor = { color: '#7a2040', bg: '#f5e4ea' }
 
 export const EVENT_TYPE_COLORS: Record<string, ConceptColor> = {
   RPG: ROLEPLAY,
@@ -32,27 +32,27 @@ export const EVENT_TYPE_COLORS: Record<string, ConceptColor> = {
   SPA: ENTERTAINMENT,
   TRD: ENTERTAINMENT,
   ZED: ENTERTAINMENT,
-};
+}
 
 export const DAY_COLORS: Record<string, ConceptColor> = {
-  Wednesday: { color: "#4a3570", bg: "#edeaf7" },
-  Thursday: { color: "#7a4a00", bg: "#fdf0d8" },
-  Friday: { color: "#2a5c3a", bg: "#e8f2ea" },
-  Saturday: { color: "#1a3d5c", bg: "#e4edf5" },
-  Sunday: { color: "#7a2040", bg: "#f5e4ea" },
-};
+  Wednesday: { color: '#4a3570', bg: '#edeaf7' },
+  Thursday: { color: '#7a4a00', bg: '#fdf0d8' },
+  Friday: { color: '#2a5c3a', bg: '#e8f2ea' },
+  Saturday: { color: '#1a3d5c', bg: '#e4edf5' },
+  Sunday: { color: '#7a2040', bg: '#f5e4ea' },
+}
 
 export const EXPERIENCE_COLORS: Record<string, ConceptColor> = {
   "None (You've never played before - rules will be taught)": {
-    color: "#2a5c3a",
-    bg: "#e8f2ea",
+    color: '#2a5c3a',
+    bg: '#e8f2ea',
   },
   "Some (You've played it a bit and understand the basics)": {
-    color: "#7a4a00",
-    bg: "#fdf0d8",
+    color: '#7a4a00',
+    bg: '#fdf0d8',
   },
-  "Expert (You play it regularly and know all the rules)": {
-    color: "#7a2040",
-    bg: "#f5e4ea",
+  'Expert (You play it regularly and know all the rules)': {
+    color: '#7a2040',
+    bg: '#f5e4ea',
   },
-};
+}

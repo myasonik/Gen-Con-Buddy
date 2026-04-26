@@ -67,29 +67,29 @@ Add at the bottom of the file:
 
 ```typescript
 export interface ChangelogSummary {
-  id: string;
-  date: string;
-  updatedCount: number;
-  deletedCount: number;
-  createdCount: number;
+  id: string
+  date: string
+  updatedCount: number
+  deletedCount: number
+  createdCount: number
 }
 
 export interface ChangelogEntry {
-  id: string;
-  date: string;
-  updatedEvents: Event[];
-  deletedEvents: Event[];
-  createdEvents: Event[];
+  id: string
+  date: string
+  updatedEvents: Event[]
+  deletedEvents: Event[]
+  createdEvents: Event[]
 }
 
 export interface ListChangelogsResponse {
-  error?: string;
-  entries?: ChangelogSummary[];
+  error?: string
+  entries?: ChangelogSummary[]
 }
 
 export interface FetchChangelogResponse {
-  error?: string;
-  entry?: ChangelogEntry;
+  error?: string
+  entry?: ChangelogEntry
 }
 ```
 
@@ -104,31 +104,29 @@ import type {
   ListChangelogsResponse,
   FetchChangelogResponse,
   ChangelogEntry,
-} from "./types";
+} from './types'
 ```
 
 Append to the bottom of the file:
 
 ```typescript
-export async function fetchChangelogList(
-  limit = 6,
-): Promise<ListChangelogsResponse> {
-  const url = new URL("/api/changelog/list", window.location.origin);
-  url.searchParams.set("limit", String(limit));
-  const res = await fetch(url.toString());
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json() as Promise<ListChangelogsResponse>;
+export async function fetchChangelogList(limit = 6): Promise<ListChangelogsResponse> {
+  const url = new URL('/api/changelog/list', window.location.origin)
+  url.searchParams.set('limit', String(limit))
+  const res = await fetch(url.toString())
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  return res.json() as Promise<ListChangelogsResponse>
 }
 
 export async function fetchChangelogEntry(id: string): Promise<ChangelogEntry> {
-  const url = new URL("/api/changelog/fetch", window.location.origin);
-  url.searchParams.set("id", id);
-  const res = await fetch(url.toString());
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = (await res.json()) as FetchChangelogResponse;
-  if (data.error) throw new Error(data.error);
-  if (!data.entry) throw new Error("Missing entry in response");
-  return data.entry;
+  const url = new URL('/api/changelog/fetch', window.location.origin)
+  url.searchParams.set('id', id)
+  const res = await fetch(url.toString())
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  const data = (await res.json()) as FetchChangelogResponse
+  if (data.error) throw new Error(data.error)
+  if (!data.entry) throw new Error('Missing entry in response')
+  return data.entry
 }
 ```
 
@@ -158,41 +156,33 @@ git commit -m "feat(changelog): add types and API functions"
 Update the import at the top:
 
 ```typescript
-import type {
-  Event,
-  ChangelogSummary,
-  ChangelogEntry,
-} from "../../utils/types";
+import type { Event, ChangelogSummary, ChangelogEntry } from '../../utils/types'
 ```
 
 Append to the bottom of the file (after `makeEvent`):
 
 ```typescript
-export function makeChangelogSummary(
-  overrides: Partial<ChangelogSummary> = {},
-): ChangelogSummary {
-  counter++;
+export function makeChangelogSummary(overrides: Partial<ChangelogSummary> = {}): ChangelogSummary {
+  counter++
   return {
     id: `entry-${counter}`,
-    date: "2026-04-25T12:00:00Z",
+    date: '2026-04-25T12:00:00Z',
     createdCount: 2,
     updatedCount: 1,
     deletedCount: 0,
     ...overrides,
-  };
+  }
 }
 
-export function makeChangelogEntry(
-  overrides: Partial<ChangelogEntry> = {},
-): ChangelogEntry {
+export function makeChangelogEntry(overrides: Partial<ChangelogEntry> = {}): ChangelogEntry {
   const base: ChangelogEntry = {
     id: `entry-${counter}`,
-    date: "2026-04-25T12:00:00Z",
+    date: '2026-04-25T12:00:00Z',
     createdEvents: [makeEvent()],
     updatedEvents: [],
     deletedEvents: [],
-  };
-  return { ...base, ...overrides };
+  }
+  return { ...base, ...overrides }
 }
 ```
 
@@ -201,13 +191,13 @@ export function makeChangelogEntry(
 Update the imports at the top:
 
 ```typescript
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse } from 'msw'
 import type {
   EventSearchResponse,
   ListChangelogsResponse,
   FetchChangelogResponse,
-} from "../../utils/types";
-import { makeEvent, makeChangelogSummary, makeChangelogEntry } from "./factory";
+} from '../../utils/types'
+import { makeEvent, makeChangelogSummary, makeChangelogEntry } from './factory'
 ```
 
 Add to the `handlers` array after the existing `/api/events/search` handler:
@@ -270,15 +260,15 @@ Both test files import their subject with `"./ColumnActionsPopover"` and `"./Col
 Find these two lines:
 
 ```typescript
-import { ColumnActionsPopover } from "./ColumnActionsPopover";
-import { ColumnResizeDialog } from "./ColumnResizeDialog";
+import { ColumnActionsPopover } from './ColumnActionsPopover'
+import { ColumnResizeDialog } from './ColumnResizeDialog'
 ```
 
 Replace with:
 
 ```typescript
-import { ColumnActionsPopover } from "../../ui/EventTable/ColumnActionsPopover";
-import { ColumnResizeDialog } from "../../ui/EventTable/ColumnResizeDialog";
+import { ColumnActionsPopover } from '../../ui/EventTable/ColumnActionsPopover'
+import { ColumnResizeDialog } from '../../ui/EventTable/ColumnResizeDialog'
 ```
 
 - [ ] **Step 4: Run all tests**
@@ -314,78 +304,74 @@ git commit -m "refactor: move ColumnActionsPopover and ColumnResizeDialog to ui/
 Create `src/ui/EventTable/EventTable.test.tsx`:
 
 ```tsx
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import {
   createRootRoute,
   createRoute,
   createRouter,
   RouterProvider,
   createMemoryHistory,
-} from "@tanstack/react-router";
-import { makeEvent } from "../../test/msw/factory";
-import { EventTable } from "./EventTable";
-import type { Event } from "../../utils/types";
+} from '@tanstack/react-router'
+import { makeEvent } from '../../test/msw/factory'
+import { EventTable } from './EventTable'
+import type { Event } from '../../utils/types'
 
 beforeEach(() => {
-  localStorage.clear();
-});
+  localStorage.clear()
+})
 
 function renderEventTable(events: Event[] = [makeEvent()]) {
   const rootRoute = createRootRoute({
     component: () => <EventTable events={events} />,
-  });
+  })
   const eventRoute = createRoute({
     getParentRoute: () => rootRoute,
-    path: "/event/$id",
+    path: '/event/$id',
     component: () => null,
-  });
+  })
   const router = createRouter({
     routeTree: rootRoute.addChildren([eventRoute]),
-    history: createMemoryHistory({ initialEntries: ["/"] }),
-  });
-  render(<RouterProvider router={router} />);
+    history: createMemoryHistory({ initialEntries: ['/'] }),
+  })
+  render(<RouterProvider router={router} />)
 }
 
-test("renders a table row for each event", () => {
-  renderEventTable([makeEvent(), makeEvent()]);
-  const rows = screen.getAllByRole("row");
-  expect(rows).toHaveLength(3); // 1 header + 2 data rows
-});
+test('renders a table row for each event', () => {
+  renderEventTable([makeEvent(), makeEvent()])
+  const rows = screen.getAllByRole('row')
+  expect(rows).toHaveLength(3) // 1 header + 2 data rows
+})
 
-test("renders empty state when no events provided", () => {
-  renderEventTable([]);
-  expect(screen.getByText("No events.")).toBeInTheDocument();
-});
+test('renders empty state when no events provided', () => {
+  renderEventTable([])
+  expect(screen.getByText('No events.')).toBeInTheDocument()
+})
 
-test("title column is visible by default and shows event title", () => {
-  renderEventTable([makeEvent({ title: "Dragon Hunt" })]);
-  expect(screen.getByText("Dragon Hunt")).toBeInTheDocument();
-});
+test('title column is visible by default and shows event title', () => {
+  renderEventTable([makeEvent({ title: 'Dragon Hunt' })])
+  expect(screen.getByText('Dragon Hunt')).toBeInTheDocument()
+})
 
-test("title link points to the event detail route", () => {
-  renderEventTable([
-    makeEvent({ gameId: "RPG24000042", title: "Dragon Hunt" }),
-  ]);
-  expect(screen.getByRole("link", { name: "Dragon Hunt" })).toHaveAttribute(
-    "href",
-    "/event/RPG24000042",
-  );
-});
+test('title link points to the event detail route', () => {
+  renderEventTable([makeEvent({ gameId: 'RPG24000042', title: 'Dragon Hunt' })])
+  expect(screen.getByRole('link', { name: 'Dragon Hunt' })).toHaveAttribute(
+    'href',
+    '/event/RPG24000042',
+  )
+})
 
-test("renders the column visibility panel", () => {
-  renderEventTable();
-  expect(screen.getByText("Customize columns")).toBeInTheDocument();
-});
+test('renders the column visibility panel', () => {
+  renderEventTable()
+  expect(screen.getByText('Customize columns')).toBeInTheDocument()
+})
 
-test("toggling a column off hides its header", async () => {
-  const user = userEvent.setup();
-  renderEventTable();
-  await user.click(screen.getByRole("checkbox", { name: "Title" }));
-  expect(
-    screen.queryByRole("columnheader", { name: "Title" }),
-  ).not.toBeInTheDocument();
-});
+test('toggling a column off hides its header', async () => {
+  const user = userEvent.setup()
+  renderEventTable()
+  await user.click(screen.getByRole('checkbox', { name: 'Title' }))
+  expect(screen.queryByRole('columnheader', { name: 'Title' })).not.toBeInTheDocument()
+})
 ```
 
 - [ ] **Step 2: Run tests — verify all fail**
@@ -402,29 +388,25 @@ Create `src/ui/EventTable/EventTable.module.css` with the exact content of `src/
 Create `src/ui/EventTable/EventTable.tsx`:
 
 ```tsx
-import { useState } from "react";
-import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-} from "@tanstack/react-table";
-import type { ColumnDef } from "@tanstack/react-table";
-import { Link } from "@tanstack/react-router";
-import { format } from "date-fns";
-import { useColumnVisibility } from "../../hooks/useColumnVisibility";
-import { useColumnSizing } from "../../hooks/useColumnSizing";
-import { ColumnActionsPopover } from "./ColumnActionsPopover";
-import { ColumnResizeDialog } from "./ColumnResizeDialog";
-import { announce } from "../../lib/announce";
-import { ConceptBadge } from "../Badge/Badge";
-import { Pawn } from "../icons/Pawn";
-import { EXP } from "../../utils/enums";
-import type { Event } from "../../utils/types";
-import styles from "./EventTable.module.css";
+import { useState } from 'react'
+import { useReactTable, getCoreRowModel, flexRender } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
+import { Link } from '@tanstack/react-router'
+import { format } from 'date-fns'
+import { useColumnVisibility } from '../../hooks/useColumnVisibility'
+import { useColumnSizing } from '../../hooks/useColumnSizing'
+import { ColumnActionsPopover } from './ColumnActionsPopover'
+import { ColumnResizeDialog } from './ColumnResizeDialog'
+import { announce } from '../../lib/announce'
+import { ConceptBadge } from '../Badge/Badge'
+import { Pawn } from '../icons/Pawn'
+import { EXP } from '../../utils/enums'
+import type { Event } from '../../utils/types'
+import styles from './EventTable.module.css'
 
-declare module "@tanstack/react-table" {
+declare module '@tanstack/react-table' {
   interface ColumnMeta<TData, TValue> {
-    sortField?: string;
+    sortField?: string
   }
 }
 
@@ -433,56 +415,51 @@ declare module "@tanstack/react-table" {
 // No changes to any column definition.
 export const COLUMNS: ColumnDef<Event>[] = [
   /* … paste lines 38–299 here … */
-];
+]
 
 interface EventTableProps {
-  events: Event[];
-  activeSortField?: string;
-  activeSortDir?: "asc" | "desc";
-  onSort?: (sort: string | undefined) => void;
+  events: Event[]
+  activeSortField?: string
+  activeSortDir?: 'asc' | 'desc'
+  onSort?: (sort: string | undefined) => void
 }
 
-export function EventTable({
-  events,
-  activeSortField,
-  activeSortDir,
-  onSort,
-}: EventTableProps) {
-  const { visibility, toggle, reset } = useColumnVisibility();
-  const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
+export function EventTable({ events, activeSortField, activeSortDir, onSort }: EventTableProps) {
+  const { visibility, toggle, reset } = useColumnVisibility()
+  const { sizing, setSizing, reset: resetSizing } = useColumnSizing()
   const [resizeTarget, setResizeTarget] = useState<{
-    columnId: string;
-    columnName: string;
-    currentWidth: number;
-  } | null>(null);
+    columnId: string
+    columnName: string
+    currentWidth: number
+  } | null>(null)
 
   const handleSortClick = (sortField: string, label: string) => {
-    if (!onSort) return;
+    if (!onSort) return
     if (activeSortField !== sortField) {
-      onSort(`${sortField}.asc`);
-      announce(`Sorted by ${label}, ascending`);
-    } else if (activeSortDir === "asc") {
-      onSort(`${sortField}.desc`);
-      announce(`Sorted by ${label}, descending`);
+      onSort(`${sortField}.asc`)
+      announce(`Sorted by ${label}, ascending`)
+    } else if (activeSortDir === 'asc') {
+      onSort(`${sortField}.desc`)
+      announce(`Sorted by ${label}, descending`)
     } else {
-      onSort(undefined);
-      announce("Sort cleared");
+      onSort(undefined)
+      announce('Sort cleared')
     }
-  };
+  }
 
   const table = useReactTable({
     data: events,
     columns: COLUMNS,
-    columnResizeMode: "onChange",
+    columnResizeMode: 'onChange',
     state: { columnVisibility: visibility, columnSizing: sizing },
     onColumnSizingChange: setSizing,
     manualSorting: true,
     manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
-  });
+  })
 
   if (events.length === 0) {
-    return <p>No events.</p>;
+    return <p>No events.</p>
   }
 
   return (
@@ -507,8 +484,8 @@ export function EventTable({
           <button
             type="button"
             onClick={() => {
-              reset();
-              resetSizing();
+              reset()
+              resetSizing()
             }}
           >
             Reset to defaults
@@ -522,14 +499,12 @@ export function EventTable({
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
-                  const sortField = header.column.columnDef.meta?.sortField;
-                  const label = header.column.columnDef.header as string;
-                  const isActive =
-                    !!onSort && !!sortField && activeSortField === sortField;
-                  let ariaSort: "ascending" | "descending" | "none" = "none";
+                  const sortField = header.column.columnDef.meta?.sortField
+                  const label = header.column.columnDef.header as string
+                  const isActive = !!onSort && !!sortField && activeSortField === sortField
+                  let ariaSort: 'ascending' | 'descending' | 'none' = 'none'
                   if (isActive) {
-                    ariaSort =
-                      activeSortDir === "asc" ? "ascending" : "descending";
+                    ariaSort = activeSortDir === 'asc' ? 'ascending' : 'descending'
                   }
                   return (
                     <th
@@ -537,7 +512,7 @@ export function EventTable({
                       aria-sort={onSort ? ariaSort : undefined}
                       scope="col"
                       aria-label={label}
-                      className={`${styles.resizableTh}${header.column.getIsResizing() ? ` ${styles.isResizing}` : ""}`}
+                      className={`${styles.resizableTh}${header.column.getIsResizing() ? ` ${styles.isResizing}` : ''}`}
                       style={{ width: header.getSize() }}
                     >
                       <div className={styles.thContent}>
@@ -546,29 +521,18 @@ export function EventTable({
                             type="button"
                             className={styles.sortButton}
                             aria-label={`Sort by ${label}`}
-                            onClick={() =>
-                              sortField && handleSortClick(sortField, label)
-                            }
+                            onClick={() => sortField && handleSortClick(sortField, label)}
                           >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                            {flexRender(header.column.columnDef.header, header.getContext())}
                             {isActive && (
-                              <span
-                                aria-hidden="true"
-                                className={styles.sortIndicator}
-                              >
-                                {activeSortDir === "asc" ? " ▲" : " ▼"}
+                              <span aria-hidden="true" className={styles.sortIndicator}>
+                                {activeSortDir === 'asc' ? ' ▲' : ' ▼'}
                               </span>
                             )}
                           </button>
                         ) : (
                           <span>
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                            {flexRender(header.column.columnDef.header, header.getContext())}
                           </span>
                         )}
                         {header.column.getCanResize() && (
@@ -596,7 +560,7 @@ export function EventTable({
                         />
                       )}
                     </th>
-                  );
+                  )
                 })}
               </tr>
             ))}
@@ -605,9 +569,7 @@ export function EventTable({
             {table.getRowModel().rows.map((row) => (
               <tr key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
+                  <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
                 ))}
               </tr>
             ))}
@@ -620,13 +582,13 @@ export function EventTable({
           columnName={resizeTarget.columnName}
           currentWidth={resizeTarget.currentWidth}
           onApply={(width) => {
-            setSizing((prev) => ({ ...prev, [resizeTarget.columnId]: width }));
+            setSizing((prev) => ({ ...prev, [resizeTarget.columnId]: width }))
           }}
           onClose={() => setResizeTarget(null)}
         />
       )}
     </section>
-  );
+  )
 }
 ```
 
@@ -661,50 +623,41 @@ Expected: all pass. Note the total count — they must all pass again after the 
 Overwrite `src/components/SearchResults/SearchResults.tsx` with:
 
 ```tsx
-import { useQuery } from "@tanstack/react-query";
-import { fetchEvents } from "../../utils/api";
-import { Pagination } from "../Pagination/Pagination";
-import type { SearchParams } from "../../utils/types";
-import { PixelState } from "../../ui/PixelState/PixelState";
-import { EventTable } from "../../ui/EventTable/EventTable";
+import { useQuery } from '@tanstack/react-query'
+import { fetchEvents } from '../../utils/api'
+import { Pagination } from '../Pagination/Pagination'
+import type { SearchParams } from '../../utils/types'
+import { PixelState } from '../../ui/PixelState/PixelState'
+import { EventTable } from '../../ui/EventTable/EventTable'
 
 interface SearchResultsProps {
-  searchParams: SearchParams;
-  onNavigate: (page: number, limit: number) => void;
-  onSort: (sort: string | undefined) => void;
+  searchParams: SearchParams
+  onNavigate: (page: number, limit: number) => void
+  onSort: (sort: string | undefined) => void
 }
 
-export function SearchResults({
-  searchParams,
-  onNavigate,
-  onSort,
-}: SearchResultsProps) {
-  const page = searchParams.page ?? 1;
-  const limit = searchParams.limit ?? 100;
+export function SearchResults({ searchParams, onNavigate, onSort }: SearchResultsProps) {
+  const page = searchParams.page ?? 1
+  const limit = searchParams.limit ?? 100
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["events", searchParams],
+    queryKey: ['events', searchParams],
     queryFn: () => fetchEvents(searchParams),
-  });
+  })
 
-  let activeSortField: string | undefined;
-  let activeSortDir: "asc" | "desc" | undefined;
+  let activeSortField: string | undefined
+  let activeSortDir: 'asc' | 'desc' | undefined
   if (searchParams.sort) {
-    const [field, dir] = searchParams.sort.split(".");
-    if (field && (dir === "asc" || dir === "desc")) {
-      activeSortField = field;
-      activeSortDir = dir;
+    const [field, dir] = searchParams.sort.split('.')
+    if (field && (dir === 'asc' || dir === 'desc')) {
+      activeSortField = field
+      activeSortDir = dir
     }
   }
 
   const pagination =
     data && data.data.length > 0 ? (
-      <Pagination
-        page={page}
-        limit={limit}
-        total={data.meta.total}
-        onNavigate={onNavigate}
-      />
-    ) : null;
+      <Pagination page={page} limit={limit} total={data.meta.total} onNavigate={onNavigate} />
+    ) : null
 
   return (
     <section>
@@ -717,11 +670,7 @@ export function SearchResults({
         />
       )}
       {data && data.data.length === 0 && (
-        <PixelState
-          variant="empty"
-          text="NO QUESTS FOUND"
-          subtext="Try broadening your search."
-        />
+        <PixelState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />
       )}
       {data && data.data.length > 0 && (
         <>
@@ -736,7 +685,7 @@ export function SearchResults({
         </>
       )}
     </section>
-  );
+  )
 }
 ```
 
@@ -770,15 +719,15 @@ git commit -m "refactor(SearchResults): delegate table rendering to EventTable"
 Create `src/routes/changelog.tsx`:
 
 ```tsx
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute("/changelog")({
+export const Route = createFileRoute('/changelog')({
   component: () => (
     <main>
       <p>Changelog</p>
     </main>
   ),
-});
+})
 ```
 
 - [ ] **Step 2: Write the full test file**
@@ -786,9 +735,9 @@ export const Route = createFileRoute("/changelog")({
 Create `src/routes/changelog.test.tsx`:
 
 ```tsx
-import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { http, HttpResponse } from "msw";
+import { act, render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { http, HttpResponse } from 'msw'
 import {
   createRootRoute,
   createRoute,
@@ -796,51 +745,44 @@ import {
   RouterProvider,
   createMemoryHistory,
   Outlet,
-} from "@tanstack/react-router";
-import { server } from "../test/msw/server";
-import {
-  makeChangelogSummary,
-  makeChangelogEntry,
-  makeEvent,
-} from "../test/msw/factory";
-import type {
-  ListChangelogsResponse,
-  FetchChangelogResponse,
-} from "../utils/types";
-import { ChangelogPage } from "../components/ChangelogPage/ChangelogPage";
+} from '@tanstack/react-router'
+import { server } from '../test/msw/server'
+import { makeChangelogSummary, makeChangelogEntry, makeEvent } from '../test/msw/factory'
+import type { ListChangelogsResponse, FetchChangelogResponse } from '../utils/types'
+import { ChangelogPage } from '../components/ChangelogPage/ChangelogPage'
 
 beforeEach(() => {
-  localStorage.clear();
-});
+  localStorage.clear()
+})
 
 async function renderChangelogPage() {
-  const rootRoute = createRootRoute({ component: () => <Outlet /> });
+  const rootRoute = createRootRoute({ component: () => <Outlet /> })
   const changelogRoute = createRoute({
     getParentRoute: () => rootRoute,
-    path: "/changelog",
+    path: '/changelog',
     component: ChangelogPage,
-  });
+  })
   const eventRoute = createRoute({
     getParentRoute: () => rootRoute,
-    path: "/event/$id",
+    path: '/event/$id',
     component: () => null,
-  });
+  })
   const router = createRouter({
     routeTree: rootRoute.addChildren([changelogRoute, eventRoute]),
-    history: createMemoryHistory({ initialEntries: ["/changelog"] }),
-  });
+    history: createMemoryHistory({ initialEntries: ['/changelog'] }),
+  })
   await act(async () => {
-    render(<RouterProvider router={router} />);
-  });
+    render(<RouterProvider router={router} />)
+  })
 }
 
-test("renders a summary row for each changelog entry", async () => {
+test('renders a summary row for each changelog entry', async () => {
   server.use(
-    http.get("/api/changelog/list", () =>
+    http.get('/api/changelog/list', () =>
       HttpResponse.json<ListChangelogsResponse>({
         entries: [
           makeChangelogSummary({
-            id: "entry-1",
+            id: 'entry-1',
             createdCount: 3,
             updatedCount: 1,
             deletedCount: 0,
@@ -848,46 +790,37 @@ test("renders a summary row for each changelog entry", async () => {
         ],
       }),
     ),
-  );
-  await renderChangelogPage();
-  expect(await screen.findByText(/3 created/)).toBeInTheDocument();
-  expect(screen.getByText(/1 updated/)).toBeInTheDocument();
-  expect(screen.getByText(/0 deleted/)).toBeInTheDocument();
-});
+  )
+  await renderChangelogPage()
+  expect(await screen.findByText(/3 created/)).toBeInTheDocument()
+  expect(screen.getByText(/1 updated/)).toBeInTheDocument()
+  expect(screen.getByText(/0 deleted/)).toBeInTheDocument()
+})
 
-test("shows empty state when no entries returned", async () => {
+test('shows empty state when no entries returned', async () => {
   server.use(
-    http.get("/api/changelog/list", () =>
+    http.get('/api/changelog/list', () =>
       HttpResponse.json<ListChangelogsResponse>({ entries: [] }),
     ),
-  );
-  await renderChangelogPage();
-  expect(
-    await screen.findByText("No changelog entries yet."),
-  ).toBeInTheDocument();
-});
+  )
+  await renderChangelogPage()
+  expect(await screen.findByText('No changelog entries yet.')).toBeInTheDocument()
+})
 
-test("shows error state when list fetch fails", async () => {
-  server.use(
-    http.get(
-      "/api/changelog/list",
-      () => new HttpResponse(null, { status: 500 }),
-    ),
-  );
-  await renderChangelogPage();
-  expect(
-    await screen.findByText(/could not load changelog/i),
-  ).toBeInTheDocument();
-});
+test('shows error state when list fetch fails', async () => {
+  server.use(http.get('/api/changelog/list', () => new HttpResponse(null, { status: 500 })))
+  await renderChangelogPage()
+  expect(await screen.findByText(/could not load changelog/i)).toBeInTheDocument()
+})
 
-test("expanding a row fetches and displays the event table", async () => {
-  const user = userEvent.setup();
+test('expanding a row fetches and displays the event table', async () => {
+  const user = userEvent.setup()
   server.use(
-    http.get("/api/changelog/list", () =>
+    http.get('/api/changelog/list', () =>
       HttpResponse.json<ListChangelogsResponse>({
         entries: [
           makeChangelogSummary({
-            id: "entry-1",
+            id: 'entry-1',
             createdCount: 1,
             updatedCount: 0,
             deletedCount: 0,
@@ -895,50 +828,45 @@ test("expanding a row fetches and displays the event table", async () => {
         ],
       }),
     ),
-    http.get("/api/changelog/fetch", () =>
+    http.get('/api/changelog/fetch', () =>
       HttpResponse.json<FetchChangelogResponse>({
         entry: makeChangelogEntry({
-          id: "entry-1",
-          createdEvents: [makeEvent({ title: "Dragon Hunt" })],
+          id: 'entry-1',
+          createdEvents: [makeEvent({ title: 'Dragon Hunt' })],
           updatedEvents: [],
           deletedEvents: [],
         }),
       }),
     ),
-  );
-  await renderChangelogPage();
-  await user.click(await screen.findByText(/1 created/));
-  expect(await screen.findByText("Dragon Hunt")).toBeInTheDocument();
-});
+  )
+  await renderChangelogPage()
+  await user.click(await screen.findByText(/1 created/))
+  expect(await screen.findByText('Dragon Hunt')).toBeInTheDocument()
+})
 
-test("shows entry error message when entry fetch fails", async () => {
-  const user = userEvent.setup();
+test('shows entry error message when entry fetch fails', async () => {
+  const user = userEvent.setup()
   server.use(
-    http.get("/api/changelog/list", () =>
+    http.get('/api/changelog/list', () =>
       HttpResponse.json<ListChangelogsResponse>({
-        entries: [makeChangelogSummary({ id: "entry-1" })],
+        entries: [makeChangelogSummary({ id: 'entry-1' })],
       }),
     ),
-    http.get(
-      "/api/changelog/fetch",
-      () => new HttpResponse(null, { status: 500 }),
-    ),
-  );
-  await renderChangelogPage();
-  await user.click(await screen.findByText(/2 created/));
-  expect(
-    await screen.findByText(/could not load this entry/i),
-  ).toBeInTheDocument();
-});
+    http.get('/api/changelog/fetch', () => new HttpResponse(null, { status: 500 })),
+  )
+  await renderChangelogPage()
+  await user.click(await screen.findByText(/2 created/))
+  expect(await screen.findByText(/could not load this entry/i)).toBeInTheDocument()
+})
 
-test("does not render section headers for empty event groups", async () => {
-  const user = userEvent.setup();
+test('does not render section headers for empty event groups', async () => {
+  const user = userEvent.setup()
   server.use(
-    http.get("/api/changelog/list", () =>
+    http.get('/api/changelog/list', () =>
       HttpResponse.json<ListChangelogsResponse>({
         entries: [
           makeChangelogSummary({
-            id: "entry-1",
+            id: 'entry-1',
             createdCount: 1,
             updatedCount: 0,
             deletedCount: 0,
@@ -946,23 +874,23 @@ test("does not render section headers for empty event groups", async () => {
         ],
       }),
     ),
-    http.get("/api/changelog/fetch", () =>
+    http.get('/api/changelog/fetch', () =>
       HttpResponse.json<FetchChangelogResponse>({
         entry: makeChangelogEntry({
-          id: "entry-1",
-          createdEvents: [makeEvent({ title: "Dragon Hunt" })],
+          id: 'entry-1',
+          createdEvents: [makeEvent({ title: 'Dragon Hunt' })],
           updatedEvents: [],
           deletedEvents: [],
         }),
       }),
     ),
-  );
-  await renderChangelogPage();
-  await user.click(await screen.findByText(/1 created/));
-  expect(await screen.findByText("Created (1)")).toBeInTheDocument();
-  expect(screen.queryByText("Updated (0)")).not.toBeInTheDocument();
-  expect(screen.queryByText("Deleted (0)")).not.toBeInTheDocument();
-});
+  )
+  await renderChangelogPage()
+  await user.click(await screen.findByText(/1 created/))
+  expect(await screen.findByText('Created (1)')).toBeInTheDocument()
+  expect(screen.queryByText('Updated (0)')).not.toBeInTheDocument()
+  expect(screen.queryByText('Deleted (0)')).not.toBeInTheDocument()
+})
 ```
 
 - [ ] **Step 3: Run tests — verify all fail**
@@ -996,71 +924,66 @@ git commit -m "test(changelog): add failing route tests and route stub"
 Create `src/components/ChangelogPage/useChangelogPrefetch.ts`:
 
 ```typescript
-import { useCallback, useEffect, useReducer, useRef } from "react";
-import type { ChangelogEntry, ChangelogSummary } from "../../utils/types";
-import { fetchChangelogEntry } from "../../utils/api";
+import { useCallback, useEffect, useReducer, useRef } from 'react'
+import type { ChangelogEntry, ChangelogSummary } from '../../utils/types'
+import { fetchChangelogEntry } from '../../utils/api'
 
-type CacheValue = ChangelogEntry | "loading" | "error";
+type CacheValue = ChangelogEntry | 'loading' | 'error'
 
 export function useChangelogPrefetch(summaries: ChangelogSummary[]) {
-  const cache = useRef<Map<string, CacheValue>>(new Map());
-  const summariesRef = useRef(summaries);
-  summariesRef.current = summaries;
-  const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
+  const cache = useRef<Map<string, CacheValue>>(new Map())
+  const summariesRef = useRef(summaries)
+  summariesRef.current = summaries
+  const [, forceUpdate] = useReducer((x: number) => x + 1, 0)
 
   const fetchOne = useCallback(async (id: string): Promise<void> => {
-    const current = cache.current.get(id);
+    const current = cache.current.get(id)
     // Skip if already loading or successfully fetched; retry if "error"
-    if (current === "loading" || (current !== undefined && current !== "error"))
-      return;
-    cache.current.set(id, "loading");
-    forceUpdate();
+    if (current === 'loading' || (current !== undefined && current !== 'error')) return
+    cache.current.set(id, 'loading')
+    forceUpdate()
     try {
-      const entry = await fetchChangelogEntry(id);
-      cache.current.set(id, entry);
+      const entry = await fetchChangelogEntry(id)
+      cache.current.set(id, entry)
     } catch {
-      cache.current.set(id, "error");
+      cache.current.set(id, 'error')
     }
-    forceUpdate();
-  }, []);
+    forceUpdate()
+  }, [])
 
   // Prefetch entry[0] as soon as the summary list is available
   useEffect(() => {
     if (summaries.length > 0) {
-      void fetchOne(summaries[0].id);
+      void fetchOne(summaries[0].id)
     }
-  }, [summaries, fetchOne]);
+  }, [summaries, fetchOne])
 
-  const getEntry = useCallback(
-    (id: string): CacheValue | undefined => cache.current.get(id),
-    [],
-  );
+  const getEntry = useCallback((id: string): CacheValue | undefined => cache.current.get(id), [])
 
   const openEntry = useCallback(
     (index: number): void => {
-      const list = summariesRef.current;
-      const summary = list[index];
-      if (!summary) return;
+      const list = summariesRef.current
+      const summary = list[index]
+      if (!summary) return
 
-      const current = cache.current.get(summary.id);
-      const isReady =
-        current !== undefined && current !== "loading" && current !== "error";
+      const current = cache.current.get(summary.id)
+      const isReady = current !== undefined && current !== 'loading' && current !== 'error'
 
       if (isReady) {
         // Already fetched — background-fetch next
-        if (index + 1 < list.length) void fetchOne(list[index + 1].id);
+        if (index + 1 < list.length) void fetchOne(list[index + 1].id)
       } else {
         // Fetch target first, then fill in surrounding entries
         void fetchOne(summary.id).then(() => {
-          for (let j = 0; j < index; j++) void fetchOne(list[j].id);
-          if (index + 1 < list.length) void fetchOne(list[index + 1].id);
-        });
+          for (let j = 0; j < index; j++) void fetchOne(list[j].id)
+          if (index + 1 < list.length) void fetchOne(list[index + 1].id)
+        })
       }
     },
     [fetchOne],
-  );
+  )
 
-  return { getEntry, openEntry };
+  return { getEntry, openEntry }
 }
 ```
 
@@ -1069,31 +992,29 @@ export function useChangelogPrefetch(summaries: ChangelogSummary[]) {
 Create `src/components/ChangelogPage/ChangelogEntryPanel.tsx`:
 
 ```tsx
-import type { ChangelogEntry } from "../../utils/types";
-import { EventTable } from "../../ui/EventTable/EventTable";
-import styles from "./ChangelogEntryPanel.module.css";
+import type { ChangelogEntry } from '../../utils/types'
+import { EventTable } from '../../ui/EventTable/EventTable'
+import styles from './ChangelogEntryPanel.module.css'
 
-type EntryValue = ChangelogEntry | "loading" | "error" | undefined;
+type EntryValue = ChangelogEntry | 'loading' | 'error' | undefined
 
 interface ChangelogEntryPanelProps {
-  entry: EntryValue;
+  entry: EntryValue
 }
 
 export function ChangelogEntryPanel({ entry }: ChangelogEntryPanelProps) {
-  if (entry === undefined || entry === "loading") {
+  if (entry === undefined || entry === 'loading') {
     return (
       <p className={styles.status} aria-busy="true">
         Loading…
       </p>
-    );
+    )
   }
 
-  if (entry === "error") {
+  if (entry === 'error') {
     return (
-      <p className={styles.status}>
-        Could not load this entry. Collapse and re-expand to retry.
-      </p>
-    );
+      <p className={styles.status}>Could not load this entry. Collapse and re-expand to retry.</p>
+    )
   }
 
   return (
@@ -1117,7 +1038,7 @@ export function ChangelogEntryPanel({ entry }: ChangelogEntryPanelProps) {
         </details>
       )}
     </div>
-  );
+  )
 }
 ```
 
@@ -1163,17 +1084,17 @@ Create `src/components/ChangelogPage/ChangelogEntryPanel.module.css`:
 Create `src/components/ChangelogPage/ChangelogRow.tsx`:
 
 ```tsx
-import { format } from "date-fns";
-import type { ChangelogEntry, ChangelogSummary } from "../../utils/types";
-import { ChangelogEntryPanel } from "./ChangelogEntryPanel";
-import styles from "./ChangelogRow.module.css";
+import { format } from 'date-fns'
+import type { ChangelogEntry, ChangelogSummary } from '../../utils/types'
+import { ChangelogEntryPanel } from './ChangelogEntryPanel'
+import styles from './ChangelogRow.module.css'
 
-type EntryValue = ChangelogEntry | "loading" | "error" | undefined;
+type EntryValue = ChangelogEntry | 'loading' | 'error' | undefined
 
 interface ChangelogRowProps {
-  summary: ChangelogSummary;
-  entry: EntryValue;
-  onOpen: () => void;
+  summary: ChangelogSummary
+  entry: EntryValue
+  onOpen: () => void
 }
 
 export function ChangelogRow({ summary, entry, onOpen }: ChangelogRowProps) {
@@ -1181,12 +1102,12 @@ export function ChangelogRow({ summary, entry, onOpen }: ChangelogRowProps) {
     <details
       className={styles.row}
       onToggle={(e) => {
-        if ((e.currentTarget as HTMLDetailsElement).open) onOpen();
+        if ((e.currentTarget as HTMLDetailsElement).open) onOpen()
       }}
     >
       <summary className={styles.summary}>
         <time dateTime={summary.date} className={styles.date}>
-          {format(new Date(summary.date), "MMM d, yyyy h:mm a")}
+          {format(new Date(summary.date), 'MMM d, yyyy h:mm a')}
         </time>
         <span className={styles.counts}>
           <span>{summary.createdCount} created</span>
@@ -1196,7 +1117,7 @@ export function ChangelogRow({ summary, entry, onOpen }: ChangelogRowProps) {
       </summary>
       <ChangelogEntryPanel entry={entry} />
     </details>
-  );
+  )
 }
 ```
 
@@ -1256,46 +1177,38 @@ Create `src/components/ChangelogPage/ChangelogRow.module.css`:
 Create `src/components/ChangelogPage/ChangelogPage.tsx`:
 
 ```tsx
-import { useEffect, useState } from "react";
-import { fetchChangelogList } from "../../utils/api";
-import type { ChangelogSummary } from "../../utils/types";
-import { useChangelogPrefetch } from "./useChangelogPrefetch";
-import { ChangelogRow } from "./ChangelogRow";
-import { PixelState } from "../../ui/PixelState/PixelState";
-import styles from "./ChangelogPage.module.css";
+import { useEffect, useState } from 'react'
+import { fetchChangelogList } from '../../utils/api'
+import type { ChangelogSummary } from '../../utils/types'
+import { useChangelogPrefetch } from './useChangelogPrefetch'
+import { ChangelogRow } from './ChangelogRow'
+import { PixelState } from '../../ui/PixelState/PixelState'
+import styles from './ChangelogPage.module.css'
 
 export function ChangelogPage() {
-  const [summaries, setSummaries] = useState<ChangelogSummary[]>([]);
-  const [listState, setListState] = useState<"loading" | "error" | "done">(
-    "loading",
-  );
-  const { getEntry, openEntry } = useChangelogPrefetch(summaries);
+  const [summaries, setSummaries] = useState<ChangelogSummary[]>([])
+  const [listState, setListState] = useState<'loading' | 'error' | 'done'>('loading')
+  const { getEntry, openEntry } = useChangelogPrefetch(summaries)
 
   useEffect(() => {
     fetchChangelogList()
       .then((res) => {
         if (res.error) {
-          setListState("error");
+          setListState('error')
         } else {
-          setSummaries(res.entries ?? []);
-          setListState("done");
+          setSummaries(res.entries ?? [])
+          setListState('done')
         }
       })
-      .catch(() => setListState("error"));
-  }, []);
+      .catch(() => setListState('error'))
+  }, [])
 
   return (
     <main className={styles.page}>
-      {listState === "loading" && (
-        <PixelState variant="loading" text="LOADING CHANGELOG…" />
-      )}
-      {listState === "error" && (
-        <p>Could not load changelog. Try refreshing.</p>
-      )}
-      {listState === "done" && summaries.length === 0 && (
-        <p>No changelog entries yet.</p>
-      )}
-      {listState === "done" && summaries.length > 0 && (
+      {listState === 'loading' && <PixelState variant="loading" text="LOADING CHANGELOG…" />}
+      {listState === 'error' && <p>Could not load changelog. Try refreshing.</p>}
+      {listState === 'done' && summaries.length === 0 && <p>No changelog entries yet.</p>}
+      {listState === 'done' && summaries.length > 0 && (
         <>
           <h1 className={styles.heading}>Changelog</h1>
           <section>
@@ -1311,7 +1224,7 @@ export function ChangelogPage() {
         </>
       )}
     </main>
-  );
+  )
 }
 ```
 
@@ -1364,12 +1277,12 @@ git commit -m "feat(changelog): implement ChangelogPage, ChangelogRow, Changelog
 Replace `src/routes/changelog.tsx` with:
 
 ```tsx
-import { createFileRoute } from "@tanstack/react-router";
-import { ChangelogPage } from "../components/ChangelogPage/ChangelogPage";
+import { createFileRoute } from '@tanstack/react-router'
+import { ChangelogPage } from '../components/ChangelogPage/ChangelogPage'
 
-export const Route = createFileRoute("/changelog")({
+export const Route = createFileRoute('/changelog')({
   component: ChangelogPage,
-});
+})
 ```
 
 - [ ] **Step 2: Add nav link to the root layout**
@@ -1377,8 +1290,8 @@ export const Route = createFileRoute("/changelog")({
 The current `src/routes/__root.tsx` has `<h1>Gen Con Buddy</h1>` and a subtitle `<p>`. Add a `<nav>` with links to Search and Changelog. The existing `createRootRoute` import stays; add `Link` to the import:
 
 ```tsx
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
-import styles from "./index.module.css";
+import { createRootRoute, Link, Outlet } from '@tanstack/react-router'
+import styles from './index.module.css'
 
 export const Route = createRootRoute({
   component: () => (
@@ -1394,7 +1307,7 @@ export const Route = createRootRoute({
       <Outlet />
     </div>
   ),
-});
+})
 ```
 
 Add `.nav` to `src/routes/index.module.css` (the root layout CSS file):

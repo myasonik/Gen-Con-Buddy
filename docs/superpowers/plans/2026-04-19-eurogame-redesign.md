@@ -66,8 +66,8 @@ Replace the entire file:
   --color-gold: #c9a84c;
 
   /* Typography */
-  --font-display: "IM Fell English", serif;
-  --font-data: "Courier Prime", monospace;
+  --font-display: 'IM Fell English', serif;
+  --font-data: 'Courier Prime', monospace;
 
   /* Type scale */
   --text-display: 22px;
@@ -196,24 +196,24 @@ No tests needed — these are pure SVG render components with no logic.
 ```tsx
 // src/ui/icons/Meeple.tsx
 interface MeepleProps {
-  frontFill?: string;
-  shadowFill?: string;
-  stroke?: string;
-  strokeWidth?: number;
-  className?: string;
-  "aria-hidden"?: true | "true";
+  frontFill?: string
+  shadowFill?: string
+  stroke?: string
+  strokeWidth?: number
+  className?: string
+  'aria-hidden'?: true | 'true'
 }
 
 const PATH =
-  "M 214,169 C 164,194 96,219 80,248 C 67,278 96,295 130,282 C 159,269 189,265 193,278 L 189,320 L 126,421 L 206,421 L 256,341 L 306,421 L 386,421 L 323,320 L 319,278 C 323,265 353,269 382,282 C 416,295 445,278 432,248 C 416,219 348,194 298,169 C 311,143 319,114 319,93 A 63 63 0 0 0 193,93 C 193,114 201,143 214,169 Z";
+  'M 214,169 C 164,194 96,219 80,248 C 67,278 96,295 130,282 C 159,269 189,265 193,278 L 189,320 L 126,421 L 206,421 L 256,341 L 306,421 L 386,421 L 323,320 L 319,278 C 323,265 353,269 382,282 C 416,295 445,278 432,248 C 416,219 348,194 298,169 C 311,143 319,114 319,93 A 63 63 0 0 0 193,93 C 193,114 201,143 214,169 Z'
 
 export function Meeple({
-  frontFill = "white",
-  shadowFill = "black",
-  stroke = "black",
+  frontFill = 'white',
+  shadowFill = 'black',
+  stroke = 'black',
   strokeWidth = 12,
   className,
-  "aria-hidden": ariaHidden,
+  'aria-hidden': ariaHidden,
 }: MeepleProps) {
   return (
     <svg
@@ -232,7 +232,7 @@ export function Meeple({
         strokeLinecap="round"
       />
     </svg>
-  );
+  )
 }
 ```
 
@@ -241,14 +241,11 @@ export function Meeple({
 ```tsx
 // src/ui/icons/MeepleFlat.tsx
 interface MeepleFlatProps {
-  className?: string;
-  "aria-hidden"?: true | "true";
+  className?: string
+  'aria-hidden'?: true | 'true'
 }
 
-export function MeepleFlat({
-  className,
-  "aria-hidden": ariaHidden,
-}: MeepleFlatProps) {
+export function MeepleFlat({ className, 'aria-hidden': ariaHidden }: MeepleFlatProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -261,7 +258,7 @@ export function MeepleFlat({
         d="M 214,169 C 164,194 96,219 80,248 C 67,278 96,295 130,282 C 159,269 189,265 193,278 L 189,320 L 126,421 L 206,421 L 256,341 L 306,421 L 386,421 L 323,320 L 319,278 C 323,265 353,269 382,282 C 416,295 445,278 432,248 C 416,219 348,194 298,169 C 311,143 319,114 319,93 A 63 63 0 0 0 193,93 C 193,114 201,143 214,169 Z"
       />
     </svg>
-  );
+  )
 }
 ```
 
@@ -270,11 +267,11 @@ export function MeepleFlat({
 ```tsx
 // src/ui/icons/Pawn.tsx
 interface PawnProps {
-  className?: string;
-  "aria-hidden"?: true | "true";
+  className?: string
+  'aria-hidden'?: true | 'true'
 }
 
-export function Pawn({ className, "aria-hidden": ariaHidden }: PawnProps) {
+export function Pawn({ className, 'aria-hidden': ariaHidden }: PawnProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -288,7 +285,7 @@ export function Pawn({ className, "aria-hidden": ariaHidden }: PawnProps) {
         fill="currentColor"
       />
     </svg>
-  );
+  )
 }
 ```
 
@@ -312,99 +309,90 @@ git commit -m "feat: add Meeple, MeepleFlat, and Pawn inline SVG components"
 
 ```ts
 // src/utils/conceptColors.test.ts
-import {
-  EVENT_TYPE_COLORS,
-  DAY_COLORS,
-  EXPERIENCE_COLORS,
-} from "./conceptColors";
+import { EVENT_TYPE_COLORS, DAY_COLORS, EXPERIENCE_COLORS } from './conceptColors'
 
 const ALL_EVENT_TYPE_CODES = [
-  "ANI",
-  "BGM",
-  "CGM",
-  "EGM",
-  "ENT",
-  "FLM",
-  "HMN",
-  "KID",
-  "LRP",
-  "MHE",
-  "NMN",
-  "RPG",
-  "SEM",
-  "SPA",
-  "TCG",
-  "TDA",
-  "TRD",
-  "WKS",
-  "ZED",
-] as const;
+  'ANI',
+  'BGM',
+  'CGM',
+  'EGM',
+  'ENT',
+  'FLM',
+  'HMN',
+  'KID',
+  'LRP',
+  'MHE',
+  'NMN',
+  'RPG',
+  'SEM',
+  'SPA',
+  'TCG',
+  'TDA',
+  'TRD',
+  'WKS',
+  'ZED',
+] as const
 
-describe("EVENT_TYPE_COLORS", () => {
-  it.each(ALL_EVENT_TYPE_CODES)("maps %s to a color entry", (code) => {
+describe('EVENT_TYPE_COLORS', () => {
+  it.each(ALL_EVENT_TYPE_CODES)('maps %s to a color entry', (code) => {
     expect(EVENT_TYPE_COLORS[code]).toMatchObject({
       color: expect.stringMatching(/^#[0-9a-f]{6}$/),
       bg: expect.stringMatching(/^#[0-9a-f]{6}$/),
-    });
-  });
+    })
+  })
 
-  it("maps RPG, LRP, TDA to the roleplay family", () => {
-    expect(EVENT_TYPE_COLORS["RPG"]).toEqual(EVENT_TYPE_COLORS["LRP"]);
-    expect(EVENT_TYPE_COLORS["RPG"]).toEqual(EVENT_TYPE_COLORS["TDA"]);
-    expect(EVENT_TYPE_COLORS["RPG"].color).toBe("#5c3a7a");
-  });
+  it('maps RPG, LRP, TDA to the roleplay family', () => {
+    expect(EVENT_TYPE_COLORS['RPG']).toEqual(EVENT_TYPE_COLORS['LRP'])
+    expect(EVENT_TYPE_COLORS['RPG']).toEqual(EVENT_TYPE_COLORS['TDA'])
+    expect(EVENT_TYPE_COLORS['RPG'].color).toBe('#5c3a7a')
+  })
 
-  it("maps BGM, CGM, TCG to the board & card family", () => {
-    expect(EVENT_TYPE_COLORS["BGM"]).toEqual(EVENT_TYPE_COLORS["CGM"]);
-    expect(EVENT_TYPE_COLORS["BGM"].color).toBe("#2a5c3a");
-  });
+  it('maps BGM, CGM, TCG to the board & card family', () => {
+    expect(EVENT_TYPE_COLORS['BGM']).toEqual(EVENT_TYPE_COLORS['CGM'])
+    expect(EVENT_TYPE_COLORS['BGM'].color).toBe('#2a5c3a')
+  })
 
-  it("maps HMN, NMN, MHE to the miniatures family", () => {
-    expect(EVENT_TYPE_COLORS["HMN"]).toEqual(EVENT_TYPE_COLORS["NMN"]);
-    expect(EVENT_TYPE_COLORS["HMN"].color).toBe("#1a3d5c");
-  });
-});
+  it('maps HMN, NMN, MHE to the miniatures family', () => {
+    expect(EVENT_TYPE_COLORS['HMN']).toEqual(EVENT_TYPE_COLORS['NMN'])
+    expect(EVENT_TYPE_COLORS['HMN'].color).toBe('#1a3d5c')
+  })
+})
 
-describe("DAY_COLORS", () => {
-  it.each(["Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])(
-    "maps %s to a color entry",
+describe('DAY_COLORS', () => {
+  it.each(['Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])(
+    'maps %s to a color entry',
     (day) => {
       expect(DAY_COLORS[day]).toMatchObject({
         color: expect.stringMatching(/^#[0-9a-f]{6}$/),
         bg: expect.stringMatching(/^#[0-9a-f]{6}$/),
-      });
+      })
     },
-  );
+  )
 
-  it("maps Thursday to amber", () => {
-    expect(DAY_COLORS["Thursday"].color).toBe("#7a4a00");
-  });
-});
+  it('maps Thursday to amber', () => {
+    expect(DAY_COLORS['Thursday'].color).toBe('#7a4a00')
+  })
+})
 
-describe("EXPERIENCE_COLORS", () => {
-  it("maps the full None string to green", () => {
+describe('EXPERIENCE_COLORS', () => {
+  it('maps the full None string to green', () => {
     expect(
-      EXPERIENCE_COLORS[
-        "None (You've never played before - rules will be taught)"
-      ].color,
-    ).toBe("#2a5c3a");
-  });
+      EXPERIENCE_COLORS["None (You've never played before - rules will be taught)"].color,
+    ).toBe('#2a5c3a')
+  })
 
-  it("maps the full Some string to amber", () => {
-    expect(
-      EXPERIENCE_COLORS[
-        "Some (You've played it a bit and understand the basics)"
-      ].color,
-    ).toBe("#7a4a00");
-  });
+  it('maps the full Some string to amber', () => {
+    expect(EXPERIENCE_COLORS["Some (You've played it a bit and understand the basics)"].color).toBe(
+      '#7a4a00',
+    )
+  })
 
-  it("maps the full Expert string to rose", () => {
-    expect(
-      EXPERIENCE_COLORS["Expert (You play it regularly and know all the rules)"]
-        .color,
-    ).toBe("#7a2040");
-  });
-});
+  it('maps the full Expert string to rose', () => {
+    expect(EXPERIENCE_COLORS['Expert (You play it regularly and know all the rules)'].color).toBe(
+      '#7a2040',
+    )
+  })
+})
 ```
 
 - [ ] **Step 2: Run tests to confirm they fail**
@@ -420,16 +408,16 @@ Expected: FAIL — `Cannot find module './conceptColors'`
 ```ts
 // src/utils/conceptColors.ts
 export interface ConceptColor {
-  color: string;
-  bg: string;
+  color: string
+  bg: string
 }
 
-const ROLEPLAY: ConceptColor = { color: "#5c3a7a", bg: "#f0eaf7" };
-const BOARD_CARD: ConceptColor = { color: "#2a5c3a", bg: "#e8f2ea" };
-const MINIATURES: ConceptColor = { color: "#1a3d5c", bg: "#e4edf5" };
-const ELECTRONIC: ConceptColor = { color: "#7a4a00", bg: "#fdf0d8" };
-const LEARNING: ConceptColor = { color: "#1a5c5c", bg: "#e4f2f2" };
-const ENTERTAINMENT: ConceptColor = { color: "#7a2040", bg: "#f5e4ea" };
+const ROLEPLAY: ConceptColor = { color: '#5c3a7a', bg: '#f0eaf7' }
+const BOARD_CARD: ConceptColor = { color: '#2a5c3a', bg: '#e8f2ea' }
+const MINIATURES: ConceptColor = { color: '#1a3d5c', bg: '#e4edf5' }
+const ELECTRONIC: ConceptColor = { color: '#7a4a00', bg: '#fdf0d8' }
+const LEARNING: ConceptColor = { color: '#1a5c5c', bg: '#e4f2f2' }
+const ENTERTAINMENT: ConceptColor = { color: '#7a2040', bg: '#f5e4ea' }
 
 export const EVENT_TYPE_COLORS: Record<string, ConceptColor> = {
   RPG: ROLEPLAY,
@@ -451,30 +439,30 @@ export const EVENT_TYPE_COLORS: Record<string, ConceptColor> = {
   SPA: ENTERTAINMENT,
   TRD: ENTERTAINMENT,
   ZED: ENTERTAINMENT,
-};
+}
 
 export const DAY_COLORS: Record<string, ConceptColor> = {
-  Wednesday: { color: "#4a3570", bg: "#edeaf7" },
-  Thursday: { color: "#7a4a00", bg: "#fdf0d8" },
-  Friday: { color: "#2a5c3a", bg: "#e8f2ea" },
-  Saturday: { color: "#1a3d5c", bg: "#e4edf5" },
-  Sunday: { color: "#7a2040", bg: "#f5e4ea" },
-};
+  Wednesday: { color: '#4a3570', bg: '#edeaf7' },
+  Thursday: { color: '#7a4a00', bg: '#fdf0d8' },
+  Friday: { color: '#2a5c3a', bg: '#e8f2ea' },
+  Saturday: { color: '#1a3d5c', bg: '#e4edf5' },
+  Sunday: { color: '#7a2040', bg: '#f5e4ea' },
+}
 
 export const EXPERIENCE_COLORS: Record<string, ConceptColor> = {
   "None (You've never played before - rules will be taught)": {
-    color: "#2a5c3a",
-    bg: "#e8f2ea",
+    color: '#2a5c3a',
+    bg: '#e8f2ea',
   },
   "Some (You've played it a bit and understand the basics)": {
-    color: "#7a4a00",
-    bg: "#fdf0d8",
+    color: '#7a4a00',
+    bg: '#fdf0d8',
   },
-  "Expert (You play it regularly and know all the rules)": {
-    color: "#7a2040",
-    bg: "#f5e4ea",
+  'Expert (You play it regularly and know all the rules)': {
+    color: '#7a2040',
+    bg: '#f5e4ea',
   },
-};
+}
 ```
 
 - [ ] **Step 4: Run tests to confirm they pass**
@@ -507,15 +495,15 @@ git commit -m "feat: add conceptColors utility mapping event types, days, and ex
 Add to `src/ui/Badge/Badge.test.tsx`:
 
 ```tsx
-import { ConceptBadge } from "./Badge";
+import { ConceptBadge } from './Badge'
 
-describe("ConceptBadge", () => {
-  it("renders the value as text when no children given", () => {
-    render(<ConceptBadge concept="eventType" value="RPG" />);
-    expect(screen.getByText("RPG")).toBeInTheDocument();
-  });
+describe('ConceptBadge', () => {
+  it('renders the value as text when no children given', () => {
+    render(<ConceptBadge concept="eventType" value="RPG" />)
+    expect(screen.getByText('RPG')).toBeInTheDocument()
+  })
 
-  it("renders children instead of value when provided", () => {
+  it('renders children instead of value when provided', () => {
     render(
       <ConceptBadge
         concept="experience"
@@ -523,36 +511,30 @@ describe("ConceptBadge", () => {
       >
         None
       </ConceptBadge>,
-    );
-    expect(screen.getByText("None")).toBeInTheDocument();
-  });
+    )
+    expect(screen.getByText('None')).toBeInTheDocument()
+  })
 
-  it("applies roleplay color custom properties for RPG", () => {
-    const { container } = render(
-      <ConceptBadge concept="eventType" value="RPG" />,
-    );
-    const el = container.firstChild as HTMLElement;
-    expect(el.style.getPropertyValue("--concept-color")).toBe("#5c3a7a");
-    expect(el.style.getPropertyValue("--concept-bg")).toBe("#f0eaf7");
-  });
+  it('applies roleplay color custom properties for RPG', () => {
+    const { container } = render(<ConceptBadge concept="eventType" value="RPG" />)
+    const el = container.firstChild as HTMLElement
+    expect(el.style.getPropertyValue('--concept-color')).toBe('#5c3a7a')
+    expect(el.style.getPropertyValue('--concept-bg')).toBe('#f0eaf7')
+  })
 
-  it("applies Thursday color custom properties for day", () => {
-    const { container } = render(
-      <ConceptBadge concept="day" value="Thursday" />,
-    );
-    const el = container.firstChild as HTMLElement;
-    expect(el.style.getPropertyValue("--concept-color")).toBe("#7a4a00");
-    expect(el.style.getPropertyValue("--concept-bg")).toBe("#fdf0d8");
-  });
+  it('applies Thursday color custom properties for day', () => {
+    const { container } = render(<ConceptBadge concept="day" value="Thursday" />)
+    const el = container.firstChild as HTMLElement
+    expect(el.style.getPropertyValue('--concept-color')).toBe('#7a4a00')
+    expect(el.style.getPropertyValue('--concept-bg')).toBe('#fdf0d8')
+  })
 
-  it("applies no inline style for an unknown value", () => {
-    const { container } = render(
-      <ConceptBadge concept="eventType" value="UNKNOWN" />,
-    );
-    const el = container.firstChild as HTMLElement;
-    expect(el.style.getPropertyValue("--concept-color")).toBe("");
-  });
-});
+  it('applies no inline style for an unknown value', () => {
+    const { container } = render(<ConceptBadge concept="eventType" value="UNKNOWN" />)
+    const el = container.firstChild as HTMLElement
+    expect(el.style.getPropertyValue('--concept-color')).toBe('')
+  })
+})
 ```
 
 - [ ] **Step 2: Run tests to confirm they fail**
@@ -568,46 +550,34 @@ Expected: FAIL — `ConceptBadge is not exported from './Badge'`
 Add to `src/ui/Badge/Badge.tsx` (after the existing `BoolBadge`):
 
 ```tsx
-import {
-  EVENT_TYPE_COLORS,
-  DAY_COLORS,
-  EXPERIENCE_COLORS,
-} from "../../utils/conceptColors";
-import type { ConceptColor } from "../../utils/conceptColors";
+import { EVENT_TYPE_COLORS, DAY_COLORS, EXPERIENCE_COLORS } from '../../utils/conceptColors'
+import type { ConceptColor } from '../../utils/conceptColors'
 
 interface ConceptBadgeProps {
-  concept: "eventType" | "day" | "experience";
-  value: string;
-  children?: React.ReactNode;
-  className?: string;
+  concept: 'eventType' | 'day' | 'experience'
+  value: string
+  children?: React.ReactNode
+  className?: string
 }
 
-export function ConceptBadge({
-  concept,
-  value,
-  children,
-  className,
-}: ConceptBadgeProps) {
-  let colors: ConceptColor | undefined;
-  if (concept === "eventType") colors = EVENT_TYPE_COLORS[value];
-  else if (concept === "day") colors = DAY_COLORS[value];
-  else if (concept === "experience") colors = EXPERIENCE_COLORS[value];
+export function ConceptBadge({ concept, value, children, className }: ConceptBadgeProps) {
+  let colors: ConceptColor | undefined
+  if (concept === 'eventType') colors = EVENT_TYPE_COLORS[value]
+  else if (concept === 'day') colors = DAY_COLORS[value]
+  else if (concept === 'experience') colors = EXPERIENCE_COLORS[value]
 
   const style = colors
     ? ({
-        "--concept-color": colors.color,
-        "--concept-bg": colors.bg,
+        '--concept-color': colors.color,
+        '--concept-bg': colors.bg,
       } as React.CSSProperties)
-    : undefined;
+    : undefined
 
   return (
-    <span
-      className={[styles.conceptBadge, className].filter(Boolean).join(" ")}
-      style={style}
-    >
+    <span className={[styles.conceptBadge, className].filter(Boolean).join(' ')} style={style}>
       {children ?? value}
     </span>
-  );
+  )
 }
 ```
 
@@ -659,11 +629,11 @@ git commit -m "feat: add ConceptBadge for semantic event type/day/experience col
 Add to `src/ui/ToggleTile/ToggleTile.test.tsx`:
 
 ```tsx
-it("renders an aria-hidden meeple SVG inside the tile", () => {
-  render(<ToggleTile>Thu</ToggleTile>);
-  const btn = screen.getByRole("button", { name: "Thu" });
-  expect(btn.querySelector("svg[aria-hidden='true']")).toBeInTheDocument();
-});
+it('renders an aria-hidden meeple SVG inside the tile', () => {
+  render(<ToggleTile>Thu</ToggleTile>)
+  const btn = screen.getByRole('button', { name: 'Thu' })
+  expect(btn.querySelector("svg[aria-hidden='true']")).toBeInTheDocument()
+})
 ```
 
 - [ ] **Step 2: Run test to confirm it fails**
@@ -679,43 +649,36 @@ Expected: FAIL — `querySelector` returns null
 Replace the full content of `src/ui/ToggleTile/ToggleTile.tsx`:
 
 ```tsx
-import React from "react";
-import { Toggle } from "@base-ui/react/toggle";
-import { ToggleGroup } from "@base-ui/react/toggle-group";
-import { MeepleFlat } from "../icons/MeepleFlat";
-import styles from "./ToggleTile.module.css";
+import React from 'react'
+import { Toggle } from '@base-ui/react/toggle'
+import { ToggleGroup } from '@base-ui/react/toggle-group'
+import { MeepleFlat } from '../icons/MeepleFlat'
+import styles from './ToggleTile.module.css'
 
 export interface ToggleTileProps extends Toggle.Props {}
 
-export const ToggleTile = React.forwardRef<HTMLButtonElement, ToggleTileProps>(
-  function ToggleTile({ className, children, ...props }, ref) {
-    return (
-      <Toggle
-        ref={ref}
-        className={[styles.tile, className].filter(Boolean).join(" ")}
-        {...props}
-      >
-        <MeepleFlat className={styles.meepleSlot} aria-hidden="true" />
-        {children}
-      </Toggle>
-    );
-  },
-);
+export const ToggleTile = React.forwardRef<HTMLButtonElement, ToggleTileProps>(function ToggleTile(
+  { className, children, ...props },
+  ref,
+) {
+  return (
+    <Toggle ref={ref} className={[styles.tile, className].filter(Boolean).join(' ')} {...props}>
+      <MeepleFlat className={styles.meepleSlot} aria-hidden="true" />
+      {children}
+    </Toggle>
+  )
+})
 
 export interface ToggleTileGroupProps extends ToggleGroup.Props {}
 
-export function ToggleTileGroup({
-  className,
-  multiple = true,
-  ...props
-}: ToggleTileGroupProps) {
+export function ToggleTileGroup({ className, multiple = true, ...props }: ToggleTileGroupProps) {
   return (
     <ToggleGroup
       multiple={multiple}
-      className={[styles.group, className].filter(Boolean).join(" ")}
+      className={[styles.group, className].filter(Boolean).join(' ')}
       {...props}
     />
-  );
+  )
 }
 ```
 
@@ -826,19 +789,17 @@ git commit -m "feat(ToggleTile): add meeple placement indicator and concept-colo
 Read `src/ui/PixelState/PixelState.test.tsx` to see what currently exists, then add:
 
 ```tsx
-it("renders an SVG for the empty variant", () => {
-  render(<PixelState variant="empty" text="No results" />);
+it('renders an SVG for the empty variant', () => {
+  render(<PixelState variant="empty" text="No results" />)
   // SVG is aria-hidden; query by container
-  const svg = document.querySelector('[data-testid="empty-icon"]');
-  expect(svg).toBeInTheDocument();
-});
+  const svg = document.querySelector('[data-testid="empty-icon"]')
+  expect(svg).toBeInTheDocument()
+})
 
-it("renders an SVG for the error variant", () => {
-  render(<PixelState variant="error" text="Error" />);
-  expect(
-    document.querySelector('[data-testid="error-icon"]'),
-  ).toBeInTheDocument();
-});
+it('renders an SVG for the error variant', () => {
+  render(<PixelState variant="error" text="Error" />)
+  expect(document.querySelector('[data-testid="error-icon"]')).toBeInTheDocument()
+})
 ```
 
 - [ ] **Step 2: Run tests to confirm they fail**
@@ -854,39 +815,35 @@ Expected: FAIL — `querySelector` returns null (elements don't have `data-testi
 Replace full file content:
 
 ```tsx
-import { useEffect } from "react";
-import { announce } from "../../lib/announce";
-import { MeepleFlat } from "../icons/MeepleFlat";
-import styles from "./PixelState.module.css";
+import { useEffect } from 'react'
+import { announce } from '../../lib/announce'
+import { MeepleFlat } from '../icons/MeepleFlat'
+import styles from './PixelState.module.css'
 
 interface PixelStateProps {
-  variant: "loading" | "empty" | "error";
-  text: string;
-  subtext?: string;
+  variant: 'loading' | 'empty' | 'error'
+  text: string
+  subtext?: string
 }
 
 export function PixelState({ variant, text, subtext }: PixelStateProps) {
   useEffect(() => {
-    announce(text, variant === "error" ? "assertive" : "polite");
-  }, [variant, text]);
+    announce(text, variant === 'error' ? 'assertive' : 'polite')
+  }, [variant, text])
 
   return (
     <div className={styles.state}>
-      {variant === "loading" && (
+      {variant === 'loading' && (
         <div className={styles.progressBar} data-testid="progress-bar">
           <div className={styles.progressFill} />
         </div>
       )}
-      {variant === "empty" && (
-        <MeepleFlat
-          className={styles.icon}
-          aria-hidden="true"
-          data-testid="empty-icon"
-        />
+      {variant === 'empty' && (
+        <MeepleFlat className={styles.icon} aria-hidden="true" data-testid="empty-icon" />
       )}
-      {variant === "error" && (
+      {variant === 'error' && (
         <MeepleFlat
-          className={[styles.icon, styles.iconError].join(" ")}
+          className={[styles.icon, styles.iconError].join(' ')}
           aria-hidden="true"
           data-testid="error-icon"
         />
@@ -894,7 +851,7 @@ export function PixelState({ variant, text, subtext }: PixelStateProps) {
       <p className={styles.text}>{text}</p>
       {subtext && <p className={styles.subtext}>{subtext}</p>}
     </div>
-  );
+  )
 }
 ```
 
@@ -902,15 +859,15 @@ Note: `MeepleFlat` doesn't accept `data-testid` by default. Add it to its props 
 
 ```tsx
 interface MeepleFlatProps {
-  className?: string;
-  "aria-hidden"?: true | "true";
-  "data-testid"?: string;
+  className?: string
+  'aria-hidden'?: true | 'true'
+  'data-testid'?: string
 }
 
 export function MeepleFlat({
   className,
-  "aria-hidden": ariaHidden,
-  "data-testid": testId,
+  'aria-hidden': ariaHidden,
+  'data-testid': testId,
 }: MeepleFlatProps) {
   return (
     <svg
@@ -925,7 +882,7 @@ export function MeepleFlat({
         d="M 214,169 C 164,194 96,219 80,248 C 67,278 96,295 130,282 C 159,269 189,265 193,278 L 189,320 L 126,421 L 206,421 L 256,341 L 306,421 L 386,421 L 323,320 L 319,278 C 323,265 353,269 382,282 C 416,295 445,278 432,248 C 416,219 348,194 298,169 C 311,143 319,114 319,93 A 63 63 0 0 0 193,93 C 193,114 201,143 214,169 Z"
       />
     </svg>
-  );
+  )
 }
 ```
 
@@ -1114,11 +1071,11 @@ git commit -m "feat(Button): switch to IM Fell English and organic shadow"
 The existing test suite doesn't test the header specifically. Add to `src/routes/index.test.tsx`:
 
 ```tsx
-test("site header contains the app title", async () => {
-  await renderSearchPage();
-  expect(screen.getByRole("banner")).toBeInTheDocument();
-  expect(screen.getByText("Gen Con Buddy")).toBeInTheDocument();
-});
+test('site header contains the app title', async () => {
+  await renderSearchPage()
+  expect(screen.getByRole('banner')).toBeInTheDocument()
+  expect(screen.getByText('Gen Con Buddy')).toBeInTheDocument()
+})
 ```
 
 - [ ] **Step 2: Run test to confirm current state**
@@ -1134,9 +1091,9 @@ The test may pass or fail depending on current text — confirm behavior before 
 Replace full file content:
 
 ```tsx
-import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { Meeple } from "../ui/icons/Meeple";
-import styles from "./index.module.css";
+import { createRootRoute, Outlet } from '@tanstack/react-router'
+import { Meeple } from '../ui/icons/Meeple'
+import styles from './index.module.css'
 
 export const Route = createRootRoute({
   component: () => (
@@ -1152,15 +1109,13 @@ export const Route = createRootRoute({
         />
         <div>
           <p className={styles.headerTitle}>Gen Con Buddy</p>
-          <p className={styles.headerSubtitle}>
-            your guide to the best four days in gaming
-          </p>
+          <p className={styles.headerSubtitle}>your guide to the best four days in gaming</p>
         </div>
       </header>
       <Outlet />
     </>
   ),
-});
+})
 ```
 
 - [ ] **Step 4: Update header and sidebar styles in index.module.css**
@@ -1256,12 +1211,12 @@ git commit -m "feat: update site header with meeple logo and IM Fell English tit
 Add to `src/routes/index.test.tsx`:
 
 ```tsx
-test("day toggle tiles have concept color style properties", async () => {
-  await renderSearchPage();
-  const thuBtn = screen.getByRole("button", { name: "Thu" });
-  expect(thuBtn.style.getPropertyValue("--tile-color")).toBe("#7a4a00");
-  expect(thuBtn.style.getPropertyValue("--tile-color-bg")).toBe("#fdf0d8");
-});
+test('day toggle tiles have concept color style properties', async () => {
+  await renderSearchPage()
+  const thuBtn = screen.getByRole('button', { name: 'Thu' })
+  expect(thuBtn.style.getPropertyValue('--tile-color')).toBe('#7a4a00')
+  expect(thuBtn.style.getPropertyValue('--tile-color-bg')).toBe('#fdf0d8')
+})
 ```
 
 - [ ] **Step 2: Run test to confirm it fails**
@@ -1277,15 +1232,15 @@ Expected: FAIL — style property is empty string
 In `src/components/SearchForm/SearchForm.tsx`, add the import and the day color mapping near the top of the file (after existing imports):
 
 ```tsx
-import { DAY_COLORS } from "../../utils/conceptColors";
+import { DAY_COLORS } from '../../utils/conceptColors'
 
 const DAY_FULL: Record<string, string> = {
-  wed: "Wednesday",
-  thu: "Thursday",
-  fri: "Friday",
-  sat: "Saturday",
-  sun: "Sunday",
-};
+  wed: 'Wednesday',
+  thu: 'Thursday',
+  fri: 'Friday',
+  sat: 'Saturday',
+  sun: 'Sunday',
+}
 ```
 
 Then in the JSX, update the `ToggleTile` inside `DAY_KEYS.map(...)`:
@@ -1293,7 +1248,7 @@ Then in the JSX, update the `ToggleTile` inside `DAY_KEYS.map(...)`:
 ```tsx
 {
   DAY_KEYS.map((key) => {
-    const colors = DAY_COLORS[DAY_FULL[key]];
+    const colors = DAY_COLORS[DAY_FULL[key]]
     return (
       <ToggleTile
         key={key}
@@ -1301,16 +1256,16 @@ Then in the JSX, update the `ToggleTile` inside `DAY_KEYS.map(...)`:
         style={
           colors
             ? ({
-                "--tile-color": colors.color,
-                "--tile-color-bg": colors.bg,
+                '--tile-color': colors.color,
+                '--tile-color-bg': colors.bg,
               } as React.CSSProperties)
             : undefined
         }
       >
         {DAY_LABELS[key]}
       </ToggleTile>
-    );
-  });
+    )
+  })
 }
 ```
 
@@ -1433,9 +1388,7 @@ The CSS now uses `.fieldsetBody` for padding inside the fieldset. In `SearchForm
 ```tsx
 <fieldset className={styles.fieldset}>
   <legend className={styles.legend}>DAYS</legend>
-  <div className={styles.fieldsetBody}>
-    {/* ... existing fieldset content ... */}
-  </div>
+  <div className={styles.fieldsetBody}>{/* ... existing fieldset content ... */}</div>
 </fieldset>
 ```
 
@@ -1470,43 +1423,40 @@ git commit -m "feat(SearchForm): board-tile panel treatment and color-aware day 
 Add to `src/routes/index.test.tsx`. First find an existing test that renders results (e.g., one that checks table rows), and add alongside it:
 
 ```tsx
-test("results table rows include a day stripe cell", async () => {
+test('results table rows include a day stripe cell', async () => {
   server.use(
-    http.get("/api/events", () =>
+    http.get('/api/events', () =>
       HttpResponse.json({
         data: [
           makeEvent({
-            eventType: "RPG",
-            experienceRequired:
-              "None (You've never played before - rules will be taught)",
-            startDateTime: "2025-08-07T10:00:00-05:00", // Thursday
+            eventType: 'RPG',
+            experienceRequired: "None (You've never played before - rules will be taught)",
+            startDateTime: '2025-08-07T10:00:00-05:00', // Thursday
           }),
         ],
         meta: { total: 1 },
       }),
     ),
-  );
-  await renderSearchPage();
-  await screen.findByRole("table");
-  expect(
-    document.querySelector('[data-testid="day-stripe"]'),
-  ).toBeInTheDocument();
-});
+  )
+  await renderSearchPage()
+  await screen.findByRole('table')
+  expect(document.querySelector('[data-testid="day-stripe"]')).toBeInTheDocument()
+})
 
-test("eventType column renders a ConceptBadge", async () => {
+test('eventType column renders a ConceptBadge', async () => {
   server.use(
-    http.get("/api/events", () =>
+    http.get('/api/events', () =>
       HttpResponse.json({
-        data: [makeEvent({ eventType: "RPG" })],
+        data: [makeEvent({ eventType: 'RPG' })],
         meta: { total: 1 },
       }),
     ),
-  );
-  await renderSearchPage();
-  await screen.findByRole("table");
+  )
+  await renderSearchPage()
+  await screen.findByRole('table')
   // ConceptBadge renders the value as text in a styled span
-  expect(screen.getByText("RPG")).toBeInTheDocument();
-});
+  expect(screen.getByText('RPG')).toBeInTheDocument()
+})
 ```
 
 - [ ] **Step 2: Run tests to confirm they fail**
@@ -1522,10 +1472,10 @@ Expected: FAIL — `querySelector` returns null for day-stripe
 At the top of `src/components/SearchResults/SearchResults.tsx`, add:
 
 ```tsx
-import { ConceptBadge } from "../../ui/Badge/Badge";
-import { Pawn } from "../../ui/icons/Pawn";
-import { DAY_COLORS } from "../../utils/conceptColors";
-import { EXP } from "../../utils/enums";
+import { ConceptBadge } from '../../ui/Badge/Badge'
+import { Pawn } from '../../ui/icons/Pawn'
+import { DAY_COLORS } from '../../utils/conceptColors'
+import { EXP } from '../../utils/enums'
 ```
 
 Add a day stripe as the first entry in `COLUMNS`:
@@ -1593,15 +1543,12 @@ Update the row render loop to handle the day stripe specially:
 ```tsx
 <tbody>
   {table.getRowModel().rows.map((row) => {
-    const dayName = format(
-      new Date(row.original.attributes.startDateTime),
-      "EEEE",
-    );
-    const dayColors = DAY_COLORS[dayName];
+    const dayName = format(new Date(row.original.attributes.startDateTime), 'EEEE')
+    const dayColors = DAY_COLORS[dayName]
     return (
       <tr key={row.id}>
         {row.getVisibleCells().map((cell) => {
-          if (cell.column.id === "dayStripe") {
+          if (cell.column.id === 'dayStripe') {
             return (
               <td
                 key={cell.id}
@@ -1610,16 +1557,12 @@ Update the row render loop to handle the day stripe specially:
                 aria-hidden="true"
                 data-testid="day-stripe"
               />
-            );
+            )
           }
-          return (
-            <td key={cell.id}>
-              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-            </td>
-          );
+          return <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
         })}
       </tr>
-    );
+    )
   })}
 </tbody>
 ```
@@ -1710,11 +1653,7 @@ Replace the entire file:
 }
 
 .tableWrapper table tbody tr:hover {
-  background: color-mix(
-    in srgb,
-    var(--color-bark-light) 30%,
-    var(--color-parchment-light)
-  );
+  background: color-mix(in srgb, var(--color-bark-light) 30%, var(--color-parchment-light));
 }
 
 .tableWrapper table td {
@@ -1839,8 +1778,8 @@ Apply the same pattern to `maxPlayers`. The `Pawn` component needs a `style` pro
 
 ```tsx
 interface PawnProps {
-  className?: string;
-  style?: React.CSSProperties;
-  "aria-hidden"?: true | "true";
+  className?: string
+  style?: React.CSSProperties
+  'aria-hidden'?: true | 'true'
 }
 ```

@@ -39,14 +39,12 @@
 Create `src/components/SearchResults/ColumnActionsPopover.test.tsx`:
 
 ```tsx
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { vi } from "vitest";
-import { ColumnActionsPopover } from "./ColumnActionsPopover";
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { vi } from 'vitest'
+import { ColumnActionsPopover } from './ColumnActionsPopover'
 
-function renderPopover(
-  overrides: Partial<React.ComponentProps<typeof ColumnActionsPopover>> = {},
-) {
+function renderPopover(overrides: Partial<React.ComponentProps<typeof ColumnActionsPopover>> = {}) {
   return render(
     <ColumnActionsPopover
       sortField="title"
@@ -56,104 +54,97 @@ function renderPopover(
       onOpenResize={vi.fn()}
       {...overrides}
     />,
-  );
+  )
 }
 
-test("renders a column actions button", () => {
-  renderPopover();
-  expect(
-    screen.getByRole("button", { name: "Column actions" }),
-  ).toBeInTheDocument();
-});
+test('renders a column actions button', () => {
+  renderPopover()
+  expect(screen.getByRole('button', { name: 'Column actions' })).toBeInTheDocument()
+})
 
-test("opens popover with sort and resize actions when clicked", async () => {
-  const user = userEvent.setup();
-  renderPopover();
-  await user.click(screen.getByRole("button", { name: "Column actions" }));
-  expect(
-    screen.getByRole("button", { name: "Sort ascending" }),
-  ).toBeInTheDocument();
-  expect(
-    screen.getByRole("button", { name: "Sort descending" }),
-  ).toBeInTheDocument();
-  expect(screen.getByRole("button", { name: "Resize…" })).toBeInTheDocument();
-});
+test('opens popover with sort and resize actions when clicked', async () => {
+  const user = userEvent.setup()
+  renderPopover()
+  await user.click(screen.getByRole('button', { name: 'Column actions' }))
+  expect(screen.getByRole('button', { name: 'Sort ascending' })).toBeInTheDocument()
+  expect(screen.getByRole('button', { name: 'Sort descending' })).toBeInTheDocument()
+  expect(screen.getByRole('button', { name: 'Resize…' })).toBeInTheDocument()
+})
 
-test("Sort ascending has aria-pressed=false when column is unsorted", async () => {
-  const user = userEvent.setup();
-  renderPopover({ activeSortField: undefined });
-  await user.click(screen.getByRole("button", { name: "Column actions" }));
-  expect(
-    screen.getByRole("button", { name: "Sort ascending" }),
-  ).toHaveAttribute("aria-pressed", "false");
-});
+test('Sort ascending has aria-pressed=false when column is unsorted', async () => {
+  const user = userEvent.setup()
+  renderPopover({ activeSortField: undefined })
+  await user.click(screen.getByRole('button', { name: 'Column actions' }))
+  expect(screen.getByRole('button', { name: 'Sort ascending' })).toHaveAttribute(
+    'aria-pressed',
+    'false',
+  )
+})
 
-test("Sort ascending has aria-pressed=true when column is sorted ascending", async () => {
-  const user = userEvent.setup();
-  renderPopover({ activeSortField: "title", activeSortDir: "asc" });
-  await user.click(screen.getByRole("button", { name: "Column actions" }));
-  expect(
-    screen.getByRole("button", { name: "Sort ascending" }),
-  ).toHaveAttribute("aria-pressed", "true");
-});
+test('Sort ascending has aria-pressed=true when column is sorted ascending', async () => {
+  const user = userEvent.setup()
+  renderPopover({ activeSortField: 'title', activeSortDir: 'asc' })
+  await user.click(screen.getByRole('button', { name: 'Column actions' }))
+  expect(screen.getByRole('button', { name: 'Sort ascending' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  )
+})
 
-test("Sort descending has aria-pressed=true when column is sorted descending", async () => {
-  const user = userEvent.setup();
-  renderPopover({ activeSortField: "title", activeSortDir: "desc" });
-  await user.click(screen.getByRole("button", { name: "Column actions" }));
-  expect(
-    screen.getByRole("button", { name: "Sort descending" }),
-  ).toHaveAttribute("aria-pressed", "true");
-});
+test('Sort descending has aria-pressed=true when column is sorted descending', async () => {
+  const user = userEvent.setup()
+  renderPopover({ activeSortField: 'title', activeSortDir: 'desc' })
+  await user.click(screen.getByRole('button', { name: 'Column actions' }))
+  expect(screen.getByRole('button', { name: 'Sort descending' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  )
+})
 
-test("clicking Sort ascending when unsorted calls onSort with field.asc", async () => {
-  const user = userEvent.setup();
-  const onSort = vi.fn();
-  renderPopover({ onSort });
-  await user.click(screen.getByRole("button", { name: "Column actions" }));
-  await user.click(screen.getByRole("button", { name: "Sort ascending" }));
-  expect(onSort).toHaveBeenCalledWith("title.asc");
-});
+test('clicking Sort ascending when unsorted calls onSort with field.asc', async () => {
+  const user = userEvent.setup()
+  const onSort = vi.fn()
+  renderPopover({ onSort })
+  await user.click(screen.getByRole('button', { name: 'Column actions' }))
+  await user.click(screen.getByRole('button', { name: 'Sort ascending' }))
+  expect(onSort).toHaveBeenCalledWith('title.asc')
+})
 
-test("clicking Sort ascending when already ascending calls onSort with undefined", async () => {
-  const user = userEvent.setup();
-  const onSort = vi.fn();
-  renderPopover({ activeSortField: "title", activeSortDir: "asc", onSort });
-  await user.click(screen.getByRole("button", { name: "Column actions" }));
-  await user.click(screen.getByRole("button", { name: "Sort ascending" }));
-  expect(onSort).toHaveBeenCalledWith(undefined);
-});
+test('clicking Sort ascending when already ascending calls onSort with undefined', async () => {
+  const user = userEvent.setup()
+  const onSort = vi.fn()
+  renderPopover({ activeSortField: 'title', activeSortDir: 'asc', onSort })
+  await user.click(screen.getByRole('button', { name: 'Column actions' }))
+  await user.click(screen.getByRole('button', { name: 'Sort ascending' }))
+  expect(onSort).toHaveBeenCalledWith(undefined)
+})
 
-test("clicking Sort descending when ascending calls onSort with field.desc", async () => {
-  const user = userEvent.setup();
-  const onSort = vi.fn();
-  renderPopover({ activeSortField: "title", activeSortDir: "asc", onSort });
-  await user.click(screen.getByRole("button", { name: "Column actions" }));
-  await user.click(screen.getByRole("button", { name: "Sort descending" }));
-  expect(onSort).toHaveBeenCalledWith("title.desc");
-});
+test('clicking Sort descending when ascending calls onSort with field.desc', async () => {
+  const user = userEvent.setup()
+  const onSort = vi.fn()
+  renderPopover({ activeSortField: 'title', activeSortDir: 'asc', onSort })
+  await user.click(screen.getByRole('button', { name: 'Column actions' }))
+  await user.click(screen.getByRole('button', { name: 'Sort descending' }))
+  expect(onSort).toHaveBeenCalledWith('title.desc')
+})
 
-test("clicking Resize… calls onOpenResize", async () => {
-  const user = userEvent.setup();
-  const onOpenResize = vi.fn();
-  renderPopover({ onOpenResize });
-  await user.click(screen.getByRole("button", { name: "Column actions" }));
-  await user.click(screen.getByRole("button", { name: "Resize…" }));
-  expect(onOpenResize).toHaveBeenCalledTimes(1);
-});
+test('clicking Resize… calls onOpenResize', async () => {
+  const user = userEvent.setup()
+  const onOpenResize = vi.fn()
+  renderPopover({ onOpenResize })
+  await user.click(screen.getByRole('button', { name: 'Column actions' }))
+  await user.click(screen.getByRole('button', { name: 'Resize…' }))
+  expect(onOpenResize).toHaveBeenCalledTimes(1)
+})
 
-test("does not render sort buttons when sortField is undefined", async () => {
-  const user = userEvent.setup();
-  renderPopover({ sortField: undefined });
-  await user.click(screen.getByRole("button", { name: "Column actions" }));
-  expect(
-    screen.queryByRole("button", { name: "Sort ascending" }),
-  ).not.toBeInTheDocument();
-  expect(
-    screen.queryByRole("button", { name: "Sort descending" }),
-  ).not.toBeInTheDocument();
-  expect(screen.getByRole("button", { name: "Resize…" })).toBeInTheDocument();
-});
+test('does not render sort buttons when sortField is undefined', async () => {
+  const user = userEvent.setup()
+  renderPopover({ sortField: undefined })
+  await user.click(screen.getByRole('button', { name: 'Column actions' }))
+  expect(screen.queryByRole('button', { name: 'Sort ascending' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: 'Sort descending' })).not.toBeInTheDocument()
+  expect(screen.getByRole('button', { name: 'Resize…' })).toBeInTheDocument()
+})
 ```
 
 - [ ] **Step 2: Run tests to verify they fail**
@@ -229,14 +220,10 @@ Create `src/components/SearchResults/ColumnActionsPopover.module.css`:
 }
 
 .action:hover {
-  background: color-mix(
-    in srgb,
-    var(--color-bark-light) 20%,
-    var(--color-parchment-light)
-  );
+  background: color-mix(in srgb, var(--color-bark-light) 20%, var(--color-parchment-light));
 }
 
-.action[aria-pressed="true"] {
+.action[aria-pressed='true'] {
   color: var(--color-bark);
   font-weight: bold;
 }
@@ -247,16 +234,16 @@ Create `src/components/SearchResults/ColumnActionsPopover.module.css`:
 Create `src/components/SearchResults/ColumnActionsPopover.tsx`:
 
 ```tsx
-import { useState } from "react";
-import { Popover } from "@base-ui/react/popover";
-import styles from "./ColumnActionsPopover.module.css";
+import { useState } from 'react'
+import { Popover } from '@base-ui/react/popover'
+import styles from './ColumnActionsPopover.module.css'
 
 interface ColumnActionsPopoverProps {
-  sortField: string | undefined;
-  activeSortField: string | undefined;
-  activeSortDir: "asc" | "desc" | undefined;
-  onSort: (sort: string | undefined) => void;
-  onOpenResize: () => void;
+  sortField: string | undefined
+  activeSortField: string | undefined
+  activeSortDir: 'asc' | 'desc' | undefined
+  onSort: (sort: string | undefined) => void
+  onOpenResize: () => void
 }
 
 export function ColumnActionsPopover({
@@ -266,26 +253,18 @@ export function ColumnActionsPopover({
   onSort,
   onOpenResize,
 }: ColumnActionsPopoverProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
-  const isSortedAsc =
-    !!sortField && activeSortField === sortField && activeSortDir === "asc";
-  const isSortedDesc =
-    !!sortField && activeSortField === sortField && activeSortDir === "desc";
+  const isSortedAsc = !!sortField && activeSortField === sortField && activeSortDir === 'asc'
+  const isSortedDesc = !!sortField && activeSortField === sortField && activeSortDir === 'desc'
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger
-        className={`${styles.trigger}${open ? ` ${styles.triggerOpen}` : ""}`}
+        className={`${styles.trigger}${open ? ` ${styles.triggerOpen}` : ''}`}
         aria-label="Column actions"
       >
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
-          aria-hidden="true"
-          focusable="false"
-        >
+        <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
           <circle cx="6" cy="2" r="1.5" fill="currentColor" />
           <circle cx="6" cy="6" r="1.5" fill="currentColor" />
           <circle cx="6" cy="10" r="1.5" fill="currentColor" />
@@ -301,8 +280,8 @@ export function ColumnActionsPopover({
                   className={styles.action}
                   aria-pressed={isSortedAsc}
                   onClick={() => {
-                    onSort(isSortedAsc ? undefined : `${sortField}.asc`);
-                    setOpen(false);
+                    onSort(isSortedAsc ? undefined : `${sortField}.asc`)
+                    setOpen(false)
                   }}
                 >
                   Sort ascending
@@ -312,8 +291,8 @@ export function ColumnActionsPopover({
                   className={styles.action}
                   aria-pressed={isSortedDesc}
                   onClick={() => {
-                    onSort(isSortedDesc ? undefined : `${sortField}.desc`);
-                    setOpen(false);
+                    onSort(isSortedDesc ? undefined : `${sortField}.desc`)
+                    setOpen(false)
                   }}
                 >
                   Sort descending
@@ -324,8 +303,8 @@ export function ColumnActionsPopover({
               type="button"
               className={styles.action}
               onClick={() => {
-                setOpen(false);
-                onOpenResize();
+                setOpen(false)
+                onOpenResize()
               }}
             >
               Resize…
@@ -334,7 +313,7 @@ export function ColumnActionsPopover({
         </Popover.Positioner>
       </Popover.Portal>
     </Popover.Root>
-  );
+  )
 }
 ```
 
@@ -368,12 +347,12 @@ git commit -m "feat(ColumnActionsPopover): add popover with sort toggles and res
 Create `src/components/SearchResults/ColumnResizeDialog.test.tsx`:
 
 ```tsx
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { vi } from "vitest";
-import { ColumnResizeDialog } from "./ColumnResizeDialog";
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { vi } from 'vitest'
+import { ColumnResizeDialog } from './ColumnResizeDialog'
 
-test("renders with the column name in the heading", () => {
+test('renders with the column name in the heading', () => {
   render(
     <ColumnResizeDialog
       columnName="Title"
@@ -381,13 +360,11 @@ test("renders with the column name in the heading", () => {
       onApply={vi.fn()}
       onClose={vi.fn()}
     />,
-  );
-  expect(
-    screen.getByRole("heading", { name: "Resize Title" }),
-  ).toBeInTheDocument();
-});
+  )
+  expect(screen.getByRole('heading', { name: 'Resize Title' })).toBeInTheDocument()
+})
 
-test("pre-fills the number input with currentWidth", () => {
+test('pre-fills the number input with currentWidth', () => {
   render(
     <ColumnResizeDialog
       columnName="Title"
@@ -395,15 +372,13 @@ test("pre-fills the number input with currentWidth", () => {
       onApply={vi.fn()}
       onClose={vi.fn()}
     />,
-  );
-  expect(screen.getByRole("spinbutton", { name: "Width (px)" })).toHaveValue(
-    200,
-  );
-});
+  )
+  expect(screen.getByRole('spinbutton', { name: 'Width (px)' })).toHaveValue(200)
+})
 
-test("clicking Apply calls onApply with the parsed number value", async () => {
-  const user = userEvent.setup();
-  const onApply = vi.fn();
+test('clicking Apply calls onApply with the parsed number value', async () => {
+  const user = userEvent.setup()
+  const onApply = vi.fn()
   render(
     <ColumnResizeDialog
       columnName="Title"
@@ -411,18 +386,18 @@ test("clicking Apply calls onApply with the parsed number value", async () => {
       onApply={onApply}
       onClose={vi.fn()}
     />,
-  );
-  const input = screen.getByRole("spinbutton", { name: "Width (px)" });
-  await user.clear(input);
-  await user.type(input, "300");
-  await user.click(screen.getByRole("button", { name: "Apply" }));
-  expect(onApply).toHaveBeenCalledWith(300);
-});
+  )
+  const input = screen.getByRole('spinbutton', { name: 'Width (px)' })
+  await user.clear(input)
+  await user.type(input, '300')
+  await user.click(screen.getByRole('button', { name: 'Apply' }))
+  expect(onApply).toHaveBeenCalledWith(300)
+})
 
-test("clicking Cancel calls onClose without calling onApply", async () => {
-  const user = userEvent.setup();
-  const onApply = vi.fn();
-  const onClose = vi.fn();
+test('clicking Cancel calls onClose without calling onApply', async () => {
+  const user = userEvent.setup()
+  const onApply = vi.fn()
+  const onClose = vi.fn()
   render(
     <ColumnResizeDialog
       columnName="Title"
@@ -430,11 +405,11 @@ test("clicking Cancel calls onClose without calling onApply", async () => {
       onApply={onApply}
       onClose={onClose}
     />,
-  );
-  await user.click(screen.getByRole("button", { name: "Cancel" }));
-  expect(onClose).toHaveBeenCalledTimes(1);
-  expect(onApply).not.toHaveBeenCalled();
-});
+  )
+  await user.click(screen.getByRole('button', { name: 'Cancel' }))
+  expect(onClose).toHaveBeenCalledTimes(1)
+  expect(onApply).not.toHaveBeenCalled()
+})
 ```
 
 - [ ] **Step 2: Run tests to verify they fail**
@@ -544,15 +519,15 @@ Create `src/components/SearchResults/ColumnResizeDialog.module.css`:
 Create `src/components/SearchResults/ColumnResizeDialog.tsx`:
 
 ```tsx
-import { useState } from "react";
-import { Dialog } from "@base-ui/react/dialog";
-import styles from "./ColumnResizeDialog.module.css";
+import { useState } from 'react'
+import { Dialog } from '@base-ui/react/dialog'
+import styles from './ColumnResizeDialog.module.css'
 
 interface ColumnResizeDialogProps {
-  columnName: string;
-  currentWidth: number;
-  onApply: (width: number) => void;
-  onClose: () => void;
+  columnName: string
+  currentWidth: number
+  onApply: (width: number) => void
+  onClose: () => void
 }
 
 export function ColumnResizeDialog({
@@ -561,21 +536,19 @@ export function ColumnResizeDialog({
   onApply,
   onClose,
 }: ColumnResizeDialogProps) {
-  const [value, setValue] = useState(String(currentWidth));
+  const [value, setValue] = useState(String(currentWidth))
 
   return (
     <Dialog.Root
       open={true}
       onOpenChange={(open) => {
-        if (!open) onClose();
+        if (!open) onClose()
       }}
     >
       <Dialog.Portal>
         <Dialog.Backdrop className={styles.backdrop} />
         <Dialog.Popup className={styles.popup}>
-          <Dialog.Title className={styles.title}>
-            Resize {columnName}
-          </Dialog.Title>
+          <Dialog.Title className={styles.title}>Resize {columnName}</Dialog.Title>
           <div className={styles.field}>
             <label htmlFor="resize-width-input" className={styles.label}>
               Width (px)
@@ -603,7 +576,7 @@ export function ColumnResizeDialog({
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>
-  );
+  )
 }
 ```
 
@@ -637,64 +610,60 @@ git commit -m "feat(ColumnResizeDialog): add modal dialog for setting column wid
 Append to `src/components/SearchResults/SearchResults.test.tsx`:
 
 ```tsx
-test("actions button is present on resizable columns", async () => {
-  renderSearchResults();
-  await screen.findAllByRole("row");
-  const actionButtons = screen.getAllByRole("button", {
-    name: "Column actions",
-  });
-  expect(actionButtons.length).toBeGreaterThan(0);
-});
+test('actions button is present on resizable columns', async () => {
+  renderSearchResults()
+  await screen.findAllByRole('row')
+  const actionButtons = screen.getAllByRole('button', {
+    name: 'Column actions',
+  })
+  expect(actionButtons.length).toBeGreaterThan(0)
+})
 
-test("actions button is absent on dayStripe column", async () => {
-  renderSearchResults();
-  await screen.findAllByRole("row");
-  const dayStripes = document.querySelectorAll("th[aria-hidden='true']");
+test('actions button is absent on dayStripe column', async () => {
+  renderSearchResults()
+  await screen.findAllByRole('row')
+  const dayStripes = document.querySelectorAll("th[aria-hidden='true']")
   dayStripes.forEach((th) => {
-    expect(th.querySelector("[aria-label='Column actions']")).toBeNull();
-  });
-});
+    expect(th.querySelector("[aria-label='Column actions']")).toBeNull()
+  })
+})
 
-test("clicking Resize… on a column opens the resize dialog", async () => {
-  const user = userEvent.setup();
-  renderSearchResults();
-  await screen.findAllByRole("row");
-  const titleTh = screen.getByRole("columnheader", { name: "Title" });
-  await user.click(
-    within(titleTh).getByRole("button", { name: "Column actions" }),
-  );
-  await user.click(screen.getByRole("button", { name: "Resize…" }));
-  expect(screen.getByRole("dialog")).toBeInTheDocument();
-});
+test('clicking Resize… on a column opens the resize dialog', async () => {
+  const user = userEvent.setup()
+  renderSearchResults()
+  await screen.findAllByRole('row')
+  const titleTh = screen.getByRole('columnheader', { name: 'Title' })
+  await user.click(within(titleTh).getByRole('button', { name: 'Column actions' }))
+  await user.click(screen.getByRole('button', { name: 'Resize…' }))
+  expect(screen.getByRole('dialog')).toBeInTheDocument()
+})
 
-test("submitting resize dialog updates column width in localStorage", async () => {
-  const user = userEvent.setup();
-  renderSearchResults();
-  await screen.findAllByRole("row");
-  const titleTh = screen.getByRole("columnheader", { name: "Title" });
-  await user.click(
-    within(titleTh).getByRole("button", { name: "Column actions" }),
-  );
-  await user.click(screen.getByRole("button", { name: "Resize…" }));
-  const input = screen.getByRole("spinbutton", { name: "Width (px)" });
-  await user.clear(input);
-  await user.type(input, "400");
-  await user.click(screen.getByRole("button", { name: "Apply" }));
-  const stored = JSON.parse(localStorage.getItem("gcb-column-sizing")!);
-  expect(stored).toEqual({ version: 1, sizing: { title: 400 } });
-});
+test('submitting resize dialog updates column width in localStorage', async () => {
+  const user = userEvent.setup()
+  renderSearchResults()
+  await screen.findAllByRole('row')
+  const titleTh = screen.getByRole('columnheader', { name: 'Title' })
+  await user.click(within(titleTh).getByRole('button', { name: 'Column actions' }))
+  await user.click(screen.getByRole('button', { name: 'Resize…' }))
+  const input = screen.getByRole('spinbutton', { name: 'Width (px)' })
+  await user.clear(input)
+  await user.type(input, '400')
+  await user.click(screen.getByRole('button', { name: 'Apply' }))
+  const stored = JSON.parse(localStorage.getItem('gcb-column-sizing')!)
+  expect(stored).toEqual({ version: 1, sizing: { title: 400 } })
+})
 ```
 
 Also add `within` to the import at the top of the test file. The existing import is:
 
 ```tsx
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from '@testing-library/react'
 ```
 
 Change it to:
 
 ```tsx
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from '@testing-library/react'
 ```
 
 - [ ] **Step 2: Run new tests to verify they fail**
@@ -724,31 +693,23 @@ At the top of `src/components/SearchResults/SearchResults.tsx`, add `useState` t
 Change:
 
 ```tsx
-import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-} from "@tanstack/react-table";
-import type { ColumnDef } from "@tanstack/react-table";
+import { useReactTable, getCoreRowModel, flexRender } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 ```
 
 To:
 
 ```tsx
-import { useState } from "react";
-import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-} from "@tanstack/react-table";
-import type { ColumnDef } from "@tanstack/react-table";
+import { useState } from 'react'
+import { useReactTable, getCoreRowModel, flexRender } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 ```
 
 After the `useColumnSizing` import line, add:
 
 ```tsx
-import { ColumnActionsPopover } from "./ColumnActionsPopover";
-import { ColumnResizeDialog } from "./ColumnResizeDialog";
+import { ColumnActionsPopover } from './ColumnActionsPopover'
+import { ColumnResizeDialog } from './ColumnResizeDialog'
 ```
 
 - [ ] **Step 5: Add `resizeTarget` state inside `SearchResults`**
@@ -757,10 +718,10 @@ Inside the `SearchResults` function body, after the `const { sizing, setSizing, 
 
 ```tsx
 const [resizeTarget, setResizeTarget] = useState<{
-  columnId: string;
-  columnName: string;
-  currentWidth: number;
-} | null>(null);
+  columnId: string
+  columnName: string
+  currentWidth: number
+} | null>(null)
 ```
 
 - [ ] **Step 6: Render `ColumnActionsPopover` inside each resizable `<th>`**
@@ -768,7 +729,7 @@ const [resizeTarget, setResizeTarget] = useState<{
 Find the section inside the `<th>` that renders the sort button and resize handle (around lines 449–476 of the current file). Change it from:
 
 ```tsx
-<button
+;<button
   type="button"
   aria-label={`Sort by ${label}`}
   onClick={() => sortField && handleSortClick(sortField, label)}
@@ -776,10 +737,10 @@ Find the section inside the `<th>` that renders the sort button and resize handl
   {flexRender(header.column.columnDef.header, header.getContext())}
   {isActive && (
     <span aria-hidden="true" className={styles.sortIndicator}>
-      {activeSortDir === "asc" ? " ▲" : " ▼"}
+      {activeSortDir === 'asc' ? ' ▲' : ' ▼'}
     </span>
   )}
-</button>;
+</button>
 {
   header.column.getCanResize() && (
     <div
@@ -788,14 +749,14 @@ Find the section inside the `<th>` that renders the sort button and resize handl
       aria-hidden="true"
       data-testid="resize-handle"
     />
-  );
+  )
 }
 ```
 
 To:
 
 ```tsx
-<button
+;<button
   type="button"
   aria-label={`Sort by ${label}`}
   onClick={() => sortField && handleSortClick(sortField, label)}
@@ -803,10 +764,10 @@ To:
   {flexRender(header.column.columnDef.header, header.getContext())}
   {isActive && (
     <span aria-hidden="true" className={styles.sortIndicator}>
-      {activeSortDir === "asc" ? " ▲" : " ▼"}
+      {activeSortDir === 'asc' ? ' ▲' : ' ▼'}
     </span>
   )}
-</button>;
+</button>
 {
   header.column.getCanResize() && (
     <ColumnActionsPopover
@@ -822,7 +783,7 @@ To:
         })
       }
     />
-  );
+  )
 }
 {
   header.column.getCanResize() && (
@@ -832,7 +793,7 @@ To:
       aria-hidden="true"
       data-testid="resize-handle"
     />
-  );
+  )
 }
 ```
 

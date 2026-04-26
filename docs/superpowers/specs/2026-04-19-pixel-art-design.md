@@ -36,10 +36,9 @@ Parchment & Pixel: warm parchment background (#f5e6c8), earthy brown palette, fa
 **Composing global classes with module classes:** Use `clsx` to combine global base classes with module layout classes. Global class provides visual identity; module class provides layout and local variants. Always list the global class first:
 
 ```tsx
-import clsx from "clsx";
-import styles from "./SearchForm.module.css";
-
-<button className={clsx("btn-primary", styles.searchButton)}>▶ SEARCH</button>;
+import clsx from 'clsx'
+import styles from './SearchForm.module.css'
+;<button className={clsx('btn-primary', styles.searchButton)}>▶ SEARCH</button>
 ```
 
 `clsx` is a zero-dependency utility (~300 bytes). Add it as a dependency. Never override `.btn-primary` visual properties (background, border, font) from a module — only add layout properties (width, position, margin).
@@ -57,13 +56,11 @@ Sidebar Quest Log: fixed-width search panel (280px) pinned left, results fill th
 ### Color Palette
 
 ```css
---color-parchment: #f5e6c8 /* page bg, card fills */
-  --color-parchment-light: #fff9ee /* input bg, alternating table rows */
-  --color-bark: #8b4513 /* primary borders, button fills, header bg */
-  --color-bark-dark: #5c3317 /* text, dark accents */
-  --color-bark-light: #d4a76a /* secondary borders, dividers, zebra stripes */
-  --color-ink: #3b1e0a /* body text, max contrast on parchment */
-  --color-gold: #c9a84c
+--color-parchment: #f5e6c8 /* page bg, card fills */ --color-parchment-light: #fff9ee
+  /* input bg, alternating table rows */ --color-bark: #8b4513
+  /* primary borders, button fills, header bg */ --color-bark-dark: #5c3317 /* text, dark accents */
+  --color-bark-light: #d4a76a /* secondary borders, dividers, zebra stripes */ --color-ink: #3b1e0a
+  /* body text, max contrast on parchment */ --color-gold: #c9a84c
   /* accent: header title, active page, active sort, link hover */;
 ```
 
@@ -72,8 +69,8 @@ Sidebar Quest Log: fixed-width search panel (280px) pinned left, results fill th
 ### Typography
 
 ```css
---font-pixel: "Press Start 2P", monospace;
---font-data: "Courier Prime", monospace;
+--font-pixel: 'Press Start 2P', monospace;
+--font-data: 'Courier Prime', monospace;
 ```
 
 Both loaded from Google Fonts via a `<link>` in `index.html`.
@@ -334,7 +331,7 @@ Solid `#f5e6c8` is beige, not parchment. Texture is what makes the difference.
 ```css
 html {
   background-color: var(--color-parchment);
-  background-image: url("data:image/svg+xml,..."); /* feTurbulence noise, opacity 0.04 */
+  background-image: url('data:image/svg+xml,...'); /* feTurbulence noise, opacity 0.04 */
   background-attachment: fixed;
 }
 ```

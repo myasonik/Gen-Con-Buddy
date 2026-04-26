@@ -23,29 +23,29 @@ Add a `/changelog` route that surfaces the backend changelog API. Users can see 
 
 ```ts
 interface ChangelogSummary {
-  id: string;
-  date: string; // RFC3339
-  updatedCount: number;
-  deletedCount: number;
-  createdCount: number;
+  id: string
+  date: string // RFC3339
+  updatedCount: number
+  deletedCount: number
+  createdCount: number
 }
 
 interface ChangelogEntry {
-  id: string;
-  date: string;
-  updatedEvents: Event[];
-  deletedEvents: Event[];
-  createdEvents: Event[];
+  id: string
+  date: string
+  updatedEvents: Event[]
+  deletedEvents: Event[]
+  createdEvents: Event[]
 }
 
 interface ListChangelogsResponse {
-  error?: string;
-  entries?: ChangelogSummary[];
+  error?: string
+  entries?: ChangelogSummary[]
 }
 
 interface FetchChangelogResponse {
-  error?: string;
-  entry?: ChangelogEntry;
+  error?: string
+  entry?: ChangelogEntry
 }
 ```
 

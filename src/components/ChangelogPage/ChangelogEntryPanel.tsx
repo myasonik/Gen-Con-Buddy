@@ -1,28 +1,26 @@
-import type { ChangelogEntry } from "../../utils/types";
-import { EventTable } from "../../ui/EventTable/EventTable";
-import styles from "./ChangelogEntryPanel.module.css";
+import type { ChangelogEntry } from '../../utils/types'
+import { EventTable } from '../../ui/EventTable/EventTable'
+import styles from './ChangelogEntryPanel.module.css'
 
-type EntryValue = ChangelogEntry | "loading" | "error" | undefined;
+type EntryValue = ChangelogEntry | 'loading' | 'error' | undefined
 
 interface ChangelogEntryPanelProps {
-  entry: EntryValue;
+  entry: EntryValue
 }
 
 export function ChangelogEntryPanel({ entry }: ChangelogEntryPanelProps) {
-  if (entry === undefined || entry === "loading") {
+  if (entry === undefined || entry === 'loading') {
     return (
       <p className={styles.status} aria-busy="true">
         Loading…
       </p>
-    );
+    )
   }
 
-  if (entry === "error") {
+  if (entry === 'error') {
     return (
-      <p className={styles.status}>
-        Could not load this entry. Collapse and re-expand to retry.
-      </p>
-    );
+      <p className={styles.status}>Could not load this entry. Collapse and re-expand to retry.</p>
+    )
   }
 
   return (
@@ -46,5 +44,5 @@ export function ChangelogEntryPanel({ entry }: ChangelogEntryPanelProps) {
         </details>
       )}
     </div>
-  );
+  )
 }

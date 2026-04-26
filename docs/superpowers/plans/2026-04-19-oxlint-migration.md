@@ -114,40 +114,40 @@ git commit -m "chore: add oxlint config"
 - [ ] **Step 1: Replace the entire contents of eslint.config.js**
 
 ```js
-import tsParser from "@typescript-eslint/parser";
-import eslintConfigPrettier from "eslint-config-prettier";
+import tsParser from '@typescript-eslint/parser'
+import eslintConfigPrettier from 'eslint-config-prettier'
 
 const noInlineLiveRegions = {
-  meta: { type: "problem", schema: [] },
+  meta: { type: 'problem', schema: [] },
   create(context) {
     return {
       JSXAttribute(node) {
-        if (node.name.name === "aria-live") {
+        if (node.name.name === 'aria-live') {
           context.report({
             node,
             message:
-              "Use announce() from src/lib/announce.ts instead of aria-live. Inline live regions are unreliable on Windows screen readers.",
-          });
+              'Use announce() from src/lib/announce.ts instead of aria-live. Inline live regions are unreliable on Windows screen readers.',
+          })
         }
         if (
-          node.name.name === "role" &&
-          node.value?.type === "Literal" &&
-          (node.value.value === "alert" || node.value.value === "status")
+          node.name.name === 'role' &&
+          node.value?.type === 'Literal' &&
+          (node.value.value === 'alert' || node.value.value === 'status')
         ) {
           context.report({
             node,
             message: `Use announce() from src/lib/announce.ts instead of role="${node.value.value}". Inline live regions are unreliable on Windows screen readers.`,
-          });
+          })
         }
       },
-    };
+    }
   },
-};
+}
 
 export default [
-  { ignores: ["dist", "public/mockServiceWorker.js"] },
+  { ignores: ['dist', 'public/mockServiceWorker.js'] },
   {
-    files: ["**/*.{ts,tsx}"],
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -155,14 +155,14 @@ export default [
       },
     },
     plugins: {
-      local: { rules: { "no-inline-live-regions": noInlineLiveRegions } },
+      local: { rules: { 'no-inline-live-regions': noInlineLiveRegions } },
     },
     rules: {
-      "local/no-inline-live-regions": "error",
+      'local/no-inline-live-regions': 'error',
     },
   },
   eslintConfigPrettier,
-];
+]
 ```
 
 - [ ] **Step 2: Run ESLint and verify it passes on the current codebase**

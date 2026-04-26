@@ -15,7 +15,7 @@ No new files. Two small changes to existing files.
 Add a `reset` function:
 
 ```ts
-const reset = () => setVisibility({ ...DEFAULTS });
+const reset = () => setVisibility({ ...DEFAULTS })
 ```
 
 Return it alongside `visibility` and `toggle`. The existing `useEffect` already syncs state to localStorage on every change, so reset persists automatically.

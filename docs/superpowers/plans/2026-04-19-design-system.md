@@ -103,8 +103,8 @@ Use semantic HTML elements. Use the `src/ui/` component library for shared UI pr
   --color-gold: #c9a84c;
 
   /* Typography */
-  --font-pixel: "Press Start 2P", monospace;
-  --font-data: "Courier Prime", monospace;
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-data: 'Courier Prime', monospace;
 
   /* Type scale — Press Start 2P only; all sizes must be multiples of 8px */
   --text-display: 18px; /* page title */
@@ -271,8 +271,8 @@ a:hover {
 Replace the entire file with:
 
 ```css
-@import "./styles/tokens.css";
-@import "./styles/global.css";
+@import './styles/tokens.css';
+@import './styles/global.css';
 ```
 
 - [ ] **Step 5: Verify tests pass**
@@ -306,34 +306,34 @@ Expected: Installs without errors.
 - [ ] **Step 8: Create `.storybook/main.ts`**
 
 ```ts
-import type { StorybookConfig } from "@storybook/react-vite";
+import type { StorybookConfig } from '@storybook/react-vite'
 
 const config: StorybookConfig = {
-  stories: ["../src/ui/**/*.stories.@(ts|tsx)"],
+  stories: ['../src/ui/**/*.stories.@(ts|tsx)'],
   addons: [],
   framework: {
-    name: "@storybook/react-vite",
+    name: '@storybook/react-vite',
     options: {},
   },
-};
+}
 
-export default config;
+export default config
 ```
 
 - [ ] **Step 9: Create `.storybook/preview.ts`**
 
 ```ts
-import type { Preview } from "@storybook/react";
-import "../src/styles/tokens.css";
-import "../src/styles/global.css";
+import type { Preview } from '@storybook/react'
+import '../src/styles/tokens.css'
+import '../src/styles/global.css'
 
 const preview: Preview = {
   parameters: {
-    layout: "padded",
+    layout: 'padded',
   },
-};
+}
 
-export default preview;
+export default preview
 ```
 
 - [ ] **Step 10: Create `.storybook/preview-head.html`**
@@ -368,30 +368,30 @@ This utility generates a cartesian product of story variants. It is copied verba
 - [ ] **Step 1: Create `src/ui/storyMatrix.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import React from "react";
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import React from 'react'
 
-type AxisValues = Record<string, readonly unknown[]>;
+type AxisValues = Record<string, readonly unknown[]>
 
 type Combo<T extends AxisValues> = {
-  [K in keyof T]: T[K][number];
-};
+  [K in keyof T]: T[K][number]
+}
 
 export function cartesian<T extends AxisValues>(axes: T): Combo<T>[] {
-  const keys = Object.keys(axes);
-  let result: Partial<Combo<T>>[] = [{}];
+  const keys = Object.keys(axes)
+  let result: Partial<Combo<T>>[] = [{}]
 
   for (const key of keys) {
-    const next: Partial<Combo<T>>[] = [];
+    const next: Partial<Combo<T>>[] = []
     for (const combo of result) {
       for (const val of axes[key]) {
-        next.push({ ...combo, [key]: val });
+        next.push({ ...combo, [key]: val })
       }
     }
-    result = next;
+    result = next
   }
 
-  return result as Combo<T>[];
+  return result as Combo<T>[]
 }
 
 export function makeMatrix<TMeta extends Meta<any>>(
@@ -399,69 +399,66 @@ export function makeMatrix<TMeta extends Meta<any>>(
   axes: AxisValues,
   defaults?: Record<string, unknown>,
 ): {
-  stories: Record<string, StoryObj<TMeta>>;
-  Grid: () => React.JSX.Element;
+  stories: Record<string, StoryObj<TMeta>>
+  Grid: () => React.JSX.Element
 } {
-  const combos = cartesian(axes);
-  if (!meta.component)
-    throw new Error("makeMatrix requires meta.component to be defined");
-  const Component = meta.component as React.ComponentType<
-    Record<string, unknown>
-  >;
+  const combos = cartesian(axes)
+  if (!meta.component) throw new Error('makeMatrix requires meta.component to be defined')
+  const Component = meta.component as React.ComponentType<Record<string, unknown>>
 
-  const stories: Record<string, StoryObj<TMeta>> = {};
+  const stories: Record<string, StoryObj<TMeta>> = {}
   for (const combo of combos) {
-    const vals = Object.values(combo).map(String);
-    const key = vals.join("_");
-    const name = vals.join(" / ");
+    const vals = Object.values(combo).map(String)
+    const key = vals.join('_')
+    const name = vals.join(' / ')
     stories[key] = {
       name,
-      args: { ...defaults, ...combo } as StoryObj<TMeta>["args"],
-    };
+      args: { ...defaults, ...combo } as StoryObj<TMeta>['args'],
+    }
   }
 
   function Grid() {
     return (
       <div
         style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "1.5rem",
-          padding: "1rem",
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '1.5rem',
+          padding: '1rem',
         }}
       >
         {combos.map((combo) => {
-          const key = Object.values(combo).map(String).join("_");
+          const key = Object.values(combo).map(String).join('_')
           const label = Object.entries(combo)
             .map(([k, v]) => `${k}: ${v}`)
-            .join(", ");
+            .join(', ')
           return (
             <div
               key={key}
               style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.5rem",
-                alignItems: "flex-start",
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.5rem',
+                alignItems: 'flex-start',
               }}
             >
               <Component {...defaults} {...combo} />
               <span
                 style={{
-                  fontSize: "var(--text-small)",
-                  color: "var(--color-bark-light)",
+                  fontSize: 'var(--text-small)',
+                  color: 'var(--color-bark-light)',
                 }}
               >
                 {label}
               </span>
             </div>
-          );
+          )
         })}
       </div>
-    );
+    )
   }
 
-  return { stories, Grid };
+  return { stories, Grid }
 }
 ```
 
@@ -470,96 +467,94 @@ export function makeMatrix<TMeta extends Meta<any>>(
 This test imports `Button` to satisfy `makeMatrix`'s requirement for a component — we use the Button we're building in Task 3. But since Button doesn't exist yet, use a simple stub component here:
 
 ```tsx
-import { describe, it, expect } from "vitest";
-import React from "react";
-import { cartesian, makeMatrix } from "./storyMatrix";
-import type { Meta } from "@storybook/react-vite";
+import { describe, it, expect } from 'vitest'
+import React from 'react'
+import { cartesian, makeMatrix } from './storyMatrix'
+import type { Meta } from '@storybook/react-vite'
 
 const StubComponent = ({ children }: { children?: React.ReactNode }) => (
   <button type="button">{children}</button>
-);
+)
 
-describe("cartesian", () => {
-  it("produces all combinations of two axes", () => {
+describe('cartesian', () => {
+  it('produces all combinations of two axes', () => {
     const result = cartesian({
-      variant: ["a", "b"] as const,
-      size: ["sm", "md"] as const,
-    });
-    expect(result).toHaveLength(4);
-    expect(result).toContainEqual({ variant: "a", size: "sm" });
-    expect(result).toContainEqual({ variant: "a", size: "md" });
-    expect(result).toContainEqual({ variant: "b", size: "sm" });
-    expect(result).toContainEqual({ variant: "b", size: "md" });
-  });
+      variant: ['a', 'b'] as const,
+      size: ['sm', 'md'] as const,
+    })
+    expect(result).toHaveLength(4)
+    expect(result).toContainEqual({ variant: 'a', size: 'sm' })
+    expect(result).toContainEqual({ variant: 'a', size: 'md' })
+    expect(result).toContainEqual({ variant: 'b', size: 'sm' })
+    expect(result).toContainEqual({ variant: 'b', size: 'md' })
+  })
 
-  it("returns a single empty object for empty axes", () => {
-    expect(cartesian({})).toEqual([{}]);
-  });
+  it('returns a single empty object for empty axes', () => {
+    expect(cartesian({})).toEqual([{}])
+  })
 
-  it("handles a single axis", () => {
-    expect(cartesian({ variant: ["x", "y"] as const })).toEqual([
-      { variant: "x" },
-      { variant: "y" },
-    ]);
-  });
+  it('handles a single axis', () => {
+    expect(cartesian({ variant: ['x', 'y'] as const })).toEqual([
+      { variant: 'x' },
+      { variant: 'y' },
+    ])
+  })
 
-  it("produces the correct count for three axes", () => {
+  it('produces the correct count for three axes', () => {
     const result = cartesian({
       a: [1, 2] as const,
-      b: ["x", "y"] as const,
+      b: ['x', 'y'] as const,
       c: [true, false] as const,
-    });
-    expect(result).toHaveLength(8);
-    expect(result).toContainEqual({ a: 1, b: "x", c: true });
-  });
-});
+    })
+    expect(result).toHaveLength(8)
+    expect(result).toContainEqual({ a: 1, b: 'x', c: true })
+  })
+})
 
-describe("makeMatrix", () => {
-  const meta = { component: StubComponent } satisfies Meta<
-    typeof StubComponent
-  >;
+describe('makeMatrix', () => {
+  const meta = { component: StubComponent } satisfies Meta<typeof StubComponent>
 
-  it("returns one story per combination", () => {
+  it('returns one story per combination', () => {
     const { stories } = makeMatrix(meta, {
-      variant: ["primary", "secondary"] as const,
-      size: ["sm", "md"] as const,
-    });
-    expect(Object.keys(stories)).toHaveLength(4);
-  });
+      variant: ['primary', 'secondary'] as const,
+      size: ['sm', 'md'] as const,
+    })
+    expect(Object.keys(stories)).toHaveLength(4)
+  })
 
-  it("keys stories by underscore-joined values", () => {
+  it('keys stories by underscore-joined values', () => {
     const { stories } = makeMatrix(meta, {
-      variant: ["primary"] as const,
-      size: ["md"] as const,
-    });
-    expect(stories).toHaveProperty("primary_md");
-  });
+      variant: ['primary'] as const,
+      size: ['md'] as const,
+    })
+    expect(stories).toHaveProperty('primary_md')
+  })
 
-  it("sets a human-readable name on each story", () => {
+  it('sets a human-readable name on each story', () => {
     const { stories } = makeMatrix(meta, {
-      variant: ["primary"] as const,
-      size: ["md"] as const,
-    });
-    expect(stories["primary_md"].name).toBe("primary / md");
-  });
+      variant: ['primary'] as const,
+      size: ['md'] as const,
+    })
+    expect(stories['primary_md'].name).toBe('primary / md')
+  })
 
-  it("merges defaults into story args", () => {
+  it('merges defaults into story args', () => {
     const { stories } = makeMatrix(
       meta,
-      { variant: ["primary"] as const },
-      { children: "Click me" },
-    );
-    expect(stories["primary"].args).toMatchObject({
-      children: "Click me",
-      variant: "primary",
-    });
-  });
+      { variant: ['primary'] as const },
+      { children: 'Click me' },
+    )
+    expect(stories['primary'].args).toMatchObject({
+      children: 'Click me',
+      variant: 'primary',
+    })
+  })
 
-  it("returns a Grid render function", () => {
-    const { Grid } = makeMatrix(meta, { variant: ["primary"] as const });
-    expect(typeof Grid).toBe("function");
-  });
-});
+  it('returns a Grid render function', () => {
+    const { Grid } = makeMatrix(meta, { variant: ['primary'] as const })
+    expect(typeof Grid).toBe('function')
+  })
+})
 ```
 
 - [ ] **Step 3: Run tests**
@@ -595,82 +590,78 @@ git commit -m "feat: add storyMatrix utility for Storybook variant grids"
 - [ ] **Step 1: Write `src/ui/Button/Button.test.tsx`**
 
 ```tsx
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import {
   createRootRoute,
   createRouter,
   RouterProvider,
   createMemoryHistory,
-} from "@tanstack/react-router";
-import { Button, LinkButton } from "./Button";
+} from '@tanstack/react-router'
+import { Button, LinkButton } from './Button'
 
 function renderWithRouter(ui: React.ReactNode) {
-  const rootRoute = createRootRoute({ component: () => <>{ui}</> });
+  const rootRoute = createRootRoute({ component: () => <>{ui}</> })
   const router = createRouter({
     routeTree: rootRoute,
-    history: createMemoryHistory({ initialEntries: ["/"] }),
-  });
-  render(<RouterProvider router={router} />);
+    history: createMemoryHistory({ initialEntries: ['/'] }),
+  })
+  render(<RouterProvider router={router} />)
 }
 
-describe("Button", () => {
-  it("renders children", () => {
-    render(<Button>Click me</Button>);
-    expect(
-      screen.getByRole("button", { name: "Click me" }),
-    ).toBeInTheDocument();
-  });
+describe('Button', () => {
+  it('renders children', () => {
+    render(<Button>Click me</Button>)
+    expect(screen.getByRole('button', { name: 'Click me' })).toBeInTheDocument()
+  })
 
-  it("defaults type to button to prevent accidental form submission", () => {
-    render(<Button>Click me</Button>);
-    expect(screen.getByRole("button")).toHaveAttribute("type", "button");
-  });
+  it('defaults type to button to prevent accidental form submission', () => {
+    render(<Button>Click me</Button>)
+    expect(screen.getByRole('button')).toHaveAttribute('type', 'button')
+  })
 
   it("accepts type='submit'", () => {
-    render(<Button type="submit">Submit</Button>);
-    expect(screen.getByRole("button")).toHaveAttribute("type", "submit");
-  });
+    render(<Button type="submit">Submit</Button>)
+    expect(screen.getByRole('button')).toHaveAttribute('type', 'submit')
+  })
 
-  it("is disabled when disabled prop is set", () => {
-    render(<Button disabled>Disabled</Button>);
-    expect(screen.getByRole("button")).toBeDisabled();
-  });
+  it('is disabled when disabled prop is set', () => {
+    render(<Button disabled>Disabled</Button>)
+    expect(screen.getByRole('button')).toBeDisabled()
+  })
 
-  it("calls onClick when clicked", async () => {
-    const handleClick = vi.fn();
-    render(<Button onClick={handleClick}>Click me</Button>);
-    await userEvent.click(screen.getByRole("button"));
-    expect(handleClick).toHaveBeenCalledOnce();
-  });
+  it('calls onClick when clicked', async () => {
+    const handleClick = vi.fn()
+    render(<Button onClick={handleClick}>Click me</Button>)
+    await userEvent.click(screen.getByRole('button'))
+    expect(handleClick).toHaveBeenCalledOnce()
+  })
 
-  it("does not call onClick when disabled", async () => {
-    const handleClick = vi.fn();
+  it('does not call onClick when disabled', async () => {
+    const handleClick = vi.fn()
     render(
       <Button disabled onClick={handleClick}>
         Disabled
       </Button>,
-    );
-    await userEvent.click(screen.getByRole("button"), {
+    )
+    await userEvent.click(screen.getByRole('button'), {
       pointerEventsCheck: 0,
-    });
-    expect(handleClick).not.toHaveBeenCalled();
-  });
-});
+    })
+    expect(handleClick).not.toHaveBeenCalled()
+  })
+})
 
-describe("LinkButton", () => {
-  it("renders as a link", () => {
-    renderWithRouter(<LinkButton to="/">Back</LinkButton>);
-    expect(screen.getByRole("link", { name: "Back" })).toBeInTheDocument();
-  });
+describe('LinkButton', () => {
+  it('renders as a link', () => {
+    renderWithRouter(<LinkButton to="/">Back</LinkButton>)
+    expect(screen.getByRole('link', { name: 'Back' })).toBeInTheDocument()
+  })
 
-  it("navigates to the given route", () => {
-    renderWithRouter(<LinkButton to="/">Back to results</LinkButton>);
-    expect(
-      screen.getByRole("link", { name: "Back to results" }),
-    ).toHaveAttribute("href", "/");
-  });
-});
+  it('navigates to the given route', () => {
+    renderWithRouter(<LinkButton to="/">Back to results</LinkButton>)
+    expect(screen.getByRole('link', { name: 'Back to results' })).toHaveAttribute('href', '/')
+  })
+})
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -726,54 +717,49 @@ Expected: FAIL — `Cannot find module './Button'`
 - [ ] **Step 4: Create `src/ui/Button/Button.tsx`**
 
 ```tsx
-import React from "react";
-import { Link } from "@tanstack/react-router";
-import type { LinkProps } from "@tanstack/react-router";
-import styles from "./Button.module.css";
+import React from 'react'
+import { Link } from '@tanstack/react-router'
+import type { LinkProps } from '@tanstack/react-router'
+import styles from './Button.module.css'
 
-export const BUTTON_VARIANTS = ["primary", "secondary"] as const;
-export type ButtonVariant = (typeof BUTTON_VARIANTS)[number];
+export const BUTTON_VARIANTS = ['primary', 'secondary'] as const
+export type ButtonVariant = (typeof BUTTON_VARIANTS)[number]
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariant;
+  variant?: ButtonVariant
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  function Button(
-    { variant = "primary", type = "button", className, ...props },
-    ref,
-  ) {
-    return (
-      <button
-        ref={ref}
-        type={type}
-        className={[styles.button, styles[variant], className]
-          .filter(Boolean)
-          .join(" ")}
-        {...props}
-      />
-    );
-  },
-);
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  { variant = 'primary', type = 'button', className, ...props },
+  ref,
+) {
+  return (
+    <button
+      ref={ref}
+      type={type}
+      className={[styles.button, styles[variant], className].filter(Boolean).join(' ')}
+      {...props}
+    />
+  )
+})
 
-interface LinkButtonProps extends Omit<LinkProps, "className"> {
-  variant?: ButtonVariant;
-  className?: string;
+interface LinkButtonProps extends Omit<LinkProps, 'className'> {
+  variant?: ButtonVariant
+  className?: string
 }
 
-export const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
-  function LinkButton({ variant = "secondary", className, ...props }, ref) {
-    return (
-      <Link
-        ref={ref}
-        className={[styles.button, styles[variant], className]
-          .filter(Boolean)
-          .join(" ")}
-        {...props}
-      />
-    );
-  },
-);
+export const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(function LinkButton(
+  { variant = 'secondary', className, ...props },
+  ref,
+) {
+  return (
+    <Link
+      ref={ref}
+      className={[styles.button, styles[variant], className].filter(Boolean).join(' ')}
+      {...props}
+    />
+  )
+})
 ```
 
 - [ ] **Step 5: Run test to verify it passes**
@@ -784,48 +770,47 @@ Expected: 8 tests pass.
 - [ ] **Step 6: Create `src/ui/Button/Button.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button, BUTTON_VARIANTS } from "./Button";
-import { makeMatrix } from "../storyMatrix";
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Button, BUTTON_VARIANTS } from './Button'
+import { makeMatrix } from '../storyMatrix'
 
 const meta = {
-  title: "UI/Button",
+  title: 'UI/Button',
   component: Button,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   args: {
-    children: "Button",
+    children: 'Button',
   },
-} satisfies Meta<typeof Button>;
+} satisfies Meta<typeof Button>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 export const Primary: Story = {
-  args: { variant: "primary" },
-};
+  args: { variant: 'primary' },
+}
 
 export const Secondary: Story = {
-  args: { variant: "secondary" },
-};
+  args: { variant: 'secondary' },
+}
 
 export const Disabled: Story = {
   args: { disabled: true },
-};
+}
 
 export const SubmitType: Story = {
-  args: { type: "submit", children: "▶ Search" },
-};
+  args: { type: 'submit', children: '▶ Search' },
+}
 
 const { stories, Grid } = makeMatrix(
   meta,
   { variant: BUTTON_VARIANTS, disabled: [false, true] },
-  { children: "Button" },
-);
+  { children: 'Button' },
+)
 
-export const AllVariants: Story = { render: Grid };
+export const AllVariants: Story = { render: Grid }
 
-export const { primary_false, primary_true, secondary_false, secondary_true } =
-  stories;
+export const { primary_false, primary_true, secondary_false, secondary_true } = stories
 ```
 
 - [ ] **Step 7: Update `src/components/SearchForm/SearchForm.tsx`**
@@ -833,7 +818,7 @@ export const { primary_false, primary_true, secondary_false, secondary_true } =
 Remove the `clsx` import (no longer needed). Add imports for `Button`:
 
 ```tsx
-import { Button } from "../../ui/Button/Button";
+import { Button } from '../../ui/Button/Button'
 ```
 
 Replace the two button elements in the `buttonBar`:
@@ -882,7 +867,7 @@ Also remove `import clsx from "clsx";` from the top of the file.
 Add import:
 
 ```tsx
-import { Button } from "../../ui/Button/Button";
+import { Button } from '../../ui/Button/Button'
 ```
 
 Replace the three `<button>` elements that use `btn-secondary`:
@@ -892,7 +877,7 @@ Old (Previous button):
 ```tsx
 <button
   type="button"
-  className={clsx("btn-secondary", styles.navButton)}
+  className={clsx('btn-secondary', styles.navButton)}
   onClick={() => onNavigate(page - 1, limit)}
   disabled={page === 1}
 >
@@ -919,11 +904,11 @@ Old (page number button):
 <button
   key={p}
   type="button"
-  className={clsx("btn-secondary", styles.pageButton, {
+  className={clsx('btn-secondary', styles.pageButton, {
     [styles.activePage]: p === page,
   })}
   onClick={() => onNavigate(p, limit)}
-  aria-current={p === page ? "page" : undefined}
+  aria-current={p === page ? 'page' : undefined}
   disabled={p === page}
 >
   {p}
@@ -940,7 +925,7 @@ New:
     [styles.activePage]: p === page,
   })}
   onClick={() => onNavigate(p, limit)}
-  aria-current={p === page ? "page" : undefined}
+  aria-current={p === page ? 'page' : undefined}
   disabled={p === page}
 >
   {p}
@@ -952,7 +937,7 @@ Old (Next button):
 ```tsx
 <button
   type="button"
-  className={clsx("btn-secondary", styles.navButton)}
+  className={clsx('btn-secondary', styles.navButton)}
   onClick={() => onNavigate(page + 1, limit)}
   disabled={page === totalPages}
 >
@@ -980,7 +965,7 @@ Note: `clsx` is still needed in Pagination for `clsx(styles.pageButton, { [style
 Add import:
 
 ```tsx
-import { LinkButton } from "../../ui/Button/Button";
+import { LinkButton } from '../../ui/Button/Button'
 ```
 
 Replace:
@@ -1072,51 +1057,44 @@ git commit -m "feat: extract Button and LinkButton primitives, remove global btn
 - [ ] **Step 1: Write `src/ui/Toggletip/Toggletip.test.tsx`**
 
 ```tsx
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { Toggletip } from "./Toggletip";
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Toggletip } from './Toggletip'
 
-describe("Toggletip", () => {
-  it("renders a ? button with the given aria-label", () => {
-    render(
-      <Toggletip
-        label="Why are day filters disabled?"
-        message="Because reasons"
-      />,
-    );
+describe('Toggletip', () => {
+  it('renders a ? button with the given aria-label', () => {
+    render(<Toggletip label="Why are day filters disabled?" message="Because reasons" />)
     expect(
-      screen.getByRole("button", { name: "Why are day filters disabled?" }),
-    ).toBeInTheDocument();
-  });
+      screen.getByRole('button', { name: 'Why are day filters disabled?' }),
+    ).toBeInTheDocument()
+  })
 
-  it("does not show tooltip initially", () => {
-    render(<Toggletip label="Why?" message="Because" />);
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
-  });
+  it('does not show tooltip initially', () => {
+    render(<Toggletip label="Why?" message="Because" />)
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
 
-  it("shows tooltip content when button is clicked", async () => {
-    render(<Toggletip label="Why?" message="Clear the day checkboxes" />);
-    await userEvent.click(screen.getByRole("button", { name: "Why?" }));
-    expect(screen.getByRole("tooltip")).toHaveTextContent(
-      "Clear the day checkboxes",
-    );
-  });
+  it('shows tooltip content when button is clicked', async () => {
+    render(<Toggletip label="Why?" message="Clear the day checkboxes" />)
+    await userEvent.click(screen.getByRole('button', { name: 'Why?' }))
+    expect(screen.getByRole('tooltip')).toHaveTextContent('Clear the day checkboxes')
+  })
 
-  it("hides tooltip when button is clicked a second time", async () => {
-    render(<Toggletip label="Why?" message="Because" />);
-    const btn = screen.getByRole("button", { name: "Why?" });
-    await userEvent.click(btn);
-    await userEvent.click(btn);
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
-  });
+  it('hides tooltip when button is clicked a second time', async () => {
+    render(<Toggletip label="Why?" message="Because" />)
+    const btn = screen.getByRole('button', { name: 'Why?' })
+    await userEvent.click(btn)
+    await userEvent.click(btn)
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
 
-  it("hides tooltip on Escape key", async () => {
-    render(<Toggletip label="Why?" message="Because" />);
-    await userEvent.click(screen.getByRole("button", { name: "Why?" }));
-    await userEvent.keyboard("{Escape}");
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
-  });
-});
+  it('hides tooltip on Escape key', async () => {
+    render(<Toggletip label="Why?" message="Because" />)
+    await userEvent.click(screen.getByRole('button', { name: 'Why?' }))
+    await userEvent.keyboard('{Escape}')
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+})
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -1166,25 +1144,25 @@ Expected: FAIL — `Cannot find module './Toggletip'`
 - [ ] **Step 4: Create `src/ui/Toggletip/Toggletip.tsx`**
 
 ```tsx
-import { useState, useEffect } from "react";
-import styles from "./Toggletip.module.css";
+import { useState, useEffect } from 'react'
+import styles from './Toggletip.module.css'
 
 interface ToggletipProps {
-  label: string;
-  message: string;
+  label: string
+  message: string
 }
 
 export function Toggletip({ label, message }: ToggletipProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) return
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [open]);
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  }, [open])
 
   return (
     <span className={styles.wrapper}>
@@ -1202,7 +1180,7 @@ export function Toggletip({ label, message }: ToggletipProps) {
         </span>
       )}
     </span>
-  );
+  )
 }
 ```
 
@@ -1214,30 +1192,29 @@ Expected: 5 tests pass.
 - [ ] **Step 6: Create `src/ui/Toggletip/Toggletip.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Toggletip } from "./Toggletip";
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Toggletip } from './Toggletip'
 
 const meta = {
-  title: "UI/Toggletip",
+  title: 'UI/Toggletip',
   component: Toggletip,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   args: {
-    label: "Why is this disabled?",
-    message: "Clear the day checkboxes above to use custom date fields.",
+    label: 'Why is this disabled?',
+    message: 'Clear the day checkboxes above to use custom date fields.',
   },
-} satisfies Meta<typeof Toggletip>;
+} satisfies Meta<typeof Toggletip>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
-export const Default: Story = {};
+export const Default: Story = {}
 
 export const LongMessage: Story = {
   args: {
-    message:
-      "Results are capped at 10,000 events. Narrow your search to see more pages.",
+    message: 'Results are capped at 10,000 events. Narrow your search to see more pages.',
   },
-};
+}
 ```
 
 - [ ] **Step 7: Update `src/components/SearchForm/SearchForm.tsx`**
@@ -1245,7 +1222,7 @@ export const LongMessage: Story = {
 Remove the inline `Toggletip` component definition (lines 72–101 of the current file). Add an import at the top:
 
 ```tsx
-import { Toggletip } from "../../ui/Toggletip/Toggletip";
+import { Toggletip } from '../../ui/Toggletip/Toggletip'
 ```
 
 No other changes needed — the JSX usage of `<Toggletip label="..." message="..." />` remains identical.
@@ -1294,7 +1271,7 @@ Also update the JSX in `SearchForm.tsx` that references `styles.toggletipWrapper
 Remove the inline `Toggletip` component definition (lines 8–34 of the current file). Add import:
 
 ```tsx
-import { Toggletip } from "../../ui/Toggletip/Toggletip";
+import { Toggletip } from '../../ui/Toggletip/Toggletip'
 ```
 
 The JSX usage `<Toggletip label="..." message="..." />` is already identical to the new import, so no JSX changes needed. Also remove the `useState` and `useEffect` imports if they are no longer used after removing the inline Toggletip (check the rest of Pagination — it does not use `useState` or `useEffect` itself).
@@ -1304,7 +1281,7 @@ The `useState` and `useEffect` imports in Pagination.tsx are only used by the ol
 Old:
 
 ```tsx
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react'
 ```
 
 New: remove entirely (or check if any other code in the file uses them — currently none do).
@@ -1339,54 +1316,46 @@ git commit -m "feat: extract Toggletip primitive, deduplicate SearchForm and Pag
 - [ ] **Step 1: Write `src/ui/PixelState/PixelState.test.tsx`**
 
 ```tsx
-import { render, screen } from "@testing-library/react";
-import { PixelState } from "./PixelState";
+import { render, screen } from '@testing-library/react'
+import { PixelState } from './PixelState'
 
-describe("PixelState", () => {
-  it("renders loading text for loading variant", () => {
-    render(<PixelState variant="loading" text="LOADING QUESTS..." />);
-    expect(screen.getByText("LOADING QUESTS...")).toBeInTheDocument();
-  });
+describe('PixelState', () => {
+  it('renders loading text for loading variant', () => {
+    render(<PixelState variant="loading" text="LOADING QUESTS..." />)
+    expect(screen.getByText('LOADING QUESTS...')).toBeInTheDocument()
+  })
 
-  it("does not show die icon for loading variant", () => {
-    render(<PixelState variant="loading" text="LOADING QUESTS..." />);
-    expect(screen.queryByText("⚄")).not.toBeInTheDocument();
-  });
+  it('does not show die icon for loading variant', () => {
+    render(<PixelState variant="loading" text="LOADING QUESTS..." />)
+    expect(screen.queryByText('⚄')).not.toBeInTheDocument()
+  })
 
-  it("renders die icon and text for empty variant", () => {
+  it('renders die icon and text for empty variant', () => {
     render(
-      <PixelState
-        variant="empty"
-        text="NO QUESTS FOUND"
-        subtext="Try broadening your search."
-      />,
-    );
-    expect(screen.getByText("NO QUESTS FOUND")).toBeInTheDocument();
-    expect(screen.getByText("Try broadening your search.")).toBeInTheDocument();
-    expect(screen.getByText("⚄")).toBeInTheDocument();
-  });
+      <PixelState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />,
+    )
+    expect(screen.getByText('NO QUESTS FOUND')).toBeInTheDocument()
+    expect(screen.getByText('Try broadening your search.')).toBeInTheDocument()
+    expect(screen.getByText('⚄')).toBeInTheDocument()
+  })
 
-  it("renders error text and subtext for error variant", () => {
+  it('renders error text and subtext for error variant', () => {
     render(
       <PixelState
         variant="error"
         text="QUEST FAILED"
         subtext="Unable to load events. Please try again."
       />,
-    );
-    expect(screen.getByText("QUEST FAILED")).toBeInTheDocument();
-    expect(
-      screen.getByText("Unable to load events. Please try again."),
-    ).toBeInTheDocument();
-  });
+    )
+    expect(screen.getByText('QUEST FAILED')).toBeInTheDocument()
+    expect(screen.getByText('Unable to load events. Please try again.')).toBeInTheDocument()
+  })
 
-  it("does not show subtext when not provided", () => {
-    render(<PixelState variant="loading" text="LOADING..." />);
-    expect(
-      screen.queryByRole("paragraph", { name: /subtext/ }),
-    ).not.toBeInTheDocument();
-  });
-});
+  it('does not show subtext when not provided', () => {
+    render(<PixelState variant="loading" text="LOADING..." />)
+    expect(screen.queryByRole('paragraph', { name: /subtext/ })).not.toBeInTheDocument()
+  })
+})
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -1460,23 +1429,23 @@ Expected: FAIL — `Cannot find module './PixelState'`
 - [ ] **Step 4: Create `src/ui/PixelState/PixelState.tsx`**
 
 ```tsx
-import styles from "./PixelState.module.css";
+import styles from './PixelState.module.css'
 
 interface PixelStateProps {
-  variant: "loading" | "empty" | "error";
-  text: string;
-  subtext?: string;
+  variant: 'loading' | 'empty' | 'error'
+  text: string
+  subtext?: string
 }
 
 export function PixelState({ variant, text, subtext }: PixelStateProps) {
   return (
     <div className={styles.state}>
-      {variant === "loading" && (
+      {variant === 'loading' && (
         <div className={styles.progressBar}>
           <div className={styles.progressFill} />
         </div>
       )}
-      {variant === "empty" && (
+      {variant === 'empty' && (
         <div className={styles.die} aria-hidden="true">
           ⚄
         </div>
@@ -1484,7 +1453,7 @@ export function PixelState({ variant, text, subtext }: PixelStateProps) {
       <p className={styles.text}>{text}</p>
       {subtext && <p className={styles.subtext}>{subtext}</p>}
     </div>
-  );
+  )
 }
 ```
 
@@ -1496,49 +1465,49 @@ Expected: 5 tests pass.
 - [ ] **Step 6: Create `src/ui/PixelState/PixelState.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { PixelState } from "./PixelState";
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { PixelState } from './PixelState'
 
 const meta = {
-  title: "UI/PixelState",
+  title: 'UI/PixelState',
   component: PixelState,
-  tags: ["autodocs"],
-} satisfies Meta<typeof PixelState>;
+  tags: ['autodocs'],
+} satisfies Meta<typeof PixelState>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 export const Loading: Story = {
-  args: { variant: "loading", text: "LOADING QUESTS..." },
-};
+  args: { variant: 'loading', text: 'LOADING QUESTS...' },
+}
 
 export const Empty: Story = {
   args: {
-    variant: "empty",
-    text: "NO QUESTS FOUND",
-    subtext: "Try broadening your search.",
+    variant: 'empty',
+    text: 'NO QUESTS FOUND',
+    subtext: 'Try broadening your search.',
   },
-};
+}
 
 export const Error: Story = {
   args: {
-    variant: "error",
-    text: "QUEST FAILED",
-    subtext: "Unable to load events. Please try again.",
+    variant: 'error',
+    text: 'QUEST FAILED',
+    subtext: 'Unable to load events. Please try again.',
   },
-};
+}
 
 export const LoadingEvent: Story = {
-  args: { variant: "loading", text: "LOADING QUEST..." },
-};
+  args: { variant: 'loading', text: 'LOADING QUEST...' },
+}
 
 export const NotFound: Story = {
   args: {
-    variant: "empty",
-    text: "EVENT NOT FOUND",
-    subtext: "This quest does not exist.",
+    variant: 'empty',
+    text: 'EVENT NOT FOUND',
+    subtext: 'This quest does not exist.',
   },
-};
+}
 ```
 
 - [ ] **Step 7: Update `src/components/SearchResults/SearchResults.tsx`**
@@ -1546,7 +1515,7 @@ export const NotFound: Story = {
 Add import:
 
 ```tsx
-import { PixelState } from "../../ui/PixelState/PixelState";
+import { PixelState } from '../../ui/PixelState/PixelState'
 ```
 
 Replace the three state blocks:
@@ -1562,7 +1531,7 @@ Old loading block:
       </div>
       <p className={styles.stateText}>LOADING QUESTS...</p>
     </div>
-  );
+  )
 }
 ```
 
@@ -1570,7 +1539,7 @@ New:
 
 ```tsx
 {
-  isLoading && <PixelState variant="loading" text="LOADING QUESTS..." />;
+  isLoading && <PixelState variant="loading" text="LOADING QUESTS..." />
 }
 ```
 
@@ -1581,11 +1550,9 @@ Old error block:
   isError && (
     <div className={styles.state}>
       <p className={styles.stateText}>QUEST FAILED</p>
-      <p className={styles.stateSubtext}>
-        Unable to load events. Please try again.
-      </p>
+      <p className={styles.stateSubtext}>Unable to load events. Please try again.</p>
     </div>
-  );
+  )
 }
 ```
 
@@ -1599,7 +1566,7 @@ New:
       text="QUEST FAILED"
       subtext="Unable to load events. Please try again."
     />
-  );
+  )
 }
 ```
 
@@ -1615,7 +1582,7 @@ Old empty block:
       <p className={styles.stateText}>NO QUESTS FOUND</p>
       <p className={styles.stateSubtext}>Try broadening your search.</p>
     </div>
-  );
+  )
 }
 ```
 
@@ -1624,12 +1591,8 @@ New:
 ```tsx
 {
   data && data.data.length === 0 && (
-    <PixelState
-      variant="empty"
-      text="NO QUESTS FOUND"
-      subtext="Try broadening your search."
-    />
-  );
+    <PixelState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />
+  )
 }
 ```
 
@@ -1653,7 +1616,7 @@ Delete these rule blocks (they now live in PixelState.module.css):
 Add import:
 
 ```tsx
-import { PixelState } from "../../ui/PixelState/PixelState";
+import { PixelState } from '../../ui/PixelState/PixelState'
 ```
 
 Replace the three early returns:
@@ -1669,7 +1632,7 @@ if (isLoading) {
       </div>
       <p className={styles.stateText}>LOADING QUEST...</p>
     </div>
-  );
+  )
 }
 ```
 
@@ -1677,7 +1640,7 @@ New:
 
 ```tsx
 if (isLoading) {
-  return <PixelState variant="loading" text="LOADING QUEST..." />;
+  return <PixelState variant="loading" text="LOADING QUEST..." />
 }
 ```
 
@@ -1688,11 +1651,9 @@ if (isError) {
   return (
     <div className={styles.state}>
       <p className={styles.stateText}>QUEST FAILED</p>
-      <p className={styles.stateSubtext}>
-        Unable to load event. Please try again.
-      </p>
+      <p className={styles.stateSubtext}>Unable to load event. Please try again.</p>
     </div>
-  );
+  )
 }
 ```
 
@@ -1706,7 +1667,7 @@ if (isError) {
       text="QUEST FAILED"
       subtext="Unable to load event. Please try again."
     />
-  );
+  )
 }
 ```
 
@@ -1722,7 +1683,7 @@ if (!data || data.data.length === 0) {
       <p className={styles.stateText}>EVENT NOT FOUND</p>
       <p className={styles.stateSubtext}>This quest does not exist.</p>
     </div>
-  );
+  )
 }
 ```
 
@@ -1730,13 +1691,7 @@ New:
 
 ```tsx
 if (!data || data.data.length === 0) {
-  return (
-    <PixelState
-      variant="empty"
-      text="EVENT NOT FOUND"
-      subtext="This quest does not exist."
-    />
-  );
+  return <PixelState variant="empty" text="EVENT NOT FOUND" subtext="This quest does not exist." />
 }
 ```
 
@@ -1787,57 +1742,51 @@ git commit -m "feat: extract PixelState primitive, deduplicate loading/empty/err
 - [ ] **Step 1: Write `src/ui/ToggleTile/ToggleTile.test.tsx`**
 
 ```tsx
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { ToggleTile } from "./ToggleTile";
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { ToggleTile } from './ToggleTile'
 
-describe("ToggleTile", () => {
-  it("renders as a button with the given label", () => {
-    render(<ToggleTile>Wed</ToggleTile>);
-    expect(screen.getByRole("button", { name: "Wed" })).toBeInTheDocument();
-  });
+describe('ToggleTile', () => {
+  it('renders as a button with the given label', () => {
+    render(<ToggleTile>Wed</ToggleTile>)
+    expect(screen.getByRole('button', { name: 'Wed' })).toBeInTheDocument()
+  })
 
   it("has aria-pressed='false' by default", () => {
-    render(<ToggleTile>Thu</ToggleTile>);
-    expect(screen.getByRole("button", { name: "Thu" })).toHaveAttribute(
-      "aria-pressed",
-      "false",
-    );
-  });
+    render(<ToggleTile>Thu</ToggleTile>)
+    expect(screen.getByRole('button', { name: 'Thu' })).toHaveAttribute('aria-pressed', 'false')
+  })
 
   it("has aria-pressed='true' when selected", () => {
-    render(<ToggleTile selected>Fri</ToggleTile>);
-    expect(screen.getByRole("button", { name: "Fri" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-  });
+    render(<ToggleTile selected>Fri</ToggleTile>)
+    expect(screen.getByRole('button', { name: 'Fri' })).toHaveAttribute('aria-pressed', 'true')
+  })
 
-  it("is disabled when disabled prop is set", () => {
-    render(<ToggleTile disabled>Sat</ToggleTile>);
-    expect(screen.getByRole("button", { name: "Sat" })).toBeDisabled();
-  });
+  it('is disabled when disabled prop is set', () => {
+    render(<ToggleTile disabled>Sat</ToggleTile>)
+    expect(screen.getByRole('button', { name: 'Sat' })).toBeDisabled()
+  })
 
-  it("calls onClick when clicked", async () => {
-    const handleClick = vi.fn();
-    render(<ToggleTile onClick={handleClick}>Sun</ToggleTile>);
-    await userEvent.click(screen.getByRole("button", { name: "Sun" }));
-    expect(handleClick).toHaveBeenCalledOnce();
-  });
+  it('calls onClick when clicked', async () => {
+    const handleClick = vi.fn()
+    render(<ToggleTile onClick={handleClick}>Sun</ToggleTile>)
+    await userEvent.click(screen.getByRole('button', { name: 'Sun' }))
+    expect(handleClick).toHaveBeenCalledOnce()
+  })
 
-  it("does not call onClick when disabled", async () => {
-    const handleClick = vi.fn();
+  it('does not call onClick when disabled', async () => {
+    const handleClick = vi.fn()
     render(
       <ToggleTile disabled onClick={handleClick}>
         Wed
       </ToggleTile>,
-    );
-    await userEvent.click(screen.getByRole("button", { name: "Wed" }), {
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Wed' }), {
       pointerEventsCheck: 0,
-    });
-    expect(handleClick).not.toHaveBeenCalled();
-  });
-});
+    })
+    expect(handleClick).not.toHaveBeenCalled()
+  })
+})
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -1879,32 +1828,29 @@ Expected: FAIL — `Cannot find module './ToggleTile'`
 - [ ] **Step 4: Create `src/ui/ToggleTile/ToggleTile.tsx`**
 
 ```tsx
-import React from "react";
-import styles from "./ToggleTile.module.css";
+import React from 'react'
+import styles from './ToggleTile.module.css'
 
 interface ToggleTileProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  selected?: boolean;
+  selected?: boolean
 }
 
-export const ToggleTile = React.forwardRef<HTMLButtonElement, ToggleTileProps>(
-  function ToggleTile({ selected = false, className, ...props }, ref) {
-    return (
-      <button
-        ref={ref}
-        type="button"
-        aria-pressed={selected}
-        className={[
-          styles.tile,
-          selected ? styles.selected : undefined,
-          className,
-        ]
-          .filter(Boolean)
-          .join(" ")}
-        {...props}
-      />
-    );
-  },
-);
+export const ToggleTile = React.forwardRef<HTMLButtonElement, ToggleTileProps>(function ToggleTile(
+  { selected = false, className, ...props },
+  ref,
+) {
+  return (
+    <button
+      ref={ref}
+      type="button"
+      aria-pressed={selected}
+      className={[styles.tile, selected ? styles.selected : undefined, className]
+        .filter(Boolean)
+        .join(' ')}
+      {...props}
+    />
+  )
+})
 ```
 
 - [ ] **Step 5: Run test to verify it passes**
@@ -1915,45 +1861,45 @@ Expected: 6 tests pass.
 - [ ] **Step 6: Create `src/ui/ToggleTile/ToggleTile.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ToggleTile } from "./ToggleTile";
-import { makeMatrix } from "../storyMatrix";
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { ToggleTile } from './ToggleTile'
+import { makeMatrix } from '../storyMatrix'
 
 const meta = {
-  title: "UI/ToggleTile",
+  title: 'UI/ToggleTile',
   component: ToggleTile,
-  tags: ["autodocs"],
-  args: { children: "Fri" },
-} satisfies Meta<typeof ToggleTile>;
+  tags: ['autodocs'],
+  args: { children: 'Fri' },
+} satisfies Meta<typeof ToggleTile>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 export const Unselected: Story = {
   args: { selected: false },
-};
+}
 
 export const Selected: Story = {
   args: { selected: true },
-};
+}
 
 export const Disabled: Story = {
   args: { disabled: true },
-};
+}
 
 export const DisabledSelected: Story = {
   args: { selected: true, disabled: true },
-};
+}
 
 const { stories, Grid } = makeMatrix(
   meta,
   { selected: [false, true], disabled: [false, true] },
-  { children: "Fri" },
-);
+  { children: 'Fri' },
+)
 
-export const AllVariants: Story = { render: Grid };
+export const AllVariants: Story = { render: Grid }
 
-export const { false_false, false_true, true_false, true_true } = stories;
+export const { false_false, false_true, true_false, true_true } = stories
 ```
 
 - [ ] **Step 7: Update `src/components/SearchForm/SearchForm.tsx`**
@@ -1961,7 +1907,7 @@ export const { false_false, false_true, true_false, true_true } = stories;
 Add import:
 
 ```tsx
-import { ToggleTile } from "../../ui/ToggleTile/ToggleTile";
+import { ToggleTile } from '../../ui/ToggleTile/ToggleTile'
 ```
 
 Replace the day tiles rendering block:
@@ -2037,201 +1983,169 @@ The day tests currently use `getByRole("checkbox")`. Update them to use `getByRo
 Replace this test:
 
 ```tsx
-test("renders day checkboxes in the top-level form area", () => {
-  render(<SearchForm defaultValues={{}} onSearch={noop} />);
+test('renders day checkboxes in the top-level form area', () => {
+  render(<SearchForm defaultValues={{}} onSearch={noop} />)
   for (const day of DAYS) {
-    expect(screen.getByRole("checkbox", { name: day })).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: day })).toBeInTheDocument()
   }
-});
+})
 ```
 
 With:
 
 ```tsx
-test("renders day tiles as toggle buttons in the DAYS fieldset", () => {
-  render(<SearchForm defaultValues={{}} onSearch={noop} />);
+test('renders day tiles as toggle buttons in the DAYS fieldset', () => {
+  render(<SearchForm defaultValues={{}} onSearch={noop} />)
   for (const day of DAYS) {
-    expect(screen.getByRole("button", { name: day })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: day })).toBeInTheDocument()
   }
-});
+})
 ```
 
 Replace this test:
 
 ```tsx
-test("checking a day checkbox submits the correct days value", async () => {
-  const user = userEvent.setup();
-  const handleSearch = vi.fn<[SearchFormValues], void>();
-  render(<SearchForm defaultValues={{}} onSearch={handleSearch} />);
+test('checking a day checkbox submits the correct days value', async () => {
+  const user = userEvent.setup()
+  const handleSearch = vi.fn<[SearchFormValues], void>()
+  render(<SearchForm defaultValues={{}} onSearch={handleSearch} />)
 
-  await user.click(screen.getByRole("checkbox", { name: "Thu" }));
-  await user.click(screen.getByRole("button", { name: "▶ Search" }));
+  await user.click(screen.getByRole('checkbox', { name: 'Thu' }))
+  await user.click(screen.getByRole('button', { name: '▶ Search' }))
 
-  expect(handleSearch.mock.calls[0][0].days).toBe("thu");
-});
+  expect(handleSearch.mock.calls[0][0].days).toBe('thu')
+})
 ```
 
 With:
 
 ```tsx
-test("clicking a day tile submits the correct days value", async () => {
-  const user = userEvent.setup();
-  const handleSearch = vi.fn<[SearchFormValues], void>();
-  render(<SearchForm defaultValues={{}} onSearch={handleSearch} />);
+test('clicking a day tile submits the correct days value', async () => {
+  const user = userEvent.setup()
+  const handleSearch = vi.fn<[SearchFormValues], void>()
+  render(<SearchForm defaultValues={{}} onSearch={handleSearch} />)
 
-  await user.click(screen.getByRole("button", { name: "Thu" }));
-  await user.click(screen.getByRole("button", { name: "▶ Search" }));
+  await user.click(screen.getByRole('button', { name: 'Thu' }))
+  await user.click(screen.getByRole('button', { name: '▶ Search' }))
 
-  expect(handleSearch.mock.calls[0][0].days).toBe("thu");
-});
+  expect(handleSearch.mock.calls[0][0].days).toBe('thu')
+})
 ```
 
 Replace this test:
 
 ```tsx
-test("checking multiple day checkboxes submits comma-separated days", async () => {
-  const user = userEvent.setup();
-  const handleSearch = vi.fn<[SearchFormValues], void>();
-  render(<SearchForm defaultValues={{}} onSearch={handleSearch} />);
+test('checking multiple day checkboxes submits comma-separated days', async () => {
+  const user = userEvent.setup()
+  const handleSearch = vi.fn<[SearchFormValues], void>()
+  render(<SearchForm defaultValues={{}} onSearch={handleSearch} />)
 
-  await user.click(screen.getByRole("checkbox", { name: "Wed" }));
-  await user.click(screen.getByRole("checkbox", { name: "Sun" }));
-  await user.click(screen.getByRole("button", { name: "▶ Search" }));
+  await user.click(screen.getByRole('checkbox', { name: 'Wed' }))
+  await user.click(screen.getByRole('checkbox', { name: 'Sun' }))
+  await user.click(screen.getByRole('button', { name: '▶ Search' }))
 
-  expect(handleSearch.mock.calls[0][0].days).toBe("wed,sun");
-});
+  expect(handleSearch.mock.calls[0][0].days).toBe('wed,sun')
+})
 ```
 
 With:
 
 ```tsx
-test("clicking multiple day tiles submits comma-separated days", async () => {
-  const user = userEvent.setup();
-  const handleSearch = vi.fn<[SearchFormValues], void>();
-  render(<SearchForm defaultValues={{}} onSearch={handleSearch} />);
+test('clicking multiple day tiles submits comma-separated days', async () => {
+  const user = userEvent.setup()
+  const handleSearch = vi.fn<[SearchFormValues], void>()
+  render(<SearchForm defaultValues={{}} onSearch={handleSearch} />)
 
-  await user.click(screen.getByRole("button", { name: "Wed" }));
-  await user.click(screen.getByRole("button", { name: "Sun" }));
-  await user.click(screen.getByRole("button", { name: "▶ Search" }));
+  await user.click(screen.getByRole('button', { name: 'Wed' }))
+  await user.click(screen.getByRole('button', { name: 'Sun' }))
+  await user.click(screen.getByRole('button', { name: '▶ Search' }))
 
-  expect(handleSearch.mock.calls[0][0].days).toBe("wed,sun");
-});
+  expect(handleSearch.mock.calls[0][0].days).toBe('wed,sun')
+})
 ```
 
 Replace this test:
 
 ```tsx
-test("populates day checkboxes from defaultValues", () => {
-  render(<SearchForm defaultValues={{ days: "fri,sat" }} onSearch={noop} />);
-  expect(screen.getByRole("checkbox", { name: "Fri" })).toBeChecked();
-  expect(screen.getByRole("checkbox", { name: "Sat" })).toBeChecked();
-  expect(screen.getByRole("checkbox", { name: "Wed" })).not.toBeChecked();
-});
+test('populates day checkboxes from defaultValues', () => {
+  render(<SearchForm defaultValues={{ days: 'fri,sat' }} onSearch={noop} />)
+  expect(screen.getByRole('checkbox', { name: 'Fri' })).toBeChecked()
+  expect(screen.getByRole('checkbox', { name: 'Sat' })).toBeChecked()
+  expect(screen.getByRole('checkbox', { name: 'Wed' })).not.toBeChecked()
+})
 ```
 
 With:
 
 ```tsx
-test("populates day tiles from defaultValues using aria-pressed", () => {
-  render(<SearchForm defaultValues={{ days: "fri,sat" }} onSearch={noop} />);
-  expect(screen.getByRole("button", { name: "Fri" })).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
-  expect(screen.getByRole("button", { name: "Sat" })).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
-  expect(screen.getByRole("button", { name: "Wed" })).toHaveAttribute(
-    "aria-pressed",
-    "false",
-  );
-});
+test('populates day tiles from defaultValues using aria-pressed', () => {
+  render(<SearchForm defaultValues={{ days: 'fri,sat' }} onSearch={noop} />)
+  expect(screen.getByRole('button', { name: 'Fri' })).toHaveAttribute('aria-pressed', 'true')
+  expect(screen.getByRole('button', { name: 'Sat' })).toHaveAttribute('aria-pressed', 'true')
+  expect(screen.getByRole('button', { name: 'Wed' })).toHaveAttribute('aria-pressed', 'false')
+})
 ```
 
 Replace this test:
 
 ```tsx
-test("Reset button clears day checkboxes", async () => {
-  const user = userEvent.setup();
-  render(<SearchForm defaultValues={{ days: "thu" }} onSearch={noop} />);
+test('Reset button clears day checkboxes', async () => {
+  const user = userEvent.setup()
+  render(<SearchForm defaultValues={{ days: 'thu' }} onSearch={noop} />)
 
-  await user.click(screen.getByRole("button", { name: "↺ Reset" }));
+  await user.click(screen.getByRole('button', { name: '↺ Reset' }))
 
-  expect(screen.getByRole("checkbox", { name: "Thu" })).not.toBeChecked();
-});
+  expect(screen.getByRole('checkbox', { name: 'Thu' })).not.toBeChecked()
+})
 ```
 
 With:
 
 ```tsx
-test("Reset button clears day tiles", async () => {
-  const user = userEvent.setup();
-  render(<SearchForm defaultValues={{ days: "thu" }} onSearch={noop} />);
+test('Reset button clears day tiles', async () => {
+  const user = userEvent.setup()
+  render(<SearchForm defaultValues={{ days: 'thu' }} onSearch={noop} />)
 
-  await user.click(screen.getByRole("button", { name: "↺ Reset" }));
+  await user.click(screen.getByRole('button', { name: '↺ Reset' }))
 
-  expect(screen.getByRole("button", { name: "Thu" })).toHaveAttribute(
-    "aria-pressed",
-    "false",
-  );
-});
+  expect(screen.getByRole('button', { name: 'Thu' })).toHaveAttribute('aria-pressed', 'false')
+})
 ```
 
 Replace these two tests:
 
 ```tsx
-test("day checkboxes are disabled when startDateTimeStart has a value", () => {
-  render(
-    <SearchForm
-      defaultValues={{ startDateTimeStart: "2024-08-01T10:00" }}
-      onSearch={noop}
-    />,
-  );
+test('day checkboxes are disabled when startDateTimeStart has a value', () => {
+  render(<SearchForm defaultValues={{ startDateTimeStart: '2024-08-01T10:00' }} onSearch={noop} />)
   for (const day of DAYS) {
-    expect(screen.getByRole("checkbox", { name: day })).toBeDisabled();
+    expect(screen.getByRole('checkbox', { name: day })).toBeDisabled()
   }
-});
+})
 
-test("day checkboxes are disabled when startDateTimeEnd has a value", () => {
-  render(
-    <SearchForm
-      defaultValues={{ startDateTimeEnd: "2024-08-01T14:00" }}
-      onSearch={noop}
-    />,
-  );
+test('day checkboxes are disabled when startDateTimeEnd has a value', () => {
+  render(<SearchForm defaultValues={{ startDateTimeEnd: '2024-08-01T14:00' }} onSearch={noop} />)
   for (const day of DAYS) {
-    expect(screen.getByRole("checkbox", { name: day })).toBeDisabled();
+    expect(screen.getByRole('checkbox', { name: day })).toBeDisabled()
   }
-});
+})
 ```
 
 With:
 
 ```tsx
-test("day tiles are disabled when startDateTimeStart has a value", () => {
-  render(
-    <SearchForm
-      defaultValues={{ startDateTimeStart: "2024-08-01T10:00" }}
-      onSearch={noop}
-    />,
-  );
+test('day tiles are disabled when startDateTimeStart has a value', () => {
+  render(<SearchForm defaultValues={{ startDateTimeStart: '2024-08-01T10:00' }} onSearch={noop} />)
   for (const day of DAYS) {
-    expect(screen.getByRole("button", { name: day })).toBeDisabled();
+    expect(screen.getByRole('button', { name: day })).toBeDisabled()
   }
-});
+})
 
-test("day tiles are disabled when startDateTimeEnd has a value", () => {
-  render(
-    <SearchForm
-      defaultValues={{ startDateTimeEnd: "2024-08-01T14:00" }}
-      onSearch={noop}
-    />,
-  );
+test('day tiles are disabled when startDateTimeEnd has a value', () => {
+  render(<SearchForm defaultValues={{ startDateTimeEnd: '2024-08-01T14:00' }} onSearch={noop} />)
   for (const day of DAYS) {
-    expect(screen.getByRole("button", { name: day })).toBeDisabled();
+    expect(screen.getByRole('button', { name: day })).toBeDisabled()
   }
-});
+})
 ```
 
 - [ ] **Step 10: Update `src/routes/index.test.tsx`**
@@ -2239,25 +2153,20 @@ test("day tiles are disabled when startDateTimeEnd has a value", () => {
 Replace this test:
 
 ```tsx
-test("day checkboxes have span wrappers (CSS toggle tiles require them)", async () => {
-  await renderSearchPage("/");
-  const wedLabel = screen
-    .getByRole("checkbox", { name: "Wed" })
-    .closest("label");
-  expect(wedLabel?.querySelector("span")).toBeInTheDocument();
-});
+test('day checkboxes have span wrappers (CSS toggle tiles require them)', async () => {
+  await renderSearchPage('/')
+  const wedLabel = screen.getByRole('checkbox', { name: 'Wed' }).closest('label')
+  expect(wedLabel?.querySelector('span')).toBeInTheDocument()
+})
 ```
 
 With:
 
 ```tsx
-test("day tiles are toggle buttons with aria-pressed", async () => {
-  await renderSearchPage("/");
-  expect(screen.getByRole("button", { name: "Wed" })).toHaveAttribute(
-    "aria-pressed",
-    "false",
-  );
-});
+test('day tiles are toggle buttons with aria-pressed', async () => {
+  await renderSearchPage('/')
+  expect(screen.getByRole('button', { name: 'Wed' })).toHaveAttribute('aria-pressed', 'false')
+})
 ```
 
 - [ ] **Step 11: Run all tests**
@@ -2290,57 +2199,57 @@ git commit -m "feat: extract ToggleTile primitive, replace hidden-checkbox day t
 - [ ] **Step 1: Write `src/ui/Badge/Badge.test.tsx`**
 
 ```tsx
-import { render, screen } from "@testing-library/react";
-import { Badge, BoolBadge } from "./Badge";
+import { render, screen } from '@testing-library/react'
+import { Badge, BoolBadge } from './Badge'
 
-describe("Badge", () => {
-  it("renders children", () => {
-    render(<Badge>ticketed</Badge>);
-    expect(screen.getByText("ticketed")).toBeInTheDocument();
-  });
+describe('Badge', () => {
+  it('renders children', () => {
+    render(<Badge>ticketed</Badge>)
+    expect(screen.getByText('ticketed')).toBeInTheDocument()
+  })
 
-  it("renders filled variant (default)", () => {
-    const { container } = render(<Badge variant="filled">ticketed</Badge>);
-    expect(container.firstChild).toBeInTheDocument();
-  });
+  it('renders filled variant (default)', () => {
+    const { container } = render(<Badge variant="filled">ticketed</Badge>)
+    expect(container.firstChild).toBeInTheDocument()
+  })
 
-  it("renders outline variant", () => {
-    render(<Badge variant="outline">free</Badge>);
-    expect(screen.getByText("free")).toBeInTheDocument();
-  });
-});
+  it('renders outline variant', () => {
+    render(<Badge variant="outline">free</Badge>)
+    expect(screen.getByText('free')).toBeInTheDocument()
+  })
+})
 
-describe("BoolBadge", () => {
-  it("shows ✓ for true", () => {
-    render(<BoolBadge value={true} />);
-    expect(screen.getByText("✓")).toBeInTheDocument();
-  });
+describe('BoolBadge', () => {
+  it('shows ✓ for true', () => {
+    render(<BoolBadge value={true} />)
+    expect(screen.getByText('✓')).toBeInTheDocument()
+  })
 
   it("shows ✓ for 'yes' string (case-insensitive)", () => {
-    render(<BoolBadge value="yes" />);
-    expect(screen.getByText("✓")).toBeInTheDocument();
-  });
+    render(<BoolBadge value="yes" />)
+    expect(screen.getByText('✓')).toBeInTheDocument()
+  })
 
   it("shows ✓ for 'Yes' (capitalized)", () => {
-    render(<BoolBadge value="Yes" />);
-    expect(screen.getByText("✓")).toBeInTheDocument();
-  });
+    render(<BoolBadge value="Yes" />)
+    expect(screen.getByText('✓')).toBeInTheDocument()
+  })
 
-  it("shows — for false", () => {
-    render(<BoolBadge value={false} />);
-    expect(screen.getByText("—")).toBeInTheDocument();
-  });
+  it('shows — for false', () => {
+    render(<BoolBadge value={false} />)
+    expect(screen.getByText('—')).toBeInTheDocument()
+  })
 
   it("shows — for 'no' string", () => {
-    render(<BoolBadge value="no" />);
-    expect(screen.getByText("—")).toBeInTheDocument();
-  });
+    render(<BoolBadge value="no" />)
+    expect(screen.getByText('—')).toBeInTheDocument()
+  })
 
-  it("shows — for empty string", () => {
-    render(<BoolBadge value="" />);
-    expect(screen.getByText("—")).toBeInTheDocument();
-  });
-});
+  it('shows — for empty string', () => {
+    render(<BoolBadge value="" />)
+    expect(screen.getByText('—')).toBeInTheDocument()
+  })
+})
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -2381,42 +2290,32 @@ Expected: FAIL — `Cannot find module './Badge'`
 - [ ] **Step 4: Create `src/ui/Badge/Badge.tsx`**
 
 ```tsx
-import styles from "./Badge.module.css";
+import styles from './Badge.module.css'
 
-export const BADGE_VARIANTS = ["filled", "outline"] as const;
-export type BadgeVariant = (typeof BADGE_VARIANTS)[number];
+export const BADGE_VARIANTS = ['filled', 'outline'] as const
+export type BadgeVariant = (typeof BADGE_VARIANTS)[number]
 
 interface BadgeProps {
-  children: React.ReactNode;
-  variant?: BadgeVariant;
-  className?: string;
+  children: React.ReactNode
+  variant?: BadgeVariant
+  className?: string
 }
 
-export function Badge({ children, variant = "filled", className }: BadgeProps) {
+export function Badge({ children, variant = 'filled', className }: BadgeProps) {
   return (
-    <span
-      className={[styles.badge, styles[variant], className]
-        .filter(Boolean)
-        .join(" ")}
-    >
+    <span className={[styles.badge, styles[variant], className].filter(Boolean).join(' ')}>
       {children}
     </span>
-  );
+  )
 }
 
 interface BoolBadgeProps {
-  value: string | boolean;
+  value: string | boolean
 }
 
 export function BoolBadge({ value }: BoolBadgeProps) {
-  const isYes =
-    value === true ||
-    (typeof value === "string" && value.toLowerCase() === "yes");
-  return (
-    <span className={isYes ? styles.boolYes : styles.boolNo}>
-      {isYes ? "✓" : "—"}
-    </span>
-  );
+  const isYes = value === true || (typeof value === 'string' && value.toLowerCase() === 'yes')
+  return <span className={isYes ? styles.boolYes : styles.boolNo}>{isYes ? '✓' : '—'}</span>
 }
 ```
 
@@ -2428,45 +2327,41 @@ Expected: 9 tests pass.
 - [ ] **Step 6: Create `src/ui/Badge/Badge.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Badge, BoolBadge, BADGE_VARIANTS } from "./Badge";
-import { makeMatrix } from "../storyMatrix";
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Badge, BoolBadge, BADGE_VARIANTS } from './Badge'
+import { makeMatrix } from '../storyMatrix'
 
 const meta = {
-  title: "UI/Badge",
+  title: 'UI/Badge',
   component: Badge,
-  tags: ["autodocs"],
-  args: { children: "ticketed" },
-} satisfies Meta<typeof Badge>;
+  tags: ['autodocs'],
+  args: { children: 'ticketed' },
+} satisfies Meta<typeof Badge>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 export const Filled: Story = {
-  args: { variant: "filled", children: "ticketed" },
-};
+  args: { variant: 'filled', children: 'ticketed' },
+}
 
 export const Outline: Story = {
-  args: { variant: "outline", children: "free" },
-};
+  args: { variant: 'outline', children: 'free' },
+}
 
-const { stories, Grid } = makeMatrix(
-  meta,
-  { variant: BADGE_VARIANTS },
-  { children: "ticketed" },
-);
+const { stories, Grid } = makeMatrix(meta, { variant: BADGE_VARIANTS }, { children: 'ticketed' })
 
-export const AllVariants: Story = { render: Grid };
+export const AllVariants: Story = { render: Grid }
 
-export const { filled, outline } = stories;
+export const { filled, outline } = stories
 
 export const BoolTrue: StoryObj = {
   render: () => <BoolBadge value={true} />,
-};
+}
 
 export const BoolFalse: StoryObj = {
   render: () => <BoolBadge value={false} />,
-};
+}
 ```
 
 - [ ] **Step 7: Update `src/components/EventDetail/EventDetail.tsx`**
@@ -2474,7 +2369,7 @@ export const BoolFalse: StoryObj = {
 Remove the inline `BoolField` component (lines 11–22 of the current file). Add imports:
 
 ```tsx
-import { Badge, BoolBadge } from "../../ui/Badge/Badge";
+import { Badge, BoolBadge } from '../../ui/Badge/Badge'
 ```
 
 Replace all `<BoolField value={...} />` usages with `<BoolBadge value={...} />`:
@@ -2508,13 +2403,7 @@ Replace the attendee registration pill:
 Old:
 
 ```tsx
-<span
-  className={
-    a.attendeeRegistration === "ticketed"
-      ? styles.pillFilled
-      : styles.pillOutline
-  }
->
+<span className={a.attendeeRegistration === 'ticketed' ? styles.pillFilled : styles.pillOutline}>
   {a.attendeeRegistration}
 </span>
 ```
@@ -2522,7 +2411,7 @@ Old:
 New:
 
 ```tsx
-<Badge variant={a.attendeeRegistration === "ticketed" ? "filled" : "outline"}>
+<Badge variant={a.attendeeRegistration === 'ticketed' ? 'filled' : 'outline'}>
   {a.attendeeRegistration}
 </Badge>
 ```

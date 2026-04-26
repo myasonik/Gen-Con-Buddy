@@ -92,18 +92,8 @@ Replace the `<head>` in `index.html` with:
   </head>
   <body>
     <div id="root"></div>
-    <div
-      id="live-polite"
-      aria-live="polite"
-      aria-atomic="true"
-      class="sr-only"
-    ></div>
-    <div
-      id="live-assertive"
-      aria-live="assertive"
-      aria-atomic="true"
-      class="sr-only"
-    ></div>
+    <div id="live-polite" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+    <div id="live-assertive" aria-live="assertive" aria-atomic="true" class="sr-only"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
@@ -126,8 +116,8 @@ Replace the entire contents of `src/index.css`:
   --color-gold: #c9a84c;
 
   /* Typography */
-  --font-pixel: "Press Start 2P", monospace;
-  --font-data: "Courier Prime", monospace;
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-data: 'Courier Prime', monospace;
 
   /* Type scale — Press Start 2P only; all sizes must be multiples of 8px */
   --text-display: 18px; /* page title */
@@ -309,11 +299,11 @@ git commit -m "feat: add design tokens, Google Fonts, and grain texture"
 Add to `src/routes/index.test.tsx` (inside the existing file, after the last test):
 
 ```tsx
-test("renders a banner landmark with the app title", async () => {
-  await renderSearchPage("/");
-  expect(screen.getByRole("banner")).toBeInTheDocument();
-  expect(screen.getByRole("banner")).toHaveTextContent("GEN CON BUDDY");
-});
+test('renders a banner landmark with the app title', async () => {
+  await renderSearchPage('/')
+  expect(screen.getByRole('banner')).toBeInTheDocument()
+  expect(screen.getByRole('banner')).toHaveTextContent('GEN CON BUDDY')
+})
 ```
 
 - [ ] **Step 2: Run test to confirm it fails**
@@ -327,7 +317,7 @@ Expected: FAIL — "Unable to find role='banner'"
 - [ ] **Step 3: Update `__root.tsx` to add the header**
 
 ```tsx
-import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { createRootRoute, Outlet } from '@tanstack/react-router'
 
 export const Route = createRootRoute({
   component: () => (
@@ -338,7 +328,7 @@ export const Route = createRootRoute({
       <Outlet />
     </>
   ),
-});
+})
 ```
 
 - [ ] **Step 4: Run test to confirm it passes**
@@ -400,8 +390,8 @@ Expected: PASS
 - [ ] **Step 6: Update `src/routes/__root.tsx` to use module styles**
 
 ```tsx
-import { createRootRoute, Outlet } from "@tanstack/react-router";
-import styles from "./index.module.css";
+import { createRootRoute, Outlet } from '@tanstack/react-router'
+import styles from './index.module.css'
 
 export const Route = createRootRoute({
   component: () => (
@@ -412,76 +402,74 @@ export const Route = createRootRoute({
       <Outlet />
     </>
   ),
-});
+})
 ```
 
 - [ ] **Step 7: Update `src/routes/index.tsx` to add grid shell**
 
 ```tsx
-import { createFileRoute } from "@tanstack/react-router";
-import { SearchForm } from "../components/SearchForm/SearchForm";
-import { SearchResults } from "../components/SearchResults/SearchResults";
-import { buildSearchParams, parseSearchParams } from "../utils/searchParams";
-import type { SearchFormValues, SearchParams } from "../utils/types";
-import styles from "./index.module.css";
+import { createFileRoute } from '@tanstack/react-router'
+import { SearchForm } from '../components/SearchForm/SearchForm'
+import { SearchResults } from '../components/SearchResults/SearchResults'
+import { buildSearchParams, parseSearchParams } from '../utils/searchParams'
+import type { SearchFormValues, SearchParams } from '../utils/types'
+import styles from './index.module.css'
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute('/')({
   validateSearch: (search: Record<string, unknown>): SearchParams => {
-    const str = (k: string) =>
-      typeof search[k] === "string" ? (search[k] as string) : undefined;
-    const num = (k: string) =>
-      typeof search[k] === "number" ? (search[k] as number) : undefined;
+    const str = (k: string) => (typeof search[k] === 'string' ? (search[k] as string) : undefined)
+    const num = (k: string) => (typeof search[k] === 'number' ? (search[k] as number) : undefined)
     return {
-      limit: num("limit"),
-      page: num("page"),
-      filter: str("filter"),
-      gameId: str("gameId"),
-      title: str("title"),
-      eventType: str("eventType"),
-      group: str("group"),
-      shortDescription: str("shortDescription"),
-      longDescription: str("longDescription"),
-      gameSystem: str("gameSystem"),
-      rulesEdition: str("rulesEdition"),
-      minPlayers: str("minPlayers"),
-      maxPlayers: str("maxPlayers"),
-      ageRequired: str("ageRequired"),
-      experienceRequired: str("experienceRequired"),
-      materialsProvided: str("materialsProvided"),
-      startDateTime: str("startDateTime"),
-      duration: str("duration"),
-      endDateTime: str("endDateTime"),
-      gmNames: str("gmNames"),
-      website: str("website"),
-      email: str("email"),
-      tournament: str("tournament"),
-      roundNumber: str("roundNumber"),
-      totalRounds: str("totalRounds"),
-      minimumPlayTime: str("minimumPlayTime"),
-      attendeeRegistration: str("attendeeRegistration"),
-      cost: str("cost"),
-      location: str("location"),
-      roomName: str("roomName"),
-      tableNumber: str("tableNumber"),
-      specialCategory: str("specialCategory"),
-      ticketsAvailable: str("ticketsAvailable"),
-      lastModified: str("lastModified"),
-      days: str("days"),
-      sort: str("sort"),
-    };
+      limit: num('limit'),
+      page: num('page'),
+      filter: str('filter'),
+      gameId: str('gameId'),
+      title: str('title'),
+      eventType: str('eventType'),
+      group: str('group'),
+      shortDescription: str('shortDescription'),
+      longDescription: str('longDescription'),
+      gameSystem: str('gameSystem'),
+      rulesEdition: str('rulesEdition'),
+      minPlayers: str('minPlayers'),
+      maxPlayers: str('maxPlayers'),
+      ageRequired: str('ageRequired'),
+      experienceRequired: str('experienceRequired'),
+      materialsProvided: str('materialsProvided'),
+      startDateTime: str('startDateTime'),
+      duration: str('duration'),
+      endDateTime: str('endDateTime'),
+      gmNames: str('gmNames'),
+      website: str('website'),
+      email: str('email'),
+      tournament: str('tournament'),
+      roundNumber: str('roundNumber'),
+      totalRounds: str('totalRounds'),
+      minimumPlayTime: str('minimumPlayTime'),
+      attendeeRegistration: str('attendeeRegistration'),
+      cost: str('cost'),
+      location: str('location'),
+      roomName: str('roomName'),
+      tableNumber: str('tableNumber'),
+      specialCategory: str('specialCategory'),
+      ticketsAvailable: str('ticketsAvailable'),
+      lastModified: str('lastModified'),
+      days: str('days'),
+      sort: str('sort'),
+    }
   },
   component: SearchPage,
-});
+})
 
 function SearchPage() {
-  const navigate = Route.useNavigate();
-  const search = Route.useSearch();
+  const navigate = Route.useNavigate()
+  const search = Route.useSearch()
 
   const handleSearch = (values: SearchFormValues) => {
     void navigate({
       search: (prev) => ({ ...buildSearchParams(values), limit: prev.limit }),
-    });
-  };
+    })
+  }
 
   const handleNavigate = (page: number, limit: number) => {
     void navigate({
@@ -490,8 +478,8 @@ function SearchPage() {
         page: page === 1 ? undefined : page,
         limit: limit === 100 ? undefined : limit,
       }),
-    });
-  };
+    })
+  }
 
   const handleSort = (sort: string | undefined) => {
     void navigate({
@@ -500,8 +488,8 @@ function SearchPage() {
         sort,
         page: undefined,
       }),
-    });
-  };
+    })
+  }
 
   return (
     <main className={styles.shell}>
@@ -513,14 +501,10 @@ function SearchPage() {
         />
       </div>
       <div className={styles.results}>
-        <SearchResults
-          searchParams={search}
-          onNavigate={handleNavigate}
-          onSort={handleSort}
-        />
+        <SearchResults searchParams={search} onNavigate={handleNavigate} onSort={handleSort} />
       </div>
     </main>
-  );
+  )
 }
 ```
 
@@ -553,23 +537,21 @@ git commit -m "feat: add header bar and two-column sidebar grid shell"
 Add to the bottom of `src/routes/index.test.tsx`:
 
 ```tsx
-test("renders SEARCH fieldset in search form", async () => {
-  await renderSearchPage("/");
-  expect(screen.getByRole("group", { name: "SEARCH" })).toBeInTheDocument();
-});
+test('renders SEARCH fieldset in search form', async () => {
+  await renderSearchPage('/')
+  expect(screen.getByRole('group', { name: 'SEARCH' })).toBeInTheDocument()
+})
 
-test("renders DAYS fieldset in search form", async () => {
-  await renderSearchPage("/");
-  expect(screen.getByRole("group", { name: "DAYS" })).toBeInTheDocument();
-});
+test('renders DAYS fieldset in search form', async () => {
+  await renderSearchPage('/')
+  expect(screen.getByRole('group', { name: 'DAYS' })).toBeInTheDocument()
+})
 
-test("day checkboxes have span wrappers (CSS toggle tiles require them)", async () => {
-  await renderSearchPage("/");
-  const wedLabel = screen
-    .getByRole("checkbox", { name: "Wed" })
-    .closest("label");
-  expect(wedLabel?.querySelector("span")).toBeInTheDocument();
-});
+test('day checkboxes have span wrappers (CSS toggle tiles require them)', async () => {
+  await renderSearchPage('/')
+  const wedLabel = screen.getByRole('checkbox', { name: 'Wed' }).closest('label')
+  expect(wedLabel?.querySelector('span')).toBeInTheDocument()
+})
 ```
 
 - [ ] **Step 2: Run tests to confirm they fail**
@@ -583,88 +565,82 @@ Expected: FAIL — no group named "SEARCH", no group named "DAYS", no span in da
 - [ ] **Step 3: Rewrite `SearchForm.tsx`**
 
 ```tsx
-import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import clsx from "clsx";
-import {
-  AGE_GROUPS,
-  CATEGORY,
-  EVENT_TYPES,
-  EXP,
-  REGISTRATION,
-} from "../../utils/enums";
-import type { SearchFormValues } from "../../utils/types";
-import styles from "./SearchForm.module.css";
+import { useState, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import clsx from 'clsx'
+import { AGE_GROUPS, CATEGORY, EVENT_TYPES, EXP, REGISTRATION } from '../../utils/enums'
+import type { SearchFormValues } from '../../utils/types'
+import styles from './SearchForm.module.css'
 
 const EMPTY_VALUES: SearchFormValues = {
-  filter: "",
-  gameId: "",
-  title: "",
-  eventType: "",
-  group: "",
-  shortDescription: "",
-  longDescription: "",
-  gameSystem: "",
-  rulesEdition: "",
-  minPlayersMin: "",
-  minPlayersMax: "",
-  maxPlayersMin: "",
-  maxPlayersMax: "",
-  ageRequired: "",
-  experienceRequired: "",
-  materialsProvided: "",
-  materialsRequired: "",
-  materialsRequiredDetails: "",
-  startDateTimeStart: "",
-  startDateTimeEnd: "",
-  durationMin: "",
-  durationMax: "",
-  endDateTimeStart: "",
-  endDateTimeEnd: "",
-  gmNames: "",
-  website: "",
-  email: "",
-  tournament: "",
-  roundNumberMin: "",
-  roundNumberMax: "",
-  totalRoundsMin: "",
-  totalRoundsMax: "",
-  minimumPlayTimeMin: "",
-  minimumPlayTimeMax: "",
-  attendeeRegistration: "",
-  costMin: "",
-  costMax: "",
-  location: "",
-  roomName: "",
-  tableNumber: "",
-  specialCategory: "",
-  ticketsAvailableMin: "",
-  ticketsAvailableMax: "",
-  lastModifiedStart: "",
-  lastModifiedEnd: "",
-  days: "",
-};
+  filter: '',
+  gameId: '',
+  title: '',
+  eventType: '',
+  group: '',
+  shortDescription: '',
+  longDescription: '',
+  gameSystem: '',
+  rulesEdition: '',
+  minPlayersMin: '',
+  minPlayersMax: '',
+  maxPlayersMin: '',
+  maxPlayersMax: '',
+  ageRequired: '',
+  experienceRequired: '',
+  materialsProvided: '',
+  materialsRequired: '',
+  materialsRequiredDetails: '',
+  startDateTimeStart: '',
+  startDateTimeEnd: '',
+  durationMin: '',
+  durationMax: '',
+  endDateTimeStart: '',
+  endDateTimeEnd: '',
+  gmNames: '',
+  website: '',
+  email: '',
+  tournament: '',
+  roundNumberMin: '',
+  roundNumberMax: '',
+  totalRoundsMin: '',
+  totalRoundsMax: '',
+  minimumPlayTimeMin: '',
+  minimumPlayTimeMax: '',
+  attendeeRegistration: '',
+  costMin: '',
+  costMax: '',
+  location: '',
+  roomName: '',
+  tableNumber: '',
+  specialCategory: '',
+  ticketsAvailableMin: '',
+  ticketsAvailableMax: '',
+  lastModifiedStart: '',
+  lastModifiedEnd: '',
+  days: '',
+}
 
-const DAY_KEYS = ["wed", "thu", "fri", "sat", "sun"] as const;
+const DAY_KEYS = ['wed', 'thu', 'fri', 'sat', 'sun'] as const
 const DAY_LABELS: Record<string, string> = {
-  wed: "Wed",
-  thu: "Thu",
-  fri: "Fri",
-  sat: "Sat",
-  sun: "Sun",
-};
+  wed: 'Wed',
+  thu: 'Thu',
+  fri: 'Fri',
+  sat: 'Sat',
+  sun: 'Sun',
+}
 
 function Toggletip({ label, message }: { label: string; message: string }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) return
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [open]);
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  }, [open])
 
   return (
     <span className={styles.toggletipWrapper}>
@@ -682,37 +658,38 @@ function Toggletip({ label, message }: { label: string; message: string }) {
         </span>
       )}
     </span>
-  );
+  )
 }
 
 interface SearchFormProps {
-  defaultValues: SearchFormValues;
-  onSearch: (values: SearchFormValues) => void;
+  defaultValues: SearchFormValues
+  onSearch: (values: SearchFormValues) => void
 }
 
 export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
-  const { register, handleSubmit, reset, watch, setValue } =
-    useForm<SearchFormValues>({ defaultValues });
+  const { register, handleSubmit, reset, watch, setValue } = useForm<SearchFormValues>({
+    defaultValues,
+  })
 
-  const days = watch("days") ?? "";
-  const selectedDays = new Set(days ? days.split(",") : []);
+  const days = watch('days') ?? ''
+  const selectedDays = new Set(days ? days.split(',') : [])
 
-  const startDateTimeStart = watch("startDateTimeStart") ?? "";
-  const startDateTimeEnd = watch("startDateTimeEnd") ?? "";
-  const startDateActive = !!(startDateTimeStart || startDateTimeEnd);
-  const daysActive = selectedDays.size > 0;
-  const daysDisabled = startDateActive;
-  const startDateDisabled = daysActive;
+  const startDateTimeStart = watch('startDateTimeStart') ?? ''
+  const startDateTimeEnd = watch('startDateTimeEnd') ?? ''
+  const startDateActive = !!(startDateTimeStart || startDateTimeEnd)
+  const daysActive = selectedDays.size > 0
+  const daysDisabled = startDateActive
+  const startDateDisabled = daysActive
 
   const handleDayChange = (key: string, checked: boolean) => {
-    const next = new Set(selectedDays);
+    const next = new Set(selectedDays)
     if (checked) {
-      next.add(key);
+      next.add(key)
     } else {
-      next.delete(key);
+      next.delete(key)
     }
-    setValue("days", DAY_KEYS.filter((d) => next.has(d)).join(","));
-  };
+    setValue('days', DAY_KEYS.filter((d) => next.has(d)).join(','))
+  }
 
   return (
     <form onSubmit={handleSubmit(onSearch)} className={styles.form}>
@@ -722,15 +699,11 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
           <legend className={styles.legend}>SEARCH</legend>
           <label className={styles.label}>
             Search
-            <input
-              type="text"
-              className={styles.input}
-              {...register("filter")}
-            />
+            <input type="text" className={styles.input} {...register('filter')} />
           </label>
           <label className={styles.label}>
             Event Type
-            <select className={styles.select} {...register("eventType")}>
+            <select className={styles.select} {...register('eventType')}>
               <option value="">Any</option>
               {Object.entries(EVENT_TYPES).map(([k, v]) => (
                 <option key={k} value={k}>
@@ -783,7 +756,7 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
                 type="datetime-local"
                 className={styles.input}
                 disabled={startDateDisabled}
-                {...register("startDateTimeStart")}
+                {...register('startDateTimeStart')}
               />
             </label>
             <label className={styles.label}>
@@ -792,7 +765,7 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
                 type="datetime-local"
                 className={styles.input}
                 disabled={startDateDisabled}
-                {...register("startDateTimeEnd")}
+                {...register('startDateTimeEnd')}
               />
             </label>
           </div>
@@ -805,7 +778,7 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
                 min="0"
                 step="0.5"
                 className={styles.input}
-                {...register("durationMin")}
+                {...register('durationMin')}
               />
             </label>
             <label className={styles.label}>
@@ -815,7 +788,7 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
                 min="0"
                 step="0.5"
                 className={styles.input}
-                {...register("durationMax")}
+                {...register('durationMax')}
               />
             </label>
           </div>
@@ -833,7 +806,7 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
                 type="datetime-local"
                 className={styles.input}
                 disabled={startDateDisabled}
-                {...register("endDateTimeStart")}
+                {...register('endDateTimeStart')}
               />
             </label>
             <label className={styles.label}>
@@ -842,7 +815,7 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
                 type="datetime-local"
                 className={styles.input}
                 disabled={startDateDisabled}
-                {...register("endDateTimeEnd")}
+                {...register('endDateTimeEnd')}
               />
             </label>
           </div>
@@ -854,48 +827,48 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
           <div className={styles.rangeGroup}>
             Min Players:
             <label className={styles.label}>
-              from{" "}
+              from{' '}
               <input
                 type="number"
                 min="0"
                 className={styles.input}
-                {...register("minPlayersMin")}
+                {...register('minPlayersMin')}
               />
             </label>
             <label className={styles.label}>
-              to{" "}
+              to{' '}
               <input
                 type="number"
                 min="0"
                 className={styles.input}
-                {...register("minPlayersMax")}
+                {...register('minPlayersMax')}
               />
             </label>
           </div>
           <div className={styles.rangeGroup}>
             Max Players:
             <label className={styles.label}>
-              from{" "}
+              from{' '}
               <input
                 type="number"
                 min="0"
                 className={styles.input}
-                {...register("maxPlayersMin")}
+                {...register('maxPlayersMin')}
               />
             </label>
             <label className={styles.label}>
-              to{" "}
+              to{' '}
               <input
                 type="number"
                 min="0"
                 className={styles.input}
-                {...register("maxPlayersMax")}
+                {...register('maxPlayersMax')}
               />
             </label>
           </div>
           <label className={styles.label}>
             Age Required
-            <select className={styles.select} {...register("ageRequired")}>
+            <select className={styles.select} {...register('ageRequired')}>
               <option value="">Any</option>
               {Object.entries(AGE_GROUPS).map(([k, v]) => (
                 <option key={k} value={k}>
@@ -906,10 +879,7 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
           </label>
           <label className={styles.label}>
             Experience Required
-            <select
-              className={styles.select}
-              {...register("experienceRequired")}
-            >
+            <select className={styles.select} {...register('experienceRequired')}>
               <option value="">Any</option>
               {Object.entries(EXP).map(([k, v]) => (
                 <option key={k} value={k}>
@@ -924,77 +894,47 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
         <fieldset className={styles.fieldset}>
           <legend className={styles.legend}>LOGISTICS</legend>
           <label className={styles.label}>
-            Location{" "}
-            <input
-              type="text"
-              className={styles.input}
-              {...register("location")}
-            />
+            Location <input type="text" className={styles.input} {...register('location')} />
           </label>
           <label className={styles.label}>
-            Room Name{" "}
-            <input
-              type="text"
-              className={styles.input}
-              {...register("roomName")}
-            />
+            Room Name <input type="text" className={styles.input} {...register('roomName')} />
           </label>
           <label className={styles.label}>
-            Table{" "}
-            <input
-              type="text"
-              className={styles.input}
-              {...register("tableNumber")}
-            />
+            Table <input type="text" className={styles.input} {...register('tableNumber')} />
           </label>
           <div className={styles.rangeGroup}>
             Cost:
             <label className={styles.label}>
-              from{" "}
-              <input
-                type="number"
-                min="0"
-                className={styles.input}
-                {...register("costMin")}
-              />
+              from <input type="number" min="0" className={styles.input} {...register('costMin')} />
             </label>
             <label className={styles.label}>
-              to{" "}
-              <input
-                type="number"
-                min="0"
-                className={styles.input}
-                {...register("costMax")}
-              />
+              to <input type="number" min="0" className={styles.input} {...register('costMax')} />
             </label>
           </div>
           <div className={styles.rangeGroup}>
             Tickets Available:
             <label className={styles.label}>
-              from{" "}
+              from{' '}
               <input
                 type="number"
                 min="0"
                 className={styles.input}
-                {...register("ticketsAvailableMin")}
+                {...register('ticketsAvailableMin')}
               />
             </label>
             <label className={styles.label}>
-              to{" "}
+              to{' '}
               <input
                 type="number"
                 min="0"
                 className={styles.input}
-                {...register("ticketsAvailableMax")}
+                {...register('ticketsAvailableMax')}
               />
             </label>
           </div>
           <label className={styles.label}>
             Attendee Registration
-            <select
-              className={styles.select}
-              {...register("attendeeRegistration")}
-            >
+            <select className={styles.select} {...register('attendeeRegistration')}>
               <option value="">Any</option>
               {Object.entries(REGISTRATION).map(([k, v]) => (
                 <option key={k} value={k}>
@@ -1009,183 +949,119 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
         <fieldset className={styles.fieldset}>
           <legend className={styles.legend}>DETAILS</legend>
           <label className={styles.label}>
-            Game ID{" "}
-            <input
-              type="text"
-              className={styles.input}
-              {...register("gameId")}
-            />
+            Game ID <input type="text" className={styles.input} {...register('gameId')} />
           </label>
           <label className={styles.label}>
-            Title{" "}
-            <input
-              type="text"
-              className={styles.input}
-              {...register("title")}
-            />
+            Title <input type="text" className={styles.input} {...register('title')} />
           </label>
           <label className={styles.label}>
-            Group{" "}
-            <input
-              type="text"
-              className={styles.input}
-              {...register("group")}
-            />
+            Group <input type="text" className={styles.input} {...register('group')} />
           </label>
           <label className={styles.label}>
-            Short Description{" "}
-            <input
-              type="text"
-              className={styles.input}
-              {...register("shortDescription")}
-            />
+            Short Description{' '}
+            <input type="text" className={styles.input} {...register('shortDescription')} />
           </label>
           <label className={styles.label}>
-            Long Description{" "}
-            <input
-              type="text"
-              className={styles.input}
-              {...register("longDescription")}
-            />
+            Long Description{' '}
+            <input type="text" className={styles.input} {...register('longDescription')} />
           </label>
           <label className={styles.label}>
-            Game System{" "}
-            <input
-              type="text"
-              className={styles.input}
-              {...register("gameSystem")}
-            />
+            Game System <input type="text" className={styles.input} {...register('gameSystem')} />
           </label>
           <label className={styles.label}>
-            Rules Edition{" "}
-            <input
-              type="text"
-              className={styles.input}
-              {...register("rulesEdition")}
-            />
+            Rules Edition{' '}
+            <input type="text" className={styles.input} {...register('rulesEdition')} />
           </label>
           <label className={styles.label}>
-            Materials Provided{" "}
-            <input
-              type="text"
-              className={styles.input}
-              {...register("materialsProvided")}
-            />
+            Materials Provided{' '}
+            <input type="text" className={styles.input} {...register('materialsProvided')} />
           </label>
           <label className={styles.label}>
-            Materials Required{" "}
-            <input
-              type="text"
-              className={styles.input}
-              {...register("materialsRequired")}
-            />
+            Materials Required{' '}
+            <input type="text" className={styles.input} {...register('materialsRequired')} />
           </label>
           <label className={styles.label}>
-            Materials Required Details{" "}
-            <input
-              type="text"
-              className={styles.input}
-              {...register("materialsRequiredDetails")}
-            />
+            Materials Required Details{' '}
+            <input type="text" className={styles.input} {...register('materialsRequiredDetails')} />
           </label>
           <label className={styles.label}>
-            Game Masters{" "}
-            <input
-              type="text"
-              className={styles.input}
-              {...register("gmNames")}
-            />
+            Game Masters <input type="text" className={styles.input} {...register('gmNames')} />
           </label>
           <label className={styles.label}>
-            Website{" "}
-            <input
-              type="text"
-              className={styles.input}
-              {...register("website")}
-            />
+            Website <input type="text" className={styles.input} {...register('website')} />
           </label>
           <label className={styles.label}>
-            Email{" "}
-            <input
-              type="text"
-              className={styles.input}
-              {...register("email")}
-            />
+            Email <input type="text" className={styles.input} {...register('email')} />
           </label>
           <label className={styles.label}>
-            Tournament{" "}
-            <input
-              type="text"
-              className={styles.input}
-              {...register("tournament")}
-            />
+            Tournament <input type="text" className={styles.input} {...register('tournament')} />
           </label>
           <div className={styles.rangeGroup}>
             Round Number:
             <label className={styles.label}>
-              from{" "}
+              from{' '}
               <input
                 type="number"
                 min="0"
                 className={styles.input}
-                {...register("roundNumberMin")}
+                {...register('roundNumberMin')}
               />
             </label>
             <label className={styles.label}>
-              to{" "}
+              to{' '}
               <input
                 type="number"
                 min="0"
                 className={styles.input}
-                {...register("roundNumberMax")}
+                {...register('roundNumberMax')}
               />
             </label>
           </div>
           <div className={styles.rangeGroup}>
             Total Rounds:
             <label className={styles.label}>
-              from{" "}
+              from{' '}
               <input
                 type="number"
                 min="0"
                 className={styles.input}
-                {...register("totalRoundsMin")}
+                {...register('totalRoundsMin')}
               />
             </label>
             <label className={styles.label}>
-              to{" "}
+              to{' '}
               <input
                 type="number"
                 min="0"
                 className={styles.input}
-                {...register("totalRoundsMax")}
+                {...register('totalRoundsMax')}
               />
             </label>
           </div>
           <div className={styles.rangeGroup}>
             Minimum Play Time:
             <label className={styles.label}>
-              from{" "}
+              from{' '}
               <input
                 type="number"
                 min="0"
                 className={styles.input}
-                {...register("minimumPlayTimeMin")}
+                {...register('minimumPlayTimeMin')}
               />
             </label>
             <label className={styles.label}>
-              to{" "}
+              to{' '}
               <input
                 type="number"
                 min="0"
                 className={styles.input}
-                {...register("minimumPlayTimeMax")}
+                {...register('minimumPlayTimeMax')}
               />
             </label>
           </div>
           <label className={styles.label}>
             Special Category
-            <select className={styles.select} {...register("specialCategory")}>
+            <select className={styles.select} {...register('specialCategory')}>
               <option value="">Any</option>
               {Object.entries(CATEGORY).map(([k, v]) => (
                 <option key={k} value={k}>
@@ -1197,19 +1073,19 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
           <div className={styles.rangeGroup}>
             Last Modified:
             <label className={styles.label}>
-              from{" "}
+              from{' '}
               <input
                 type="datetime-local"
                 className={styles.input}
-                {...register("lastModifiedStart")}
+                {...register('lastModifiedStart')}
               />
             </label>
             <label className={styles.label}>
-              to{" "}
+              to{' '}
               <input
                 type="datetime-local"
                 className={styles.input}
-                {...register("lastModifiedEnd")}
+                {...register('lastModifiedEnd')}
               />
             </label>
           </div>
@@ -1218,22 +1094,19 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
       {/* end filterScroll */}
 
       <div className={styles.buttonBar}>
-        <button
-          type="submit"
-          className={clsx("btn-primary", styles.actionButton)}
-        >
+        <button type="submit" className={clsx('btn-primary', styles.actionButton)}>
           ▶ Search
         </button>
         <button
           type="button"
-          className={clsx("btn-secondary", styles.actionButton)}
+          className={clsx('btn-secondary', styles.actionButton)}
           onClick={() => reset(EMPTY_VALUES)}
         >
           ↺ Reset
         </button>
       </div>
     </form>
-  );
+  )
 }
 ```
 
@@ -1431,10 +1304,10 @@ git commit -m "feat: restructure SearchForm into fieldset groups with CSS module
 In `SearchResults.test.tsx`, change the loading test:
 
 ```tsx
-test("shows loading state while fetching", async () => {
-  renderSearchResults();
-  expect(await screen.findByText("LOADING QUESTS...")).toBeInTheDocument();
-});
+test('shows loading state while fetching', async () => {
+  renderSearchResults()
+  expect(await screen.findByText('LOADING QUESTS...')).toBeInTheDocument()
+})
 ```
 
 - [ ] **Step 2: Update the empty state test**
@@ -1442,21 +1315,21 @@ test("shows loading state while fetching", async () => {
 In `SearchResults.test.tsx`, change the empty state test:
 
 ```tsx
-test("renders empty state when no events are returned", async () => {
+test('renders empty state when no events are returned', async () => {
   server.use(
-    http.get("/api/events/search", () => {
+    http.get('/api/events/search', () => {
       const response: EventSearchResponse = {
         data: [],
         meta: { total: 0 },
-        links: { self: "" },
+        links: { self: '' },
         error: null,
-      };
-      return HttpResponse.json(response);
+      }
+      return HttpResponse.json(response)
     }),
-  );
-  renderSearchResults();
-  expect(await screen.findByText("NO QUESTS FOUND")).toBeInTheDocument();
-});
+  )
+  renderSearchResults()
+  expect(await screen.findByText('NO QUESTS FOUND')).toBeInTheDocument()
+})
 ```
 
 - [ ] **Step 3: Run tests to confirm they fail**
@@ -1480,17 +1353,15 @@ Find and replace the three state returns in `SearchResults.tsx`. The loading sta
       </div>
       <p className={styles.stateText}>LOADING QUESTS...</p>
     </div>
-  );
+  )
 }
 {
   isError && (
     <div className={styles.state}>
       <p className={styles.stateText}>QUEST FAILED</p>
-      <p className={styles.stateSubtext}>
-        Unable to load events. Please try again.
-      </p>
+      <p className={styles.stateSubtext}>Unable to load events. Please try again.</p>
     </div>
-  );
+  )
 }
 {
   data && data.data.length === 0 && (
@@ -1501,7 +1372,7 @@ Find and replace the three state returns in `SearchResults.tsx`. The loading sta
       <p className={styles.stateText}>NO QUESTS FOUND</p>
       <p className={styles.stateSubtext}>Try broadening your search.</p>
     </div>
-  );
+  )
 }
 ```
 
@@ -1541,302 +1412,284 @@ Expected: all tests pass.
 - [ ] **Step 2: Replace `SearchResults.tsx` with TanStack Table implementation**
 
 ```tsx
-import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-} from "@tanstack/react-table";
-import type { ColumnDef } from "@tanstack/react-table";
-import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
-import { format } from "date-fns";
-import { useColumnVisibility } from "../../hooks/useColumnVisibility";
-import { fetchEvents } from "../../utils/api";
-import { Pagination } from "../Pagination/Pagination";
-import { announce } from "../../lib/announce";
-import type { SearchParams, Event } from "../../utils/types";
-import styles from "./SearchResults.module.css";
+import { useReactTable, getCoreRowModel, flexRender } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
+import { useQuery } from '@tanstack/react-query'
+import { Link } from '@tanstack/react-router'
+import { format } from 'date-fns'
+import { useColumnVisibility } from '../../hooks/useColumnVisibility'
+import { fetchEvents } from '../../utils/api'
+import { Pagination } from '../Pagination/Pagination'
+import { announce } from '../../lib/announce'
+import type { SearchParams, Event } from '../../utils/types'
+import styles from './SearchResults.module.css'
 
 // Extend TanStack Table's ColumnMeta to include our sortField
-declare module "@tanstack/react-table" {
+declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ColumnMeta<TData, TValue> {
-    sortField?: string;
+    sortField?: string
   }
 }
 
 interface SearchResultsProps {
-  searchParams: SearchParams;
-  onNavigate: (page: number, limit: number) => void;
-  onSort: (sort: string | undefined) => void;
+  searchParams: SearchParams
+  onNavigate: (page: number, limit: number) => void
+  onSort: (sort: string | undefined) => void
 }
 
 const COLUMNS: ColumnDef<Event>[] = [
   {
-    id: "gameId",
-    header: "Game ID",
-    meta: { sortField: "gameId" },
+    id: 'gameId',
+    header: 'Game ID',
+    meta: { sortField: 'gameId' },
     cell: ({ row }) => {
-      const { gameId } = row.original.attributes;
+      const { gameId } = row.original.attributes
       return (
         <Link to="/event/$id" params={{ id: gameId }}>
           {gameId}
         </Link>
-      );
+      )
     },
   },
   {
-    id: "title",
-    header: "Title",
-    meta: { sortField: "title" },
+    id: 'title',
+    header: 'Title',
+    meta: { sortField: 'title' },
     cell: ({ row }) => {
-      const { gameId, title } = row.original.attributes;
+      const { gameId, title } = row.original.attributes
       return (
         <Link to="/event/$id" params={{ id: gameId }}>
           {title}
         </Link>
-      );
+      )
     },
   },
   {
-    id: "eventType",
-    header: "Type",
-    meta: { sortField: "eventType" },
+    id: 'eventType',
+    header: 'Type',
+    meta: { sortField: 'eventType' },
     cell: ({ row }) => <>{row.original.attributes.eventType}</>,
   },
   {
-    id: "group",
-    header: "Group",
-    meta: { sortField: "group" },
+    id: 'group',
+    header: 'Group',
+    meta: { sortField: 'group' },
     cell: ({ row }) => <>{row.original.attributes.group}</>,
   },
   {
-    id: "shortDescription",
-    header: "Short Description",
-    meta: { sortField: "shortDescription" },
+    id: 'shortDescription',
+    header: 'Short Description',
+    meta: { sortField: 'shortDescription' },
     cell: ({ row }) => <>{row.original.attributes.shortDescription}</>,
   },
   {
-    id: "longDescription",
-    header: "Long Description",
-    meta: { sortField: "longDescription" },
+    id: 'longDescription',
+    header: 'Long Description',
+    meta: { sortField: 'longDescription' },
     cell: ({ row }) => <>{row.original.attributes.longDescription}</>,
   },
   {
-    id: "gameSystem",
-    header: "Game System",
-    meta: { sortField: "gameSystem" },
+    id: 'gameSystem',
+    header: 'Game System',
+    meta: { sortField: 'gameSystem' },
     cell: ({ row }) => <>{row.original.attributes.gameSystem}</>,
   },
   {
-    id: "rulesEdition",
-    header: "Rules Edition",
-    meta: { sortField: "rulesEdition" },
+    id: 'rulesEdition',
+    header: 'Rules Edition',
+    meta: { sortField: 'rulesEdition' },
     cell: ({ row }) => <>{row.original.attributes.rulesEdition}</>,
   },
   {
-    id: "minPlayers",
-    header: "Min Players",
-    meta: { sortField: "minPlayers" },
+    id: 'minPlayers',
+    header: 'Min Players',
+    meta: { sortField: 'minPlayers' },
     cell: ({ row }) => <>{row.original.attributes.minPlayers}</>,
   },
   {
-    id: "maxPlayers",
-    header: "Max Players",
-    meta: { sortField: "maxPlayers" },
+    id: 'maxPlayers',
+    header: 'Max Players',
+    meta: { sortField: 'maxPlayers' },
     cell: ({ row }) => <>{row.original.attributes.maxPlayers}</>,
   },
   {
-    id: "ageRequired",
-    header: "Age Required",
-    meta: { sortField: "ageRequired" },
+    id: 'ageRequired',
+    header: 'Age Required',
+    meta: { sortField: 'ageRequired' },
     cell: ({ row }) => <>{row.original.attributes.ageRequired}</>,
   },
   {
-    id: "experienceRequired",
-    header: "Experience Required",
-    meta: { sortField: "experienceRequired" },
+    id: 'experienceRequired',
+    header: 'Experience Required',
+    meta: { sortField: 'experienceRequired' },
     cell: ({ row }) => <>{row.original.attributes.experienceRequired}</>,
   },
   {
-    id: "materialsProvided",
-    header: "Materials Provided",
-    meta: { sortField: "materialsProvided" },
+    id: 'materialsProvided',
+    header: 'Materials Provided',
+    meta: { sortField: 'materialsProvided' },
     cell: ({ row }) => <>{row.original.attributes.materialsProvided}</>,
   },
   {
-    id: "materialsRequired",
-    header: "Materials Required",
-    meta: { sortField: "materialsRequired" },
+    id: 'materialsRequired',
+    header: 'Materials Required',
+    meta: { sortField: 'materialsRequired' },
     cell: ({ row }) => <>{row.original.attributes.materialsRequired}</>,
   },
   {
-    id: "materialsRequiredDetails",
-    header: "Materials Required Details",
-    meta: { sortField: "materialsRequiredDetails" },
+    id: 'materialsRequiredDetails',
+    header: 'Materials Required Details',
+    meta: { sortField: 'materialsRequiredDetails' },
     cell: ({ row }) => <>{row.original.attributes.materialsRequiredDetails}</>,
   },
   {
-    id: "day",
-    header: "Day",
-    meta: { sortField: "startDateTime" },
-    cell: ({ row }) => (
-      <>{format(new Date(row.original.attributes.startDateTime), "EEEE")}</>
-    ),
+    id: 'day',
+    header: 'Day',
+    meta: { sortField: 'startDateTime' },
+    cell: ({ row }) => <>{format(new Date(row.original.attributes.startDateTime), 'EEEE')}</>,
   },
   {
-    id: "startDateTime",
-    header: "Start",
-    meta: { sortField: "startDateTime" },
-    cell: ({ row }) => (
-      <>{format(new Date(row.original.attributes.startDateTime), "HH:mm")}</>
-    ),
+    id: 'startDateTime',
+    header: 'Start',
+    meta: { sortField: 'startDateTime' },
+    cell: ({ row }) => <>{format(new Date(row.original.attributes.startDateTime), 'HH:mm')}</>,
   },
   {
-    id: "duration",
-    header: "Duration",
-    meta: { sortField: "duration" },
+    id: 'duration',
+    header: 'Duration',
+    meta: { sortField: 'duration' },
     cell: ({ row }) => <>{row.original.attributes.duration}</>,
   },
   {
-    id: "endDateTime",
-    header: "End",
-    meta: { sortField: "endDateTime" },
-    cell: ({ row }) => (
-      <>{format(new Date(row.original.attributes.endDateTime), "HH:mm")}</>
-    ),
+    id: 'endDateTime',
+    header: 'End',
+    meta: { sortField: 'endDateTime' },
+    cell: ({ row }) => <>{format(new Date(row.original.attributes.endDateTime), 'HH:mm')}</>,
   },
   {
-    id: "gmNames",
-    header: "GMs",
-    meta: { sortField: "gmNames" },
+    id: 'gmNames',
+    header: 'GMs',
+    meta: { sortField: 'gmNames' },
     cell: ({ row }) => <>{row.original.attributes.gmNames}</>,
   },
   {
-    id: "website",
-    header: "Website",
-    meta: { sortField: "website" },
+    id: 'website',
+    header: 'Website',
+    meta: { sortField: 'website' },
     cell: ({ row }) => <>{row.original.attributes.website}</>,
   },
   {
-    id: "email",
-    header: "Email",
-    meta: { sortField: "email" },
+    id: 'email',
+    header: 'Email',
+    meta: { sortField: 'email' },
     cell: ({ row }) => <>{row.original.attributes.email}</>,
   },
   {
-    id: "tournament",
-    header: "Tournament",
-    meta: { sortField: "tournament" },
+    id: 'tournament',
+    header: 'Tournament',
+    meta: { sortField: 'tournament' },
     cell: ({ row }) => <>{row.original.attributes.tournament}</>,
   },
   {
-    id: "roundNumber",
-    header: "Round Number",
-    meta: { sortField: "roundNumber" },
+    id: 'roundNumber',
+    header: 'Round Number',
+    meta: { sortField: 'roundNumber' },
     cell: ({ row }) => <>{row.original.attributes.roundNumber}</>,
   },
   {
-    id: "totalRounds",
-    header: "Total Rounds",
-    meta: { sortField: "totalRounds" },
+    id: 'totalRounds',
+    header: 'Total Rounds',
+    meta: { sortField: 'totalRounds' },
     cell: ({ row }) => <>{row.original.attributes.totalRounds}</>,
   },
   {
-    id: "minimumPlayTime",
-    header: "Min Time",
-    meta: { sortField: "minimumPlayTime" },
+    id: 'minimumPlayTime',
+    header: 'Min Time',
+    meta: { sortField: 'minimumPlayTime' },
     cell: ({ row }) => <>{row.original.attributes.minimumPlayTime}</>,
   },
   {
-    id: "attendeeRegistration",
-    header: "Attendee Registration",
-    meta: { sortField: "attendeeRegistration" },
+    id: 'attendeeRegistration',
+    header: 'Attendee Registration',
+    meta: { sortField: 'attendeeRegistration' },
     cell: ({ row }) => <>{row.original.attributes.attendeeRegistration}</>,
   },
   {
-    id: "cost",
-    header: "Cost",
-    meta: { sortField: "cost" },
+    id: 'cost',
+    header: 'Cost',
+    meta: { sortField: 'cost' },
     cell: ({ row }) => <>${row.original.attributes.cost.toFixed(2)}</>,
   },
   {
-    id: "location",
-    header: "Location",
-    meta: { sortField: "location" },
+    id: 'location',
+    header: 'Location',
+    meta: { sortField: 'location' },
     cell: ({ row }) => <>{row.original.attributes.location}</>,
   },
   {
-    id: "roomName",
-    header: "Room",
-    meta: { sortField: "roomName" },
+    id: 'roomName',
+    header: 'Room',
+    meta: { sortField: 'roomName' },
     cell: ({ row }) => <>{row.original.attributes.roomName}</>,
   },
   {
-    id: "tableNumber",
-    header: "Table Number",
-    meta: { sortField: "tableNumber" },
+    id: 'tableNumber',
+    header: 'Table Number',
+    meta: { sortField: 'tableNumber' },
     cell: ({ row }) => <>{row.original.attributes.tableNumber}</>,
   },
   {
-    id: "specialCategory",
-    header: "Special Category",
-    meta: { sortField: "specialCategory" },
+    id: 'specialCategory',
+    header: 'Special Category',
+    meta: { sortField: 'specialCategory' },
     cell: ({ row }) => <>{row.original.attributes.specialCategory}</>,
   },
   {
-    id: "ticketsAvailable",
-    header: "Tickets Available",
-    meta: { sortField: "ticketsAvailable" },
+    id: 'ticketsAvailable',
+    header: 'Tickets Available',
+    meta: { sortField: 'ticketsAvailable' },
     cell: ({ row }) => <>{row.original.attributes.ticketsAvailable}</>,
   },
   {
-    id: "lastModified",
-    header: "Last Modified",
-    meta: { sortField: "lastModified" },
-    cell: ({ row }) => (
-      <>
-        {format(new Date(row.original.attributes.lastModified), "yyyy-MM-dd")}
-      </>
-    ),
+    id: 'lastModified',
+    header: 'Last Modified',
+    meta: { sortField: 'lastModified' },
+    cell: ({ row }) => <>{format(new Date(row.original.attributes.lastModified), 'yyyy-MM-dd')}</>,
   },
-];
+]
 
-export function SearchResults({
-  searchParams,
-  onNavigate,
-  onSort,
-}: SearchResultsProps) {
-  const { visibility, toggle, reset } = useColumnVisibility();
-  const page = searchParams.page ?? 1;
-  const limit = searchParams.limit ?? 100;
+export function SearchResults({ searchParams, onNavigate, onSort }: SearchResultsProps) {
+  const { visibility, toggle, reset } = useColumnVisibility()
+  const page = searchParams.page ?? 1
+  const limit = searchParams.limit ?? 100
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["events", searchParams],
+    queryKey: ['events', searchParams],
     queryFn: () => fetchEvents(searchParams),
-  });
+  })
 
-  let activeSortField: string | undefined;
-  let activeSortDir: "asc" | "desc" | undefined;
+  let activeSortField: string | undefined
+  let activeSortDir: 'asc' | 'desc' | undefined
   if (searchParams.sort) {
-    const [field, dir] = searchParams.sort.split(".");
-    if (field && (dir === "asc" || dir === "desc")) {
-      activeSortField = field;
-      activeSortDir = dir;
+    const [field, dir] = searchParams.sort.split('.')
+    if (field && (dir === 'asc' || dir === 'desc')) {
+      activeSortField = field
+      activeSortDir = dir
     }
   }
 
   const handleSortClick = (sortField: string, label: string) => {
     if (activeSortField !== sortField) {
-      onSort(`${sortField}.asc`);
-      announce(`Sorted by ${label}, ascending`);
-    } else if (activeSortDir === "asc") {
-      onSort(`${sortField}.desc`);
-      announce(`Sorted by ${label}, descending`);
+      onSort(`${sortField}.asc`)
+      announce(`Sorted by ${label}, ascending`)
+    } else if (activeSortDir === 'asc') {
+      onSort(`${sortField}.desc`)
+      announce(`Sorted by ${label}, descending`)
     } else {
-      onSort(undefined);
-      announce("Sort cleared");
+      onSort(undefined)
+      announce('Sort cleared')
     }
-  };
+  }
 
   const table = useReactTable({
     data: data?.data ?? [],
@@ -1847,17 +1700,12 @@ export function SearchResults({
     manualSorting: true,
     manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
-  });
+  })
 
   const pagination =
     data && data.data.length > 0 ? (
-      <Pagination
-        page={page}
-        limit={limit}
-        total={data.meta.total}
-        onNavigate={onNavigate}
-      />
-    ) : null;
+      <Pagination page={page} limit={limit} total={data.meta.total} onNavigate={onNavigate} />
+    ) : null
 
   return (
     <section>
@@ -1895,9 +1743,7 @@ export function SearchResults({
       {isError && (
         <div className={styles.state}>
           <p className={styles.stateText}>QUEST FAILED</p>
-          <p className={styles.stateSubtext}>
-            Unable to load events. Please try again.
-          </p>
+          <p className={styles.stateSubtext}>Unable to load events. Please try again.</p>
         </div>
       )}
       {data && data.data.length === 0 && (
@@ -1917,41 +1763,28 @@ export function SearchResults({
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
-                    const sortField = header.column.columnDef.meta?.sortField;
-                    const label = header.column.columnDef.header as string;
-                    const isActive =
-                      !!sortField && activeSortField === sortField;
+                    const sortField = header.column.columnDef.meta?.sortField
+                    const label = header.column.columnDef.header as string
+                    const isActive = !!sortField && activeSortField === sortField
                     const ariaSort = isActive
-                      ? activeSortDir === "asc"
-                        ? ("ascending" as const)
-                        : ("descending" as const)
-                      : ("none" as const);
+                      ? activeSortDir === 'asc'
+                        ? ('ascending' as const)
+                        : ('descending' as const)
+                      : ('none' as const)
                     return (
-                      <th
-                        key={header.id}
-                        aria-sort={ariaSort}
-                        scope="col"
-                        aria-label={label}
-                      >
+                      <th key={header.id} aria-sort={ariaSort} scope="col" aria-label={label}>
                         <button
                           type="button"
                           aria-label={`Sort by ${label}`}
-                          onClick={() =>
-                            sortField && handleSortClick(sortField, label)
-                          }
+                          onClick={() => sortField && handleSortClick(sortField, label)}
                         >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          {flexRender(header.column.columnDef.header, header.getContext())}
                           {isActive && (
-                            <span aria-hidden="true">
-                              {activeSortDir === "asc" ? " ▲" : " ▼"}
-                            </span>
+                            <span aria-hidden="true">{activeSortDir === 'asc' ? ' ▲' : ' ▼'}</span>
                           )}
                         </button>
                       </th>
-                    );
+                    )
                   })}
                 </tr>
               ))}
@@ -1961,10 +1794,7 @@ export function SearchResults({
                 <tr key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}
                 </tr>
@@ -1975,7 +1805,7 @@ export function SearchResults({
         </>
       )}
     </section>
-  );
+  )
 }
 ```
 
@@ -2219,10 +2049,10 @@ git commit -m "feat: add SearchResults CSS module with table styles and pixel st
 Add to `Pagination.test.tsx`:
 
 ```tsx
-test("shows total events and per-page count summary", () => {
-  render(<Pagination page={1} limit={100} total={247} onNavigate={vi.fn()} />);
-  expect(screen.getByText("247 events • 100 per page")).toBeInTheDocument();
-});
+test('shows total events and per-page count summary', () => {
+  render(<Pagination page={1} limit={100} total={247} onNavigate={vi.fn()} />)
+  expect(screen.getByText('247 events • 100 per page')).toBeInTheDocument()
+})
 ```
 
 - [ ] **Step 2: Run test to confirm it fails**
@@ -2238,79 +2068,69 @@ Expected: FAIL — "247 events • 100 per page" not found
 Add the summary line and import clsx + module styles:
 
 ```tsx
-import { useState, useEffect } from "react";
-import clsx from "clsx";
-import styles from "./Pagination.module.css";
+import { useState, useEffect } from 'react'
+import clsx from 'clsx'
+import styles from './Pagination.module.css'
 
-const PAGE_SIZE_OPTIONS = [100, 500, 1000] as const;
-const BACKEND_MAX_RESULTS = 10_000;
+const PAGE_SIZE_OPTIONS = [100, 500, 1000] as const
+const BACKEND_MAX_RESULTS = 10_000
 
 function Toggletip({ label, message }: { label: string; message: string }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   useEffect(() => {
-    if (!open) return;
+    if (!open) return
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [open]);
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  }, [open])
   return (
-    <span style={{ position: "relative", display: "inline-block" }}>
-      <button
-        type="button"
-        aria-label={label}
-        onClick={() => setOpen((o) => !o)}
-      >
+    <span style={{ position: 'relative', display: 'inline-block' }}>
+      <button type="button" aria-label={label} onClick={() => setOpen((o) => !o)}>
         ?
       </button>
       {open && (
-        <span role="tooltip" style={{ position: "absolute", zIndex: 1 }}>
+        <span role="tooltip" style={{ position: 'absolute', zIndex: 1 }}>
           {message}
         </span>
       )}
     </span>
-  );
+  )
 }
 
-function getPageNumbers(page: number, totalPages: number): (number | "...")[] {
-  if (totalPages <= 7)
-    return Array.from({ length: totalPages }, (_, i) => i + 1);
-  const pages: (number | "...")[] = [1];
-  if (page > 3) pages.push("...");
-  const start = Math.max(2, page - 1);
-  const end = Math.min(totalPages - 1, page + 1);
-  for (let i = start; i <= end; i++) pages.push(i);
-  if (page < totalPages - 2) pages.push("...");
-  pages.push(totalPages);
-  return pages;
+function getPageNumbers(page: number, totalPages: number): (number | '...')[] {
+  if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1)
+  const pages: (number | '...')[] = [1]
+  if (page > 3) pages.push('...')
+  const start = Math.max(2, page - 1)
+  const end = Math.min(totalPages - 1, page + 1)
+  for (let i = start; i <= end; i++) pages.push(i)
+  if (page < totalPages - 2) pages.push('...')
+  pages.push(totalPages)
+  return pages
 }
 
 interface PaginationProps {
-  page: number;
-  limit: number;
-  total: number;
-  onNavigate: (page: number, limit: number) => void;
+  page: number
+  limit: number
+  total: number
+  onNavigate: (page: number, limit: number) => void
 }
 
-export function Pagination({
-  page,
-  limit,
-  total,
-  onNavigate,
-}: PaginationProps) {
-  const naturalTotalPages = Math.ceil(total / limit);
-  const maxPages = Math.floor(BACKEND_MAX_RESULTS / limit);
-  const totalPages = Math.min(naturalTotalPages, maxPages);
-  const isTruncated = naturalTotalPages > maxPages;
-  const pageNumbers = getPageNumbers(page, totalPages);
+export function Pagination({ page, limit, total, onNavigate }: PaginationProps) {
+  const naturalTotalPages = Math.ceil(total / limit)
+  const maxPages = Math.floor(BACKEND_MAX_RESULTS / limit)
+  const totalPages = Math.min(naturalTotalPages, maxPages)
+  const isTruncated = naturalTotalPages > maxPages
+  const pageNumbers = getPageNumbers(page, totalPages)
 
   return (
     <nav aria-label="Pagination" className={styles.nav}>
       <div className={styles.controls}>
         <button
           type="button"
-          className={clsx("btn-secondary", styles.navButton)}
+          className={clsx('btn-secondary', styles.navButton)}
           onClick={() => onNavigate(page - 1, limit)}
           disabled={page === 1}
         >
@@ -2326,7 +2146,7 @@ export function Pagination({
           />
         )}
         {pageNumbers.map((p, i) =>
-          p === "..." ? (
+          p === '...' ? (
             <span key={`ellipsis-${i}`} aria-hidden className={styles.ellipsis}>
               …
             </span>
@@ -2334,11 +2154,11 @@ export function Pagination({
             <button
               key={p}
               type="button"
-              className={clsx("btn-secondary", styles.pageButton, {
+              className={clsx('btn-secondary', styles.pageButton, {
                 [styles.activePage]: p === page,
               })}
               onClick={() => onNavigate(p, limit)}
-              aria-current={p === page ? "page" : undefined}
+              aria-current={p === page ? 'page' : undefined}
               disabled={p === page}
             >
               {p}
@@ -2347,7 +2167,7 @@ export function Pagination({
         )}
         <button
           type="button"
-          className={clsx("btn-secondary", styles.navButton)}
+          className={clsx('btn-secondary', styles.navButton)}
           onClick={() => onNavigate(page + 1, limit)}
           disabled={page === totalPages}
         >
@@ -2372,7 +2192,7 @@ export function Pagination({
         </label>
       </div>
     </nav>
-  );
+  )
 }
 ```
 
@@ -2491,50 +2311,46 @@ git commit -m "feat: update Pagination with event count summary and CSS module"
 Add to `EventDetail.test.tsx`:
 
 ```tsx
-test("renders THE EVENT section heading", async () => {
+test('renders THE EVENT section heading', async () => {
   server.use(
-    http.get("/api/events/search", () => {
+    http.get('/api/events/search', () => {
       const response: EventSearchResponse = {
-        data: [makeEvent({ gameId: "RPG24000001", title: "Epic Dragon Hunt" })],
+        data: [makeEvent({ gameId: 'RPG24000001', title: 'Epic Dragon Hunt' })],
         meta: { total: 1 },
-        links: { self: "" },
+        links: { self: '' },
         error: null,
-      };
-      return HttpResponse.json(response);
+      }
+      return HttpResponse.json(response)
     }),
-  );
-  renderEventDetail("RPG24000001");
-  await screen.findByText("Epic Dragon Hunt");
-  expect(
-    screen.getByRole("heading", { name: "THE EVENT" }),
-  ).toBeInTheDocument();
-});
+  )
+  renderEventDetail('RPG24000001')
+  await screen.findByText('Epic Dragon Hunt')
+  expect(screen.getByRole('heading', { name: 'THE EVENT' })).toBeInTheDocument()
+})
 
-test("renders PLAYERS section heading", async () => {
+test('renders PLAYERS section heading', async () => {
   server.use(
-    http.get("/api/events/search", () => {
+    http.get('/api/events/search', () => {
       const response: EventSearchResponse = {
-        data: [makeEvent({ gameId: "RPG24000001" })],
+        data: [makeEvent({ gameId: 'RPG24000001' })],
         meta: { total: 1 },
-        links: { self: "" },
+        links: { self: '' },
         error: null,
-      };
-      return HttpResponse.json(response);
+      }
+      return HttpResponse.json(response)
     }),
-  );
-  renderEventDetail("RPG24000001");
-  await screen.findByRole("heading", { name: "THE EVENT" });
-  expect(screen.getByRole("heading", { name: "PLAYERS" })).toBeInTheDocument();
-  expect(
-    screen.getByRole("heading", { name: "LOGISTICS" }),
-  ).toBeInTheDocument();
-  expect(screen.getByRole("heading", { name: "CONTACT" })).toBeInTheDocument();
-});
+  )
+  renderEventDetail('RPG24000001')
+  await screen.findByRole('heading', { name: 'THE EVENT' })
+  expect(screen.getByRole('heading', { name: 'PLAYERS' })).toBeInTheDocument()
+  expect(screen.getByRole('heading', { name: 'LOGISTICS' })).toBeInTheDocument()
+  expect(screen.getByRole('heading', { name: 'CONTACT' })).toBeInTheDocument()
+})
 
-test("shows loading state while fetching", async () => {
-  renderEventDetail("RPG24000001");
-  expect(await screen.findByText("LOADING QUEST...")).toBeInTheDocument();
-});
+test('shows loading state while fetching', async () => {
+  renderEventDetail('RPG24000001')
+  expect(await screen.findByText('LOADING QUEST...')).toBeInTheDocument()
+})
 ```
 
 - [ ] **Step 2: Run tests to confirm they fail**
@@ -2548,34 +2364,30 @@ Expected: FAIL — no "THE EVENT" heading, no "LOADING QUEST..."
 - [ ] **Step 3: Rewrite `EventDetail.tsx`**
 
 ```tsx
-import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
-import { format } from "date-fns";
-import { fetchEvents } from "../../utils/api";
-import styles from "./EventDetail.module.css";
+import { useQuery } from '@tanstack/react-query'
+import { Link } from '@tanstack/react-router'
+import { format } from 'date-fns'
+import { fetchEvents } from '../../utils/api'
+import styles from './EventDetail.module.css'
 
 interface EventDetailProps {
-  gameId: string;
+  gameId: string
 }
 
 function BoolField({ value }: { value: string | boolean }) {
-  const isYes =
-    value === true ||
-    (typeof value === "string" && value.toLowerCase() === "yes");
+  const isYes = value === true || (typeof value === 'string' && value.toLowerCase() === 'yes')
   return (
-    <span
-      style={{ color: isYes ? "var(--color-bark)" : "var(--color-bark-light)" }}
-    >
-      {isYes ? "✓" : "—"}
+    <span style={{ color: isYes ? 'var(--color-bark)' : 'var(--color-bark-light)' }}>
+      {isYes ? '✓' : '—'}
     </span>
-  );
+  )
 }
 
 export function EventDetail({ gameId }: EventDetailProps) {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["event", gameId],
+    queryKey: ['event', gameId],
     queryFn: () => fetchEvents({ gameId, limit: 1 }),
-  });
+  })
 
   if (isLoading) {
     return (
@@ -2585,17 +2397,15 @@ export function EventDetail({ gameId }: EventDetailProps) {
         </div>
         <p className={styles.stateText}>LOADING QUEST...</p>
       </div>
-    );
+    )
   }
   if (isError) {
     return (
       <div className={styles.state}>
         <p className={styles.stateText}>QUEST FAILED</p>
-        <p className={styles.stateSubtext}>
-          Unable to load event. Please try again.
-        </p>
+        <p className={styles.stateSubtext}>Unable to load event. Please try again.</p>
       </div>
-    );
+    )
   }
   if (!data || data.data.length === 0) {
     return (
@@ -2606,10 +2416,10 @@ export function EventDetail({ gameId }: EventDetailProps) {
         <p className={styles.stateText}>EVENT NOT FOUND</p>
         <p className={styles.stateSubtext}>This quest does not exist.</p>
       </div>
-    );
+    )
   }
 
-  const a = data.data[0].attributes;
+  const a = data.data[0].attributes
 
   return (
     <article className={styles.article}>
@@ -2697,21 +2507,15 @@ export function EventDetail({ gameId }: EventDetailProps) {
           <dl className={styles.dl}>
             <div className={styles.dlItem}>
               <dt className={styles.dt}>Day</dt>
-              <dd className={styles.dd}>
-                {format(new Date(a.startDateTime), "EEEE")}
-              </dd>
+              <dd className={styles.dd}>{format(new Date(a.startDateTime), 'EEEE')}</dd>
             </div>
             <div className={styles.dlItem}>
               <dt className={styles.dt}>Start</dt>
-              <dd className={styles.dd}>
-                {format(new Date(a.startDateTime), "HH:mm")}
-              </dd>
+              <dd className={styles.dd}>{format(new Date(a.startDateTime), 'HH:mm')}</dd>
             </div>
             <div className={styles.dlItem}>
               <dt className={styles.dt}>End</dt>
-              <dd className={styles.dd}>
-                {format(new Date(a.endDateTime), "HH:mm")}
-              </dd>
+              <dd className={styles.dd}>{format(new Date(a.endDateTime), 'HH:mm')}</dd>
             </div>
             <div className={styles.dlItem}>
               <dt className={styles.dt}>Duration</dt>
@@ -2742,9 +2546,7 @@ export function EventDetail({ gameId }: EventDetailProps) {
               <dd className={styles.dd}>
                 <span
                   className={
-                    a.attendeeRegistration === "ticketed"
-                      ? styles.pillFilled
-                      : styles.pillOutline
+                    a.attendeeRegistration === 'ticketed' ? styles.pillFilled : styles.pillOutline
                   }
                 >
                   {a.attendeeRegistration}
@@ -2782,23 +2584,21 @@ export function EventDetail({ gameId }: EventDetailProps) {
             </div>
             <div className={styles.dlItem}>
               <dt className={styles.dt}>Website</dt>
-              <dd className={styles.dd}>{a.website || "—"}</dd>
+              <dd className={styles.dd}>{a.website || '—'}</dd>
             </div>
             <div className={styles.dlItem}>
               <dt className={styles.dt}>Email</dt>
-              <dd className={styles.dd}>{a.email || "—"}</dd>
+              <dd className={styles.dd}>{a.email || '—'}</dd>
             </div>
             <div className={styles.dlItem}>
               <dt className={styles.dt}>Last Modified</dt>
-              <dd className={styles.dd}>
-                {format(new Date(a.lastModified), "yyyy-MM-dd")}
-              </dd>
+              <dd className={styles.dd}>{format(new Date(a.lastModified), 'yyyy-MM-dd')}</dd>
             </div>
           </dl>
         </section>
       </div>
     </article>
-  );
+  )
 }
 ```
 
@@ -2811,30 +2611,30 @@ npm test -- --reporter=verbose src/components/EventDetail/EventDetail.test.tsx
 Note: the existing test `shows not-found message when event does not exist` checks `screen.findByText("Event not found.")` — update that test to match the new text:
 
 ```tsx
-test("shows not-found message when event does not exist", async () => {
+test('shows not-found message when event does not exist', async () => {
   server.use(
-    http.get("/api/events/search", () => {
+    http.get('/api/events/search', () => {
       const response: EventSearchResponse = {
         data: [],
         meta: { total: 0 },
-        links: { self: "" },
+        links: { self: '' },
         error: null,
-      };
-      return HttpResponse.json(response);
+      }
+      return HttpResponse.json(response)
     }),
-  );
-  renderEventDetail("DOESNOTEXIST");
-  expect(await screen.findByText("EVENT NOT FOUND")).toBeInTheDocument();
-});
+  )
+  renderEventDetail('DOESNOTEXIST')
+  expect(await screen.findByText('EVENT NOT FOUND')).toBeInTheDocument()
+})
 ```
 
 Also update `shows loading state while fetching`:
 
 ```tsx
-test("shows loading state while fetching", async () => {
-  renderEventDetail("RPG24000001");
-  expect(await screen.findByText("LOADING QUEST...")).toBeInTheDocument();
-});
+test('shows loading state while fetching', async () => {
+  renderEventDetail('RPG24000001')
+  expect(await screen.findByText('LOADING QUEST...')).toBeInTheDocument()
+})
 ```
 
 Re-run:
@@ -3076,9 +2876,9 @@ Find the sort indicator `<span>` in the header rendering and add the class:
 {
   isActive && (
     <span aria-hidden="true" className={styles.sortIndicator}>
-      {activeSortDir === "asc" ? " ▲" : " ▼"}
+      {activeSortDir === 'asc' ? ' ▲' : ' ▼'}
     </span>
-  );
+  )
 }
 ```
 

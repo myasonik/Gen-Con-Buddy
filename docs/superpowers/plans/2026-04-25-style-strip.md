@@ -159,11 +159,11 @@ Replace the entire file content with:
   transition: grid-template-columns var(--motion-expand);
 }
 
-.shell[data-sidebar-open="false"] {
+.shell[data-sidebar-open='false'] {
   grid-template-columns: 0 1fr;
 }
 
-.shell[data-sidebar-open="false"] .sidebar {
+.shell[data-sidebar-open='false'] .sidebar {
   visibility: hidden;
 }
 
@@ -221,12 +221,12 @@ Replace the entire file content with:
     transition: transform var(--motion-expand);
   }
 
-  .shell[data-sidebar-open="true"] .sidebar {
+  .shell[data-sidebar-open='true'] .sidebar {
     transform: translateX(0);
     visibility: visible;
   }
 
-  .shell[data-sidebar-open="false"] .sidebar {
+  .shell[data-sidebar-open='false'] .sidebar {
     visibility: hidden;
   }
 
@@ -237,7 +237,7 @@ Replace the entire file content with:
     z-index: calc(var(--z-modal) - 1);
   }
 
-  .shell[data-sidebar-open="true"] .backdrop {
+  .shell[data-sidebar-open='true'] .backdrop {
     display: block;
   }
 }
@@ -253,7 +253,7 @@ return (
     <div
       className={styles.backdrop}
       onClick={() => {
-        if (sidebarOpen) toggleSidebar();
+        if (sidebarOpen) toggleSidebar()
       }}
       aria-hidden="true"
     />
@@ -272,18 +272,14 @@ return (
           aria-expanded={sidebarOpen}
           aria-controls="sidebar"
         >
-          {sidebarOpen ? "◀ Filters" : "▶ Filters"}
+          {sidebarOpen ? '◀ Filters' : '▶ Filters'}
         </Button>
       </div>
       <ActiveFilters searchParams={search} onRemove={handleRemoveFilter} />
-      <SearchResults
-        searchParams={search}
-        onNavigate={handleNavigate}
-        onSort={handleSort}
-      />
+      <SearchResults searchParams={search} onNavigate={handleNavigate} onSort={handleSort} />
     </div>
   </main>
-);
+)
 ```
 
 - [ ] **Step 3: Remove token-dependent color props from Meeple in \_\_root.tsx**
@@ -298,15 +294,13 @@ export const Route = createRootRoute({
         <Meeple className={styles.headerMeeple} aria-hidden="true" />
         <div>
           <p className={styles.headerTitle}>Gen Con Buddy</p>
-          <p className={styles.headerSubtitle}>
-            your guide to the best four days in gaming
-          </p>
+          <p className={styles.headerSubtitle}>your guide to the best four days in gaming</p>
         </div>
       </header>
       <Outlet />
     </>
   ),
-});
+})
 ```
 
 - [ ] **Step 4: Run tests**

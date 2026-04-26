@@ -17,13 +17,13 @@
 }
 
 .tile::before {
-  content: "";
+  content: '';
   display: inline-block;
   width: 1em;
 }
 
-.tile[aria-pressed="true"]::before {
-  content: "♟";
+.tile[aria-pressed='true']::before {
+  content: '♟';
 }
 
 .group {

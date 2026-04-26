@@ -152,12 +152,12 @@ The existing grid layout is preserved. Visual chrome (header background, gold bo
     transition: transform var(--motion-expand);
   }
 
-  .shell[data-sidebar-open="true"] .sidebar {
+  .shell[data-sidebar-open='true'] .sidebar {
     transform: translateX(0);
     visibility: visible;
   }
 
-  .shell[data-sidebar-open="false"] .sidebar {
+  .shell[data-sidebar-open='false'] .sidebar {
     visibility: hidden;
   }
 
@@ -168,7 +168,7 @@ The existing grid layout is preserved. Visual chrome (header background, gold bo
     z-index: calc(var(--z-modal) - 1);
   }
 
-  .shell[data-sidebar-open="true"] .backdrop {
+  .shell[data-sidebar-open='true'] .backdrop {
     display: block;
   }
 

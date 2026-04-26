@@ -1,9 +1,9 @@
-import { Popover } from "@base-ui/react/popover";
-import styles from "./Toggletip.module.css";
+import { Popover } from '@base-ui/react/popover'
+import styles from './Toggletip.module.css'
 
 interface ToggletipProps {
-  label: string;
-  message: string;
+  label: string
+  message: string
 }
 
 export function Toggletip({ label, message }: ToggletipProps) {
@@ -18,5 +18,5 @@ export function Toggletip({ label, message }: ToggletipProps) {
         </Popover.Positioner>
       </Popover.Portal>
     </Popover.Root>
-  );
+  )
 }

@@ -23,22 +23,16 @@ This test verifies that `SearchForm` correctly initializes from `defaultValues` 
 Add to `src/components/SearchForm/SearchForm.test.tsx`:
 
 ```tsx
-test("picks up new defaultValues when re-mounted with a new key", () => {
+test('picks up new defaultValues when re-mounted with a new key', () => {
   const { rerender } = render(
-    <SearchForm key="a" defaultValues={{ eventType: "BGM" }} onSearch={noop} />,
-  );
-  expect(screen.getByRole("combobox", { name: "Event Type" })).toHaveValue(
-    "BGM",
-  );
+    <SearchForm key="a" defaultValues={{ eventType: 'BGM' }} onSearch={noop} />,
+  )
+  expect(screen.getByRole('combobox', { name: 'Event Type' })).toHaveValue('BGM')
 
-  rerender(
-    <SearchForm key="b" defaultValues={{ eventType: "RPG" }} onSearch={noop} />,
-  );
+  rerender(<SearchForm key="b" defaultValues={{ eventType: 'RPG' }} onSearch={noop} />)
 
-  expect(screen.getByRole("combobox", { name: "Event Type" })).toHaveValue(
-    "RPG",
-  );
-});
+  expect(screen.getByRole('combobox', { name: 'Event Type' })).toHaveValue('RPG')
+})
 ```
 
 - [ ] **Step 2: Run the test to confirm it passes (SearchForm already respects defaultValues — this is a regression guard)**
@@ -71,27 +65,23 @@ This test catches the actual bug: rendering `SearchPage` with one URL, then navi
 Create `src/routes/index.test.tsx`:
 
 ```tsx
-import { act, render, screen } from "@testing-library/react";
-import {
-  RouterProvider,
-  createRouter,
-  createMemoryHistory,
-} from "@tanstack/react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { routeTree } from "../routeTree.gen";
+import { act, render, screen } from '@testing-library/react'
+import { RouterProvider, createRouter, createMemoryHistory } from '@tanstack/react-router'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { routeTree } from '../routeTree.gen'
 
-function renderSearchPage(initialEntry = "/") {
-  const history = createMemoryHistory({ initialEntries: [initialEntry] });
-  const router = createRouter({ routeTree, history });
+function renderSearchPage(initialEntry = '/') {
+  const history = createMemoryHistory({ initialEntries: [initialEntry] })
+  const router = createRouter({ routeTree, history })
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
-  });
+  })
   render(
     <QueryClientProvider client={client}>
       <RouterProvider router={router} />
     </QueryClientProvider>,
-  );
-  return router;
+  )
+  return router
 }
 ```
 
@@ -100,12 +90,10 @@ function renderSearchPage(initialEntry = "/") {
 Add to `src/routes/index.test.tsx`:
 
 ```tsx
-test("populates eventType dropdown from URL search param on load", () => {
-  renderSearchPage("/?eventType=BGM");
-  expect(screen.getByRole("combobox", { name: "Event Type" })).toHaveValue(
-    "BGM",
-  );
-});
+test('populates eventType dropdown from URL search param on load', () => {
+  renderSearchPage('/?eventType=BGM')
+  expect(screen.getByRole('combobox', { name: 'Event Type' })).toHaveValue('BGM')
+})
 ```
 
 - [ ] **Step 3: Run to confirm it passes (this works today via defaultValues on initial mount)**
@@ -121,20 +109,16 @@ Expected: passes.
 Add to `src/routes/index.test.tsx`:
 
 ```tsx
-test("updates form when URL search params change after initial render", async () => {
-  const router = renderSearchPage("/?eventType=BGM");
-  expect(screen.getByRole("combobox", { name: "Event Type" })).toHaveValue(
-    "BGM",
-  );
+test('updates form when URL search params change after initial render', async () => {
+  const router = renderSearchPage('/?eventType=BGM')
+  expect(screen.getByRole('combobox', { name: 'Event Type' })).toHaveValue('BGM')
 
   await act(async () => {
-    await router.navigate({ to: "/", search: { eventType: "RPG" } });
-  });
+    await router.navigate({ to: '/', search: { eventType: 'RPG' } })
+  })
 
-  expect(screen.getByRole("combobox", { name: "Event Type" })).toHaveValue(
-    "RPG",
-  );
-});
+  expect(screen.getByRole('combobox', { name: 'Event Type' })).toHaveValue('RPG')
+})
 ```
 
 - [ ] **Step 5: Run to confirm it FAILS (the bug is not yet fixed)**

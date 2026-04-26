@@ -60,11 +60,11 @@ Built with `@base-ui/react` `Dialog.Root`.
 
 ```ts
 interface ColumnActionsPopoverProps {
-  header: Header<Event, unknown>;
-  activeSortField: string | undefined;
-  activeSortDir: "asc" | "desc" | undefined;
-  onSort: (sort: string | undefined) => void;
-  onOpenResize: () => void;
+  header: Header<Event, unknown>
+  activeSortField: string | undefined
+  activeSortDir: 'asc' | 'desc' | undefined
+  onSort: (sort: string | undefined) => void
+  onOpenResize: () => void
 }
 ```
 
@@ -78,10 +78,10 @@ interface ColumnActionsPopoverProps {
 
 ```ts
 interface ColumnResizeDialogProps {
-  columnName: string;
-  currentWidth: number;
-  onApply: (width: number) => void;
-  onClose: () => void;
+  columnName: string
+  currentWidth: number
+  onApply: (width: number) => void
+  onClose: () => void
 }
 ```
 

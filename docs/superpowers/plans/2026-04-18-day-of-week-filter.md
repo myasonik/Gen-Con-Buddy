@@ -33,42 +33,42 @@ In `src/utils/types.ts`, add `days?: string` to the `SearchParams` interface aft
 ```ts
 /** URL search params — map directly to API query params. Ranges encoded as "[min,max]". */
 export interface SearchParams {
-  limit?: number;
-  filter?: string;
-  gameId?: string;
-  title?: string;
-  eventType?: string;
-  group?: string;
-  shortDescription?: string;
-  longDescription?: string;
-  gameSystem?: string;
-  rulesEdition?: string;
-  minPlayers?: string;
-  maxPlayers?: string;
-  ageRequired?: string;
-  experienceRequired?: string;
-  materialsProvided?: string;
-  materialsRequired?: string;
-  materialsRequiredDetails?: string;
-  startDateTime?: string;
-  duration?: string;
-  endDateTime?: string;
-  gmNames?: string;
-  website?: string;
-  email?: string;
-  tournament?: string;
-  roundNumber?: string;
-  totalRounds?: string;
-  minimumPlayTime?: string;
-  attendeeRegistration?: string;
-  cost?: string;
-  location?: string;
-  roomName?: string;
-  tableNumber?: string;
-  specialCategory?: string;
-  ticketsAvailable?: string;
-  lastModified?: string;
-  days?: string;
+  limit?: number
+  filter?: string
+  gameId?: string
+  title?: string
+  eventType?: string
+  group?: string
+  shortDescription?: string
+  longDescription?: string
+  gameSystem?: string
+  rulesEdition?: string
+  minPlayers?: string
+  maxPlayers?: string
+  ageRequired?: string
+  experienceRequired?: string
+  materialsProvided?: string
+  materialsRequired?: string
+  materialsRequiredDetails?: string
+  startDateTime?: string
+  duration?: string
+  endDateTime?: string
+  gmNames?: string
+  website?: string
+  email?: string
+  tournament?: string
+  roundNumber?: string
+  totalRounds?: string
+  minimumPlayTime?: string
+  attendeeRegistration?: string
+  cost?: string
+  location?: string
+  roomName?: string
+  tableNumber?: string
+  specialCategory?: string
+  ticketsAvailable?: string
+  lastModified?: string
+  days?: string
 }
 ```
 
@@ -79,52 +79,52 @@ In `src/utils/types.ts`, add `days?: string` to the `SearchFormValues` interface
 ```ts
 /** React Hook Form values — ranges split into min/max fields. */
 export interface SearchFormValues {
-  filter?: string;
-  gameId?: string;
-  title?: string;
-  eventType?: string;
-  group?: string;
-  shortDescription?: string;
-  longDescription?: string;
-  gameSystem?: string;
-  rulesEdition?: string;
-  minPlayersMin?: string;
-  minPlayersMax?: string;
-  maxPlayersMin?: string;
-  maxPlayersMax?: string;
-  ageRequired?: string;
-  experienceRequired?: string;
-  materialsProvided?: string;
-  materialsRequired?: string;
-  materialsRequiredDetails?: string;
-  startDateTimeStart?: string;
-  startDateTimeEnd?: string;
-  durationMin?: string;
-  durationMax?: string;
-  endDateTimeStart?: string;
-  endDateTimeEnd?: string;
-  gmNames?: string;
-  website?: string;
-  email?: string;
-  tournament?: string;
-  roundNumberMin?: string;
-  roundNumberMax?: string;
-  totalRoundsMin?: string;
-  totalRoundsMax?: string;
-  minimumPlayTimeMin?: string;
-  minimumPlayTimeMax?: string;
-  attendeeRegistration?: string;
-  costMin?: string;
-  costMax?: string;
-  location?: string;
-  roomName?: string;
-  tableNumber?: string;
-  specialCategory?: string;
-  ticketsAvailableMin?: string;
-  ticketsAvailableMax?: string;
-  lastModifiedStart?: string;
-  lastModifiedEnd?: string;
-  days?: string;
+  filter?: string
+  gameId?: string
+  title?: string
+  eventType?: string
+  group?: string
+  shortDescription?: string
+  longDescription?: string
+  gameSystem?: string
+  rulesEdition?: string
+  minPlayersMin?: string
+  minPlayersMax?: string
+  maxPlayersMin?: string
+  maxPlayersMax?: string
+  ageRequired?: string
+  experienceRequired?: string
+  materialsProvided?: string
+  materialsRequired?: string
+  materialsRequiredDetails?: string
+  startDateTimeStart?: string
+  startDateTimeEnd?: string
+  durationMin?: string
+  durationMax?: string
+  endDateTimeStart?: string
+  endDateTimeEnd?: string
+  gmNames?: string
+  website?: string
+  email?: string
+  tournament?: string
+  roundNumberMin?: string
+  roundNumberMax?: string
+  totalRoundsMin?: string
+  totalRoundsMax?: string
+  minimumPlayTimeMin?: string
+  minimumPlayTimeMax?: string
+  attendeeRegistration?: string
+  costMin?: string
+  costMax?: string
+  location?: string
+  roomName?: string
+  tableNumber?: string
+  specialCategory?: string
+  ticketsAvailableMin?: string
+  ticketsAvailableMax?: string
+  lastModifiedStart?: string
+  lastModifiedEnd?: string
+  days?: string
 }
 ```
 
@@ -157,57 +157,53 @@ git commit -m "feat: add days field to SearchParams and SearchFormValues"
 Add to the `describe('buildSearchParams')` block in `src/utils/searchParams.test.ts`:
 
 ```ts
-it("translates a single day to a startDateTime range", () => {
-  const result = buildSearchParams({ days: "thu" });
+it('translates a single day to a startDateTime range', () => {
+  const result = buildSearchParams({ days: 'thu' })
+  expect(result.startDateTime).toBe('[2024-08-01T00:00:00-04:00,2024-08-02T00:00:00-04:00]')
+  expect(result).not.toHaveProperty('days')
+})
+
+it('translates two non-contiguous days to a comma-separated multi-range startDateTime', () => {
+  const result = buildSearchParams({ days: 'wed,sun' })
   expect(result.startDateTime).toBe(
-    "[2024-08-01T00:00:00-04:00,2024-08-02T00:00:00-04:00]",
-  );
-  expect(result).not.toHaveProperty("days");
-});
+    '[2024-07-31T00:00:00-04:00,2024-08-01T00:00:00-04:00],[2024-08-04T00:00:00-04:00,2024-08-05T00:00:00-04:00]',
+  )
+  expect(result).not.toHaveProperty('days')
+})
 
-it("translates two non-contiguous days to a comma-separated multi-range startDateTime", () => {
-  const result = buildSearchParams({ days: "wed,sun" });
+it('translates all five days to five ranges', () => {
+  const result = buildSearchParams({ days: 'wed,thu,fri,sat,sun' })
   expect(result.startDateTime).toBe(
-    "[2024-07-31T00:00:00-04:00,2024-08-01T00:00:00-04:00],[2024-08-04T00:00:00-04:00,2024-08-05T00:00:00-04:00]",
-  );
-  expect(result).not.toHaveProperty("days");
-});
+    '[2024-07-31T00:00:00-04:00,2024-08-01T00:00:00-04:00],' +
+      '[2024-08-01T00:00:00-04:00,2024-08-02T00:00:00-04:00],' +
+      '[2024-08-02T00:00:00-04:00,2024-08-03T00:00:00-04:00],' +
+      '[2024-08-03T00:00:00-04:00,2024-08-04T00:00:00-04:00],' +
+      '[2024-08-04T00:00:00-04:00,2024-08-05T00:00:00-04:00]',
+  )
+})
 
-it("translates all five days to five ranges", () => {
-  const result = buildSearchParams({ days: "wed,thu,fri,sat,sun" });
-  expect(result.startDateTime).toBe(
-    "[2024-07-31T00:00:00-04:00,2024-08-01T00:00:00-04:00]," +
-      "[2024-08-01T00:00:00-04:00,2024-08-02T00:00:00-04:00]," +
-      "[2024-08-02T00:00:00-04:00,2024-08-03T00:00:00-04:00]," +
-      "[2024-08-03T00:00:00-04:00,2024-08-04T00:00:00-04:00]," +
-      "[2024-08-04T00:00:00-04:00,2024-08-05T00:00:00-04:00]",
-  );
-});
+it('does not set startDateTime when days is empty', () => {
+  const result = buildSearchParams({ days: '' })
+  expect(result).not.toHaveProperty('startDateTime')
+  expect(result).not.toHaveProperty('days')
+})
 
-it("does not set startDateTime when days is empty", () => {
-  const result = buildSearchParams({ days: "" });
-  expect(result).not.toHaveProperty("startDateTime");
-  expect(result).not.toHaveProperty("days");
-});
-
-it("uses explicit startDateTime fields when days is not set", () => {
+it('uses explicit startDateTime fields when days is not set', () => {
   const result = buildSearchParams({
-    startDateTimeStart: "2024-08-01T10:00",
-    startDateTimeEnd: "",
-  });
-  expect(result.startDateTime).toBe("[2024-08-01T10:00:00Z,]");
-});
+    startDateTimeStart: '2024-08-01T10:00',
+    startDateTimeEnd: '',
+  })
+  expect(result.startDateTime).toBe('[2024-08-01T10:00:00Z,]')
+})
 
-it("days takes priority over explicit startDateTime fields when both are set", () => {
+it('days takes priority over explicit startDateTime fields when both are set', () => {
   const result = buildSearchParams({
-    days: "fri",
-    startDateTimeStart: "2024-08-01T10:00",
-    startDateTimeEnd: "2024-08-01T14:00",
-  });
-  expect(result.startDateTime).toBe(
-    "[2024-08-02T00:00:00-04:00,2024-08-03T00:00:00-04:00]",
-  );
-});
+    days: 'fri',
+    startDateTimeStart: '2024-08-01T10:00',
+    startDateTimeEnd: '2024-08-01T14:00',
+  })
+  expect(result.startDateTime).toBe('[2024-08-02T00:00:00-04:00,2024-08-03T00:00:00-04:00]')
+})
 ```
 
 - [ ] **Step 2: Run tests to verify they fail**
@@ -223,112 +219,89 @@ Expected: new tests fail with errors about missing functionality.
 Replace the top of `src/utils/searchParams.ts` (keep the existing import and add the constant, then update `buildSearchParams`):
 
 ```ts
-import type { SearchFormValues, SearchParams } from "./types";
+import type { SearchFormValues, SearchParams } from './types'
 
 const DAY_DATES: Record<string, { start: string; end: string }> = {
-  wed: { start: "2024-07-31T00:00:00-04:00", end: "2024-08-01T00:00:00-04:00" },
-  thu: { start: "2024-08-01T00:00:00-04:00", end: "2024-08-02T00:00:00-04:00" },
-  fri: { start: "2024-08-02T00:00:00-04:00", end: "2024-08-03T00:00:00-04:00" },
-  sat: { start: "2024-08-03T00:00:00-04:00", end: "2024-08-04T00:00:00-04:00" },
-  sun: { start: "2024-08-04T00:00:00-04:00", end: "2024-08-05T00:00:00-04:00" },
-};
+  wed: { start: '2024-07-31T00:00:00-04:00', end: '2024-08-01T00:00:00-04:00' },
+  thu: { start: '2024-08-01T00:00:00-04:00', end: '2024-08-02T00:00:00-04:00' },
+  fri: { start: '2024-08-02T00:00:00-04:00', end: '2024-08-03T00:00:00-04:00' },
+  sat: { start: '2024-08-03T00:00:00-04:00', end: '2024-08-04T00:00:00-04:00' },
+  sun: { start: '2024-08-04T00:00:00-04:00', end: '2024-08-05T00:00:00-04:00' },
+}
 
 export function buildSearchParams(values: SearchFormValues): SearchParams {
-  const params: SearchParams = {};
+  const params: SearchParams = {}
 
-  const set = (
-    key: keyof SearchParams,
-    val: string | number | undefined | boolean,
-  ) => {
-    if (val === undefined || val === "" || val === false) return;
-    (params as Record<string, unknown>)[key] = val;
-  };
+  const set = (key: keyof SearchParams, val: string | number | undefined | boolean) => {
+    if (val === undefined || val === '' || val === false) return
+    ;(params as Record<string, unknown>)[key] = val
+  }
 
-  const setRange = (
-    key: keyof SearchParams,
-    min: string | undefined,
-    max: string | undefined,
-  ) => {
-    if (!min && !max) return;
-    (params as Record<string, unknown>)[key] = `[${min ?? ""},${max ?? ""}]`;
-  };
+  const setRange = (key: keyof SearchParams, min: string | undefined, max: string | undefined) => {
+    if (!min && !max) return
+    ;(params as Record<string, unknown>)[key] = `[${min ?? ''},${max ?? ''}]`
+  }
 
   const setDateRange = (
     key: keyof SearchParams,
     start: string | undefined,
     end: string | undefined,
   ) => {
-    if (!start && !end) return;
-    const s = start ? `${start}:00Z` : "";
-    const e = end ? `${end}:00Z` : "";
-    (params as Record<string, unknown>)[key] = `[${s},${e}]`;
-  };
+    if (!start && !end) return
+    const s = start ? `${start}:00Z` : ''
+    const e = end ? `${end}:00Z` : ''
+    ;(params as Record<string, unknown>)[key] = `[${s},${e}]`
+  }
 
-  set("filter", values.filter);
-  set("gameId", values.gameId);
-  set("title", values.title);
-  set("eventType", values.eventType);
-  set("group", values.group);
-  set("shortDescription", values.shortDescription);
-  set("longDescription", values.longDescription);
-  set("gameSystem", values.gameSystem);
-  set("rulesEdition", values.rulesEdition);
-  setRange("minPlayers", values.minPlayersMin, values.minPlayersMax);
-  setRange("maxPlayers", values.maxPlayersMin, values.maxPlayersMax);
-  set("ageRequired", values.ageRequired);
-  set("experienceRequired", values.experienceRequired);
-  set("materialsProvided", values.materialsProvided);
-  set("materialsRequired", values.materialsRequired);
-  set("materialsRequiredDetails", values.materialsRequiredDetails);
+  set('filter', values.filter)
+  set('gameId', values.gameId)
+  set('title', values.title)
+  set('eventType', values.eventType)
+  set('group', values.group)
+  set('shortDescription', values.shortDescription)
+  set('longDescription', values.longDescription)
+  set('gameSystem', values.gameSystem)
+  set('rulesEdition', values.rulesEdition)
+  setRange('minPlayers', values.minPlayersMin, values.minPlayersMax)
+  setRange('maxPlayers', values.maxPlayersMin, values.maxPlayersMax)
+  set('ageRequired', values.ageRequired)
+  set('experienceRequired', values.experienceRequired)
+  set('materialsProvided', values.materialsProvided)
+  set('materialsRequired', values.materialsRequired)
+  set('materialsRequiredDetails', values.materialsRequiredDetails)
 
   if (values.days) {
     const ranges = values.days
-      .split(",")
+      .split(',')
       .filter((d) => DAY_DATES[d])
       .map((d) => `[${DAY_DATES[d].start},${DAY_DATES[d].end}]`)
-      .join(",");
+      .join(',')
     if (ranges) {
-      (params as Record<string, unknown>)["startDateTime"] = ranges;
+      ;(params as Record<string, unknown>)['startDateTime'] = ranges
     }
   } else {
-    setDateRange(
-      "startDateTime",
-      values.startDateTimeStart,
-      values.startDateTimeEnd,
-    );
+    setDateRange('startDateTime', values.startDateTimeStart, values.startDateTimeEnd)
   }
 
-  setRange("duration", values.durationMin, values.durationMax);
-  setDateRange("endDateTime", values.endDateTimeStart, values.endDateTimeEnd);
-  set("gmNames", values.gmNames);
-  set("website", values.website);
-  set("email", values.email);
-  set("tournament", values.tournament);
-  setRange("roundNumber", values.roundNumberMin, values.roundNumberMax);
-  setRange("totalRounds", values.totalRoundsMin, values.totalRoundsMax);
-  setRange(
-    "minimumPlayTime",
-    values.minimumPlayTimeMin,
-    values.minimumPlayTimeMax,
-  );
-  set("attendeeRegistration", values.attendeeRegistration);
-  setRange("cost", values.costMin, values.costMax);
-  set("location", values.location);
-  set("roomName", values.roomName);
-  set("tableNumber", values.tableNumber);
-  set("specialCategory", values.specialCategory);
-  setRange(
-    "ticketsAvailable",
-    values.ticketsAvailableMin,
-    values.ticketsAvailableMax,
-  );
-  setDateRange(
-    "lastModified",
-    values.lastModifiedStart,
-    values.lastModifiedEnd,
-  );
+  setRange('duration', values.durationMin, values.durationMax)
+  setDateRange('endDateTime', values.endDateTimeStart, values.endDateTimeEnd)
+  set('gmNames', values.gmNames)
+  set('website', values.website)
+  set('email', values.email)
+  set('tournament', values.tournament)
+  setRange('roundNumber', values.roundNumberMin, values.roundNumberMax)
+  setRange('totalRounds', values.totalRoundsMin, values.totalRoundsMax)
+  setRange('minimumPlayTime', values.minimumPlayTimeMin, values.minimumPlayTimeMax)
+  set('attendeeRegistration', values.attendeeRegistration)
+  setRange('cost', values.costMin, values.costMax)
+  set('location', values.location)
+  set('roomName', values.roomName)
+  set('tableNumber', values.tableNumber)
+  set('specialCategory', values.specialCategory)
+  setRange('ticketsAvailable', values.ticketsAvailableMin, values.ticketsAvailableMax)
+  setDateRange('lastModified', values.lastModifiedStart, values.lastModifiedEnd)
 
-  return params;
+  return params
 }
 ```
 
@@ -361,15 +334,15 @@ git commit -m "feat: translate days selection to startDateTime ranges in buildSe
 Add to the `describe('parseSearchParams')` block in `src/utils/searchParams.test.ts`:
 
 ```ts
-it("round-trips days directly from URL params", () => {
-  const result = parseSearchParams({ days: "thu,sat" });
-  expect(result.days).toBe("thu,sat");
-});
+it('round-trips days directly from URL params', () => {
+  const result = parseSearchParams({ days: 'thu,sat' })
+  expect(result.days).toBe('thu,sat')
+})
 
-it("returns undefined days when not in URL params", () => {
-  const result = parseSearchParams({});
-  expect(result.days).toBeUndefined();
-});
+it('returns undefined days when not in URL params', () => {
+  const result = parseSearchParams({})
+  expect(result.days).toBeUndefined()
+})
 ```
 
 - [ ] **Step 2: Run tests to verify they fail**
@@ -427,16 +400,12 @@ return {
   roomName: params.roomName,
   tableNumber: params.tableNumber,
   specialCategory: params.specialCategory,
-  ticketsAvailableMin: params.ticketsAvailable
-    ? ticketsAvailable.min
-    : undefined,
-  ticketsAvailableMax: params.ticketsAvailable
-    ? ticketsAvailable.max
-    : undefined,
+  ticketsAvailableMin: params.ticketsAvailable ? ticketsAvailable.min : undefined,
+  ticketsAvailableMax: params.ticketsAvailable ? ticketsAvailable.max : undefined,
   lastModifiedStart: params.lastModified ? lastModified.start : undefined,
   lastModifiedEnd: params.lastModified ? lastModified.end : undefined,
   days: params.days,
-};
+}
 ```
 
 - [ ] **Step 4: Run tests to verify they pass**
@@ -530,106 +499,101 @@ Expected: new tests fail.
 Replace `src/components/SearchForm/SearchForm.tsx` with:
 
 ```tsx
-import { useForm } from "react-hook-form";
-import {
-  AGE_GROUPS,
-  CATEGORY,
-  EVENT_TYPES,
-  EXP,
-  REGISTRATION,
-} from "../../utils/enums";
-import type { SearchFormValues } from "../../utils/types";
+import { useForm } from 'react-hook-form'
+import { AGE_GROUPS, CATEGORY, EVENT_TYPES, EXP, REGISTRATION } from '../../utils/enums'
+import type { SearchFormValues } from '../../utils/types'
 
 const EMPTY_VALUES: SearchFormValues = {
-  filter: "",
-  gameId: "",
-  title: "",
-  eventType: "",
-  group: "",
-  shortDescription: "",
-  longDescription: "",
-  gameSystem: "",
-  rulesEdition: "",
-  minPlayersMin: "",
-  minPlayersMax: "",
-  maxPlayersMin: "",
-  maxPlayersMax: "",
-  ageRequired: "",
-  experienceRequired: "",
-  materialsProvided: "",
-  materialsRequired: "",
-  materialsRequiredDetails: "",
-  startDateTimeStart: "",
-  startDateTimeEnd: "",
-  durationMin: "",
-  durationMax: "",
-  endDateTimeStart: "",
-  endDateTimeEnd: "",
-  gmNames: "",
-  website: "",
-  email: "",
-  tournament: "",
-  roundNumberMin: "",
-  roundNumberMax: "",
-  totalRoundsMin: "",
-  totalRoundsMax: "",
-  minimumPlayTimeMin: "",
-  minimumPlayTimeMax: "",
-  attendeeRegistration: "",
-  costMin: "",
-  costMax: "",
-  location: "",
-  roomName: "",
-  tableNumber: "",
-  specialCategory: "",
-  ticketsAvailableMin: "",
-  ticketsAvailableMax: "",
-  lastModifiedStart: "",
-  lastModifiedEnd: "",
-  days: "",
-};
+  filter: '',
+  gameId: '',
+  title: '',
+  eventType: '',
+  group: '',
+  shortDescription: '',
+  longDescription: '',
+  gameSystem: '',
+  rulesEdition: '',
+  minPlayersMin: '',
+  minPlayersMax: '',
+  maxPlayersMin: '',
+  maxPlayersMax: '',
+  ageRequired: '',
+  experienceRequired: '',
+  materialsProvided: '',
+  materialsRequired: '',
+  materialsRequiredDetails: '',
+  startDateTimeStart: '',
+  startDateTimeEnd: '',
+  durationMin: '',
+  durationMax: '',
+  endDateTimeStart: '',
+  endDateTimeEnd: '',
+  gmNames: '',
+  website: '',
+  email: '',
+  tournament: '',
+  roundNumberMin: '',
+  roundNumberMax: '',
+  totalRoundsMin: '',
+  totalRoundsMax: '',
+  minimumPlayTimeMin: '',
+  minimumPlayTimeMax: '',
+  attendeeRegistration: '',
+  costMin: '',
+  costMax: '',
+  location: '',
+  roomName: '',
+  tableNumber: '',
+  specialCategory: '',
+  ticketsAvailableMin: '',
+  ticketsAvailableMax: '',
+  lastModifiedStart: '',
+  lastModifiedEnd: '',
+  days: '',
+}
 
-const DAY_KEYS = ["wed", "thu", "fri", "sat", "sun"] as const;
+const DAY_KEYS = ['wed', 'thu', 'fri', 'sat', 'sun'] as const
 const DAY_LABELS: Record<string, string> = {
-  wed: "Wed",
-  thu: "Thu",
-  fri: "Fri",
-  sat: "Sat",
-  sun: "Sun",
-};
+  wed: 'Wed',
+  thu: 'Thu',
+  fri: 'Fri',
+  sat: 'Sat',
+  sun: 'Sun',
+}
 
 interface SearchFormProps {
-  defaultValues: SearchFormValues;
-  onSearch: (values: SearchFormValues) => void;
+  defaultValues: SearchFormValues
+  onSearch: (values: SearchFormValues) => void
 }
 
 export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
-  const { register, handleSubmit, reset, watch, setValue } =
-    useForm<SearchFormValues>({ defaultValues });
+  const { register, handleSubmit, reset, watch, setValue } = useForm<SearchFormValues>({
+    defaultValues,
+  })
 
-  const days = watch("days") ?? "";
-  const selectedDays = new Set(days ? days.split(",") : []);
+  const days = watch('days') ?? ''
+  const selectedDays = new Set(days ? days.split(',') : [])
 
   const handleDayChange = (key: string, checked: boolean) => {
-    const next = new Set(selectedDays);
+    const next = new Set(selectedDays)
     if (checked) {
-      next.add(key);
+      next.add(key)
     } else {
-      next.delete(key);
+      next.delete(key)
     }
-    setValue("days", DAY_KEYS.filter((d) => next.has(d)).join(","));
-  };
+    setValue('days', DAY_KEYS.filter((d) => next.has(d)).join(','))
+  }
 
   return (
     <form onSubmit={handleSubmit(onSearch)}>
       <div>
         <label>
           Search
-          <input type="text" {...register("filter")} />
+          <input type="text" {...register('filter')} />
         </label>
         <label>
           Event Type
-          <select {...register("eventType")}>
+          <select {...register('eventType')}>
             <option value="">Any</option>
             {Object.entries(EVENT_TYPES).map(([k, v]) => (
               <option key={k} value={k}>
@@ -659,65 +623,61 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
         <ul>
           <li>
             <label>
-              Game ID <input type="text" {...register("gameId")} />
+              Game ID <input type="text" {...register('gameId')} />
             </label>
           </li>
           <li>
             <label>
-              Title <input type="text" {...register("title")} />
+              Title <input type="text" {...register('title')} />
             </label>
           </li>
           <li>
             <label>
-              Group <input type="text" {...register("group")} />
+              Group <input type="text" {...register('group')} />
             </label>
           </li>
           <li>
             <label>
-              Short Description{" "}
-              <input type="text" {...register("shortDescription")} />
+              Short Description <input type="text" {...register('shortDescription')} />
             </label>
           </li>
           <li>
             <label>
-              Long Description{" "}
-              <input type="text" {...register("longDescription")} />
+              Long Description <input type="text" {...register('longDescription')} />
             </label>
           </li>
           <li>
             <label>
-              Game System <input type="text" {...register("gameSystem")} />
+              Game System <input type="text" {...register('gameSystem')} />
             </label>
           </li>
           <li>
             <label>
-              Rules Edition <input type="text" {...register("rulesEdition")} />
+              Rules Edition <input type="text" {...register('rulesEdition')} />
             </label>
           </li>
           <li>
             Min Players:
             <label>
-              from{" "}
-              <input type="number" min="0" {...register("minPlayersMin")} />
+              from <input type="number" min="0" {...register('minPlayersMin')} />
             </label>
             <label>
-              to <input type="number" min="0" {...register("minPlayersMax")} />
+              to <input type="number" min="0" {...register('minPlayersMax')} />
             </label>
           </li>
           <li>
             Max Players:
             <label>
-              from{" "}
-              <input type="number" min="0" {...register("maxPlayersMin")} />
+              from <input type="number" min="0" {...register('maxPlayersMin')} />
             </label>
             <label>
-              to <input type="number" min="0" {...register("maxPlayersMax")} />
+              to <input type="number" min="0" {...register('maxPlayersMax')} />
             </label>
           </li>
           <li>
             <label>
               Age Required
-              <select {...register("ageRequired")}>
+              <select {...register('ageRequired')}>
                 <option value="">Any</option>
                 {Object.entries(AGE_GROUPS).map(([k, v]) => (
                   <option key={k} value={k}>
@@ -730,7 +690,7 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
           <li>
             <label>
               Experience Required
-              <select {...register("experienceRequired")}>
+              <select {...register('experienceRequired')}>
                 <option value="">Any</option>
                 {Object.entries(EXP).map(([k, v]) => (
                   <option key={k} value={k}>
@@ -742,118 +702,98 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
           </li>
           <li>
             <label>
-              Materials Provided{" "}
-              <input type="text" {...register("materialsProvided")} />
+              Materials Provided <input type="text" {...register('materialsProvided')} />
             </label>
           </li>
           <li>
             <label>
-              Materials Required{" "}
-              <input type="text" {...register("materialsRequired")} />
+              Materials Required <input type="text" {...register('materialsRequired')} />
             </label>
           </li>
           <li>
             <label>
-              Materials Required Details{" "}
-              <input type="text" {...register("materialsRequiredDetails")} />
+              Materials Required Details{' '}
+              <input type="text" {...register('materialsRequiredDetails')} />
             </label>
           </li>
           <li>
             Start Date:
             <label>
-              from{" "}
-              <input
-                type="datetime-local"
-                {...register("startDateTimeStart")}
-              />
+              from <input type="datetime-local" {...register('startDateTimeStart')} />
             </label>
             <label>
-              to{" "}
-              <input type="datetime-local" {...register("startDateTimeEnd")} />
+              to <input type="datetime-local" {...register('startDateTimeEnd')} />
             </label>
           </li>
           <li>
             Duration (hours):
             <label>
-              from <input type="number" min="0" {...register("durationMin")} />
+              from <input type="number" min="0" {...register('durationMin')} />
             </label>
             <label>
-              to <input type="number" min="0" {...register("durationMax")} />
+              to <input type="number" min="0" {...register('durationMax')} />
             </label>
           </li>
           <li>
             End Date:
             <label>
-              from{" "}
-              <input type="datetime-local" {...register("endDateTimeStart")} />
+              from <input type="datetime-local" {...register('endDateTimeStart')} />
             </label>
             <label>
-              to <input type="datetime-local" {...register("endDateTimeEnd")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Game Masters <input type="text" {...register("gmNames")} />
+              to <input type="datetime-local" {...register('endDateTimeEnd')} />
             </label>
           </li>
           <li>
             <label>
-              Website <input type="text" {...register("website")} />
+              Game Masters <input type="text" {...register('gmNames')} />
             </label>
           </li>
           <li>
             <label>
-              Email <input type="text" {...register("email")} />
+              Website <input type="text" {...register('website')} />
             </label>
           </li>
           <li>
             <label>
-              Tournament <input type="text" {...register("tournament")} />
+              Email <input type="text" {...register('email')} />
+            </label>
+          </li>
+          <li>
+            <label>
+              Tournament <input type="text" {...register('tournament')} />
             </label>
           </li>
           <li>
             Round Number:
             <label>
-              from{" "}
-              <input type="number" min="0" {...register("roundNumberMin")} />
+              from <input type="number" min="0" {...register('roundNumberMin')} />
             </label>
             <label>
-              to <input type="number" min="0" {...register("roundNumberMax")} />
+              to <input type="number" min="0" {...register('roundNumberMax')} />
             </label>
           </li>
           <li>
             Total Rounds:
             <label>
-              from{" "}
-              <input type="number" min="0" {...register("totalRoundsMin")} />
+              from <input type="number" min="0" {...register('totalRoundsMin')} />
             </label>
             <label>
-              to <input type="number" min="0" {...register("totalRoundsMax")} />
+              to <input type="number" min="0" {...register('totalRoundsMax')} />
             </label>
           </li>
           <li>
             Minimum Play Time:
             <label>
-              from{" "}
-              <input
-                type="number"
-                min="0"
-                {...register("minimumPlayTimeMin")}
-              />
+              from <input type="number" min="0" {...register('minimumPlayTimeMin')} />
             </label>
             <label>
-              to{" "}
-              <input
-                type="number"
-                min="0"
-                {...register("minimumPlayTimeMax")}
-              />
+              to <input type="number" min="0" {...register('minimumPlayTimeMax')} />
             </label>
           </li>
           <li>
             <label>
               Attendee Registration
-              <select {...register("attendeeRegistration")}>
+              <select {...register('attendeeRegistration')}>
                 <option value="">Any</option>
                 {Object.entries(REGISTRATION).map(([k, v]) => (
                   <option key={k} value={k}>
@@ -866,31 +806,31 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
           <li>
             Cost:
             <label>
-              from <input type="number" min="0" {...register("costMin")} />
+              from <input type="number" min="0" {...register('costMin')} />
             </label>
             <label>
-              to <input type="number" min="0" {...register("costMax")} />
-            </label>
-          </li>
-          <li>
-            <label>
-              Location <input type="text" {...register("location")} />
+              to <input type="number" min="0" {...register('costMax')} />
             </label>
           </li>
           <li>
             <label>
-              Room Name <input type="text" {...register("roomName")} />
+              Location <input type="text" {...register('location')} />
             </label>
           </li>
           <li>
             <label>
-              Table <input type="text" {...register("tableNumber")} />
+              Room Name <input type="text" {...register('roomName')} />
+            </label>
+          </li>
+          <li>
+            <label>
+              Table <input type="text" {...register('tableNumber')} />
             </label>
           </li>
           <li>
             <label>
               Special Category
-              <select {...register("specialCategory")}>
+              <select {...register('specialCategory')}>
                 <option value="">Any</option>
                 {Object.entries(CATEGORY).map(([k, v]) => (
                   <option key={k} value={k}>
@@ -903,31 +843,19 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
           <li>
             Tickets Available:
             <label>
-              from{" "}
-              <input
-                type="number"
-                min="0"
-                {...register("ticketsAvailableMin")}
-              />
+              from <input type="number" min="0" {...register('ticketsAvailableMin')} />
             </label>
             <label>
-              to{" "}
-              <input
-                type="number"
-                min="0"
-                {...register("ticketsAvailableMax")}
-              />
+              to <input type="number" min="0" {...register('ticketsAvailableMax')} />
             </label>
           </li>
           <li>
             Last Modified:
             <label>
-              from{" "}
-              <input type="datetime-local" {...register("lastModifiedStart")} />
+              from <input type="datetime-local" {...register('lastModifiedStart')} />
             </label>
             <label>
-              to{" "}
-              <input type="datetime-local" {...register("lastModifiedEnd")} />
+              to <input type="datetime-local" {...register('lastModifiedEnd')} />
             </label>
           </li>
         </ul>
@@ -938,7 +866,7 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps) {
         Reset
       </button>
     </form>
-  );
+  )
 }
 ```
 
@@ -1034,23 +962,19 @@ Update `src/components/SearchForm/SearchForm.tsx` — add the `Toggletip` compon
 
 ```tsx
 function Toggletip({ label, message }: { label: string; message: string }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   return (
-    <span style={{ position: "relative", display: "inline-block" }}>
-      <button
-        type="button"
-        aria-label={label}
-        onClick={() => setOpen((o) => !o)}
-      >
+    <span style={{ position: 'relative', display: 'inline-block' }}>
+      <button type="button" aria-label={label} onClick={() => setOpen((o) => !o)}>
         ?
       </button>
       {open && (
-        <span role="tooltip" style={{ position: "absolute", zIndex: 1 }}>
+        <span role="tooltip" style={{ position: 'absolute', zIndex: 1 }}>
           {message}
         </span>
       )}
     </span>
-  );
+  )
 }
 ```
 
@@ -1059,12 +983,12 @@ Add `import { useState } from "react";` to the top of the file (alongside the ex
 Then in the `SearchForm` function body, add these derived values after the `selectedDays` declaration:
 
 ```tsx
-const startDateTimeStart = watch("startDateTimeStart") ?? "";
-const startDateTimeEnd = watch("startDateTimeEnd") ?? "";
-const startDateActive = !!(startDateTimeStart || startDateTimeEnd);
-const daysActive = selectedDays.size > 0;
-const daysDisabled = startDateActive;
-const startDateDisabled = daysActive;
+const startDateTimeStart = watch('startDateTimeStart') ?? ''
+const startDateTimeEnd = watch('startDateTimeEnd') ?? ''
+const startDateActive = !!(startDateTimeStart || startDateTimeEnd)
+const daysActive = selectedDays.size > 0
+const daysDisabled = startDateActive
+const startDateDisabled = daysActive
 ```
 
 Update the day checkboxes to use `disabled={daysDisabled}`:
@@ -1105,20 +1029,12 @@ Update the Start Date list item in the advanced section to use `disabled={startD
     />
   )}
   <label>
-    from{" "}
-    <input
-      type="datetime-local"
-      disabled={startDateDisabled}
-      {...register("startDateTimeStart")}
-    />
+    from{' '}
+    <input type="datetime-local" disabled={startDateDisabled} {...register('startDateTimeStart')} />
   </label>
   <label>
-    to{" "}
-    <input
-      type="datetime-local"
-      disabled={startDateDisabled}
-      {...register("startDateTimeEnd")}
-    />
+    to{' '}
+    <input type="datetime-local" disabled={startDateDisabled} {...register('startDateTimeEnd')} />
   </label>
 </li>
 ```
