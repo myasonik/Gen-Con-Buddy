@@ -1,19 +1,19 @@
 .trigger {
-  position: absolute;
-  right: 6px;
-  top: 50%;
-  transform: translateY(-50%);
+  flex-shrink: 0;
   background: none;
   border: none;
   padding: 2px;
   cursor: pointer;
+  color: var(--color-parchment);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
+  border-radius: 2px;
+  opacity: 0.6;
+  transition: opacity var(--motion-hover);
 }
 
-:global(th):hover .trigger,
+.trigger:hover,
 .trigger:focus-visible,
 .triggerOpen {
   opacity: 1;

@@ -442,41 +442,44 @@ export function SearchResults({
                           className={`${styles.resizableTh}${header.column.getIsResizing() ? ` ${styles.isResizing}` : ""}`}
                           style={{ width: header.getSize() }}
                         >
-                          <button
-                            type="button"
-                            aria-label={`Sort by ${label}`}
-                            onClick={() =>
-                              sortField && handleSortClick(sortField, label)
-                            }
-                          >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                            {isActive && (
-                              <span
-                                aria-hidden="true"
-                                className={styles.sortIndicator}
-                              >
-                                {activeSortDir === "asc" ? " ▲" : " ▼"}
-                              </span>
-                            )}
-                          </button>
-                          {header.column.getCanResize() && (
-                            <ColumnActionsPopover
-                              sortField={sortField}
-                              activeSortField={activeSortField}
-                              activeSortDir={activeSortDir}
-                              onSort={onSort}
-                              onOpenResize={() =>
-                                setResizeTarget({
-                                  columnId: header.column.id,
-                                  columnName: label,
-                                  currentWidth: header.getSize(),
-                                })
+                          <div className={styles.thContent}>
+                            <button
+                              type="button"
+                              className={styles.sortButton}
+                              aria-label={`Sort by ${label}`}
+                              onClick={() =>
+                                sortField && handleSortClick(sortField, label)
                               }
-                            />
-                          )}
+                            >
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
+                              {isActive && (
+                                <span
+                                  aria-hidden="true"
+                                  className={styles.sortIndicator}
+                                >
+                                  {activeSortDir === "asc" ? " ▲" : " ▼"}
+                                </span>
+                              )}
+                            </button>
+                            {header.column.getCanResize() && (
+                              <ColumnActionsPopover
+                                sortField={sortField}
+                                activeSortField={activeSortField}
+                                activeSortDir={activeSortDir}
+                                onSort={onSort}
+                                onOpenResize={() =>
+                                  setResizeTarget({
+                                    columnId: header.column.id,
+                                    columnName: label,
+                                    currentWidth: header.getSize(),
+                                  })
+                                }
+                              />
+                            )}
+                          </div>
                           {header.column.getCanResize() && (
                             <div
                               className={styles.resizeHandle}
