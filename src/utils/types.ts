@@ -149,3 +149,29 @@ export interface SearchFormValues {
   lastModifiedEnd?: string;
   days?: string;
 }
+
+export interface ChangelogSummary {
+  id: string;
+  date: string;
+  updatedCount: number;
+  deletedCount: number;
+  createdCount: number;
+}
+
+export interface ChangelogEntry {
+  id: string;
+  date: string;
+  updatedEvents: Event[];
+  deletedEvents: Event[];
+  createdEvents: Event[];
+}
+
+export interface ListChangelogsResponse {
+  error?: string;
+  entries?: ChangelogSummary[];
+}
+
+export interface FetchChangelogResponse {
+  error?: string;
+  entry?: ChangelogEntry;
+}

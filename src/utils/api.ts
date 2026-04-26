@@ -1,5 +1,11 @@
 import { daysToStartDateTime } from "./searchParams";
-import type { EventSearchResponse, SearchParams } from "./types";
+import type {
+  EventSearchResponse,
+  SearchParams,
+  ListChangelogsResponse,
+  FetchChangelogResponse,
+  ChangelogEntry,
+} from "./types";
 
 export async function fetchEvents(
   params: SearchParams,
@@ -29,4 +35,25 @@ export async function fetchEvents(
   const res = await fetch(url.toString());
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json() as Promise<EventSearchResponse>;
+}
+
+export async function fetchChangelogList(
+  limit = 6,
+): Promise<ListChangelogsResponse> {
+  const url = new URL("/api/changelog/list", window.location.origin);
+  url.searchParams.set("limit", String(limit));
+  const res = await fetch(url.toString());
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json() as Promise<ListChangelogsResponse>;
+}
+
+export async function fetchChangelogEntry(id: string): Promise<ChangelogEntry> {
+  const url = new URL("/api/changelog/fetch", window.location.origin);
+  url.searchParams.set("id", id);
+  const res = await fetch(url.toString());
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = (await res.json()) as FetchChangelogResponse;
+  if (data.error) throw new Error(data.error);
+  if (!data.entry) throw new Error("Missing entry in response");
+  return data.entry;
 }
