@@ -1,24 +1,29 @@
 import { StrictMode } from 'react'
-import { expect, test } from 'vitest'
+import { afterEach, expect, test } from 'vitest'
 import { act, render, screen } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { RouterProvider, createRouter, createMemoryHistory } from '@tanstack/react-router'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { server } from '../test/msw/server'
 import { makeEvent } from '../test/msw/factory'
 import { routeTree } from '../routeTree.gen'
+import { queryClient } from '../lib/queryClient'
 import type { EventSearchResponse } from '../utils/types'
+
+afterEach(() => {
+  queryClient.clear()
+})
 
 // oxlint-disable-next-line typescript/explicit-function-return-type
 async function renderEventDetailPage(gameId: string) {
   const history = createMemoryHistory({ initialEntries: [`/event/${gameId}`] })
   const router = createRouter({ routeTree, history })
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+  // use the singleton so loader and component share the same cache
   await router.load()
   await act(async () => {
     render(
       <StrictMode>
-        <QueryClientProvider client={client}>
+        <QueryClientProvider client={queryClient}>
           <RouterProvider router={router} />
         </QueryClientProvider>
       </StrictMode>,
@@ -87,4 +92,24 @@ test('has exactly one h1 on the event detail page', async () => {
   await renderEventDetailPage('RPG24000001')
   await screen.findByText('Only Heading Here')
   expect(document.querySelectorAll('h1')).toHaveLength(1)
+})
+
+test('loader pre-fetches event data so the component renders without loading state', async () => {
+  server.use(
+    http.get('/api/events/search', ({ request }) => {
+      const url = new URL(request.url)
+      const gameId = url.searchParams.get('gameId') ?? ''
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId, title: 'Pre-fetched Event' })],
+        meta: { total: 1 },
+        links: { self: '' },
+        error: null,
+      }
+      return HttpResponse.json(response)
+    }),
+  )
+  await renderEventDetailPage('RPG24000001')
+  // loader primed the cache; component should render data immediately
+  await expect(screen.findByText('Pre-fetched Event')).resolves.toBeInTheDocument()
+  expect(screen.queryByText('LOADING QUEST...')).not.toBeInTheDocument()
 })
