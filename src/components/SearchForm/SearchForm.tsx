@@ -107,7 +107,7 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps): JSX.El
             {daysDisabled && (
               <Toggletip
                 label="Why are day filters disabled?"
-                message="Clear the Start Date fields in Time filters to use day checkboxes."
+                message="Clear the Start Date fields in the TIME section to enable the day buttons."
               />
             )}
             <ToggleTileGroup
@@ -136,7 +136,7 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps): JSX.El
               {startDateDisabled && (
                 <Toggletip
                   label="Why are Start Date fields disabled?"
-                  message="Clear the day checkboxes above to use custom Start Date fields."
+                  message="Clear the day buttons in the DAYS section to enable custom Start Date fields."
                 />
               )}
               <label className={styles.label}>
@@ -186,7 +186,7 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps): JSX.El
               {startDateDisabled && (
                 <Toggletip
                   label="Why are End Date fields disabled?"
-                  message="Clear the day checkboxes above to use custom End Date fields."
+                  message="Clear the day buttons in the DAYS section to enable custom End Date fields."
                 />
               )}
               <label className={styles.label}>

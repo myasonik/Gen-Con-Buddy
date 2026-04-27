@@ -179,13 +179,13 @@ test('toggletip message for disabled day checkboxes explains to clear start date
   expect(screen.getByText(/clear the start date fields/i)).toBeInTheDocument()
 })
 
-test('toggletip message for disabled start date explains to clear day checkboxes', async () => {
+test('toggletip message for disabled start date explains to clear day buttons', async () => {
   const user = userEvent.setup()
   render(<SearchForm defaultValues={{ days: 'thu' }} onSearch={noop} />)
 
   await user.click(screen.getByRole('button', { name: /why.*start date/i }))
 
-  expect(screen.getByText(/clear the day checkboxes/i)).toBeInTheDocument()
+  expect(screen.getByText(/clear the day buttons/i)).toBeInTheDocument()
 })
 
 test('duration inputs use 0.5-hour steps to match real event data', () => {
