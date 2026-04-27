@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import clsx from 'clsx'
 import { announce } from '../../lib/announce'
 import { MeepleFlat } from '../icons/MeepleFlat'
 import styles from './PixelState.module.css'
@@ -26,7 +27,7 @@ export function PixelState({ variant, text, subtext }: PixelStateProps): JSX.Ele
       )}
       {variant === 'error' && (
         <MeepleFlat
-          className={[styles.icon, styles.iconError].join(' ')}
+          className={clsx(styles.icon, styles.iconError)}
           aria-hidden="true"
           data-testid="error-icon"
         />

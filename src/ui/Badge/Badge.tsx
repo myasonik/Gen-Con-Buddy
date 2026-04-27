@@ -1,4 +1,5 @@
 import React from 'react'
+import clsx from 'clsx'
 import styles from './Badge.module.css'
 
 export const BADGE_VARIANTS = ['filled', 'outline'] as const
@@ -14,7 +15,7 @@ export function Badge({ children, variant = 'filled', className }: BadgeProps): 
   return (
     <span
       data-variant={variant}
-      className={[styles.badge, styles[variant], className].filter(Boolean).join(' ')}
+      className={clsx(styles.badge, styles[variant], className)}
     >
       {children}
     </span>
@@ -30,7 +31,7 @@ export interface ConceptBadgeProps {
 
 export function ConceptBadge({ value, children, className }: ConceptBadgeProps): JSX.Element {
   return (
-    <span className={[styles.conceptBadge, className].filter(Boolean).join(' ')}>
+    <span className={clsx(styles.conceptBadge, className)}>
       {children ?? value}
     </span>
   )
@@ -45,7 +46,7 @@ export function BoolBadge({ value, className }: BoolBadgeProps): JSX.Element {
   const isYes = value === true || (typeof value === 'string' && value.toLowerCase() === 'yes')
   // Gen Con API returns "Yes"/"No" strings; true/false booleans also accepted
   return (
-    <span className={[isYes ? styles.boolYes : styles.boolNo, className].filter(Boolean).join(' ')}>
+    <span className={clsx(isYes ? styles.boolYes : styles.boolNo, className)}>
       <span aria-hidden="true">{isYes ? '✓' : '—'}</span>
       <span className="sr-only">{isYes ? 'yes' : 'no'}</span>
     </span>

@@ -1,4 +1,5 @@
 import React from 'react'
+import clsx from 'clsx'
 import { Toggle } from '@base-ui/react/toggle'
 import { ToggleGroup } from '@base-ui/react/toggle-group'
 import styles from './ToggleTile.module.css'
@@ -10,7 +11,7 @@ export const ToggleTile = React.forwardRef<HTMLButtonElement, ToggleTileProps>(f
   ref,
 ) {
   return (
-    <Toggle ref={ref} className={[styles.tile, className].filter(Boolean).join(' ')} {...props}>
+    <Toggle ref={ref} className={clsx(styles.tile, className)} {...props}>
       {children}
     </Toggle>
   )
@@ -26,7 +27,7 @@ export function ToggleTileGroup({
   return (
     <ToggleGroup
       multiple={multiple}
-      className={[styles.group, className].filter(Boolean).join(' ')}
+      className={clsx(styles.group, className)}
       {...props}
     />
   )
