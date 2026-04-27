@@ -151,6 +151,9 @@ export function getActiveFilters(params: SearchParams): ActiveFilter[] {
             },
           })
         }
+      } else {
+        const _exhaustiveCheck: never = def
+        throw new Error(`Unhandled filter def type: ${JSON.stringify(_exhaustiveCheck)}`)
       }
     }
   }
