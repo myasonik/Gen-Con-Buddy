@@ -476,7 +476,7 @@ test('each visible column header has a resize handle', async () => {
 })
 
 test('pre-seeded localStorage sizing is applied to column width on mount', async () => {
-  localStorage.setItem('gcb-column-sizing', JSON.stringify({ version: 1, sizing: { title: 300 } }))
+  localStorage.setItem('gcb-column-sizing', JSON.stringify({ version: 1, value: { title: 300 } }))
   renderSearchResults()
   await screen.findAllByRole('row')
   const titleTh = screen.getByRole('columnheader', { name: 'Title' })
@@ -485,7 +485,7 @@ test('pre-seeded localStorage sizing is applied to column width on mount', async
 
 test('reset to defaults clears column sizing from localStorage', async () => {
   const user = userEvent.setup()
-  localStorage.setItem('gcb-column-sizing', JSON.stringify({ version: 1, sizing: { title: 300 } }))
+  localStorage.setItem('gcb-column-sizing', JSON.stringify({ version: 1, value: { title: 300 } }))
   renderSearchResults()
   await screen.findAllByRole('row')
 
@@ -534,5 +534,5 @@ test('submitting resize dialog updates column width in localStorage', async () =
   await user.type(input, '400')
   await user.click(screen.getByRole('button', { name: 'Apply' }))
   const stored = JSON.parse(localStorage.getItem('gcb-column-sizing') ?? '{}')
-  expect(stored).toStrictEqual({ version: 1, sizing: { title: 400 } })
+  expect(stored).toStrictEqual({ version: 1, value: { title: 400 } })
 })

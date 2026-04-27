@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useStoredState } from './useStoredState'
 
 const STORAGE_KEY = 'gen-con-buddy-columns'
 const VERSION = 1
@@ -40,36 +40,12 @@ const DEFAULTS: Record<string, boolean> = {
   lastModified: false,
 }
 
-function readFromStorage(): Record<string, boolean> {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) {
-      return { ...DEFAULTS }
-    }
-    const parsed: unknown = JSON.parse(raw)
-    if (
-      typeof parsed !== 'object' ||
-      parsed === null ||
-      (parsed as { version?: unknown }).version !== VERSION
-    ) {
-      return { ...DEFAULTS }
-    }
-    return (parsed as { version: number; visibility: Record<string, boolean> }).visibility
-  } catch {
-    return { ...DEFAULTS }
-  }
-}
-
 export function useColumnVisibility(): {
   visibility: Record<string, boolean>
   toggle: (column: string) => void
   reset: () => void
 } {
-  const [visibility, setVisibility] = useState<Record<string, boolean>>(readFromStorage)
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: VERSION, visibility }))
-  }, [visibility])
+  const [visibility, setVisibility] = useStoredState(STORAGE_KEY, VERSION, { ...DEFAULTS })
 
   const toggle = (column: string): void => {
     setVisibility((prev) => ({ ...prev, [column]: !prev[column] }))

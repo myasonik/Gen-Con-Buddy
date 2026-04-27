@@ -46,18 +46,18 @@ test('persists state to localStorage on toggle', () => {
 })
 
 test('reads existing true value from localStorage', () => {
-  localStorage.setItem(KEY, 'true')
+  localStorage.setItem(KEY, JSON.stringify({ version: 1, value: true }))
   const { result } = renderHook(() => useSidebarOpen())
   expect(result.current[0]).toBe(true)
 })
 
 test('reads existing false value from localStorage', () => {
-  localStorage.setItem(KEY, 'false')
+  localStorage.setItem(KEY, JSON.stringify({ version: 1, value: false }))
   const { result } = renderHook(() => useSidebarOpen())
   expect(result.current[0]).toBe(false)
 })
 
-test("defaults to true when localStorage value is not 'true' or 'false'", () => {
+test('defaults to true when localStorage value is malformed', () => {
   localStorage.setItem(KEY, 'garbage')
   const { result } = renderHook(() => useSidebarOpen())
   expect(result.current[0]).toBe(true)

@@ -44,13 +44,13 @@ test('persists sizing to localStorage', () => {
   })
 
   const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}')
-  expect(stored).toStrictEqual({ version: 1, sizing: { title: 300 } })
+  expect(stored).toStrictEqual({ version: 1, value: { title: 300 } })
 })
 
 test('loads sizing from localStorage on mount', () => {
   localStorage.setItem(
     STORAGE_KEY,
-    JSON.stringify({ version: 1, sizing: { title: 300, gameId: 150 } }),
+    JSON.stringify({ version: 1, value: { title: 300, gameId: 150 } }),
   )
 
   const { result } = renderHook(() => useColumnSizing())
@@ -58,7 +58,7 @@ test('loads sizing from localStorage on mount', () => {
 })
 
 test('returns empty sizing when stored version does not match', () => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 9999, sizing: { title: 300 } }))
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 9999, value: { title: 300 } }))
 
   const { result } = renderHook(() => useColumnSizing())
   expect(result.current.sizing).toStrictEqual({})
