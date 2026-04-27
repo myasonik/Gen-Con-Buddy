@@ -30,21 +30,3 @@
   margin: 0 0 var(--space-3) 0;
 }
 
-.dl {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-3);
-  margin: 0;
-}
-
-.dlFull {
-  grid-column: 1 / -1;
-}
-
-.dlItem {
-  /* default span — single column in the two-column grid */
-}
-
-.dd {
-  margin: 0;
-}

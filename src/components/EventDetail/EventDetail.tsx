@@ -5,6 +5,7 @@ import { fetchEvents } from '../../utils/api'
 import { Button } from '../../ui/Button/Button'
 import { PixelState } from '../../ui/PixelState/PixelState'
 import { Badge, BoolBadge } from '../../ui/Badge/Badge'
+import { DescriptionList, DescriptionItem } from '../../ui/DescriptionList/DescriptionList'
 import styles from './EventDetail.module.css'
 
 interface EventDetailProps {
@@ -50,163 +51,70 @@ export function EventDetail({ gameId }: EventDetailProps): JSX.Element {
         {/* THE EVENT */}
         <section className={styles.section}>
           <h2 className={styles.sectionHeading}>THE EVENT</h2>
-          <dl className={styles.dl}>
-            <div className={styles.dlFull}>
-              <dt className={styles.dt}>Short Description</dt>
-              <dd className={styles.dd}>{a.shortDescription}</dd>
-            </div>
-            <div className={styles.dlFull}>
-              <dt className={styles.dt}>Long Description</dt>
-              <dd className={styles.dd}>{a.longDescription}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Event Type</dt>
-              <dd className={styles.dd}>{a.eventType}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Group</dt>
-              <dd className={styles.dd}>{a.group}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Game System</dt>
-              <dd className={styles.dd}>{a.gameSystem}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Rules Edition</dt>
-              <dd className={styles.dd}>{a.rulesEdition}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Special Category</dt>
-              <dd className={styles.dd}>{a.specialCategory}</dd>
-            </div>
-          </dl>
+          <DescriptionList>
+            <DescriptionItem term="Short Description" span="full">{a.shortDescription}</DescriptionItem>
+            <DescriptionItem term="Long Description" span="full">{a.longDescription}</DescriptionItem>
+            <DescriptionItem term="Event Type">{a.eventType}</DescriptionItem>
+            <DescriptionItem term="Group">{a.group}</DescriptionItem>
+            <DescriptionItem term="Game System">{a.gameSystem}</DescriptionItem>
+            <DescriptionItem term="Rules Edition">{a.rulesEdition}</DescriptionItem>
+            <DescriptionItem term="Special Category">{a.specialCategory}</DescriptionItem>
+          </DescriptionList>
         </section>
 
         {/* PLAYERS */}
         <section className={styles.section}>
           <h2 className={styles.sectionHeading}>PLAYERS</h2>
-          <dl className={styles.dl}>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Min Players</dt>
-              <dd className={styles.dd}>{a.minPlayers}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Max Players</dt>
-              <dd className={styles.dd}>{a.maxPlayers}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Age Required</dt>
-              <dd className={styles.dd}>{a.ageRequired}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Experience Required</dt>
-              <dd className={styles.dd}>{a.experienceRequired}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Tournament</dt>
-              <dd className={styles.dd}>
-                <BoolBadge value={a.tournament} />
-              </dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Round</dt>
-              <dd className={styles.dd}>
-                {a.roundNumber} of {a.totalRounds}
-              </dd>
-            </div>
-          </dl>
+          <DescriptionList>
+            <DescriptionItem term="Min Players">{a.minPlayers}</DescriptionItem>
+            <DescriptionItem term="Max Players">{a.maxPlayers}</DescriptionItem>
+            <DescriptionItem term="Age Required">{a.ageRequired}</DescriptionItem>
+            <DescriptionItem term="Experience Required">{a.experienceRequired}</DescriptionItem>
+            <DescriptionItem term="Tournament">
+              <BoolBadge value={a.tournament} />
+            </DescriptionItem>
+            <DescriptionItem term="Round">
+              {a.roundNumber} of {a.totalRounds}
+            </DescriptionItem>
+          </DescriptionList>
         </section>
 
         {/* LOGISTICS */}
         <section className={styles.section}>
           <h2 className={styles.sectionHeading}>LOGISTICS</h2>
-          <dl className={styles.dl}>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Day</dt>
-              <dd className={styles.dd}>{format(new Date(a.startDateTime), 'EEEE')}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Start</dt>
-              <dd className={styles.dd}>{format(new Date(a.startDateTime), 'HH:mm')}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>End</dt>
-              <dd className={styles.dd}>{format(new Date(a.endDateTime), 'HH:mm')}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Duration</dt>
-              <dd className={styles.dd}>{a.duration} hours</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Min Play Time</dt>
-              <dd className={styles.dd}>{a.minimumPlayTime} hours</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Location</dt>
-              <dd className={styles.dd}>{a.location}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Room</dt>
-              <dd className={styles.dd}>{a.roomName}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Table</dt>
-              <dd className={styles.dd}>{a.tableNumber}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Cost</dt>
-              <dd className={styles.dd}>${a.cost.toFixed(2)}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Attendee Registration</dt>
-              <dd className={styles.dd}>
-                <Badge variant={a.attendeeRegistration === 'ticketed' ? 'filled' : 'outline'}>
-                  {a.attendeeRegistration}
-                </Badge>
-              </dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Tickets Available</dt>
-              <dd className={styles.dd}>{a.ticketsAvailable}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Materials Provided</dt>
-              <dd className={styles.dd}>
-                <BoolBadge value={a.materialsProvided} />
-              </dd>
-            </div>
-            <div className={styles.dlFull}>
-              <dt className={styles.dt}>Materials Required</dt>
-              <dd className={styles.dd}>{a.materialsRequired}</dd>
-            </div>
-            <div className={styles.dlFull}>
-              <dt className={styles.dt}>Materials Required Details</dt>
-              <dd className={styles.dd}>{a.materialsRequiredDetails}</dd>
-            </div>
-          </dl>
+          <DescriptionList>
+            <DescriptionItem term="Day">{format(new Date(a.startDateTime), 'EEEE')}</DescriptionItem>
+            <DescriptionItem term="Start">{format(new Date(a.startDateTime), 'HH:mm')}</DescriptionItem>
+            <DescriptionItem term="End">{format(new Date(a.endDateTime), 'HH:mm')}</DescriptionItem>
+            <DescriptionItem term="Duration">{a.duration} hours</DescriptionItem>
+            <DescriptionItem term="Min Play Time">{a.minimumPlayTime} hours</DescriptionItem>
+            <DescriptionItem term="Location">{a.location}</DescriptionItem>
+            <DescriptionItem term="Room">{a.roomName}</DescriptionItem>
+            <DescriptionItem term="Table">{a.tableNumber}</DescriptionItem>
+            <DescriptionItem term="Cost">${a.cost.toFixed(2)}</DescriptionItem>
+            <DescriptionItem term="Attendee Registration">
+              <Badge variant={a.attendeeRegistration === 'ticketed' ? 'filled' : 'outline'}>
+                {a.attendeeRegistration}
+              </Badge>
+            </DescriptionItem>
+            <DescriptionItem term="Tickets Available">{a.ticketsAvailable}</DescriptionItem>
+            <DescriptionItem term="Materials Provided">
+              <BoolBadge value={a.materialsProvided} />
+            </DescriptionItem>
+            <DescriptionItem term="Materials Required" span="full">{a.materialsRequired}</DescriptionItem>
+            <DescriptionItem term="Materials Required Details" span="full">{a.materialsRequiredDetails}</DescriptionItem>
+          </DescriptionList>
         </section>
 
         {/* CONTACT */}
         <section className={styles.section}>
           <h2 className={styles.sectionHeading}>CONTACT</h2>
-          <dl className={styles.dl}>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>GMs</dt>
-              <dd className={styles.dd}>{a.gmNames}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Website</dt>
-              <dd className={styles.dd}>{a.website || '—'}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Email</dt>
-              <dd className={styles.dd}>{a.email || '—'}</dd>
-            </div>
-            <div className={styles.dlItem}>
-              <dt className={styles.dt}>Last Modified</dt>
-              <dd className={styles.dd}>{format(new Date(a.lastModified), 'yyyy-MM-dd')}</dd>
-            </div>
-          </dl>
+          <DescriptionList>
+            <DescriptionItem term="GMs">{a.gmNames}</DescriptionItem>
+            <DescriptionItem term="Website">{a.website || '—'}</DescriptionItem>
+            <DescriptionItem term="Email">{a.email || '—'}</DescriptionItem>
+            <DescriptionItem term="Last Modified">{format(new Date(a.lastModified), 'yyyy-MM-dd')}</DescriptionItem>
+          </DescriptionList>
         </section>
       </div>
     </article>
