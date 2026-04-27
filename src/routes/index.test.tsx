@@ -145,7 +145,7 @@ test('clicking a sort column header updates the URL with sort param and resets p
   await renderSearchPage('/?page=3')
   await screen.findAllByRole('navigation', { name: 'Pagination' })
   latestUrl = null
-  await user.click(screen.getByRole('button', { name: 'Sort by Start' }))
+  await user.click(screen.getByRole('button', { name: 'Start' }))
   await screen.findAllByRole('navigation', { name: 'Pagination' })
   // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(latestUrl!.searchParams.has('page')).toBe(false)

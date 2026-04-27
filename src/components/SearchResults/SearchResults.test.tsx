@@ -379,7 +379,7 @@ test('clicking unsorted column calls onSort with field.asc', async () => {
   const onSort = vi.fn<(sort: string | undefined) => void>()
   renderSearchResults({}, vi.fn<(page: number, limit: number) => void>(), onSort)
   await screen.findAllByRole('row')
-  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
+  await user.click(screen.getByRole('button', { name: 'Title' }))
   expect(onSort).toHaveBeenCalledWith('title.asc')
 })
 
@@ -388,7 +388,7 @@ test('clicking ascending column calls onSort with field.desc', async () => {
   const onSort = vi.fn<(sort: string | undefined) => void>()
   renderSearchResults({ sort: 'title.asc' }, vi.fn<(page: number, limit: number) => void>(), onSort)
   await screen.findAllByRole('row')
-  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
+  await user.click(screen.getByRole('button', { name: 'Title' }))
   expect(onSort).toHaveBeenCalledWith('title.desc')
 })
 
@@ -401,7 +401,7 @@ test('clicking descending column calls onSort with undefined (clears sort)', asy
     onSort,
   )
   await screen.findAllByRole('row')
-  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
+  await user.click(screen.getByRole('button', { name: 'Title' }))
   expect(onSort).toHaveBeenCalledWith(undefined)
 })
 
@@ -420,7 +420,7 @@ test('announces "Sorted by Title, ascending" when clicking unsorted column', asy
     vi.fn<(sort: string | undefined) => void>(),
   )
   await screen.findAllByRole('row')
-  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
+  await user.click(screen.getByRole('button', { name: 'Title' }))
   await waitFor(() => {
     expect(document.getElementById('live-polite')?.textContent).toBe('Sorted by Title, ascending')
   })
@@ -436,7 +436,7 @@ test('announces "Sorted by Title, descending" when clicking ascending column', a
     vi.fn<(sort: string | undefined) => void>(),
   )
   await screen.findAllByRole('row')
-  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
+  await user.click(screen.getByRole('button', { name: 'Title' }))
   await waitFor(() => {
     expect(document.getElementById('live-polite')?.textContent).toBe('Sorted by Title, descending')
   })
@@ -452,7 +452,7 @@ test('announces "Sort cleared" when clicking descending column', async () => {
     vi.fn<(sort: string | undefined) => void>(),
   )
   await screen.findAllByRole('row')
-  await user.click(screen.getByRole('button', { name: 'Sort by Title' }))
+  await user.click(screen.getByRole('button', { name: 'Title' }))
   await waitFor(() => {
     expect(document.getElementById('live-polite')?.textContent).toBe('Sort cleared')
   })

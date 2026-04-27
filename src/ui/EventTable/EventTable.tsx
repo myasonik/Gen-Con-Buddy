@@ -179,7 +179,6 @@ export function EventTable({
                       key={header.id}
                       aria-sort={sortField ? ariaSort : undefined}
                       scope="col"
-                      aria-label={label}
                       className={styles.resizableTh}
                       style={
                         {
@@ -192,7 +191,6 @@ export function EventTable({
                         <button
                           type="button"
                           className={styles.sortButton}
-                          aria-label={`Sort by ${label}`}
                           onClick={() => sortField && handleHeaderSortClick(sortField, label)}
                         >
                           {flexRender(header.column.columnDef.header, header.getContext())}
