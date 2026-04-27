@@ -61,164 +61,98 @@ function fmtCostRange(val: string): string {
   return `Cost: ${min}${dash}${max}`
 }
 
+function removeKey(key: keyof SearchParams): (prev: SearchParams) => SearchParams {
+  return (prev) => {
+    const { [key]: _r, ...rest } = prev
+    return rest
+  }
+}
+
+interface PlainDef { type: 'plain'; key: keyof SearchParams; label: string }
+interface EnumDef { type: 'enum'; key: keyof SearchParams; label: string; map: Record<string, string> }
+interface RangeDef { type: 'range'; key: keyof SearchParams; label: string; suffix?: string }
+interface DateRangeDef { type: 'dateRange'; key: keyof SearchParams; label: string }
+interface CostDef { type: 'cost'; key: 'cost' }
+interface MultiDef { type: 'multi'; key: keyof SearchParams; map: Record<string, string>; prefix: string }
+type FilterDef = PlainDef | EnumDef | RangeDef | DateRangeDef | CostDef | MultiDef
+
+const FILTER_DEFS: FilterDef[] = [
+  { type: 'plain', key: 'filter', label: 'Search' },
+  { type: 'plain', key: 'gameId', label: 'Game ID' },
+  { type: 'plain', key: 'title', label: 'Title' },
+  { type: 'multi', key: 'eventType', map: EVENT_TYPES, prefix: 'eventType' },
+  { type: 'plain', key: 'group', label: 'Group' },
+  { type: 'plain', key: 'shortDescription', label: 'Short desc' },
+  { type: 'plain', key: 'longDescription', label: 'Long desc' },
+  { type: 'plain', key: 'gameSystem', label: 'System' },
+  { type: 'plain', key: 'rulesEdition', label: 'Rules' },
+  { type: 'enum', key: 'ageRequired', label: 'Age', map: AGE_GROUPS },
+  { type: 'enum', key: 'experienceRequired', label: 'Exp', map: EXP },
+  { type: 'plain', key: 'materialsProvided', label: 'Materials provided' },
+  { type: 'plain', key: 'materialsRequired', label: 'Materials required' },
+  { type: 'plain', key: 'materialsRequiredDetails', label: 'Materials details' },
+  { type: 'multi', key: 'days', map: DAY_LABELS, prefix: 'days' },
+  { type: 'dateRange', key: 'startDateTime', label: 'Start' },
+  { type: 'range', key: 'duration', label: 'Duration', suffix: 'hrs' },
+  { type: 'dateRange', key: 'endDateTime', label: 'End' },
+  { type: 'range', key: 'minPlayers', label: 'Min players' },
+  { type: 'range', key: 'maxPlayers', label: 'Max players' },
+  { type: 'plain', key: 'gmNames', label: 'GM' },
+  { type: 'plain', key: 'website', label: 'Website' },
+  { type: 'plain', key: 'email', label: 'Email' },
+  { type: 'plain', key: 'tournament', label: 'Tournament' },
+  { type: 'range', key: 'roundNumber', label: 'Round' },
+  { type: 'range', key: 'totalRounds', label: 'Total rounds' },
+  { type: 'range', key: 'minimumPlayTime', label: 'Min play time' },
+  { type: 'enum', key: 'attendeeRegistration', label: 'Registration', map: REGISTRATION },
+  { type: 'cost', key: 'cost' },
+  { type: 'plain', key: 'location', label: 'Location' },
+  { type: 'plain', key: 'roomName', label: 'Room' },
+  { type: 'plain', key: 'tableNumber', label: 'Table' },
+  { type: 'enum', key: 'specialCategory', label: 'Category', map: CATEGORY },
+  { type: 'range', key: 'ticketsAvailable', label: 'Tickets' },
+  { type: 'dateRange', key: 'lastModified', label: 'Modified' },
+]
+
 export function getActiveFilters(params: SearchParams): ActiveFilter[] {
   const filters: ActiveFilter[] = []
 
-  const add = (key: keyof SearchParams, label: string): void => {
-    filters.push({
-      id: key,
-      label,
-      remove: (prev) => {
-        const { [key]: _removed, ...rest } = prev
-        return rest
-      },
-    })
-  }
-
-  if (params.filter) {
-    add('filter', `Search: ${params.filter}`)
-  }
-  if (params.gameId) {
-    add('gameId', `Game ID: ${params.gameId}`)
-  }
-  if (params.title) {
-    add('title', `Title: ${params.title}`)
-  }
-  if (params.eventType) {
-    for (const code of params.eventType.split(',').filter(Boolean)) {
-      const label = EVENT_TYPES[code] ?? code
-      filters.push({
-        id: `eventType:${code}`,
-        label,
-        remove: (prev) => {
-          const remaining = (prev.eventType ?? '')
-            .split(',')
-            .filter((c) => c !== code)
-            .join(',')
-          if (!remaining) {
-            const { eventType: _removed, ...rest } = prev
-            return rest
-          }
-          return { ...prev, eventType: remaining }
-        },
-      })
+  for (const def of FILTER_DEFS) {
+    const val = params[def.key]
+    if (val) {
+      if (def.type === 'plain') {
+        filters.push({ id: def.key, label: `${def.label}: ${val}`, remove: removeKey(def.key) })
+      } else if (def.type === 'enum') {
+        const display = def.map[val as string] ?? (val as string)
+        filters.push({ id: def.key, label: `${def.label}: ${display}`, remove: removeKey(def.key) })
+      } else if (def.type === 'range') {
+        filters.push({ id: def.key, label: fmtRange(val as string, `${def.label}: `, def.suffix), remove: removeKey(def.key) })
+      } else if (def.type === 'dateRange') {
+        filters.push({ id: def.key, label: fmtDateRange(val as string, `${def.label}: `), remove: removeKey(def.key) })
+      } else if (def.type === 'cost') {
+        filters.push({ id: def.key, label: fmtCostRange(val as string), remove: removeKey(def.key) })
+      } else if (def.type === 'multi') {
+        for (const code of (val as string).split(',').filter(Boolean)) {
+          const label = def.map[code] ?? code
+          const k = def.key
+          filters.push({
+            id: `${def.prefix}:${code}`,
+            label,
+            remove: (prev) => {
+              const remaining = ((prev[k] ?? '') as string)
+                .split(',')
+                .filter((c) => c !== code)
+                .join(',')
+              if (!remaining) {
+                const { [k]: _r, ...rest } = prev
+                return rest
+              }
+              return { ...prev, [k]: remaining }
+            },
+          })
+        }
+      }
     }
-  }
-  if (params.group) {
-    add('group', `Group: ${params.group}`)
-  }
-  if (params.shortDescription) {
-    add('shortDescription', `Short desc: ${params.shortDescription}`)
-  }
-  if (params.longDescription) {
-    add('longDescription', `Long desc: ${params.longDescription}`)
-  }
-  if (params.gameSystem) {
-    add('gameSystem', `System: ${params.gameSystem}`)
-  }
-  if (params.rulesEdition) {
-    add('rulesEdition', `Rules: ${params.rulesEdition}`)
-  }
-  if (params.ageRequired) {
-    add('ageRequired', `Age: ${AGE_GROUPS[params.ageRequired] ?? params.ageRequired}`)
-  }
-  if (params.experienceRequired) {
-    add('experienceRequired', `Exp: ${EXP[params.experienceRequired] ?? params.experienceRequired}`)
-  }
-  if (params.materialsProvided) {
-    add('materialsProvided', `Materials provided: ${params.materialsProvided}`)
-  }
-  if (params.materialsRequired) {
-    add('materialsRequired', `Materials required: ${params.materialsRequired}`)
-  }
-  if (params.materialsRequiredDetails) {
-    add('materialsRequiredDetails', `Materials details: ${params.materialsRequiredDetails}`)
-  }
-  if (params.days) {
-    for (const code of params.days.split(',').filter(Boolean)) {
-      const label = DAY_LABELS[code] ?? code
-      filters.push({
-        id: `days:${code}`,
-        label,
-        remove: (prev) => {
-          const remaining = (prev.days ?? '')
-            .split(',')
-            .filter((d) => d !== code)
-            .join(',')
-          if (!remaining) {
-            const { days: _removed, ...rest } = prev
-            return rest
-          }
-          return { ...prev, days: remaining }
-        },
-      })
-    }
-  }
-  if (params.startDateTime) {
-    add('startDateTime', fmtDateRange(params.startDateTime, 'Start: '))
-  }
-  if (params.duration) {
-    add('duration', fmtRange(params.duration, 'Duration: ', 'hrs'))
-  }
-  if (params.endDateTime) {
-    add('endDateTime', fmtDateRange(params.endDateTime, 'End: '))
-  }
-  if (params.minPlayers) {
-    add('minPlayers', fmtRange(params.minPlayers, 'Min players: '))
-  }
-  if (params.maxPlayers) {
-    add('maxPlayers', fmtRange(params.maxPlayers, 'Max players: '))
-  }
-  if (params.gmNames) {
-    add('gmNames', `GM: ${params.gmNames}`)
-  }
-  if (params.website) {
-    add('website', `Website: ${params.website}`)
-  }
-  if (params.email) {
-    add('email', `Email: ${params.email}`)
-  }
-  if (params.tournament) {
-    add('tournament', `Tournament: ${params.tournament}`)
-  }
-  if (params.roundNumber) {
-    add('roundNumber', fmtRange(params.roundNumber, 'Round: '))
-  }
-  if (params.totalRounds) {
-    add('totalRounds', fmtRange(params.totalRounds, 'Total rounds: '))
-  }
-  if (params.minimumPlayTime) {
-    add('minimumPlayTime', fmtRange(params.minimumPlayTime, 'Min play time: '))
-  }
-  if (params.attendeeRegistration) {
-    add(
-      'attendeeRegistration',
-      `Registration: ${REGISTRATION[params.attendeeRegistration] ?? params.attendeeRegistration}`,
-    )
-  }
-  if (params.cost) {
-    add('cost', fmtCostRange(params.cost))
-  }
-  if (params.location) {
-    add('location', `Location: ${params.location}`)
-  }
-  if (params.roomName) {
-    add('roomName', `Room: ${params.roomName}`)
-  }
-  if (params.tableNumber) {
-    add('tableNumber', `Table: ${params.tableNumber}`)
-  }
-  if (params.specialCategory) {
-    add(
-      'specialCategory',
-      `Category: ${CATEGORY[params.specialCategory] ?? params.specialCategory}`,
-    )
-  }
-  if (params.ticketsAvailable) {
-    add('ticketsAvailable', fmtRange(params.ticketsAvailable, 'Tickets: '))
-  }
-  if (params.lastModified) {
-    add('lastModified', fmtDateRange(params.lastModified, 'Modified: '))
   }
 
   return filters
