@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Popover } from '@base-ui/react/popover'
+import { Button } from '../Button/Button'
 import styles from './ColumnActionsPopover.module.css'
 
 interface ColumnActionsPopoverProps {
@@ -40,9 +41,8 @@ export function ColumnActionsPopover({
           <Popover.Popup className={styles.popup}>
             {sortField && (
               <>
-                <button
-                  type="button"
-                  className={styles.action}
+                <Button
+                  variant="ghost"
                   aria-pressed={isSortedAsc}
                   onClick={() => {
                     onSort(isSortedAsc ? undefined : `${sortField}.asc`)
@@ -50,10 +50,9 @@ export function ColumnActionsPopover({
                   }}
                 >
                   Sort ascending
-                </button>
-                <button
-                  type="button"
-                  className={styles.action}
+                </Button>
+                <Button
+                  variant="ghost"
                   aria-pressed={isSortedDesc}
                   onClick={() => {
                     onSort(isSortedDesc ? undefined : `${sortField}.desc`)
@@ -61,19 +60,18 @@ export function ColumnActionsPopover({
                   }}
                 >
                   Sort descending
-                </button>
+                </Button>
               </>
             )}
-            <button
-              type="button"
-              className={styles.action}
+            <Button
+              variant="ghost"
               onClick={() => {
                 setOpen(false)
                 onOpenResize()
               }}
             >
               Resize…
-            </button>
+            </Button>
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>

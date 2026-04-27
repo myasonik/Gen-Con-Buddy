@@ -9,6 +9,7 @@ import {
 } from '@tanstack/react-table'
 import { useColumnVisibility } from '../../hooks/useColumnVisibility'
 import { useColumnSizing } from '../../hooks/useColumnSizing'
+import { Button } from '../Button/Button'
 import { ColumnActionsPopover } from './ColumnActionsPopover'
 import { ColumnResizeDialog } from './ColumnResizeDialog'
 import { announce } from '../../lib/announce'
@@ -148,15 +149,15 @@ export function EventTable({
               </li>
             ))}
           </ul>
-          <button
-            type="button"
+          <Button
+            variant="secondary"
             onClick={() => {
               reset()
               resetSizing()
             }}
           >
             Reset to defaults
-          </button>
+          </Button>
         </fieldset>
       </details>
 

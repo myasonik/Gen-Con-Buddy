@@ -1,5 +1,6 @@
 import { useState, useId } from 'react'
 import { Dialog } from '@base-ui/react/dialog'
+import { Button } from '../Button/Button'
 import styles from './ColumnResizeDialog.module.css'
 
 interface ColumnResizeDialogProps {
@@ -44,19 +45,18 @@ export function ColumnResizeDialog({
             />
           </div>
           <div className={styles.actions}>
-            <button type="button" className={styles.button} onClick={onClose}>
+            <Button variant="secondary" onClick={onClose}>
               Cancel
-            </button>
-            <button
-              type="button"
-              className={`${styles.button} ${styles.primaryButton}`}
+            </Button>
+            <Button
+              variant="primary"
               onClick={() => {
                 onApply(Number(value))
                 onClose()
               }}
             >
               Apply
-            </button>
+            </Button>
           </div>
         </Dialog.Popup>
       </Dialog.Portal>

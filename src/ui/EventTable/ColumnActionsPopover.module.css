@@ -30,12 +30,3 @@
   min-width: 9.25rem;
   z-index: var(--z-popover);
 }
-
-.action {
-  background: none;
-  border: none;
-  padding: var(--space-2) var(--space-3);
-  cursor: pointer;
-  text-align: left;
-  width: 100%;
-}

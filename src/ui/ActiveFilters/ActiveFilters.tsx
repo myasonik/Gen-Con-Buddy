@@ -1,5 +1,6 @@
 import type { SearchParams } from '../../utils/types'
 import { type ActiveFilter, getActiveFilters } from './getActiveFilters'
+import { Button } from '../Button/Button'
 import styles from './ActiveFilters.module.css'
 
 interface ActiveFiltersProps {
@@ -17,9 +18,9 @@ export function ActiveFilters({ searchParams, onRemove }: ActiveFiltersProps): J
     <ul className={styles.bar} aria-label="Active filters">
       {filters.map((filter) => (
         <li key={filter.id}>
-          <button type="button" className={styles.chip} onClick={() => onRemove(filter)}>
+          <Button variant="ghost" className={styles.chip} onClick={() => onRemove(filter)}>
             {filter.label} <span aria-hidden="true">×</span>
-          </button>
+          </Button>
         </li>
       ))}
     </ul>
