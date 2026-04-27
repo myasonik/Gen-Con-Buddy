@@ -23,7 +23,7 @@ const ALL_EVENT_TYPE_CODES = [
   'ZED',
 ] as const
 
-describe('eVENT_TYPE_COLORS', () => {
+describe('EVENT_TYPE_COLORS', () => {
   it.each(ALL_EVENT_TYPE_CODES)('maps %s to a color entry', (code) => {
     expect(EVENT_TYPE_COLORS[code]).toMatchObject({
       color: expect.stringMatching(/^#[0-9a-f]{6}$/),
@@ -48,7 +48,7 @@ describe('eVENT_TYPE_COLORS', () => {
   })
 })
 
-describe('dAY_COLORS', () => {
+describe('DAY_COLORS', () => {
   it.each(['Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])(
     'maps %s to a color entry',
     (day) => {
@@ -64,7 +64,7 @@ describe('dAY_COLORS', () => {
   })
 })
 
-describe('eXPERIENCE_COLORS', () => {
+describe('EXPERIENCE_COLORS', () => {
   it('maps the full None string to green', () => {
     expect(
       EXPERIENCE_COLORS["None (You've never played before - rules will be taught)"].color,
