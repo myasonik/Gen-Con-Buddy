@@ -30,6 +30,7 @@
     "capitalized-comments": "off",
     "func-style": "off",
     "jest/no-hooks": "off",
+    "jest/prefer-lowercase-title": "off",
     "jest/no-conditional-expect": "error",
     "jest/no-untyped-mock-factory": "off",
     "jest/require-top-level-describe": "off",
