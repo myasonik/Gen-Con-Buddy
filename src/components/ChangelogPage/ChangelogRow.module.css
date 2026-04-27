@@ -9,18 +9,6 @@
   background: #f5f5f5;
 }
 
-.row::details-content {
-  height: 0;
-  overflow: hidden;
-  transition:
-    height var(--motion-expand),
-    content-visibility var(--motion-expand) allow-discrete;
-}
-
-.row[open]::details-content {
-  height: auto;
-}
-
 .summary {
   display: flex;
   align-items: center;

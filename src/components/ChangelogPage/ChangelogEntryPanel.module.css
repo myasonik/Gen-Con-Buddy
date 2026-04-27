@@ -19,14 +19,3 @@
   color: #000;
 }
 
-.group::details-content {
-  height: 0;
-  overflow: hidden;
-  transition:
-    height var(--motion-expand),
-    content-visibility var(--motion-expand) allow-discrete;
-}
-
-.group[open]::details-content {
-  height: auto;
-}

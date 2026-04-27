@@ -70,18 +70,6 @@
   margin-bottom: var(--space-2);
 }
 
-.visibilityPanel details::details-content {
-  height: 0;
-  overflow: hidden;
-  transition:
-    height var(--motion-expand),
-    content-visibility var(--motion-expand) allow-discrete;
-}
-
-.visibilityPanel details[open]::details-content {
-  height: auto;
-}
-
 .sortIndicator {
   display: inline-block;
 }

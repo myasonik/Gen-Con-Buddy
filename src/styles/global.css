@@ -63,3 +63,18 @@ textarea {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ─── Details Animation Utility ──────────────────────────────────────────── */
+
+/* Apply to any <details> element to get animated open/close on ::details-content */
+.animates-details::details-content {
+  height: 0;
+  overflow: hidden;
+  transition:
+    height var(--motion-expand),
+    content-visibility var(--motion-expand) allow-discrete;
+}
+
+.animates-details[open]::details-content {
+  height: auto;
+}

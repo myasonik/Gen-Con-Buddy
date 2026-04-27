@@ -21,7 +21,7 @@ export function ChangelogRow({ summary, onOpen }: ChangelogRowProps): JSX.Elemen
 
   return (
     <details
-      className={styles.row}
+      className={`${styles.row} animates-details`}
       onToggle={(e) => {
         const { open } = e.currentTarget as HTMLDetailsElement
         setIsOpen(open)

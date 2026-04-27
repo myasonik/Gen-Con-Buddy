@@ -26,19 +26,19 @@ export function ChangelogEntryPanel({ entry }: ChangelogEntryPanelProps): JSX.El
   return (
     <div className={styles.panel}>
       {entry.createdEvents.length > 0 && (
-        <details open className={styles.group}>
+        <details open className={`${styles.group} animates-details`}>
           <summary>Created ({entry.createdEvents.length})</summary>
           <EventTable events={entry.createdEvents} />
         </details>
       )}
       {entry.updatedEvents.length > 0 && (
-        <details open className={styles.group}>
+        <details open className={`${styles.group} animates-details`}>
           <summary>Updated ({entry.updatedEvents.length})</summary>
           <EventTable events={entry.updatedEvents} />
         </details>
       )}
       {entry.deletedEvents.length > 0 && (
-        <details open className={styles.group}>
+        <details open className={`${styles.group} animates-details`}>
           <summary>Deleted ({entry.deletedEvents.length})</summary>
           <EventTable events={entry.deletedEvents} />
         </details>

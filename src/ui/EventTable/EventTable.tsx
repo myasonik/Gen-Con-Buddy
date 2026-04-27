@@ -127,7 +127,7 @@ export function EventTable({
 
   return (
     <section>
-      <details className={styles.visibilityPanel}>
+      <details className={`${styles.visibilityPanel} animates-details`}>
         <summary>Customize columns</summary>
         <fieldset>
           <ul>
