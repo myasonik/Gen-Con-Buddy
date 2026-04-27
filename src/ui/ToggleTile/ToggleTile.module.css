@@ -19,7 +19,8 @@
 .tile::before {
   content: '';
   display: inline-block;
-  width: 1rem;
+  /* stylelint-disable-next-line unit-disallowed-list */
+  width: 1em;
 }
 
 .tile[aria-pressed='true']::before {

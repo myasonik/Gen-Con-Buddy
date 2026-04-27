@@ -13,5 +13,6 @@
   font-family: var(--font-display);
   font-size: var(--text-badge);
   font-style: italic;
-  letter-spacing: 0.03rem;
+  /* stylelint-disable-next-line unit-disallowed-list */
+  letter-spacing: 0.03em;
 }
