@@ -5,6 +5,7 @@ import { ActiveFilters } from '../ui/ActiveFilters/ActiveFilters'
 import { Button } from '../ui/Button/Button'
 import { useSidebarOpen } from '../hooks/useSidebarOpen'
 import { buildSearchParams, parseSearchParams } from '../utils/searchParams'
+import { DEFAULT_PAGE_SIZE } from '../utils/constants'
 import type { SearchFormValues, SearchParams } from '../utils/types'
 import type { ActiveFilter } from '../ui/ActiveFilters/getActiveFilters'
 import styles from './index.module.css'
@@ -75,7 +76,7 @@ function SearchPage(): JSX.Element {
       search: (prev) => ({
         ...prev,
         page: page === 1 ? undefined : page,
-        limit: limit === 100 ? undefined : limit,
+        limit: limit === DEFAULT_PAGE_SIZE ? undefined : limit,
       }),
     })
   }

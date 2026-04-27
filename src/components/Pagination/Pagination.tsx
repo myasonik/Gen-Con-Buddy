@@ -1,10 +1,8 @@
 import clsx from 'clsx'
 import { Button } from '../../ui/Button/Button'
 import { Toggletip } from '../../ui/Toggletip/Toggletip'
+import { PAGE_SIZE_OPTIONS, BACKEND_MAX_RESULTS } from '../../utils/constants'
 import styles from './Pagination.module.css'
-
-const PAGE_SIZE_OPTIONS = [100, 500, 1000] as const
-const BACKEND_MAX_RESULTS = 10_000
 
 function getPageNumbers(page: number, totalPages: number): (number | '...')[] {
   if (totalPages <= 7) {

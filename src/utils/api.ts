@@ -1,4 +1,5 @@
 import { daysToStartDateTime } from './searchParams'
+import { DEFAULT_PAGE_SIZE } from './constants'
 import type {
   EventSearchResponse,
   SearchParams,
@@ -31,8 +32,8 @@ export async function fetchEvents(params: SearchParams): Promise<EventSearchResp
       return
     }
     if (key === 'limit') {
-      // Omit when 100 (API default).
-      if (typeof value === 'number' && value !== 100) {
+      // Omit when DEFAULT_PAGE_SIZE (API default).
+      if (typeof value === 'number' && value !== DEFAULT_PAGE_SIZE) {
         url.searchParams.set('limit', String(value))
       }
       return
