@@ -33,10 +33,20 @@ export function SearchResults({
     }
   }
 
-  const pagination =
-    data && data.data.length > 0 ? (
-      <Pagination page={page} limit={limit} total={data.meta.total} onNavigate={onNavigate} />
-    ) : null
+  function renderPagination(ariaLabel: string): JSX.Element | null {
+    if (!data || data.data.length === 0) {
+      return null
+    }
+    return (
+      <Pagination
+        page={page}
+        limit={limit}
+        total={data.meta.total}
+        onNavigate={onNavigate}
+        aria-label={ariaLabel}
+      />
+    )
+  }
 
   return (
     <section>
@@ -53,14 +63,14 @@ export function SearchResults({
       )}
       {data && data.data.length > 0 && (
         <>
-          {pagination}
+          {renderPagination('Pagination, top')}
           <EventTable
             events={data.data}
             activeSortField={activeSortField}
             activeSortDir={activeSortDir}
             onSort={onSort}
           />
-          {pagination}
+          {renderPagination('Pagination, bottom')}
         </>
       )}
     </section>

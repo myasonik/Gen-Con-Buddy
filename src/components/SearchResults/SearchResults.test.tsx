@@ -267,15 +267,17 @@ test('sends limit param when limit is not 100', async () => {
 
 test('renders pagination when results are present', async () => {
   renderSearchResults()
-  const navs = await screen.findAllByRole('navigation', { name: 'Pagination' })
-  expect(navs.length).toBeGreaterThan(0)
+  const topNav = await screen.findByRole('navigation', { name: 'Pagination, top' })
+  expect(topNav).toBeInTheDocument()
 })
 
 test('renders pagination above and below the table', async () => {
   renderSearchResults()
   await screen.findAllByRole('row')
-  const navs = screen.getAllByRole('navigation', { name: 'Pagination' })
-  expect(navs).toHaveLength(2)
+  const topNav = screen.getByRole('navigation', { name: 'Pagination, top' })
+  const bottomNav = screen.getByRole('navigation', { name: 'Pagination, bottom' })
+  expect(topNav).toBeInTheDocument()
+  expect(bottomNav).toBeInTheDocument()
 })
 
 test('does not render pagination when no events found', async () => {
@@ -311,7 +313,7 @@ test('calls onNavigate when Next is clicked', async () => {
   )
   renderSearchResults({ page: 1 }, onNavigate)
   // wait for both pagination navs to render
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
+  await screen.findByRole('navigation', { name: 'Pagination, top' })
   await user.click(screen.getAllByRole('button', { name: 'Next ▶' })[0])
   expect(onNavigate).toHaveBeenCalledWith(2, 100)
 })

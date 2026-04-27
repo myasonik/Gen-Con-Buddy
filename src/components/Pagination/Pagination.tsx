@@ -31,9 +31,16 @@ interface PaginationProps {
   limit: number
   total: number
   onNavigate: (page: number, limit: number) => void
+  'aria-label'?: string
 }
 
-export function Pagination({ page, limit, total, onNavigate }: PaginationProps): JSX.Element {
+export function Pagination({
+  page,
+  limit,
+  total,
+  onNavigate,
+  'aria-label': ariaLabel = 'Pagination',
+}: PaginationProps): JSX.Element {
   const naturalTotalPages = Math.ceil(total / limit)
   const maxPages = Math.floor(BACKEND_MAX_RESULTS / limit)
   const totalPages = Math.min(naturalTotalPages, maxPages)
@@ -41,7 +48,7 @@ export function Pagination({ page, limit, total, onNavigate }: PaginationProps):
   const pageNumbers = getPageNumbers(page, totalPages)
 
   return (
-    <nav aria-label="Pagination" className={styles.nav}>
+    <nav aria-label={ariaLabel} className={styles.nav}>
       <div className={styles.controls}>
         <Button
           variant="secondary"

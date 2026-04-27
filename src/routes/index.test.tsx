@@ -73,11 +73,11 @@ test('submitting a new search resets page to 1', async () => {
     }),
   )
   await renderSearchPage('/?page=3')
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
+  await screen.findByRole('navigation', { name: 'Pagination, top' })
   latestUrl = null
   // Submit the search form (clicking Search button resets page)
   await user.click(screen.getByRole('button', { name: '▶ Search' }))
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
+  await screen.findByRole('navigation', { name: 'Pagination, top' })
   // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(latestUrl!.searchParams.has('page')).toBe(false)
 })
@@ -99,13 +99,13 @@ test('navigating to page 2 sends page=1 to API (0-indexed)', async () => {
   )
   await renderSearchPage('/')
   // wait for initial render and pagination
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
+  await screen.findByRole('navigation', { name: 'Pagination, top' })
   latestUrl = null
   // click Next on the first pagination nav
-  const navs = screen.getAllByRole('navigation', { name: 'Pagination' })
-  await user.click(within(navs[0]).getByRole('button', { name: 'Next ▶' }))
+  const topNav = screen.getByRole('navigation', { name: 'Pagination, top' })
+  await user.click(within(topNav).getByRole('button', { name: 'Next ▶' }))
   // wait for re-render after navigation
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
+  await screen.findByRole('navigation', { name: 'Pagination, top' })
   // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(latestUrl!.searchParams.get('page')).toBe('1')
 })
@@ -143,10 +143,10 @@ test('clicking a sort column header updates the URL with sort param and resets p
     }),
   )
   await renderSearchPage('/?page=3')
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
+  await screen.findByRole('navigation', { name: 'Pagination, top' })
   latestUrl = null
   await user.click(screen.getByRole('button', { name: 'Start' }))
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
+  await screen.findByRole('navigation', { name: 'Pagination, top' })
   // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(latestUrl!.searchParams.has('page')).toBe(false)
   // oxlint-disable-next-line typescript/no-non-null-assertion
@@ -181,11 +181,11 @@ test('navigating back to page 1 omits page from URL and API call', async () => {
     }),
   )
   await renderSearchPage('/?page=2')
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
+  await screen.findByRole('navigation', { name: 'Pagination, top' })
   latestUrl = null
-  const navs = screen.getAllByRole('navigation', { name: 'Pagination' })
-  await user.click(within(navs[0]).getByRole('button', { name: '◀ Previous' }))
-  await screen.findAllByRole('navigation', { name: 'Pagination' })
+  const topNav = screen.getByRole('navigation', { name: 'Pagination, top' })
+  await user.click(within(topNav).getByRole('button', { name: '◀ Previous' }))
+  await screen.findByRole('navigation', { name: 'Pagination, top' })
   // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(latestUrl!.searchParams.has('page')).toBe(false)
 })
