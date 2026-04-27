@@ -15,10 +15,6 @@
   grid-template-columns: 0 1fr;
 }
 
-.shell[data-sidebar-open='false'] .sidebar {
-  visibility: hidden;
-}
-
 .resultsToolbar {
   display: flex;
   align-items: center;
@@ -30,6 +26,10 @@
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
+}
+
+.shell[data-sidebar-open='false'] .sidebar {
+  visibility: hidden;
 }
 
 .results {
@@ -49,7 +49,7 @@
   display: none;
 }
 
-@media (max-width: 768px) {
+@media (width <= 48rem) {
   .page {
     height: auto;
     min-height: 100dvh;

@@ -15,20 +15,20 @@
   gap: var(--space-1);
   padding: var(--space-1) var(--space-2);
   cursor: text;
-  min-height: 34px;
-  border: 1px solid;
+  min-height: 2.125rem;
+  border: 0.0625rem solid;
 }
 
 .inputGroup:focus-within {
-  outline: 2px solid;
-  outline-offset: 2px;
+  outline: 0.125rem solid;
+  outline-offset: 0.125rem;
 }
 
 .chip {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  padding: 1px var(--space-1) 1px var(--space-2);
+  padding: 0.0625rem var(--space-1) 0.0625rem var(--space-2);
   white-space: nowrap;
 }
 
@@ -36,13 +36,13 @@
   border: none;
   background: none;
   cursor: pointer;
-  padding: 0 2px;
+  padding: 0 0.125rem;
   line-height: 1;
 }
 
 .input {
   flex: 1;
-  min-width: 80px;
+  min-width: 5rem;
   border: none;
   background: none;
   padding: 0;
@@ -64,12 +64,12 @@
   position: absolute;
   z-index: var(--z-popover);
   padding: var(--space-1) 0;
-  max-height: 240px;
+  max-height: 15rem;
   overflow-y: scroll;
   width: max-content;
   max-width: 100%;
   background-color: canvas;
-  border: 1px solid;
+  border: 0.0625rem solid;
 }
 
 .item {
@@ -82,7 +82,7 @@
 
 .itemBadge {
   display: inline-block;
-  padding: 1px var(--space-1);
+  padding: 0.0625rem var(--space-1);
   white-space: nowrap;
   flex-shrink: 0;
 }

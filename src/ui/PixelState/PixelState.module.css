@@ -5,8 +5,8 @@
 }
 
 .icon {
-  width: 48px;
-  height: 48px;
+  width: 3rem;
+  height: 3rem;
   margin: 0 auto var(--space-3);
   display: block;
 }
@@ -21,7 +21,7 @@
 
 .progressBar {
   width: 100%;
-  max-width: 200px;
+  max-width: 12.5rem;
   height: var(--space-3);
   margin: 0 auto var(--space-3);
   overflow: hidden;
@@ -29,16 +29,18 @@
 
 .progressFill {
   height: 100%;
-  animation: loadingProgress 1.5s ease-in-out infinite;
+  animation: loading-progress 1.5s ease-in-out infinite;
 }
 
-@keyframes loadingProgress {
+@keyframes loading-progress {
   0% {
     width: 0%;
   }
+
   60% {
     width: 75%;
   }
+
   100% {
     width: 75%;
   }

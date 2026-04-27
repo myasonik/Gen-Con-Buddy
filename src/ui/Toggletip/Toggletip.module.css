@@ -3,13 +3,13 @@
 }
 
 .button:focus-visible {
-  outline: 2px solid;
-  outline-offset: 2px;
+  outline: 0.125rem solid;
+  outline-offset: 0.125rem;
 }
 
 .tooltip {
   z-index: var(--z-popover);
-  min-width: 200px;
+  min-width: 12.5rem;
   background-color: canvas;
-  border: 1px solid;
+  border: 0.0625rem solid;
 }

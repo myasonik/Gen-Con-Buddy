@@ -2,13 +2,13 @@
   flex-shrink: 0;
   background: none;
   border: none;
-  padding: 2px;
+  padding: 0.125rem;
   cursor: pointer;
   color: inherit;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 2px;
+  border-radius: 0.125rem;
   opacity: 0.6;
   transition: opacity var(--motion-hover);
 }
@@ -20,14 +20,14 @@
 }
 
 .trigger:focus-visible {
-  outline: 2px solid;
-  outline-offset: 1px;
+  outline: 0.125rem solid;
+  outline-offset: 0.0625rem;
 }
 
 .popup {
   display: flex;
   flex-direction: column;
-  min-width: 148px;
+  min-width: 9.25rem;
   z-index: var(--z-popover);
 }
 

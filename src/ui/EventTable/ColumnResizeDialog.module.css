@@ -10,7 +10,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   padding: var(--space-4);
-  min-width: 260px;
+  min-width: 16.25rem;
   z-index: var(--z-modal);
 }
 
@@ -31,8 +31,8 @@
 }
 
 .input:focus {
-  outline: 2px solid;
-  outline-offset: 1px;
+  outline: 0.125rem solid;
+  outline-offset: 0.0625rem;
 }
 
 .actions {
