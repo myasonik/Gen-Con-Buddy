@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import { Button } from '../../ui/Button/Button'
 import { Toggletip } from '../../ui/Toggletip/Toggletip'
+import { Select } from '../../ui/Select/Select'
 import { PAGE_SIZE_OPTIONS, BACKEND_MAX_RESULTS } from '../../utils/constants'
 import styles from './Pagination.module.css'
 
@@ -96,20 +97,15 @@ export function Pagination({
       </div>
       <div className={styles.summary}>
         {total.toLocaleString()} events
-        <label className={styles.perPageLabel}>
+        <div className={styles.perPageLabel}>
           Per page
-          <select
-            value={limit}
-            onChange={(e) => onNavigate(1, Number(e.target.value))}
-            className={styles.perPageSelect}
-          >
-            {PAGE_SIZE_OPTIONS.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
-        </label>
+          <Select
+            aria-label="Per page"
+            value={String(limit)}
+            onValueChange={(v) => onNavigate(1, Number(v))}
+            options={PAGE_SIZE_OPTIONS.map((opt) => ({ value: String(opt), label: String(opt) }))}
+          />
+        </div>
       </div>
     </nav>
   )

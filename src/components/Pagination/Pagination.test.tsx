@@ -98,7 +98,8 @@ test('changing page size calls onNavigate with page 1 and new limit', async () =
   const user = userEvent.setup()
   const onNavigate = vi.fn<(page: number, limit: number) => void>()
   render(<Pagination page={3} limit={100} total={500} onNavigate={onNavigate} />)
-  await user.selectOptions(screen.getByRole('combobox', { name: 'Per page' }), '500')
+  await user.click(screen.getByRole('combobox', { name: 'Per page' }))
+  await user.click(screen.getByRole('option', { name: '500' }))
   expect(onNavigate).toHaveBeenCalledWith(1, 500)
 })
 
@@ -111,7 +112,7 @@ test('page size select shows current limit', () => {
       onNavigate={vi.fn<(page: number, limit: number) => void>()}
     />,
   )
-  expect(screen.getByRole('combobox', { name: 'Per page' })).toHaveValue('500')
+  expect(screen.getByRole('combobox', { name: 'Per page' })).toHaveTextContent('500')
 })
 
 test('caps page count at 10,000-result backend limit', () => {

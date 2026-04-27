@@ -5,6 +5,7 @@ import { Button } from '../../ui/Button/Button'
 import { Toggletip } from '../../ui/Toggletip/Toggletip'
 import { ToggleTile, ToggleTileGroup } from '../../ui/ToggleTile/ToggleTile'
 import { EventTypeSelect } from '../../ui/EventTypeSelect/EventTypeSelect'
+import { Select } from '../../ui/Select/Select'
 import styles from './SearchForm.module.css'
 
 const EMPTY_VALUES: SearchFormValues = {
@@ -259,25 +260,19 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps): JSX.El
             </div>
             <label className={styles.label}>
               Age Required
-              <select className={styles.select} {...register('ageRequired')}>
-                <option value="">Any</option>
-                {Object.entries(AGE_GROUPS).map(([k, v]) => (
-                  <option key={k} value={k}>
-                    {v}
-                  </option>
-                ))}
-              </select>
+              <Select
+                value={watch('ageRequired') ?? ''}
+                onValueChange={(v) => setValue('ageRequired', v)}
+                options={Object.entries(AGE_GROUPS).map(([k, v]) => ({ value: k, label: v }))}
+              />
             </label>
             <label className={styles.label}>
               Experience Required
-              <select className={styles.select} {...register('experienceRequired')}>
-                <option value="">Any</option>
-                {Object.entries(EXP).map(([k, v]) => (
-                  <option key={k} value={k}>
-                    {v}
-                  </option>
-                ))}
-              </select>
+              <Select
+                value={watch('experienceRequired') ?? ''}
+                onValueChange={(v) => setValue('experienceRequired', v)}
+                options={Object.entries(EXP).map(([k, v]) => ({ value: k, label: v }))}
+              />
             </label>
           </div>
         </fieldset>
@@ -328,14 +323,11 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps): JSX.El
             </div>
             <label className={styles.label}>
               Attendee Registration
-              <select className={styles.select} {...register('attendeeRegistration')}>
-                <option value="">Any</option>
-                {Object.entries(REGISTRATION).map(([k, v]) => (
-                  <option key={k} value={k}>
-                    {v}
-                  </option>
-                ))}
-              </select>
+              <Select
+                value={watch('attendeeRegistration') ?? ''}
+                onValueChange={(v) => setValue('attendeeRegistration', v)}
+                options={Object.entries(REGISTRATION).map(([k, v]) => ({ value: k, label: v }))}
+              />
             </label>
           </div>
         </fieldset>
@@ -461,14 +453,11 @@ export function SearchForm({ defaultValues, onSearch }: SearchFormProps): JSX.El
             </div>
             <label className={styles.label}>
               Special Category
-              <select className={styles.select} {...register('specialCategory')}>
-                <option value="">Any</option>
-                {Object.entries(CATEGORY).map(([k, v]) => (
-                  <option key={k} value={k}>
-                    {v}
-                  </option>
-                ))}
-              </select>
+              <Select
+                value={watch('specialCategory') ?? ''}
+                onValueChange={(v) => setValue('specialCategory', v)}
+                options={Object.entries(CATEGORY).map(([k, v]) => ({ value: k, label: v }))}
+              />
             </label>
             <div className={styles.rangeGroup}>
               Last Modified:
