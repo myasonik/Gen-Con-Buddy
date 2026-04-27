@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { clsx } from 'clsx'
 import styles from './DescriptionList.module.css'
 
 interface DescriptionListProps {
@@ -23,12 +24,11 @@ export function DescriptionItem({
   span,
   className,
 }: DescriptionItemProps): JSX.Element {
-  const wrapperClass = [span === 'full' ? styles.full : styles.item, className]
-    .filter(Boolean)
-    .join(' ')
-
   return (
-    <div className={wrapperClass}>
+    <div
+      data-span={span}
+      className={clsx(span === 'full' ? styles.full : undefined, className)}
+    >
       <dt>{term}</dt>
       <dd className={styles.dd}>{children}</dd>
     </div>

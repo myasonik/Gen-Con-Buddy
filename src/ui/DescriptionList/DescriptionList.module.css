@@ -5,10 +5,6 @@
   margin: 0;
 }
 
-.item {
-  /* single-column default */
-}
-
 .full {
   grid-column: 1 / -1;
 }

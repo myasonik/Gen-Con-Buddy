@@ -1,7 +1,6 @@
 import { expect, test } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { DescriptionList, DescriptionItem } from './DescriptionList'
-import styles from './DescriptionList.module.css'
 
 test('renders a dl element', () => {
   render(
@@ -24,21 +23,23 @@ test('DescriptionItem renders term and value', () => {
 })
 
 test('DescriptionItem with span="full" has full class', () => {
-  render(
+  const { container } = render(
     <DescriptionList>
       <DescriptionItem term="Label" span="full">Value</DescriptionItem>
     </DescriptionList>,
   )
-  const dl = screen.getByRole('term').closest('dl')
-  expect(dl?.firstElementChild?.classList).toContain(styles.full)
+  const dl = container.querySelector('dl')
+  const firstDiv = dl?.firstElementChild as HTMLElement
+  expect(firstDiv?.dataset?.['span']).toBe('full')
 })
 
 test('DescriptionItem without span="full" does not have full class', () => {
-  render(
+  const { container } = render(
     <DescriptionList>
       <DescriptionItem term="Label">Value</DescriptionItem>
     </DescriptionList>,
   )
-  const dl = screen.getByRole('term').closest('dl')
-  expect(dl?.firstElementChild?.classList).not.toContain(styles.full)
+  const dl = container.querySelector('dl')
+  const firstDiv = dl?.firstElementChild as HTMLElement
+  expect(firstDiv?.dataset?.['span']).toBeUndefined()
 })
