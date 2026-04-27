@@ -115,3 +115,16 @@ test('removing a chip calls onValueChange without that code', async () => {
 
   expect(handleChange).toHaveBeenCalledWith('BGM')
 })
+
+test('two mounted EventTypeSelect instances have distinct input ids', () => {
+  render(
+    <>
+      <EventTypeSelect value="" onValueChange={() => undefined} />
+      <EventTypeSelect value="" onValueChange={() => undefined} />
+    </>,
+  )
+  const inputs = screen.getAllByRole('combobox')
+  expect(inputs[0].id).not.toBe('')
+  expect(inputs[1].id).not.toBe('')
+  expect(inputs[0].id).not.toBe(inputs[1].id)
+})

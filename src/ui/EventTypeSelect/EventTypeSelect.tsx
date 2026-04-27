@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useId } from 'react'
 import { Combobox } from '@base-ui/react/combobox'
 import { EVENT_TYPES } from '../../utils/enums'
 import styles from './EventTypeSelect.module.css'
@@ -15,6 +15,7 @@ const OPTIONS = Object.entries(EVENT_TYPES).map(([code, label]) => ({
 }))
 
 export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps): JSX.Element {
+  const inputId = useId()
   const [open, setOpen] = useState(false)
   const [filterText, setFilterText] = useState('')
   const filter = Combobox.useFilter()
@@ -45,7 +46,7 @@ export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps):
         }}
         onInputValueChange={(text) => setFilterText(text)}
       >
-        <label htmlFor="event-type-input" className={styles.label}>
+        <label htmlFor={inputId} className={styles.label}>
           Event Type
         </label>
         <Combobox.InputGroup className={styles.inputGroup}>
@@ -71,7 +72,7 @@ export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps):
             </div>
           ))}
           <Combobox.Input
-            id="event-type-input"
+            id={inputId}
             className={styles.input}
             placeholder={selectedCodes.length > 0 ? 'Add type…' : 'Filter types…'}
           />
