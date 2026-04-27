@@ -69,3 +69,22 @@ test('renders the event title from the URL gameId param', async () => {
   await renderEventDetailPage('RPG24000042')
   await expect(screen.findByText('Dungeon Crawl Classic')).resolves.toBeInTheDocument()
 })
+
+test('has exactly one h1 on the event detail page', async () => {
+  server.use(
+    http.get('/api/events/search', ({ request }) => {
+      const url = new URL(request.url)
+      const gameId = url.searchParams.get('gameId') ?? ''
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId, title: 'Only Heading Here' })],
+        meta: { total: 1 },
+        links: { self: '' },
+        error: null,
+      }
+      return HttpResponse.json(response)
+    }),
+  )
+  await renderEventDetailPage('RPG24000001')
+  await screen.findByText('Only Heading Here')
+  expect(document.querySelectorAll('h1')).toHaveLength(1)
+})

@@ -6,7 +6,7 @@ export const Route = createRootRoute({
   component: () => (
     <div className={indexStyles.page}>
       <header role="banner" className={indexStyles.header}>
-        <h1>Gen Con Buddy</h1>
+        <p className={rootStyles.brandingTitle}>Gen Con Buddy</p>
         <p>your guide to the best four days in gaming</p>
         <nav className={rootStyles.nav}>
           <Link to="/">Search</Link>
