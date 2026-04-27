@@ -41,6 +41,7 @@ const ruleTester = new RuleTester({
 })
 
 describe('local/no-inline-live-regions', () => {
+  // oxlint-disable-next-line jest/expect-expect
   it('reports aria-live attribute', () => {
     ruleTester.run('no-inline-live-regions', noInlineLiveRegions, {
       valid: [
