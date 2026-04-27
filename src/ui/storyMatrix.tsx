@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import React from 'react'
 
+import styles from './storyMatrix.module.css'
+
 type AxisValues = Record<string, readonly unknown[]>
 
 type Combo<T extends AxisValues> = {
@@ -51,36 +53,16 @@ export function makeMatrix<TMeta extends Meta<unknown>>(
 
   function Grid(): JSX.Element {
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '1.5rem',
-          padding: '1rem',
-        }}
-      >
+      <div className={styles.grid}>
         {combos.map((combo) => {
           const key = Object.values(combo).map(String).join('_')
           const label = Object.entries(combo)
             .map(([k, v]) => `${k}: ${v}`)
             .join(', ')
           return (
-            <div
-              key={key}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.5rem',
-                alignItems: 'flex-start',
-              }}
-            >
+            <div key={key} className={styles.cell}>
               <Component {...defaults} {...combo} />
-              <span
-                style={{
-                  fontSize: 'var(--text-small)',
-                  color: 'var(--color-bark-light)',
-                }}
-              >
+              <span className={styles.label}>
                 {label}
               </span>
             </div>
