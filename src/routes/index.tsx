@@ -32,6 +32,8 @@ export const Route = createFileRoute('/')({
       ageRequired: str('ageRequired'),
       experienceRequired: str('experienceRequired'),
       materialsProvided: str('materialsProvided'),
+      materialsRequired: str('materialsRequired'),
+      materialsRequiredDetails: str('materialsRequiredDetails'),
       startDateTime: str('startDateTime'),
       duration: str('duration'),
       endDateTime: str('endDateTime'),

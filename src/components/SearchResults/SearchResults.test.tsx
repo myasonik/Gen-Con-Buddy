@@ -1,3 +1,4 @@
+import { StrictMode } from 'react'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { vi, expect, test, beforeEach } from 'vitest'
@@ -65,9 +66,11 @@ function renderSearchResults(
     defaultOptions: { queries: { retry: false } },
   })
   return render(
-    <QueryClientProvider client={client}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>,
+    <StrictMode>
+      <QueryClientProvider client={client}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </StrictMode>,
   )
 }
 
@@ -498,13 +501,13 @@ test('actions button is present on resizable columns', async () => {
   expect(actionButtons.length).toBeGreaterThan(0)
 })
 
-test('actions button is absent on dayStripe column', async () => {
+test('renders error state when API returns HTTP 500', async () => {
+  server.use(http.get('/api/events/search', () => new HttpResponse(null, { status: 500 })))
   renderSearchResults()
-  await screen.findAllByRole('row')
-  const dayStripes = document.querySelectorAll("th[aria-hidden='true']")
-  dayStripes.forEach((th) => {
-    expect(th.querySelector("[aria-label='Column actions']")).toBeNull()
-  })
+  await expect(screen.findByText('QUEST FAILED')).resolves.toBeInTheDocument()
+  expect(
+    screen.getByText('Unable to load events. Please try again.'),
+  ).toBeInTheDocument()
 })
 
 test('clicking Resize… on a column opens the resize dialog', async () => {

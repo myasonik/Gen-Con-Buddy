@@ -23,6 +23,20 @@ function captureUrl(): { getUrl: () => URL | null } {
   return { getUrl: () => capturedUrl }
 }
 
+test('fetchEvents throws when response contains error field', async () => {
+  server.use(
+    http.get('/api/events/search', () =>
+      HttpResponse.json<EventSearchResponse>({
+        data: [],
+        meta: { total: 0 },
+        links: { self: '/api/events/search' },
+        error: { status: '500', detail: 'Something went wrong on the server' },
+      }),
+    ),
+  )
+  await expect(fetchEvents({})).rejects.toThrow('Something went wrong on the server')
+})
+
 test('serializes single eventType code directly', async () => {
   const { getUrl } = captureUrl()
   await fetchEvents({ eventType: 'BGM' })

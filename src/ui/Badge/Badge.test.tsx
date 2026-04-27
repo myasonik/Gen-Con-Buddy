@@ -64,6 +64,18 @@ describe('boolBadge', () => {
     render(<BoolBadge value={false} />)
     expect(screen.getByText('no')).toBeInTheDocument()
   })
+
+  it('renders both glyph and sr-only text for true', () => {
+    render(<BoolBadge value />)
+    expect(screen.getByText('✓')).toBeInTheDocument()
+    expect(screen.getByText('yes')).toBeInTheDocument()
+  })
+
+  it('renders both glyph and sr-only text for false', () => {
+    render(<BoolBadge value={false} />)
+    expect(screen.getByText('—')).toBeInTheDocument()
+    expect(screen.getByText('no')).toBeInTheDocument()
+  })
 })
 
 describe('conceptBadge', () => {

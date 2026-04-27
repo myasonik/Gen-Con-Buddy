@@ -1,2 +1,4 @@
-- [AGENTS.md vs pixel-art spec tension](project_agents_md_constraint_tension.md) — "no CSS" rule contradicts approved redesign; update `AGENTS.md` in the same commit as `src/index.css`.
+- [AGENTS.md vs pixel-art spec tension](project_agents_md_constraint_tension.md) — "no CSS" rule contradicts approved redesign; update `AGENTS.md` in the same commit as `src/index.css`. (Likely stale — AGENTS.md now describes CSS Modules + tokens.)
 - [Parchment & Pixel design direction](project_pixel_art_design_direction.md) — Press Start 2P sizes must be multiples of 8; gold is an accent only (not text/border/fill on light bg); pixel borders live in tokens.
+- [Token system is half-built](project_token_state_audit.md) — color/typography tokens are referenced across CSS Modules but never defined in tokens.css; index.html loads the wrong fonts.
+- [Base UI coverage snapshot](project_base_ui_coverage_status.md) — what's already wrapped in src/ui/ and where the codebase still hand-rolls native controls (selects, inputs, details).

@@ -1,3 +1,4 @@
+import { StrictMode } from 'react'
 import { expect, test, beforeEach } from 'vitest'
 import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -41,9 +42,11 @@ async function renderChangelogPage(): Promise<void> {
   })
   await act(async () => {
     render(
-      <QueryClientProvider client={client}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>,
+      <StrictMode>
+        <QueryClientProvider client={client}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </StrictMode>,
     )
   })
 }

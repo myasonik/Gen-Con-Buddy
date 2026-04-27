@@ -143,7 +143,7 @@ export function EventTable({
                       }
                     }}
                   />
-                  {col.header as string}
+                  {typeof col.header === 'string' ? col.header : col.id}
                 </label>
               </li>
             ))}
@@ -167,7 +167,8 @@ export function EventTable({
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   const sortField = header.column.columnDef.meta?.sortField
-                  const label = header.column.columnDef.header as string
+                  const colHeader = header.column.columnDef.header
+                  const label = typeof colHeader === 'string' ? colHeader : (header.column.id ?? '')
                   const isActive = Boolean(sortField) && effectiveSortField === sortField
                   let ariaSort: 'ascending' | 'descending' | 'none' = 'none'
                   if (isActive) {

@@ -98,6 +98,15 @@ test('clicking Resize… calls onOpenResize', async () => {
   expect(onOpenResize).toHaveBeenCalledTimes(1)
 })
 
+test('clicking Sort descending when already descending calls onSort with undefined', async () => {
+  const user = userEvent.setup()
+  const onSort = vi.fn<(sort: string | undefined) => void>()
+  renderPopover({ activeSortField: 'title', activeSortDir: 'desc', onSort })
+  await user.click(screen.getByRole('button', { name: 'Column actions' }))
+  await user.click(screen.getByRole('button', { name: 'Sort descending' }))
+  expect(onSort).toHaveBeenCalledWith(undefined)
+})
+
 test('does not render sort buttons when sortField is undefined', async () => {
   const user = userEvent.setup()
   renderPopover({ sortField: undefined })

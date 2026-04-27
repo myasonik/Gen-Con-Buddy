@@ -1,4 +1,4 @@
-import { expect, test, beforeEach } from 'vitest'
+import { vi, expect, test, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useSidebarOpen } from './useSidebarOpen'
 
@@ -6,6 +6,10 @@ const KEY = 'sidebarOpen'
 
 beforeEach(() => {
   localStorage.clear()
+})
+
+afterEach(() => {
+  vi.restoreAllMocks()
 })
 
 test('defaults to true when localStorage has no entry', () => {
@@ -55,6 +59,14 @@ test('reads existing false value from localStorage', () => {
 
 test("defaults to true when localStorage value is not 'true' or 'false'", () => {
   localStorage.setItem(KEY, 'garbage')
+  const { result } = renderHook(() => useSidebarOpen())
+  expect(result.current[0]).toBe(true)
+})
+
+test('defaults to true when localStorage.getItem throws', () => {
+  vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+    throw new Error('storage unavailable')
+  })
   const { result } = renderHook(() => useSidebarOpen())
   expect(result.current[0]).toBe(true)
 })

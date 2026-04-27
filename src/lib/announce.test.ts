@@ -69,6 +69,18 @@ describe('announce', () => {
     expect(assertive.textContent).toBe('delivered')
   })
 
+  it('delivers a polite message after the queue recovered from a missing-node skip', async () => {
+    document.getElementById('live-polite')?.remove()
+    announce('dropped', 'polite')
+    // Restore the node before the next announcement
+    const restored = document.createElement('div')
+    restored.id = 'live-polite'
+    document.body.appendChild(restored)
+    announce('recovered', 'polite')
+    await vi.runAllTimersAsync()
+    expect(restored.textContent).toBe('recovered')
+  })
+
   it('__reset prevents queued-but-not-yet-written messages from being delivered', async () => {
     announce('first')
     announce('second')

@@ -1,3 +1,4 @@
+import { StrictMode } from 'react'
 import { test, describe, expect, beforeEach } from 'vitest'
 import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -19,9 +20,11 @@ async function renderSearchPage(initialEntry = '/') {
   await router.load()
   await act(async () => {
     render(
-      <QueryClientProvider client={client}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>,
+      <StrictMode>
+        <QueryClientProvider client={client}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </StrictMode>,
     )
   })
   return router
@@ -110,6 +113,18 @@ test('navigating to page 2 sends page=1 to API (0-indexed)', async () => {
 test('sort param is read from URL without crashing', async () => {
   await renderSearchPage('/?sort=startDateTime.asc')
   expect(screen.getByRole('main')).toBeInTheDocument()
+})
+
+test('materialsRequired param survives route validator', async () => {
+  const router = await renderSearchPage('/?materialsRequired=Yes')
+  // oxlint-disable-next-line typescript/no-non-null-assertion
+  expect(router.state.resolvedLocation!.search.materialsRequired).toBe('Yes')
+})
+
+test('materialsRequiredDetails param survives route validator', async () => {
+  const router = await renderSearchPage('/?materialsRequiredDetails=Dice+required')
+  // oxlint-disable-next-line typescript/no-non-null-assertion
+  expect(router.state.resolvedLocation!.search.materialsRequiredDetails).toBe('Dice required')
 })
 
 test('clicking a sort column header updates the URL with sort param and resets page', async () => {

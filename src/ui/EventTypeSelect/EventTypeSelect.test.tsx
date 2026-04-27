@@ -90,6 +90,22 @@ test('filter text narrows options by name', async () => {
   expect(screen.queryByRole('option', { name: /Board Game/ })).not.toBeInTheDocument()
 })
 
+test('filter text is cleared when dropdown closes', async () => {
+  const user = userEvent.setup()
+  render(<EventTypeSelect value="" onValueChange={() => {}} />)
+
+  await user.click(screen.getByRole('combobox', { name: 'Event Type' }))
+  await user.type(screen.getByRole('combobox', { name: 'Event Type' }), 'RPG')
+  expect(screen.queryByRole('option', { name: /Board Game/ })).not.toBeInTheDocument()
+
+  // Close the dropdown by pressing Escape
+  await user.keyboard('{Escape}')
+
+  // Reopen — all options should be visible again (filter was reset)
+  await user.click(screen.getByRole('combobox', { name: 'Event Type' }))
+  expect(screen.getByRole('option', { name: /Board Game/ })).toBeInTheDocument()
+})
+
 test('removing a chip calls onValueChange without that code', async () => {
   const user = userEvent.setup()
   const handleChange = vi.fn<(value: string) => void>()

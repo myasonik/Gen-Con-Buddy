@@ -43,7 +43,11 @@ export async function fetchEvents(params: SearchParams): Promise<EventSearchResp
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}`)
   }
-  return res.json() as Promise<EventSearchResponse>
+  const data = (await res.json()) as EventSearchResponse
+  if (data.error) {
+    throw new Error(data.error.detail)
+  }
+  return data
 }
 
 export async function fetchChangelogList(limit = 6): Promise<ChangelogSummary[]> {

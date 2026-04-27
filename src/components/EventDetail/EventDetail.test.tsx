@@ -1,3 +1,4 @@
+import { StrictMode } from 'react'
 import { expect, test } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import {
@@ -25,11 +26,20 @@ function renderEventDetail(gameId: string): ReturnType<typeof render> {
     defaultOptions: { queries: { retry: false } },
   })
   return render(
-    <QueryClientProvider client={client}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>,
+    <StrictMode>
+      <QueryClientProvider client={client}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </StrictMode>,
   )
 }
+
+test('renders error state when API returns HTTP 500', async () => {
+  server.use(http.get('/api/events/search', () => new HttpResponse(null, { status: 500 })))
+  renderEventDetail('RPG24000001')
+  await expect(screen.findByText('QUEST FAILED')).resolves.toBeInTheDocument()
+  expect(screen.getByText('Unable to load event. Please try again.')).toBeInTheDocument()
+})
 
 test('shows loading state while fetching', async () => {
   renderEventDetail('RPG24000001')

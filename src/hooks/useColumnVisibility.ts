@@ -4,7 +4,6 @@ const STORAGE_KEY = 'gen-con-buddy-columns'
 const VERSION = 1
 
 const DEFAULTS: Record<string, boolean> = {
-  dayStripe: true,
   gameId: false,
   title: true,
   eventType: true,
