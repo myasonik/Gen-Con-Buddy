@@ -47,7 +47,6 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "husky": "^9.1.7",
     "jsdom": "^25.0.1",
-    "lint-staged": "^16.4.0",
     "msw": "^2.7.3",
     "oxlint": "^1.60.0",
     "prettier": "^3.8.3",
@@ -61,13 +60,6 @@
   "msw": {
     "workerDirectory": [
       "public"
-    ]
-  },
-  "lint-staged": {
-    "*.{ts,tsx,js,json,md}": "prettier --write",
-    "*.{ts,tsx,js}": [
-      "oxlint --fix",
-      "eslint --fix"
     ]
   }
 }
