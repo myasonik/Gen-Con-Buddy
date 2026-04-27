@@ -41,6 +41,10 @@
   grid-column: 1 / -1;
 }
 
+.dlItem {
+  /* default span — single column in the two-column grid */
+}
+
 .dd {
   margin: 0;
 }
