@@ -68,13 +68,13 @@ const DAY_LABELS: Record<string, string> = {
 }
 
 interface SearchFormProps {
-  defaultValues: SearchFormValues
+  values: SearchFormValues
   onSearch: (values: SearchFormValues) => void
 }
 
-export function SearchForm({ defaultValues, onSearch }: SearchFormProps): JSX.Element {
+export function SearchForm({ values, onSearch }: SearchFormProps): JSX.Element {
   const { register, handleSubmit, reset, watch, setValue } = useForm<SearchFormValues>({
-    defaultValues,
+    values,
   })
 
   const days = watch('days') ?? ''

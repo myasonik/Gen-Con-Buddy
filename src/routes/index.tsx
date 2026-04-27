@@ -100,8 +100,7 @@ function SearchPage(): JSX.Element {
       <div className={styles.backdrop} onClick={toggleSidebar} aria-hidden="true" />
       <div id="sidebar" className={styles.sidebar}>
         <SearchForm
-          key={JSON.stringify(search)}
-          defaultValues={parseSearchParams(search)}
+          values={parseSearchParams(search)}
           onSearch={handleSearch}
         />
       </div>
