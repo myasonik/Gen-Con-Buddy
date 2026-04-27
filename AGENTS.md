@@ -24,6 +24,13 @@ Test files co-locate with route files in `src/routes/` and are excluded from rou
 
 All tests use MSW for network interception — never mock API requests or internal modules directly. The MSW server and its default handlers live in `src/test/msw/`. Override specific handlers per-test with `server.use(...)`.
 
+## Global CSS Escape Hatches
+
+Two global utility classes in `src/styles/global.css` are intentionally used as bare strings (bypassing CSS Modules encapsulation). Do not replace them with CSS Module imports.
+
+- `.sr-only` — screen-reader-only visually hidden pattern. Used where `composes:` would require a pseudo-element workaround (e.g. `Badge.tsx`).
+- `.animates-details` — `::details-content` expand/collapse animation for `<details>` elements. Applied alongside component-scoped classes wherever `<details>` needs animated open/close; `composes:` cannot target pseudo-elements.
+
 ## Accessibility
 
 Never use inline `aria-live` regions or `role="alert"` / `role="status"` on rendered elements. Windows screen readers are buggy around dynamically inserted live regions, which all React apps produce. Always use the `announce()` utility from `src/lib/announce.ts` instead. Call `announce()` imperatively (e.g., in a `useEffect` or event handler) when something needs to be read out to screen readers.
