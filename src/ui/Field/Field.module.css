@@ -1,0 +1,36 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.rangeRoot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.rangeLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.rangeFields {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-end;
+}
+
+.rangeFieldLabel {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}

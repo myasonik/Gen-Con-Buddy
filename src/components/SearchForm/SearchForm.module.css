@@ -43,10 +43,6 @@
   cursor: not-allowed;
 }
 
-.rangeGroup {
-  margin-bottom: var(--space-3);
-}
-
 .dayTiles {
   display: flex;
   flex-wrap: wrap;
