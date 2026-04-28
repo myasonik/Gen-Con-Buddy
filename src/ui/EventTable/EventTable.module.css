@@ -42,15 +42,15 @@
 }
 
 .tableWrapper table tbody tr:nth-child(odd) {
-  background: var(--color-parchment-light);
+  background: #f9f6f0;
 }
 
 .tableWrapper table tbody tr:nth-child(even) {
-  background: var(--color-parchment);
+  background: #f0ead6;
 }
 
 .tableWrapper table tbody tr:hover {
-  background: color-mix(in srgb, var(--color-bark-light) 30%, var(--color-parchment-light));
+  background: #e8dfca;
 }
 
 .tableWrapper table td {

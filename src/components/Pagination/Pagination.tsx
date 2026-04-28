@@ -97,15 +97,14 @@ export function Pagination({
       </div>
       <div className={styles.summary}>
         {total.toLocaleString()} events
-        <div className={styles.perPageLabel}>
+        <label className={styles.perPageLabel}>
           Per page
           <Select
-            aria-label="Per page"
             value={String(limit)}
             onValueChange={(v) => onNavigate(1, Number(v))}
             options={PAGE_SIZE_OPTIONS.map((opt) => ({ value: String(opt), label: String(opt) }))}
           />
-        </div>
+        </label>
       </div>
     </nav>
   )

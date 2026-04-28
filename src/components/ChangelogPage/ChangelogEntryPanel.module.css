@@ -15,7 +15,6 @@
   cursor: pointer;
   padding: var(--space-2) var(--space-4);
   font-weight: 600;
-  font-size: var(--text-label);
   color: #000;
 }
 

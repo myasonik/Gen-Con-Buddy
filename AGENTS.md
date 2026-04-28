@@ -24,6 +24,8 @@ Test files co-locate with route files in `src/routes/` and are excluded from rou
 
 All tests use MSW for network interception — never mock API requests or internal modules directly. The MSW server and its default handlers live in `src/test/msw/`. Override specific handlers per-test with `server.use(...)`.
 
+`src/test/setup.ts` pins `process.env.TZ = 'America/Indianapolis'` so date formatting tests (day names, times) are deterministic on any CI box. Gen Con is held in Indianapolis every year, so all date display is relative to that timezone.
+
 ## Global CSS Escape Hatches
 
 Two global utility classes in `src/styles/global.css` are intentionally used as bare strings (bypassing CSS Modules encapsulation). Do not replace them with CSS Module imports.

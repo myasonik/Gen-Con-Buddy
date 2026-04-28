@@ -28,9 +28,6 @@
 }
 
 .date {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: var(--text-label);
   color: #000;
   flex: 1;
 }
@@ -38,6 +35,5 @@
 .counts {
   display: flex;
   gap: var(--space-3);
-  font-size: var(--text-label);
   color: #666;
 }

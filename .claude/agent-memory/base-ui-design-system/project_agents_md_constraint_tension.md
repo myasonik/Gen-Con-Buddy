@@ -1,11 +1,11 @@
 ---
-name: AGENTS.md "no CSS" rule conflicts with pixel-art redesign
-description: The project's AGENTS.md "Plain HTML only — no styles, no CSS, no UI libraries" rule is in active tension with the approved 2026-04-19 pixel art design spec, which introduces CSS tokens, CSS Modules, and Google Fonts.
+name: AGENTS.md CSS architecture (resolved)
+description: AGENTS.md now correctly documents CSS Modules + global tokens as the project's styling architecture. The former "no CSS" tension is resolved.
 type: project
 ---
 
-`AGENTS.md` contains a hard rule: _"Plain HTML only — no styles, no CSS, no UI libraries. Use semantic elements."_ The approved pixel-art design spec at `docs/superpowers/specs/2026-04-19-pixel-art-design.md` directly contradicts this by introducing a full CSS token system, per-component CSS Modules, and Google Fonts.
+`AGENTS.md` now reflects the actual CSS architecture: global tokens in `src/styles/tokens.css`, component styles via co-located CSS Modules, headless primitives from `@base-ui/react`. No CSS-in-JS, no utility frameworks.
 
-**Why:** The project started as plain-HTML-only, but a full visual redesign was approved without updating the governing doc. When the redesign implementation PR lands, `AGENTS.md` will be stale the moment it merges unless updated in the same commit.
+**Why:** Was a stale tension between an old "plain HTML only" rule and the approved pixel-art design spec. Resolved when AGENTS.md was updated during the design system implementation work.
 
-**How to apply:** Any implementation PR that touches `src/index.css`, adds a `.module.css`, or introduces Google Fonts must also edit `AGENTS.md`. When reviewing future frontend PRs, check that the project instruction file reflects the CSS architecture in use — don't let the doc and reality drift. The replacement rule should be: "Global tokens in `src/index.css`; component styles via co-located CSS Modules. No CSS-in-JS, no utility frameworks, no UI libraries with bundled styles."
+**How to apply:** No longer a concern. The doc and reality are in sync.
