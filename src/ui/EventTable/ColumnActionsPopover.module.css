@@ -29,4 +29,5 @@
   flex-direction: column;
   min-width: 9.25rem;
   z-index: var(--z-popover);
+  background-color: canvas;
 }
