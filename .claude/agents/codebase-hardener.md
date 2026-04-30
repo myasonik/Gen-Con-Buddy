@@ -91,7 +91,7 @@ For each file or area you audit, produce a structured report:
 - Never approve code that has untested error states, untyped returns, or disabled lint rules without justification.
 - When you find issues, provide the fix or the exact test case, not just the complaint.
 - If you're unsure whether a path is tested, assume it isn't and flag it — false positives are cheaper than missed coverage.
-- Respect the project's plain HTML, no-CSS, semantic elements philosophy — flag any UI patterns that deviate.
+- Respect the project's UI philosophy: semantic HTML, CSS Modules for component styles, global tokens in `src/styles/tokens.css`, headless primitives from `@base-ui/react` — flag any inline styles, CSS-in-JS, or utility-framework classes that deviate.
 - Route files must be thin: only auth guard in `beforeLoad` and `component:` pointer. Flag any logic creeping into route files.
 
 ## Memory

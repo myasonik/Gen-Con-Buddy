@@ -1,3 +1,3 @@
-- [AGENTS.md CSS architecture](project_agents_md_constraint_tension.md) — AGENTS.md now correctly documents CSS Modules + global tokens; the former "no CSS" tension is resolved.
 - [Parchment & Pixel design direction](project_pixel_art_design_direction.md) — Press Start 2P sizes must be multiples of 8; gold is an accent only (not text/border/fill on light bg); pixel borders live in tokens.
 - [Base UI coverage snapshot](project_base_ui_coverage_status.md) — what's already wrapped in src/ui/ and where the codebase still hand-rolls native controls (selects, inputs, details).
+- [Design review style](feedback_strong_opinions.md) — User wants thorough, opinionated design reviews with concrete code examples; not hedged summaries.

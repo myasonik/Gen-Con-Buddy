@@ -33,6 +33,12 @@ Two global utility classes in `src/styles/global.css` are intentionally used as 
 - `.sr-only` — screen-reader-only visually hidden pattern. Used where `composes:` would require a pseudo-element workaround (e.g. `Badge.tsx`).
 - `.animates-details` — `::details-content` expand/collapse animation for `<details>` elements. Applied alongside component-scoped classes wherever `<details>` needs animated open/close; `composes:` cannot target pseudo-elements.
 
+## Key Architecture Decisions
+
+**Table library:** TanStack Table (headless). MUI X Data Grid was considered and rejected — it requires `@mui/material` and Emotion CSS-in-JS as peer dependencies, which conflicts with the "no external styled UI libraries" rule.
+
+**EventDetail `<dl>` layout:** `<dt>`/`<dd>` pairs are stacked (label above value), not side-by-side. Side-by-side requires a fixed label width that breaks visually with long label names (especially at Press Start 2P's wide letter-spacing).
+
 ## Accessibility
 
 Never use inline `aria-live` regions or `role="alert"` / `role="status"` on rendered elements. Windows screen readers are buggy around dynamically inserted live regions, which all React apps produce. Always use the `announce()` utility from `src/lib/announce.ts` instead. Call `announce()` imperatively (e.g., in a `useEffect` or event handler) when something needs to be read out to screen readers.

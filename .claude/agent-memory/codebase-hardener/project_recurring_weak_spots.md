@@ -14,7 +14,7 @@ The audit on 2026-04-27 surfaced recurring risk patterns. Watch for these in any
 
 2. **Date formatting (resolved)** — `src/test/setup.ts` now pins `process.env.TZ = 'America/Indianapolis'`. All date display is relative to Indianapolis time (Gen Con's host city). Any new date display test will automatically run under the correct timezone.
 
-3. **Day → date pinning to 2024** — `DAY_DATES` in `src/utils/searchParams.ts` hardcodes 2024 dates. Switching to 2025/2026 will silently break "Wed/Thu/Fri/Sat/Sun" filters with no test catching it. The test suite asserts the 2024 strings literally.
+3. **Day → date pinning to 2024** — `DAY_DATES` in `src/utils/searchParams.ts` hardcodes 2024 dates intentionally — the API currently serves 2024 Gen Con data. The 2024 values are correct for now, but the test suite asserts the literal date strings, so bumping the year will require touching both the source and tests. See TODO C4 for the fix plan.
 
 4. **API error envelope inconsistency** — `fetchEvents` does not check `data.error` (despite `EventSearchResponse` declaring it), but `fetchChangelogList`/`fetchChangelogEntry` do. Any backend that returns 200 + error body will silently produce a "found 0 results" state. Mirror the changelog pattern when adding a new API call.
 

@@ -1,3 +1,11 @@
+# Deferred work
+
+## EventType multi-select backend wiring
+
+The `EventTypeSelect` frontend serializes multiple event type codes as a comma-separated string and the UI supports selecting multiple. Full multi-type filtering requires a backend change: switch `NewKeywordSingle` → `NewKeyword` for the `EventType` field in `search.go`. The frontend is ready; the backend is not.
+
+---
+
 # Deferred hardening work
 
 ## C4 — Centralize Gen Con year / dates
@@ -31,7 +39,7 @@ Gen Con dates by year:
 // src/utils/searchParams.ts
 
 // Update this each year. Gen Con always runs Wed–Sun in late July/early August.
-export const GEN_CON_YEAR = 2025
+export const GEN_CON_YEAR = 2024 // currently 2024; bump when API data updates
 
 // Derive Wed offset: find the Wednesday on or before Aug 1 of that year
 function genConWednesday(year: number): Date {
@@ -70,7 +78,7 @@ test('daysToStartDateTime for thu includes the correct year', () => {
 })
 ```
 
-This way, bumping `GEN_CON_YEAR = 2025` automatically updates all tests.
+This way, bumping `GEN_CON_YEAR` automatically updates all tests.
 
 **Step 3:** Add a test that pins the derivation logic itself (so a wrong algorithm is caught even before year-bump):
 
