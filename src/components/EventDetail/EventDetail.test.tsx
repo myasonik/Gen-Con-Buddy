@@ -162,3 +162,43 @@ test('renders PLAYERS section heading', async () => {
   expect(screen.getByRole('heading', { name: 'LOGISTICS' })).toBeInTheDocument()
   expect(screen.getByRole('heading', { name: 'CONTACT' })).toBeInTheDocument()
 })
+
+test('renders Add to Google Calendar link', async () => {
+  server.use(
+    http.get('/api/events/search', () => {
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId: 'RPG24000001' })],
+        meta: { total: 1 },
+        links: { self: '' },
+        error: null,
+      }
+      return HttpResponse.json(response)
+    }),
+  )
+  renderEventDetail('RPG24000001')
+  await screen.findByText('THE EVENT')
+  const link = screen.getByRole('link', { name: /add to google calendar/i })
+  expect(link).toHaveAttribute('href', expect.stringContaining('calendar.google.com/calendar/render'))
+  expect(link).toHaveAttribute('target', '_blank')
+  expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+})
+
+test('renders View on Gen Con link', async () => {
+  server.use(
+    http.get('/api/events/search', () => {
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId: 'RPG24000001' })],
+        meta: { total: 1 },
+        links: { self: '' },
+        error: null,
+      }
+      return HttpResponse.json(response)
+    }),
+  )
+  renderEventDetail('RPG24000001')
+  await screen.findByText('THE EVENT')
+  const link = screen.getByRole('link', { name: /view on gen con/i })
+  expect(link).toHaveAttribute('href', 'https://www.gencon.com/events/RPG24000001')
+  expect(link).toHaveAttribute('target', '_blank')
+  expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+})

@@ -2,10 +2,13 @@ import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { Link } from '@tanstack/react-router'
 import { fetchEvents } from '../../utils/api'
+import { buildGoogleCalendarUrl } from '../../utils/googleCalendar'
 import { Button } from '../../ui/Button/Button'
 import { PixelState } from '../../ui/PixelState/PixelState'
 import { Badge, BoolBadge } from '../../ui/Badge/Badge'
 import { DescriptionList, DescriptionItem } from '../../ui/DescriptionList/DescriptionList'
+import { CalendarPlus } from '../../ui/icons/CalendarPlus'
+import { ExternalLink } from '../../ui/icons/ExternalLink'
 import styles from './EventDetail.module.css'
 
 interface EventDetailProps {
@@ -47,6 +50,35 @@ export function EventDetail({ gameId }: EventDetailProps): JSX.Element {
       <div className={styles.card}>
         <p className={styles.gameIdBadge}>{a.gameId}</p>
         <h1 className={styles.title}>{a.title}</h1>
+
+        <div className={styles.actions}>
+          <Button
+            render={
+              <a
+                href={buildGoogleCalendarUrl(a)}
+                target="_blank"
+                rel="noopener noreferrer"
+              />
+            }
+            variant="ghost"
+          >
+            <CalendarPlus aria-hidden="true" className={styles.actionIcon} />
+            Add to Google Calendar
+          </Button>
+          <Button
+            render={
+              <a
+                href={`https://www.gencon.com/events/${a.gameId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              />
+            }
+            variant="ghost"
+          >
+            <ExternalLink aria-hidden="true" className={styles.actionIcon} />
+            View on Gen Con
+          </Button>
+        </div>
 
         {/* THE EVENT */}
         <section className={styles.section}>
