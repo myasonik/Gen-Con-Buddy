@@ -1,27 +1,23 @@
 ---
 name: Base UI primitives in active use vs. notable gaps
-description: Snapshot of which @base-ui/react primitives the codebase already wraps in src/ui/ and which interactive controls still hand-roll behavior or use bare HTML (as of 2026-04-27).
+description: Snapshot of which @base-ui/react primitives the codebase already wraps in src/ui/ and which interactive controls still hand-roll behavior or use bare HTML (updated 2026-04-28 after DS work).
 type: project
 ---
 
 **In active use (wrapped in src/ui/):**
 
-- `Button` (Base UI button) — variants `primary`/`secondary`
-- `Toggle` + `ToggleGroup` → `ToggleTile`/`ToggleTileGroup` (day-of-week filter, default multiple=true)
+- `Button` — variants `primary`/`secondary`/`ghost`/`icon`; all inline `<button>` uses in EventTable, ActiveFilters, ColumnActionsPopover, ColumnResizeDialog now route through it
+- `Toggle` + `ToggleGroup` → `ToggleTile`/`ToggleTileGroup` (day-of-week filter)
 - `Popover` → `Toggletip` and `ColumnActionsPopover`
 - `Combobox` → `EventTypeSelect` (multi-select chips)
 - `Dialog` → `ColumnResizeDialog`
+- `Select` — wraps all `<select>` usages (4 in SearchForm, 1 in Pagination)
+- `Field` / `RangeField` — wraps all `<label>/<input>` pairs in SearchForm (18 simple fields, 11 range groups)
 
-**Hand-rolled or native where Base UI exists:**
+**Remaining hand-rolled where Base UI exists:**
 
-- Native `<select>` — used in `SearchForm` (ageRequired, experienceRequired, attendeeRegistration, specialCategory) and `Pagination` (per-page). Base UI ships `Select`. No `Select` wrapper exists in `src/ui/`.
-- Native `<input>` (text/number/datetime-local) — `SearchForm` repeats `<label>` + `<input className={styles.input}>` 30+ times. No `Input`/`Field` wrapper. Base UI ships `Field` + `Input` + `NumberField` (the latter would also fix the "type=number with step=0.5" repetition).
-- Native `<details>`/`<summary>` — `EventTable` column visibility panel, `ChangelogRow`, `ChangelogEntryPanel` group sections. Base UI ships `Collapsible` and `Accordion`. The `details::details-content` transition pattern is duplicated across three CSS Modules.
+- Native `<details>`/`<summary>` — `EventTable` column visibility panel, `ChangelogRow`, `ChangelogEntryPanel`. Base UI ships `Collapsible` and `Accordion`. The animation is now a shared `.animates-details` global utility class rather than copy-pasted CSS, but the element is still native `<details>`.
 - Plain `type="checkbox"` for column visibility list in `EventTable`. Base UI ships `Checkbox`.
+- Native `<input>` still used inside `Field`/`RangeField` (Field.Control wires the label; the input itself is still native — this is correct).
 
-**Other notes:**
-
-- `BoolBadge` and `ConceptBadge` live in `Badge.tsx` but `ConceptBadge` doesn't actually compose `Badge` — it's a separate `<span>` with its own padding rules.
-- `ColumnActionsPopover` and `ColumnResizeDialog` define their own `<button>` elements with private CSS rather than reusing `src/ui/Button`. Inconsistent with `Pagination` and `SearchForm` which do use `Button`.
-
-**How to apply:** When reviewing form-heavy or list-disclosure work, the first question is "should this become a `src/ui/` wrapper?" The pattern is well-established for Toggle/Popover/Dialog/Combobox; Select/Field/Collapsible/Checkbox are the obvious next additions. Avoid creating one-off styled `<button>` inside features when `Button` exists.
+**How to apply:** Select, Field, and all Button variants are now first-class. When adding new form controls, reach for `Field`/`Select` from `src/ui/`. The remaining gap is `<details>` → `Collapsible` and checkboxes → `Checkbox` if those are ever worth standardizing.
