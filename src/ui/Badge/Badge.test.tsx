@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { Badge, BoolBadge, ConceptBadge } from './Badge'
+import { Badge, BoolBadge } from './Badge'
 
 describe('badge', () => {
   it('renders children', () => {
@@ -75,44 +75,5 @@ describe('boolBadge', () => {
     render(<BoolBadge value={false} />)
     expect(screen.getByText('—')).toBeInTheDocument()
     expect(screen.getByText('no')).toBeInTheDocument()
-  })
-})
-
-describe('conceptBadge', () => {
-  it('renders the value as text when no children given', () => {
-    render(<ConceptBadge concept="eventType" value="RPG" />)
-    expect(screen.getByText('RPG')).toBeInTheDocument()
-  })
-
-  it('renders children instead of value when provided', () => {
-    render(
-      <ConceptBadge
-        concept="experience"
-        value="None (You've never played before - rules will be taught)"
-      >
-        None
-      </ConceptBadge>,
-    )
-    expect(screen.getByText('None')).toBeInTheDocument()
-  })
-
-  it('applies no inline color styles for any eventType value', () => {
-    const { container } = render(<ConceptBadge concept="eventType" value="RPG" />)
-    const el = container.firstChild as HTMLElement
-    expect(el.style.getPropertyValue('--concept-color')).toBe('')
-    expect(el.style.getPropertyValue('--concept-bg')).toBe('')
-  })
-
-  it('applies no inline color styles for any day value', () => {
-    const { container } = render(<ConceptBadge concept="day" value="Thursday" />)
-    const el = container.firstChild as HTMLElement
-    expect(el.style.getPropertyValue('--concept-color')).toBe('')
-    expect(el.style.getPropertyValue('--concept-bg')).toBe('')
-  })
-
-  it('applies no inline color styles for an unknown value', () => {
-    const { container } = render(<ConceptBadge concept="eventType" value="UNKNOWN" />)
-    const el = container.firstChild as HTMLElement
-    expect(el.style.getPropertyValue('--concept-color')).toBe('')
   })
 })
