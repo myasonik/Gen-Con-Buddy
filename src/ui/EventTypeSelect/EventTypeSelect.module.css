@@ -88,14 +88,13 @@
 }
 
 .list {
+  composes: surface from '../../styles/popup.module.css';
   position: absolute;
   z-index: var(--z-popover);
   padding: var(--space-1) 0;
   max-height: 15rem;
   overflow-y: scroll;
   width: 100%;
-  background-color: canvas;
-  border: 0.0625rem solid;
 }
 
 .item {

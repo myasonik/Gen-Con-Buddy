@@ -8,8 +8,8 @@
 }
 
 .tooltip {
+  composes: surface from '../../styles/popup.module.css';
   z-index: var(--z-popover);
   min-width: 12.5rem;
-  background-color: canvas;
-  border: 0.0625rem solid;
+  padding: var(--space-2) var(--space-3);
 }

@@ -5,6 +5,7 @@
 }
 
 .popup {
+  composes: surface from '../../styles/popup.module.css';
   position: fixed;
   top: 50%;
   left: 50%;
@@ -12,7 +13,6 @@
   padding: var(--space-4);
   min-width: 16.25rem;
   z-index: var(--z-modal);
-  background-color: canvas;
 }
 
 .title {

@@ -20,8 +20,7 @@
 }
 
 .popup {
-  background: Canvas;
-  border: 0.0625rem solid;
+  composes: surface from '../../styles/popup.module.css';
   z-index: var(--z-popover);
 }
 
