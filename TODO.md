@@ -84,14 +84,3 @@ test('gen con wednesday is always in late July or early August', () => {
 })
 ```
 
----
-
-## DS-16 — `ConceptBadge` CSS vars never set; `conceptColors.ts` is dead code
-
-`Badge.tsx` and `Badge.module.css:6-18`: `--concept-color` / `--concept-bg` are read in CSS but never written from JS. Every `ConceptBadge` renders with `#666`/`#fff` fallbacks regardless of concept. The `src/utils/conceptColors.ts` utility is unused by `Badge.tsx` (it has its own test file but is never imported by the component).
-
-The Badge tests at lines 102–116 assert the vars are empty strings — documenting the broken state rather than the fixed one.
-
-### Fix
-
-Either wire up `style={{ '--concept-color': ..., '--concept-bg': ... }}` from `conceptColors.ts` in `ConceptBadge`, or delete `conceptColors.ts`, its test file, and the dead CSS vars.
