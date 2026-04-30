@@ -10,13 +10,23 @@
 
 .inputGroup {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-1);
   padding: var(--space-1) var(--space-2);
   cursor: text;
   min-height: 2.125rem;
   border: 0.0625rem solid;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.inputGroupInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  flex: 1;
+  min-width: 0;
 }
 
 .inputGroup:focus-within {
@@ -25,24 +35,41 @@
 }
 
 .chip {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: var(--space-1);
   padding: 0.0625rem var(--space-1) 0.0625rem var(--space-2);
   white-space: nowrap;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.chipText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .chipRemove {
   border: none;
   background: none;
   cursor: pointer;
-  padding: 0 0.125rem;
+  padding: 0;
   line-height: 1;
+  flex-shrink: 0;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .input {
   flex: 1;
-  min-width: 5rem;
+  min-width: 0;
+  width: 0;
   border: none;
   background: none;
   padding: 0;
@@ -66,8 +93,7 @@
   padding: var(--space-1) 0;
   max-height: 15rem;
   overflow-y: scroll;
-  width: max-content;
-  max-width: 100%;
+  width: 100%;
   background-color: canvas;
   border: 0.0625rem solid;
 }
