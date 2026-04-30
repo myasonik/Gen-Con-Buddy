@@ -22,14 +22,15 @@ interface RangeFieldProps {
   label: string
   children: [React.ReactElement, React.ReactElement]
   className?: string
+  stack?: boolean
 }
 
-export function RangeField({ label, children, className }: RangeFieldProps): JSX.Element {
+export function RangeField({ label, children, className, stack }: RangeFieldProps): JSX.Element {
   const [fromInput, toInput] = children
   return (
     <div className={clsx(styles.rangeRoot, className)}>
       <span className={styles.rangeLabel}>{label}</span>
-      <div className={styles.rangeFields}>
+      <div className={clsx(styles.rangeFields, stack && styles.rangeFieldsStacked)}>
         <BaseField.Root>
           <BaseField.Label className={styles.rangeFieldLabel}>from</BaseField.Label>
           <BaseField.Control render={fromInput} />

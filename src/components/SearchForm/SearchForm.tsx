@@ -139,7 +139,7 @@ export function SearchForm({ values, onSearch }: SearchFormProps): JSX.Element {
                   message="Clear the day buttons in the DAYS section to enable custom Start Date fields."
                 />
               )}
-              <RangeField label="Start Date">
+              <RangeField label="Start Date" stack>
                 <input
                   type="datetime-local"
                   className={styles.input}
@@ -177,7 +177,7 @@ export function SearchForm({ values, onSearch }: SearchFormProps): JSX.Element {
                   message="Clear the day buttons in the DAYS section to enable custom End Date fields."
                 />
               )}
-              <RangeField label="End Date">
+              <RangeField label="End Date" stack>
                 <input
                   type="datetime-local"
                   className={styles.input}
@@ -348,7 +348,7 @@ export function SearchForm({ values, onSearch }: SearchFormProps): JSX.Element {
                 options={Object.entries(CATEGORY).map(([k, v]) => ({ value: k, label: v }))}
               />
             </label>
-            <RangeField label="Last Modified">
+            <RangeField label="Last Modified" stack>
               <input
                 type="datetime-local"
                 className={styles.input}
