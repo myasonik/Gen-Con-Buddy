@@ -212,7 +212,7 @@ test('day toggle tiles have no concept color style properties', async () => {
   expect(thuBtn.style.getPropertyValue('--tile-color-bg')).toBe('')
 })
 
-test('eventType column renders a ConceptBadge', async () => {
+test('eventType column renders an outline Badge', async () => {
   server.use(
     http.get('/api/events/search', () =>
       HttpResponse.json({
