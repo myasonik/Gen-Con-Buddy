@@ -37,7 +37,7 @@ export function Select({
         <BaseSelect.Icon className={styles.icon}>▾</BaseSelect.Icon>
       </BaseSelect.Trigger>
       <BaseSelect.Portal>
-        <BaseSelect.Positioner>
+        <BaseSelect.Positioner className={styles.positioner}>
           <BaseSelect.Popup className={styles.popup}>
             <BaseSelect.Item value={null} className={styles.item}>
               <BaseSelect.ItemText>{placeholder}</BaseSelect.ItemText>

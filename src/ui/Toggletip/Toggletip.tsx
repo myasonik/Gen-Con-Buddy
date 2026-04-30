@@ -13,7 +13,7 @@ export function Toggletip({ label, message }: ToggletipProps): JSX.Element {
         ?
       </Popover.Trigger>
       <Popover.Portal>
-        <Popover.Positioner sideOffset={4}>
+        <Popover.Positioner sideOffset={4} className={styles.positioner}>
           <Popover.Popup className={styles.tooltip}>{message}</Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>

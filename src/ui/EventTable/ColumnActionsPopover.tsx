@@ -37,7 +37,7 @@ export function ColumnActionsPopover({
         </svg>
       </Popover.Trigger>
       <Popover.Portal>
-        <Popover.Positioner sideOffset={4}>
+        <Popover.Positioner sideOffset={4} className={styles.positioner}>
           <Popover.Popup className={styles.popup}>
             {sortField && (
               <>

@@ -19,9 +19,12 @@
   flex-shrink: 0;
 }
 
+.positioner {
+  z-index: var(--z-popover);
+}
+
 .popup {
   composes: surface from '../../styles/popup.module.css';
-  z-index: var(--z-popover);
 }
 
 .item {
