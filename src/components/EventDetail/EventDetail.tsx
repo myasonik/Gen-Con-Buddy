@@ -61,6 +61,7 @@ export function EventDetail({ gameId }: EventDetailProps): JSX.Element {
               />
             }
             variant="ghost"
+            className={styles.actionButton}
           >
             <CalendarPlus aria-hidden="true" className={styles.actionIcon} />
             Add to Google Calendar
@@ -74,6 +75,7 @@ export function EventDetail({ gameId }: EventDetailProps): JSX.Element {
               />
             }
             variant="ghost"
+            className={styles.actionButton}
           >
             <ExternalLink aria-hidden="true" className={styles.actionIcon} />
             View on Gen Con

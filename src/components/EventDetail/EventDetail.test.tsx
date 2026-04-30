@@ -181,6 +181,7 @@ test('renders Add to Google Calendar link', async () => {
   expect(link).toHaveAttribute('href', expect.stringContaining('calendar.google.com/calendar/render'))
   expect(link).toHaveAttribute('target', '_blank')
   expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+  expect(link.getAttribute('href')).toContain('text=Test+Event')
 })
 
 test('renders View on Gen Con link', async () => {
@@ -201,4 +202,25 @@ test('renders View on Gen Con link', async () => {
   expect(link).toHaveAttribute('href', 'https://www.gencon.com/events/RPG24000001')
   expect(link).toHaveAttribute('target', '_blank')
   expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+})
+
+test('action links appear after the event title and before THE EVENT section', async () => {
+  server.use(
+    http.get('/api/events/search', () => {
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId: 'RPG24000001', title: 'Epic Dragon Hunt' })],
+        meta: { total: 1 },
+        links: { self: '' },
+        error: null,
+      }
+      return HttpResponse.json(response)
+    }),
+  )
+  renderEventDetail('RPG24000001')
+  await screen.findByText('THE EVENT')
+  const title = screen.getByRole('heading', { level: 1, name: 'Epic Dragon Hunt' })
+  const calLink = screen.getByRole('link', { name: /add to google calendar/i })
+  const sectionHeading = screen.getByRole('heading', { name: 'THE EVENT' })
+  expect(title.compareDocumentPosition(calLink) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+  expect(calLink.compareDocumentPosition(sectionHeading) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
 })
