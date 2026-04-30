@@ -38,7 +38,11 @@ function readFromStorage<T>(key: string, version: number, defaultValue: T): T {
     ) {
       return defaultValue
     }
-    return (parsed as { version: number; value: T }).value
+    const stored = parsed as { version: number; value?: T }
+    if (stored.value === undefined) {
+      return defaultValue
+    }
+    return stored.value
   } catch {
     return defaultValue
   }

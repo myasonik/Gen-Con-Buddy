@@ -55,3 +55,9 @@ test('falls back to default when storage is malformed', () => {
   const { result } = renderHook(() => useStoredState(KEY, 1, { count: 0 }))
   expect(result.current[0]).toStrictEqual({ count: 0 })
 })
+
+test('falls back to default when stored entry has matching version but no value key', () => {
+  localStorage.setItem(KEY, JSON.stringify({ version: 1 }))
+  const { result } = renderHook(() => useStoredState(KEY, 1, { count: 0 }))
+  expect(result.current[0]).toStrictEqual({ count: 0 })
+})
