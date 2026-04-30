@@ -2,15 +2,3 @@
   display: inline-block;
   padding: var(--space-1) var(--space-2);
 }
-
-.conceptBadge {
-  display: inline-block;
-  padding: var(--space-1) var(--space-2);
-  border: 0.0625rem solid var(--concept-color, #666);
-  border-radius: 0.625rem;
-  background: var(--concept-bg, #fff);
-  color: var(--concept-color, #666);
-  font-style: italic;
-  /* stylelint-disable-next-line unit-disallowed-list */
-  letter-spacing: 0.03em;
-}

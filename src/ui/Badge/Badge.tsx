@@ -22,21 +22,6 @@ export function Badge({ children, variant = 'filled', className }: BadgeProps): 
   )
 }
 
-export interface ConceptBadgeProps {
-  concept: 'eventType' | 'day' | 'experience'
-  value: string
-  children?: React.ReactNode
-  className?: string
-}
-
-export function ConceptBadge({ value, children, className }: ConceptBadgeProps): JSX.Element {
-  return (
-    <span className={clsx(styles.conceptBadge, className)}>
-      {children ?? value}
-    </span>
-  )
-}
-
 interface BoolBadgeProps {
   value: string | boolean
   className?: string

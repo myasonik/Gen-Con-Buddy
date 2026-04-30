@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { format } from 'date-fns'
 import type { ColumnDef } from '@tanstack/react-table'
-import { ConceptBadge } from '../Badge/Badge'
+import { Badge } from '../Badge/Badge'
 import { Pawn } from '../icons/Pawn'
 import { EXP } from '../../utils/enums'
 import type { Event } from '../../utils/types'
@@ -44,7 +44,7 @@ export const COLUMNS: ColumnDef<Event>[] = [
     header: 'Type',
     meta: { sortField: 'eventType' },
     cell: ({ row }) => (
-      <ConceptBadge concept="eventType" value={row.original.attributes.eventType} />
+      <Badge variant="outline">{row.original.attributes.eventType}</Badge>
     ),
   },
   {
@@ -111,11 +111,7 @@ export const COLUMNS: ColumnDef<Event>[] = [
     meta: { sortField: 'experienceRequired' },
     cell: ({ row }) => {
       const raw = row.original.attributes.experienceRequired
-      return (
-        <ConceptBadge concept="experience" value={raw}>
-          {EXP[raw] ?? raw}
-        </ConceptBadge>
-      )
+      return <Badge variant="outline">{EXP[raw] ?? raw}</Badge>
     },
   },
   {
@@ -142,7 +138,7 @@ export const COLUMNS: ColumnDef<Event>[] = [
     meta: { sortField: 'startDateTime' },
     cell: ({ row }) => {
       const dayName = format(new Date(row.original.attributes.startDateTime), 'EEEE')
-      return <ConceptBadge concept="day" value={dayName} />
+      return <Badge variant="outline">{dayName}</Badge>
     },
   },
   {
