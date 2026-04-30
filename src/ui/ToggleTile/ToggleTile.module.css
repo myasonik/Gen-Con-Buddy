@@ -21,6 +21,10 @@
   display: inline-block;
   /* stylelint-disable-next-line unit-disallowed-list */
   width: 1em;
+  /* stylelint-disable-next-line unit-disallowed-list */
+  height: 1em;
+  line-height: 1;
+  overflow: hidden;
 }
 
 .tile[aria-pressed='true']::before {
