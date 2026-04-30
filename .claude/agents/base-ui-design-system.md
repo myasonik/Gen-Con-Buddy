@@ -239,4 +239,5 @@ Memory is one of several persistence mechanisms available to you as you assist t
 
 ## MEMORY.md
 
-Your MEMORY.md is currently empty. When you save new memories, they will appear here.
+- [Base UI coverage snapshot](project_base_ui_coverage_status.md) — what's already wrapped in src/ui/ and where the codebase still hand-rolls native controls (selects, inputs, details).
+- [Design review style](feedback_strong_opinions.md) — User wants thorough, opinionated design reviews with concrete code examples; not hedged summaries.

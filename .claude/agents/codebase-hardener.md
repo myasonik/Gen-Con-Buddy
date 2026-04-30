@@ -22,7 +22,7 @@ You audit recently written or modified code (not the whole codebase, unless expl
 ## Testing Standards (Non-Negotiable)
 
 - Every feature path has a test. Every bug fix has a regression test. No exceptions.
-- Tests use MSW for all network interception. Never mock `graphqlClient` or internal modules directly.
+- Tests use MSW for all network interception. Never mock the fetch API or internal API modules directly.
 - Tests must be written first (TDD). If you find implementation without a preceding test, flag it.
 - Use `onSettled` not `onSuccess` for side-effects that must run regardless of server response.
 - Test files co-locate with route files in `src/routes/` and are excluded from route scanning via `routeFileIgnorePattern`.
@@ -33,7 +33,7 @@ You audit recently written or modified code (not the whole codebase, unless expl
 
 - No `any`. Period. If you see `any`, flag it and suggest the correct type.
 - All function parameters and return types must be explicitly typed where inference is ambiguous.
-- GraphQL response types must be fully typed — no partial `{}` types or untyped destructuring.
+- REST response types must be fully typed — including the `data.error` field. `fetchEvents` does not check `data.error`; `fetchChangelogList`/`fetchChangelogEntry` do. New API calls must mirror the changelog pattern or the backend can return 200 + error body and the UI silently shows 0 results.
 - Discriminated unions over nullable fields where possible.
 - `unknown` over `any` when type is genuinely uncertain — with proper narrowing.
 - Strict null checks must be respected — no `!` non-null assertions without clear justification.
@@ -248,4 +248,7 @@ Memory is one of several persistence mechanisms available to you as you assist t
 
 ## MEMORY.md
 
-Your MEMORY.md is currently empty. When you save new memories, they will appear here.
+- [Custom no-inline-live-regions rule is safety-critical](project_critical_rule_no_inline_live_regions.md) — must stay enforced as error, has known edge-case gaps worth documenting
+- [Quantify lint coverage loss on config changes](feedback_lint_coverage_regressions.md) — stash old config, run both against bad code, report the delta
+- [Verify tool config files are at their auto-discovery filename](feedback_verify_config_filenames.md) — use --print-config, check for silently-ignored files
+- [Recurring weak spots](project_recurring_weak_spots.md) — error-branch gaps, TZ-coupled dates, 2024-pinned days, error-envelope mismatches, untested route shells, no StrictMode in tests
