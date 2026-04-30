@@ -9,15 +9,25 @@ import {
 } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ChangelogEntryPanel } from './ChangelogEntryPanel'
+import type { SharedColumnState } from '../../ui/EventTable/EventTable'
 import { makeChangelogEntry, makeEvent } from '../../test/msw/factory'
 import type { ChangelogEntry } from '../../utils/types'
+
+const stubColumnState: SharedColumnState = {
+  visibility: {},
+  toggleVisibility: () => {},
+  resetVisibility: () => {},
+  sizing: {},
+  setSizing: () => {},
+  resetSizing: () => {},
+}
 
 // For tests that render EventTable (which uses Link), a router context is required.
 function renderPanelWithRouter(
   entry: ChangelogEntry,
 ): ReturnType<typeof render> {
   const rootRoute = createRootRoute({
-    component: () => <ChangelogEntryPanel entry={entry} />,
+    component: () => <ChangelogEntryPanel entry={entry} sharedColumnState={stubColumnState} />,
   })
   const eventRoute = createRoute({
     getParentRoute: () => rootRoute,
@@ -38,17 +48,17 @@ function renderPanelWithRouter(
 
 // Simple states render only a <p> — no router required.
 test('shows loading indicator when entry is undefined', () => {
-  render(<ChangelogEntryPanel entry={undefined} />)
+  render(<ChangelogEntryPanel entry={undefined} sharedColumnState={stubColumnState} />)
   expect(screen.getByText('Loading…')).toBeInTheDocument()
 })
 
 test('shows loading indicator when entry is "loading"', () => {
-  render(<ChangelogEntryPanel entry="loading" />)
+  render(<ChangelogEntryPanel entry="loading" sharedColumnState={stubColumnState} />)
   expect(screen.getByText('Loading…')).toBeInTheDocument()
 })
 
 test('shows error message when entry is "error"', () => {
-  render(<ChangelogEntryPanel entry="error" />)
+  render(<ChangelogEntryPanel entry="error" sharedColumnState={stubColumnState} />)
   expect(screen.getByText(/could not load this entry/i)).toBeInTheDocument()
 })
 

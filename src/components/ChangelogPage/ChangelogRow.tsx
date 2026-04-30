@@ -4,14 +4,16 @@ import { useQuery } from '@tanstack/react-query'
 import type { ChangelogSummary } from '../../utils/types'
 import { fetchChangelogEntry } from '../../utils/api'
 import { ChangelogEntryPanel } from './ChangelogEntryPanel'
+import type { SharedColumnState } from '../../ui/EventTable/EventTable'
 import styles from './ChangelogRow.module.css'
 
 interface ChangelogRowProps {
   summary: ChangelogSummary
   onOpen: () => void
+  sharedColumnState: SharedColumnState
 }
 
-export function ChangelogRow({ summary, onOpen }: ChangelogRowProps): JSX.Element {
+export function ChangelogRow({ summary, onOpen, sharedColumnState }: ChangelogRowProps): JSX.Element {
   const [isOpen, setIsOpen] = useState(false)
   const { data: entry, isError } = useQuery({
     queryKey: ['changelog', 'entry', summary.id],
@@ -40,7 +42,7 @@ export function ChangelogRow({ summary, onOpen }: ChangelogRowProps): JSX.Elemen
           <span>{summary.deletedCount} deleted</span>
         </span>
       </summary>
-      <ChangelogEntryPanel entry={isError ? 'error' : entry} />
+      <ChangelogEntryPanel entry={isError ? 'error' : entry} sharedColumnState={sharedColumnState} />
     </details>
   )
 }

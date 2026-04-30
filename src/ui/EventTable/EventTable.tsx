@@ -6,6 +6,8 @@ import {
   getSortedRowModel,
   flexRender,
   type SortingState,
+  type ColumnSizingState,
+  type OnChangeFn,
 } from '@tanstack/react-table'
 import { useColumnVisibility } from '../../hooks/useColumnVisibility'
 import { useColumnSizing } from '../../hooks/useColumnSizing'
@@ -17,11 +19,22 @@ import type { Event } from '../../utils/types'
 import { COLUMNS, SORT_FIELD_BY_COL_ID, COL_ID_BY_SORT_FIELD } from './columns'
 import styles from './EventTable.module.css'
 
+export interface SharedColumnState {
+  visibility: Record<string, boolean>
+  toggleVisibility: (id: string) => void
+  resetVisibility: () => void
+  sizing: ColumnSizingState
+  setSizing: OnChangeFn<ColumnSizingState>
+  resetSizing: () => void
+}
+
 interface EventTableProps {
   events: Event[]
   activeSortField?: string
   activeSortDir?: 'asc' | 'desc'
   onSort?: (sort: string | undefined) => void
+  sharedColumnState?: SharedColumnState
+  showColumnControls?: boolean
 }
 
 export function EventTable({
@@ -29,9 +42,17 @@ export function EventTable({
   activeSortField,
   activeSortDir,
   onSort,
+  sharedColumnState,
+  showColumnControls = true,
 }: EventTableProps): JSX.Element {
-  const { visibility, toggle, reset } = useColumnVisibility()
-  const { sizing, setSizing, reset: resetSizing } = useColumnSizing()
+  const internalVis = useColumnVisibility()
+  const internalSizing = useColumnSizing()
+  const visibility = sharedColumnState?.visibility ?? internalVis.visibility
+  const toggleVisibility = sharedColumnState?.toggleVisibility ?? internalVis.toggle
+  const resetVisibility = sharedColumnState?.resetVisibility ?? internalVis.reset
+  const sizing = sharedColumnState?.sizing ?? internalSizing.sizing
+  const setSizing = sharedColumnState?.setSizing ?? internalSizing.setSizing
+  const resetSizing = sharedColumnState?.resetSizing ?? internalSizing.reset
   // Unique prefix so anchor names don't collide when multiple EventTable instances are on the page
   const tableId = useId().replace(/:/g, '')
   const [resizeTarget, setResizeTarget] = useState<{
@@ -114,7 +135,7 @@ export function EventTable({
       columnSizing: sizing,
       sorting: internalSorting,
     },
-    onColumnSizingChange: setSizing,
+    onColumnSizingChange: (updater) => { setSizing(updater) },
     onSortingChange: setInternalSorting,
     manualSorting: Boolean(onSort),
     manualPagination: true,
@@ -128,38 +149,40 @@ export function EventTable({
 
   return (
     <section>
-      <details className={`${styles.visibilityPanel} animates-details`}>
-        <summary>Customize columns</summary>
-        <fieldset>
-          <ul>
-            {COLUMNS.map((col) => (
-              <li key={col.id}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={col.id !== undefined && Boolean(visibility[col.id])}
-                    onChange={() => {
-                      if (col.id !== undefined) {
-                        toggle(col.id)
-                      }
-                    }}
-                  />
-                  {typeof col.header === 'string' ? col.header : col.id}
-                </label>
-              </li>
-            ))}
-          </ul>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              reset()
-              resetSizing()
-            }}
-          >
-            Reset to defaults
-          </Button>
-        </fieldset>
-      </details>
+      {showColumnControls && (
+        <details className={`${styles.visibilityPanel} animates-details`}>
+          <summary>Customize columns</summary>
+          <fieldset>
+            <ul>
+              {COLUMNS.map((col) => (
+                <li key={col.id}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={col.id !== undefined && Boolean(visibility[col.id])}
+                      onChange={() => {
+                        if (col.id !== undefined) {
+                          toggleVisibility(col.id)
+                        }
+                      }}
+                    />
+                    {typeof col.header === 'string' ? col.header : col.id}
+                  </label>
+                </li>
+              ))}
+            </ul>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                resetVisibility()
+                resetSizing()
+              }}
+            >
+              Reset to defaults
+            </Button>
+          </fieldset>
+        </details>
+      )}
 
       <div className={styles.tableWrapper}>
         <table>
@@ -263,7 +286,7 @@ export function EventTable({
           columnName={resizeTarget.columnName}
           currentWidth={resizeTarget.currentWidth}
           onApply={(width) => {
-            setSizing((prev) => ({ ...prev, [resizeTarget.columnId]: width }))
+            setSizing((prev: ColumnSizingState) => ({ ...prev, [resizeTarget.columnId]: width }))
           }}
           onClose={() => setResizeTarget(null)}
         />

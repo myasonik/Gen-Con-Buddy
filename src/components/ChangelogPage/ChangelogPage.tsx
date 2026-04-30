@@ -1,12 +1,18 @@
 import { useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { fetchChangelogList, fetchChangelogEntry } from '../../utils/api'
+import { useColumnVisibility } from '../../hooks/useColumnVisibility'
+import { useColumnSizing } from '../../hooks/useColumnSizing'
+import { ColumnControlsPanel } from '../../ui/EventTable/ColumnControlsPanel'
 import { ChangelogRow } from './ChangelogRow'
 import { PixelState } from '../../ui/PixelState/PixelState'
 import styles from './ChangelogPage.module.css'
 
 export function ChangelogPage(): JSX.Element {
   const queryClient = useQueryClient()
+  const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility()
+  const { sizing, setSizing, reset: resetSizing } = useColumnSizing()
+  const sharedColumnState = { visibility, toggleVisibility, resetVisibility, sizing, setSizing, resetSizing }
   const {
     data: summaries = [],
     isLoading,
@@ -43,9 +49,10 @@ export function ChangelogPage(): JSX.Element {
       {summaries.length > 0 && (
         <>
           <h1 className={styles.heading}>Changelog</h1>
+          <ColumnControlsPanel columnState={sharedColumnState} />
           <section>
             {summaries.map((summary, i) => (
-              <ChangelogRow key={summary.id} summary={summary} onOpen={() => handleOpen(i)} />
+              <ChangelogRow key={summary.id} summary={summary} onOpen={() => handleOpen(i)} sharedColumnState={sharedColumnState} />
             ))}
           </section>
         </>
