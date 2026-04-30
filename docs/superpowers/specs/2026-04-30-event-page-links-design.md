@@ -55,7 +55,7 @@ Materials Details: {materialsRequiredDetails}
 Gen Con event page: https://www.gencon.com/events/{gameId}
 ```
 
-Fields with no meaningful value (empty string, zero cost) are omitted to avoid noisy blank lines. The Gen Con URL is always included at the end.
+Fields with no meaningful value (empty string) are omitted to avoid noisy blank lines. `cost` is always included — "$0.00" is useful to show explicitly that an event is free. The Gen Con URL is always included at the end.
 
 ### Gen Con URL
 
@@ -94,7 +94,7 @@ Both URLs are computed inline from the already-loaded event attributes — no me
 
 - **Missing table number:** `tableNumber` is an empty string for some events. The location string drops the `Table {tableNumber}` segment, producing `{location} — {roomName}`.
 - **Empty optional fields:** Fields like `materialsRequired`, `materialsRequiredDetails`, `longDescription` may be empty strings. They are omitted from the details block.
-- **Zero cost:** `cost === 0` is omitted from the details block (event is free; not meaningful to list).
+- **Zero cost:** `cost === 0` renders as `Cost: $0.00` — explicitly communicates the event is free.
 - **No new async work:** Both links are pure URL construction from already-loaded data. No loading states, no error boundaries needed.
 - **External link safety:** Both anchors use `target="_blank" rel="noopener noreferrer"`.
 
@@ -107,7 +107,7 @@ Unit tests for `buildGoogleCalendarUrl`:
 - Happy path: all fields populated → correct URL, properly formatted dates, full details block present
 - Missing `tableNumber`: `Table` segment absent from location string
 - Empty optional fields (`materialsRequired`, `materialsRequiredDetails`, empty `longDescription`): omitted from details block, no blank lines
-- Zero `cost`: cost line omitted from details block
+- Zero `cost`: cost line renders as `Cost: $0.00` (not omitted)
 
 ### `src/components/EventDetail/EventDetail.test.tsx` (additions)
 
