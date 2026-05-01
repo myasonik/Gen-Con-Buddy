@@ -1,12 +1,14 @@
-import { createRootRoute, Link, Outlet } from '@tanstack/react-router'
-import indexStyles from './index.module.css'
-import rootStyles from './__root.module.css'
+import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import indexStyles from "./index.module.css";
+import rootStyles from "./__root.module.css";
 
 export const Route = createRootRoute({
   component: () => (
     <div className={indexStyles.page}>
       <header role="banner" className={indexStyles.header}>
-        <Link to="/" className={rootStyles.brandingTitle}>Gen Con Buddy</Link>
+        <Link to="/" className={rootStyles.brandingTitle}>
+          Gen Con Buddy
+        </Link>
         <p>your guide to the best four days in gaming</p>
         <nav className={rootStyles.nav}>
           <Link to="/">Search</Link>
@@ -16,4 +18,4 @@ export const Route = createRootRoute({
       <Outlet />
     </div>
   ),
-})
+});

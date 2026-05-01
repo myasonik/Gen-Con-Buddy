@@ -1,5 +1,5 @@
-import { useState, useId } from 'react'
-import { createPortal } from 'react-dom'
+import { useState, useId } from "react";
+import { createPortal } from "react-dom";
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,33 +8,33 @@ import {
   type SortingState,
   type ColumnSizingState,
   type OnChangeFn,
-} from '@tanstack/react-table'
-import { useColumnVisibility } from '../../hooks/useColumnVisibility'
-import { useColumnSizing } from '../../hooks/useColumnSizing'
-import { Button } from '../Button/Button'
-import { ColumnActionsPopover } from './ColumnActionsPopover'
-import { ColumnResizeDialog } from './ColumnResizeDialog'
-import { announce } from '../../lib/announce'
-import type { Event } from '../../utils/types'
-import { COLUMNS, SORT_FIELD_BY_COL_ID, COL_ID_BY_SORT_FIELD } from './columns'
-import styles from './EventTable.module.css'
+} from "@tanstack/react-table";
+import { useColumnVisibility } from "../../hooks/useColumnVisibility";
+import { useColumnSizing } from "../../hooks/useColumnSizing";
+import { Button } from "../Button/Button";
+import { ColumnActionsPopover } from "./ColumnActionsPopover";
+import { ColumnResizeDialog } from "./ColumnResizeDialog";
+import { announce } from "../../lib/announce";
+import type { Event } from "../../utils/types";
+import { COLUMNS, SORT_FIELD_BY_COL_ID, COL_ID_BY_SORT_FIELD } from "./columns";
+import styles from "./EventTable.module.css";
 
 export interface SharedColumnState {
-  visibility: Record<string, boolean>
-  toggleVisibility: (id: string) => void
-  resetVisibility: () => void
-  sizing: ColumnSizingState
-  setSizing: OnChangeFn<ColumnSizingState>
-  resetSizing: () => void
+  visibility: Record<string, boolean>;
+  toggleVisibility: (id: string) => void;
+  resetVisibility: () => void;
+  sizing: ColumnSizingState;
+  setSizing: OnChangeFn<ColumnSizingState>;
+  resetSizing: () => void;
 }
 
 interface EventTableProps {
-  events: Event[]
-  activeSortField?: string
-  activeSortDir?: 'asc' | 'desc'
-  onSort?: (sort: string | undefined) => void
-  sharedColumnState?: SharedColumnState
-  showColumnControls?: boolean
+  events: Event[];
+  activeSortField?: string;
+  activeSortDir?: "asc" | "desc";
+  onSort?: (sort: string | undefined) => void;
+  sharedColumnState?: SharedColumnState;
+  showColumnControls?: boolean;
 }
 
 export function EventTable({
@@ -45,106 +45,108 @@ export function EventTable({
   sharedColumnState,
   showColumnControls = true,
 }: EventTableProps): JSX.Element {
-  const internalVis = useColumnVisibility()
-  const internalSizing = useColumnSizing()
-  const visibility = sharedColumnState?.visibility ?? internalVis.visibility
-  const toggleVisibility = sharedColumnState?.toggleVisibility ?? internalVis.toggle
-  const resetVisibility = sharedColumnState?.resetVisibility ?? internalVis.reset
-  const sizing = sharedColumnState?.sizing ?? internalSizing.sizing
-  const setSizing = sharedColumnState?.setSizing ?? internalSizing.setSizing
-  const resetSizing = sharedColumnState?.resetSizing ?? internalSizing.reset
+  const internalVis = useColumnVisibility();
+  const internalSizing = useColumnSizing();
+  const visibility = sharedColumnState?.visibility ?? internalVis.visibility;
+  const toggleVisibility = sharedColumnState?.toggleVisibility ?? internalVis.toggle;
+  const resetVisibility = sharedColumnState?.resetVisibility ?? internalVis.reset;
+  const sizing = sharedColumnState?.sizing ?? internalSizing.sizing;
+  const setSizing = sharedColumnState?.setSizing ?? internalSizing.setSizing;
+  const resetSizing = sharedColumnState?.resetSizing ?? internalSizing.reset;
   // Unique prefix so anchor names don't collide when multiple EventTable instances are on the page
-  const tableId = useId().replace(/:/g, '')
+  const tableId = useId().replace(/:/g, "");
   const [resizeTarget, setResizeTarget] = useState<{
-    columnId: string
-    columnName: string
-    currentWidth: number
-  } | null>(null)
-  const [internalSorting, setInternalSorting] = useState<SortingState>([])
+    columnId: string;
+    columnName: string;
+    currentWidth: number;
+  } | null>(null);
+  const [internalSorting, setInternalSorting] = useState<SortingState>([]);
 
-  let effectiveSortField: string | undefined = undefined
+  let effectiveSortField: string | undefined = undefined;
   if (onSort) {
-    effectiveSortField = activeSortField
+    effectiveSortField = activeSortField;
   } else if (internalSorting.length > 0) {
-    effectiveSortField = SORT_FIELD_BY_COL_ID.get(internalSorting[0].id) ?? internalSorting[0].id
+    effectiveSortField = SORT_FIELD_BY_COL_ID.get(internalSorting[0].id) ?? internalSorting[0].id;
   }
 
-  let effectiveSortDir: 'asc' | 'desc' | undefined = undefined
+  let effectiveSortDir: "asc" | "desc" | undefined = undefined;
   if (onSort) {
-    effectiveSortDir = activeSortDir
+    effectiveSortDir = activeSortDir;
   } else if (internalSorting.length > 0) {
-    effectiveSortDir = internalSorting[0].desc ? 'desc' : 'asc'
+    effectiveSortDir = internalSorting[0].desc ? "desc" : "asc";
   }
 
   const handleHeaderSortClick = (sortField: string, label: string): void => {
     if (onSort) {
       if (effectiveSortField !== sortField) {
-        onSort(`${sortField}.asc`)
-        announce(`Sorted by ${label}, ascending`)
-      } else if (effectiveSortDir === 'asc') {
-        onSort(`${sortField}.desc`)
-        announce(`Sorted by ${label}, descending`)
+        onSort(`${sortField}.asc`);
+        announce(`Sorted by ${label}, ascending`);
+      } else if (effectiveSortDir === "asc") {
+        onSort(`${sortField}.desc`);
+        announce(`Sorted by ${label}, descending`);
       } else {
-        onSort(undefined)
-        announce('Sort cleared')
+        onSort(undefined);
+        announce("Sort cleared");
       }
     } else {
-      const colId = COL_ID_BY_SORT_FIELD.get(sortField) ?? sortField
+      const colId = COL_ID_BY_SORT_FIELD.get(sortField) ?? sortField;
       if (effectiveSortField !== sortField) {
-        setInternalSorting([{ id: colId, desc: false }])
-        announce(`Sorted by ${label}, ascending`)
-      } else if (effectiveSortDir === 'asc') {
-        setInternalSorting([{ id: colId, desc: true }])
-        announce(`Sorted by ${label}, descending`)
+        setInternalSorting([{ id: colId, desc: false }]);
+        announce(`Sorted by ${label}, ascending`);
+      } else if (effectiveSortDir === "asc") {
+        setInternalSorting([{ id: colId, desc: true }]);
+        announce(`Sorted by ${label}, descending`);
       } else {
-        setInternalSorting([])
-        announce('Sort cleared')
+        setInternalSorting([]);
+        announce("Sort cleared");
       }
     }
-  }
+  };
 
   const handlePopoverSort = (s: string | undefined, label: string): void => {
     if (onSort) {
-      onSort(s)
+      onSort(s);
       if (s) {
-        announce(`Sorted by ${label}, ${s.endsWith('.asc') ? 'ascending' : 'descending'}`)
+        announce(`Sorted by ${label}, ${s.endsWith(".asc") ? "ascending" : "descending"}`);
       } else {
-        announce('Sort cleared')
+        announce("Sort cleared");
       }
     } else {
       if (s === undefined) {
-        setInternalSorting([])
-        announce('Sort cleared')
+        setInternalSorting([]);
+        announce("Sort cleared");
       } else {
-        const [field, dir] = s.split('.')
-        if (field && (dir === 'asc' || dir === 'desc')) {
-          const colId = COL_ID_BY_SORT_FIELD.get(field) ?? field
-          setInternalSorting([{ id: colId, desc: dir === 'desc' }])
-          announce(`Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`)
+        const [field, dir] = s.split(".");
+        if (field && (dir === "asc" || dir === "desc")) {
+          const colId = COL_ID_BY_SORT_FIELD.get(field) ?? field;
+          setInternalSorting([{ id: colId, desc: dir === "desc" }]);
+          announce(`Sorted by ${label}, ${dir === "asc" ? "ascending" : "descending"}`);
         }
       }
     }
-  }
+  };
 
   const table = useReactTable({
     data: events,
     columns: COLUMNS,
-    columnResizeMode: 'onChange',
+    columnResizeMode: "onChange",
     state: {
       columnVisibility: visibility,
       columnSizing: sizing,
       sorting: internalSorting,
     },
-    onColumnSizingChange: (updater) => { setSizing(updater) },
+    onColumnSizingChange: (updater) => {
+      setSizing(updater);
+    },
     onSortingChange: setInternalSorting,
     manualSorting: Boolean(onSort),
     manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-  })
+  });
 
   if (events.length === 0) {
-    return <p>No events.</p>
+    return <p>No events.</p>;
   }
 
   return (
@@ -152,35 +154,37 @@ export function EventTable({
       {showColumnControls && (
         <details className={`${styles.visibilityPanel} animates-details`}>
           <summary>Customize columns</summary>
-          <fieldset>
-            <ul>
-              {COLUMNS.map((col) => (
-                <li key={col.id}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={col.id !== undefined && Boolean(visibility[col.id])}
-                      onChange={() => {
-                        if (col.id !== undefined) {
-                          toggleVisibility(col.id)
-                        }
-                      }}
-                    />
-                    {typeof col.header === 'string' ? col.header : col.id}
-                  </label>
-                </li>
-              ))}
-            </ul>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                resetVisibility()
-                resetSizing()
-              }}
-            >
-              Reset to defaults
-            </Button>
-          </fieldset>
+          <div>
+            <fieldset>
+              <ul>
+                {COLUMNS.map((col) => (
+                  <li key={col.id}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={col.id !== undefined && Boolean(visibility[col.id])}
+                        onChange={() => {
+                          if (col.id !== undefined) {
+                            toggleVisibility(col.id);
+                          }
+                        }}
+                      />
+                      {typeof col.header === "string" ? col.header : col.id}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  resetVisibility();
+                  resetSizing();
+                }}
+              >
+                Reset to defaults
+              </Button>
+            </fieldset>
+          </div>
         </details>
       )}
 
@@ -190,13 +194,14 @@ export function EventTable({
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
-                  const sortField = header.column.columnDef.meta?.sortField
-                  const colHeader = header.column.columnDef.header
-                  const label = typeof colHeader === 'string' ? colHeader : (header.column.id ?? '')
-                  const isActive = Boolean(sortField) && effectiveSortField === sortField
-                  let ariaSort: 'ascending' | 'descending' | 'none' = 'none'
+                  const sortField = header.column.columnDef.meta?.sortField;
+                  const colHeader = header.column.columnDef.header;
+                  const label =
+                    typeof colHeader === "string" ? colHeader : (header.column.id ?? "");
+                  const isActive = Boolean(sortField) && effectiveSortField === sortField;
+                  let ariaSort: "ascending" | "descending" | "none" = "none";
                   if (isActive) {
-                    ariaSort = effectiveSortDir === 'asc' ? 'ascending' : 'descending'
+                    ariaSort = effectiveSortDir === "asc" ? "ascending" : "descending";
                   }
                   return (
                     <th
@@ -220,7 +225,7 @@ export function EventTable({
                           {flexRender(header.column.columnDef.header, header.getContext())}
                           {isActive && (
                             <span aria-hidden="true" className={styles.sortIndicator}>
-                              {effectiveSortDir === 'asc' ? ' ▲' : ' ▼'}
+                              {effectiveSortDir === "asc" ? " ▲" : " ▼"}
                             </span>
                           )}
                         </button>
@@ -241,7 +246,7 @@ export function EventTable({
                         )}
                       </div>
                     </th>
-                  )
+                  );
                 })}
               </tr>
             ))}
@@ -286,11 +291,11 @@ export function EventTable({
           columnName={resizeTarget.columnName}
           currentWidth={resizeTarget.currentWidth}
           onApply={(width) => {
-            setSizing((prev: ColumnSizingState) => ({ ...prev, [resizeTarget.columnId]: width }))
+            setSizing((prev: ColumnSizingState) => ({ ...prev, [resizeTarget.columnId]: width }));
           }}
           onClose={() => setResizeTarget(null)}
         />
       )}
     </section>
-  )
+  );
 }

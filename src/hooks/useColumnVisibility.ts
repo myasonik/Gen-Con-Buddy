@@ -1,7 +1,7 @@
-import { useStoredState } from './useStoredState'
+import { useStoredState } from "./useStoredState";
 
-const STORAGE_KEY = 'gen-con-buddy-columns'
-const VERSION = 1
+const STORAGE_KEY = "gen-con-buddy-columns";
+const VERSION = 1;
 
 const DEFAULTS: Record<string, boolean> = {
   gameId: false,
@@ -38,22 +38,22 @@ const DEFAULTS: Record<string, boolean> = {
   specialCategory: false,
   ticketsAvailable: true,
   lastModified: false,
-}
+};
 
 export function useColumnVisibility(): {
-  visibility: Record<string, boolean>
-  toggle: (column: string) => void
-  reset: () => void
+  visibility: Record<string, boolean>;
+  toggle: (column: string) => void;
+  reset: () => void;
 } {
-  const [visibility, setVisibility] = useStoredState(STORAGE_KEY, VERSION, { ...DEFAULTS })
+  const [visibility, setVisibility] = useStoredState(STORAGE_KEY, VERSION, { ...DEFAULTS });
 
   const toggle = (column: string): void => {
-    setVisibility((prev) => ({ ...prev, [column]: !prev[column] }))
-  }
+    setVisibility((prev) => ({ ...prev, [column]: !prev[column] }));
+  };
 
   const reset = (): void => {
-    setVisibility({ ...DEFAULTS })
-  }
+    setVisibility({ ...DEFAULTS });
+  };
 
-  return { visibility, toggle, reset }
+  return { visibility, toggle, reset };
 }

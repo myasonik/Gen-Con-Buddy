@@ -1,36 +1,36 @@
-import clsx from 'clsx'
-import { Button } from '../../ui/Button/Button'
-import { Toggletip } from '../../ui/Toggletip/Toggletip'
-import { Select } from '../../ui/Select/Select'
-import { PAGE_SIZE_OPTIONS, BACKEND_MAX_RESULTS } from '../../utils/constants'
-import styles from './Pagination.module.css'
+import clsx from "clsx";
+import { Button } from "../../ui/Button/Button";
+import { Toggletip } from "../../ui/Toggletip/Toggletip";
+import { Select } from "../../ui/Select/Select";
+import { PAGE_SIZE_OPTIONS, BACKEND_MAX_RESULTS } from "../../utils/constants";
+import styles from "./Pagination.module.css";
 
-function getPageNumbers(page: number, totalPages: number): (number | '...')[] {
+function getPageNumbers(page: number, totalPages: number): (number | "...")[] {
   if (totalPages <= 7) {
-    return Array.from({ length: totalPages }, (_, i) => i + 1)
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
-  const pages: (number | '...')[] = [1]
+  const pages: (number | "...")[] = [1];
   if (page > 3) {
-    pages.push('...')
+    pages.push("...");
   }
-  const start = Math.max(2, page - 1)
-  const end = Math.min(totalPages - 1, page + 1)
+  const start = Math.max(2, page - 1);
+  const end = Math.min(totalPages - 1, page + 1);
   for (let i = start; i <= end; i++) {
-    pages.push(i)
+    pages.push(i);
   }
   if (page < totalPages - 2) {
-    pages.push('...')
+    pages.push("...");
   }
-  pages.push(totalPages)
-  return pages
+  pages.push(totalPages);
+  return pages;
 }
 
 interface PaginationProps {
-  page: number
-  limit: number
-  total: number
-  onNavigate: (page: number, limit: number) => void
-  'aria-label'?: string
+  page: number;
+  limit: number;
+  total: number;
+  onNavigate: (page: number, limit: number) => void;
+  "aria-label"?: string;
 }
 
 export function Pagination({
@@ -38,13 +38,13 @@ export function Pagination({
   limit,
   total,
   onNavigate,
-  'aria-label': ariaLabel = 'Pagination',
+  "aria-label": ariaLabel = "Pagination",
 }: PaginationProps): JSX.Element {
-  const naturalTotalPages = Math.ceil(total / limit)
-  const maxPages = Math.floor(BACKEND_MAX_RESULTS / limit)
-  const totalPages = Math.min(naturalTotalPages, maxPages)
-  const isTruncated = naturalTotalPages > maxPages
-  const pageNumbers = getPageNumbers(page, totalPages)
+  const naturalTotalPages = Math.ceil(total / limit);
+  const maxPages = Math.floor(BACKEND_MAX_RESULTS / limit);
+  const totalPages = Math.min(naturalTotalPages, maxPages);
+  const isTruncated = naturalTotalPages > maxPages;
+  const pageNumbers = getPageNumbers(page, totalPages);
 
   return (
     <nav aria-label={ariaLabel} className={styles.nav}>
@@ -67,7 +67,7 @@ export function Pagination({
           />
         )}
         {pageNumbers.map((p, i) =>
-          p === '...' ? (
+          p === "..." ? (
             <span key={`ellipsis-${i}`} aria-hidden className={styles.ellipsis}>
               …
             </span>
@@ -79,7 +79,7 @@ export function Pagination({
                 [styles.activePage]: p === page,
               })}
               onClick={() => onNavigate(p, limit)}
-              aria-current={p === page ? 'page' : undefined}
+              aria-current={p === page ? "page" : undefined}
               disabled={p === page}
             >
               {p}
@@ -107,5 +107,5 @@ export function Pagination({
         </label>
       </div>
     </nav>
-  )
+  );
 }

@@ -1,79 +1,79 @@
-import { describe, expect, it } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import { Badge, BoolBadge } from './Badge'
+import { describe, expect, it } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { Badge, BoolBadge } from "./Badge";
 
-describe('badge', () => {
-  it('renders children', () => {
-    render(<Badge>ticketed</Badge>)
-    expect(screen.getByText('ticketed')).toBeInTheDocument()
-  })
+describe("badge", () => {
+  it("renders children", () => {
+    render(<Badge>ticketed</Badge>);
+    expect(screen.getByText("ticketed")).toBeInTheDocument();
+  });
 
-  it('applies filled variant by default', () => {
-    render(<Badge>ticketed</Badge>)
-    expect(screen.getByText('ticketed')).toHaveAttribute('data-variant', 'filled')
-  })
+  it("applies filled variant by default", () => {
+    render(<Badge>ticketed</Badge>);
+    expect(screen.getByText("ticketed")).toHaveAttribute("data-variant", "filled");
+  });
 
-  it('forwards className prop', () => {
-    render(<Badge className="custom-class">ticketed</Badge>)
-    expect(screen.getByText('ticketed').closest('span')).toHaveClass('custom-class')
-  })
+  it("forwards className prop", () => {
+    render(<Badge className="custom-class">ticketed</Badge>);
+    expect(screen.getByText("ticketed").closest("span")).toHaveClass("custom-class");
+  });
 
-  it('applies outline variant', () => {
-    render(<Badge variant="outline">free</Badge>)
-    expect(screen.getByText('free')).toHaveAttribute('data-variant', 'outline')
-  })
-})
+  it("applies outline variant", () => {
+    render(<Badge variant="outline">free</Badge>);
+    expect(screen.getByText("free")).toHaveAttribute("data-variant", "outline");
+  });
+});
 
-describe('boolBadge', () => {
-  it('shows ✓ for true', () => {
-    render(<BoolBadge value />)
-    expect(screen.getByText('✓')).toBeInTheDocument()
-  })
+describe("boolBadge", () => {
+  it("shows ✓ for true", () => {
+    render(<BoolBadge value />);
+    expect(screen.getByText("✓")).toBeInTheDocument();
+  });
 
   it("shows ✓ for 'yes' string (case-insensitive)", () => {
-    render(<BoolBadge value="yes" />)
-    expect(screen.getByText('✓')).toBeInTheDocument()
-  })
+    render(<BoolBadge value="yes" />);
+    expect(screen.getByText("✓")).toBeInTheDocument();
+  });
 
   it("shows ✓ for 'Yes' (capitalized)", () => {
-    render(<BoolBadge value="Yes" />)
-    expect(screen.getByText('✓')).toBeInTheDocument()
-  })
+    render(<BoolBadge value="Yes" />);
+    expect(screen.getByText("✓")).toBeInTheDocument();
+  });
 
-  it('shows — for false', () => {
-    render(<BoolBadge value={false} />)
-    expect(screen.getByText('—')).toBeInTheDocument()
-  })
+  it("shows — for false", () => {
+    render(<BoolBadge value={false} />);
+    expect(screen.getByText("—")).toBeInTheDocument();
+  });
 
   it("shows — for 'no' string", () => {
-    render(<BoolBadge value="no" />)
-    expect(screen.getByText('—')).toBeInTheDocument()
-  })
+    render(<BoolBadge value="no" />);
+    expect(screen.getByText("—")).toBeInTheDocument();
+  });
 
-  it('shows — for empty string', () => {
-    render(<BoolBadge value="" />)
-    expect(screen.getByText('—')).toBeInTheDocument()
-  })
+  it("shows — for empty string", () => {
+    render(<BoolBadge value="" />);
+    expect(screen.getByText("—")).toBeInTheDocument();
+  });
 
   it("shows sr-only 'yes' for true", () => {
-    render(<BoolBadge value />)
-    expect(screen.getByText('yes')).toBeInTheDocument()
-  })
+    render(<BoolBadge value />);
+    expect(screen.getByText("yes")).toBeInTheDocument();
+  });
 
   it("shows sr-only 'no' for false", () => {
-    render(<BoolBadge value={false} />)
-    expect(screen.getByText('no')).toBeInTheDocument()
-  })
+    render(<BoolBadge value={false} />);
+    expect(screen.getByText("no")).toBeInTheDocument();
+  });
 
-  it('renders both glyph and sr-only text for true', () => {
-    render(<BoolBadge value />)
-    expect(screen.getByText('✓')).toBeInTheDocument()
-    expect(screen.getByText('yes')).toBeInTheDocument()
-  })
+  it("renders both glyph and sr-only text for true", () => {
+    render(<BoolBadge value />);
+    expect(screen.getByText("✓")).toBeInTheDocument();
+    expect(screen.getByText("yes")).toBeInTheDocument();
+  });
 
-  it('renders both glyph and sr-only text for false', () => {
-    render(<BoolBadge value={false} />)
-    expect(screen.getByText('—')).toBeInTheDocument()
-    expect(screen.getByText('no')).toBeInTheDocument()
-  })
-})
+  it("renders both glyph and sr-only text for false", () => {
+    render(<BoolBadge value={false} />);
+    expect(screen.getByText("—")).toBeInTheDocument();
+    expect(screen.getByText("no")).toBeInTheDocument();
+  });
+});

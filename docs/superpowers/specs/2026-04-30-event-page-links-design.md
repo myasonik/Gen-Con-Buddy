@@ -29,13 +29,13 @@ buildGoogleCalendarUrl(attrs: EventAttributes): string
 
 Constructs a `https://calendar.google.com/calendar/render` URL with:
 
-| Parameter | Value |
-|---|---|
-| `action` | `TEMPLATE` |
-| `text` | `attrs.title` |
-| `dates` | `{start}/{end}` formatted as `yyyyMMdd'T'HHmmss` (local Indianapolis time, no `Z`) |
+| Parameter  | Value                                                                                            |
+| ---------- | ------------------------------------------------------------------------------------------------ |
+| `action`   | `TEMPLATE`                                                                                       |
+| `text`     | `attrs.title`                                                                                    |
+| `dates`    | `{start}/{end}` formatted as `yyyyMMdd'T'HHmmss` (local Indianapolis time, no `Z`)               |
 | `location` | `{location} — {roomName}, Table {tableNumber}` (table segment omitted if `tableNumber` is empty) |
-| `details` | See details block below |
+| `details`  | See details block below                                                                          |
 
 Dates use `date-fns/format` (already a project dependency). No UTC conversion — Gen Con is a physical event in Indianapolis; local time is correct.
 
@@ -62,7 +62,7 @@ Fields with no meaningful value (empty string) are omitted to avoid noisy blank 
 No utility function needed:
 
 ```ts
-`https://www.gencon.com/events/${a.gameId}`
+`https://www.gencon.com/events/${a.gameId}`;
 ```
 
 ### EventDetail changes (`src/components/EventDetail/EventDetail.tsx`)
@@ -79,7 +79,13 @@ Insert an action row between the `<h1>` and the first `<section>`:
     Add to Google Calendar
   </Button>
   <Button
-    render={<a href={`https://www.gencon.com/events/${a.gameId}`} target="_blank" rel="noopener noreferrer" />}
+    render={
+      <a
+        href={`https://www.gencon.com/events/${a.gameId}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      />
+    }
     variant="ghost"
   >
     <ExternalLink aria-hidden="true" className={styles.actionIcon} />

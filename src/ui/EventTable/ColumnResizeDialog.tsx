@@ -1,13 +1,13 @@
-import { useState, useId } from 'react'
-import { Dialog } from '@base-ui/react/dialog'
-import { Button } from '../Button/Button'
-import styles from './ColumnResizeDialog.module.css'
+import { useState, useId } from "react";
+import { Dialog } from "@base-ui/react/dialog";
+import { Button } from "../Button/Button";
+import styles from "./ColumnResizeDialog.module.css";
 
 interface ColumnResizeDialogProps {
-  columnName: string
-  currentWidth: number
-  onApply: (width: number) => void
-  onClose: () => void
+  columnName: string;
+  currentWidth: number;
+  onApply: (width: number) => void;
+  onClose: () => void;
 }
 
 export function ColumnResizeDialog({
@@ -16,15 +16,15 @@ export function ColumnResizeDialog({
   onApply,
   onClose,
 }: ColumnResizeDialogProps): JSX.Element {
-  const [value, setValue] = useState(String(currentWidth))
-  const inputId = useId()
+  const [value, setValue] = useState(String(currentWidth));
+  const inputId = useId();
 
   return (
     <Dialog.Root
       open
       onOpenChange={(open) => {
         if (!open) {
-          onClose()
+          onClose();
         }
       }}
     >
@@ -51,8 +51,8 @@ export function ColumnResizeDialog({
             <Button
               variant="primary"
               onClick={() => {
-                onApply(Number(value))
-                onClose()
+                onApply(Number(value));
+                onClose();
               }}
             >
               Apply
@@ -61,5 +61,5 @@ export function ColumnResizeDialog({
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>
-  )
+  );
 }

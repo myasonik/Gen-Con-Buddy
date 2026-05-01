@@ -24,7 +24,7 @@
 }
 
 .popup {
-  composes: surface from '../../styles/popup.module.css';
+  composes: surface from "../../styles/popup.module.css";
 }
 
 .item {

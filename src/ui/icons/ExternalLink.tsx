@@ -1,15 +1,15 @@
-import React from 'react'
+import React from "react";
 
 interface ExternalLinkProps {
-  className?: string
-  style?: React.CSSProperties
-  'aria-hidden'?: true | 'true'
+  className?: string;
+  style?: React.CSSProperties;
+  "aria-hidden"?: true | "true";
 }
 
 export function ExternalLink({
   className,
   style,
-  'aria-hidden': ariaHidden,
+  "aria-hidden": ariaHidden,
 }: ExternalLinkProps): JSX.Element {
   return (
     <svg
@@ -28,5 +28,5 @@ export function ExternalLink({
       <polyline points="15 3 21 3 21 9" />
       <line x1="10" y1="14" x2="21" y2="3" />
     </svg>
-  )
+  );
 }

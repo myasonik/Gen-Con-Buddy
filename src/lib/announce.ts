@@ -1,37 +1,37 @@
-export type Priority = 'polite' | 'assertive'
+export type Priority = "polite" | "assertive";
 
 const nodeId: Record<Priority, string> = {
-  polite: 'live-polite',
-  assertive: 'live-assertive',
-}
+  polite: "live-polite",
+  assertive: "live-assertive",
+};
 
-let busy = false
-const queue: { message: string; priority: Priority }[] = []
+let busy = false;
+const queue: { message: string; priority: Priority }[] = [];
 
 function drainQueue(): void {
   if (queue.length === 0) {
-    busy = false
-    return
+    busy = false;
+    return;
   }
-  busy = true
+  busy = true;
   // oxlint-disable-next-line typescript/no-non-null-assertion
-  const { message, priority } = queue.shift()!
-  const node = document.getElementById(nodeId[priority])
+  const { message, priority } = queue.shift()!;
+  const node = document.getElementById(nodeId[priority]);
   if (!node) {
-    drainQueue()
-    return
+    drainQueue();
+    return;
   }
-  node.textContent = ''
+  node.textContent = "";
   setTimeout(() => {
-    node.textContent = message
-    setTimeout(drainQueue, 150)
-  }, 0)
+    node.textContent = message;
+    setTimeout(drainQueue, 150);
+  }, 0);
 }
 
-export function announce(message: string, priority: Priority = 'polite'): void {
-  queue.push({ message, priority })
+export function announce(message: string, priority: Priority = "polite"): void {
+  queue.push({ message, priority });
   if (!busy) {
-    drainQueue()
+    drainQueue();
   }
 }
 
@@ -39,8 +39,8 @@ export function announce(message: string, priority: Priority = 'polite'): void {
 // Guarded so it is a no-op (and throws) in production bundles.
 export function __reset(): void {
   if (import.meta.env.PROD) {
-    throw new Error('__reset is a test-only helper and must not be called in production')
+    throw new Error("__reset is a test-only helper and must not be called in production");
   }
-  busy = false
-  queue.length = 0
+  busy = false;
+  queue.length = 0;
 }

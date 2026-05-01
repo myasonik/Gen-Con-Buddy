@@ -1,40 +1,44 @@
-import { useState } from 'react'
-import { format } from 'date-fns'
-import { useQuery } from '@tanstack/react-query'
-import type { ChangelogSummary } from '../../utils/types'
-import { fetchChangelogEntry } from '../../utils/api'
-import { ChangelogEntryPanel } from './ChangelogEntryPanel'
-import type { SharedColumnState } from '../../ui/EventTable/EventTable'
-import styles from './ChangelogRow.module.css'
+import { useState } from "react";
+import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import type { ChangelogSummary } from "../../utils/types";
+import { fetchChangelogEntry } from "../../utils/api";
+import { ChangelogEntryPanel } from "./ChangelogEntryPanel";
+import type { SharedColumnState } from "../../ui/EventTable/EventTable";
+import styles from "./ChangelogRow.module.css";
 
 interface ChangelogRowProps {
-  summary: ChangelogSummary
-  onOpen: () => void
-  sharedColumnState: SharedColumnState
+  summary: ChangelogSummary;
+  onOpen: () => void;
+  sharedColumnState: SharedColumnState;
 }
 
-export function ChangelogRow({ summary, onOpen, sharedColumnState }: ChangelogRowProps): JSX.Element {
-  const [isOpen, setIsOpen] = useState(false)
+export function ChangelogRow({
+  summary,
+  onOpen,
+  sharedColumnState,
+}: ChangelogRowProps): JSX.Element {
+  const [isOpen, setIsOpen] = useState(false);
   const { data: entry, isError } = useQuery({
-    queryKey: ['changelog', 'entry', summary.id],
+    queryKey: ["changelog", "entry", summary.id],
     queryFn: () => fetchChangelogEntry(summary.id),
     enabled: isOpen,
-  })
+  });
 
   return (
     <details
       className={`${styles.row} animates-details`}
       onToggle={(e) => {
-        const { open } = e.currentTarget as HTMLDetailsElement
-        setIsOpen(open)
+        const { open } = e.currentTarget as HTMLDetailsElement;
+        setIsOpen(open);
         if (open) {
-          onOpen()
+          onOpen();
         }
       }}
     >
       <summary className={styles.summary}>
         <time dateTime={summary.date} className={styles.date}>
-          {format(new Date(summary.date), 'MMM d, yyyy h:mm a')}
+          {format(new Date(summary.date), "MMM d, yyyy h:mm a")}
         </time>
         <span className={styles.counts}>
           <span>{summary.createdCount} created</span>
@@ -42,7 +46,12 @@ export function ChangelogRow({ summary, onOpen, sharedColumnState }: ChangelogRo
           <span>{summary.deletedCount} deleted</span>
         </span>
       </summary>
-      <ChangelogEntryPanel entry={isError ? 'error' : entry} sharedColumnState={sharedColumnState} />
+      <div>
+        <ChangelogEntryPanel
+          entry={isError ? "error" : entry}
+          sharedColumnState={sharedColumnState}
+        />
+      </div>
     </details>
-  )
+  );
 }

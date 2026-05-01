@@ -1,36 +1,36 @@
-import { useState, useId, useRef } from 'react'
-import { Combobox } from '@base-ui/react/combobox'
-import { EVENT_TYPES } from '../../utils/enums'
-import styles from './EventTypeSelect.module.css'
+import { useState, useId, useRef } from "react";
+import { Combobox } from "@base-ui/react/combobox";
+import { EVENT_TYPES } from "../../utils/enums";
+import styles from "./EventTypeSelect.module.css";
 
 export interface EventTypeSelectProps {
-  value: string
-  onValueChange: (value: string) => void
+  value: string;
+  onValueChange: (value: string) => void;
 }
 
 const OPTIONS = Object.entries(EVENT_TYPES).map(([code, label]) => ({
   code,
   label,
-  name: label.replace(/^[A-Z]+ - /, ''),
-}))
+  name: label.replace(/^[A-Z]+ - /, ""),
+}));
 
 export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps): JSX.Element {
-  const inputId = useId()
-  const inputRef = useRef<HTMLInputElement>(null)
-  const [open, setOpen] = useState(false)
-  const [filterText, setFilterText] = useState('')
-  const filter = Combobox.useFilter()
+  const inputId = useId();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [open, setOpen] = useState(false);
+  const [filterText, setFilterText] = useState("");
+  const filter = Combobox.useFilter();
 
-  const selectedCodes = value ? value.split(',') : []
+  const selectedCodes = value ? value.split(",") : [];
 
   const filteredOptions = filterText
     ? OPTIONS.filter(
         ({ code, name }) => filter.contains(code, filterText) || filter.contains(name, filterText),
       )
-    : OPTIONS
+    : OPTIONS;
 
   function removeCode(code: string): void {
-    onValueChange(selectedCodes.filter((c) => c !== code).join(','))
+    onValueChange(selectedCodes.filter((c) => c !== code).join(","));
   }
 
   return (
@@ -39,11 +39,11 @@ export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps):
         multiple
         open={open}
         value={selectedCodes}
-        onValueChange={(codes) => onValueChange(codes.join(','))}
+        onValueChange={(codes) => onValueChange(codes.join(","))}
         onOpenChange={(isOpen) => {
-          setOpen(isOpen)
+          setOpen(isOpen);
           if (!isOpen) {
-            setFilterText('')
+            setFilterText("");
           }
         }}
         onInputValueChange={(text) => setFilterText(text)}
@@ -54,9 +54,13 @@ export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps):
         <Combobox.InputGroup
           className={styles.inputGroup}
           onClick={(e) => {
-            if ((e.target as HTMLElement).closest('button')) { return }
-            if (!open) { setOpen(true) }
-            inputRef.current?.focus()
+            if ((e.target as HTMLElement).closest("button")) {
+              return;
+            }
+            if (!open) {
+              setOpen(true);
+            }
+            inputRef.current?.focus();
           }}
         >
           <div className={styles.inputGroupInner}>
@@ -66,8 +70,8 @@ export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps):
                   {code}
                   {open && (
                     <span>
-                      {' – '}
-                      {EVENT_TYPES[code]?.replace(/^[A-Z]+ - /, '')}
+                      {" – "}
+                      {EVENT_TYPES[code]?.replace(/^[A-Z]+ - /, "")}
                     </span>
                   )}
                 </span>
@@ -85,10 +89,14 @@ export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps):
               ref={inputRef}
               id={inputId}
               className={styles.input}
-              placeholder={selectedCodes.length > 0 ? 'Add type…' : 'Filter types…'}
+              placeholder={selectedCodes.length > 0 ? "Add type…" : "Filter types…"}
               onKeyDown={(e) => {
-                if (e.key === 'Backspace' && e.currentTarget.value === '' && selectedCodes.length > 0) {
-                  onValueChange(selectedCodes.slice(0, -1).join(','))
+                if (
+                  e.key === "Backspace" &&
+                  e.currentTarget.value === "" &&
+                  selectedCodes.length > 0
+                ) {
+                  onValueChange(selectedCodes.slice(0, -1).join(","));
                 }
               }}
             />
@@ -112,5 +120,5 @@ export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps):
         )}
       </Combobox.Root>
     </div>
-  )
+  );
 }

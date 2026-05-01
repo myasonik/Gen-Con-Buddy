@@ -1,31 +1,50 @@
-import type { SearchFormValues, SearchParams } from './types'
+import type { SearchFormValues, SearchParams } from "./types";
 
-const DAY_DATES: Record<string, { start: string; end: string }> = {
-  wed: { start: '2024-07-31T00:00:00-04:00', end: '2024-08-01T00:00:00-04:00' },
-  thu: { start: '2024-08-01T00:00:00-04:00', end: '2024-08-02T00:00:00-04:00' },
-  fri: { start: '2024-08-02T00:00:00-04:00', end: '2024-08-03T00:00:00-04:00' },
-  sat: { start: '2024-08-03T00:00:00-04:00', end: '2024-08-04T00:00:00-04:00' },
-  sun: { start: '2024-08-04T00:00:00-04:00', end: '2024-08-05T00:00:00-04:00' },
+// Update this each year once new event data is loaded. Gen Con always runs Wed–Sun in late July/early August.
+export const GEN_CON_YEAR = 2024;
+
+function genConWednesday(year: number): Date {
+  const aug1 = new Date(year, 7, 1);
+  const daysBack = (aug1.getDay() - 3 + 7) % 7;
+  return new Date(year, 7, 1 - daysBack);
 }
+
+function offsetDateTime(base: Date, days: number): string {
+  const d = new Date(base);
+  d.setDate(d.getDate() + days);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}T00:00:00-04:00`;
+}
+
+const wed = genConWednesday(GEN_CON_YEAR);
+const DAY_DATES: Record<string, { start: string; end: string }> = {
+  wed: { start: offsetDateTime(wed, 0), end: offsetDateTime(wed, 1) },
+  thu: { start: offsetDateTime(wed, 1), end: offsetDateTime(wed, 2) },
+  fri: { start: offsetDateTime(wed, 2), end: offsetDateTime(wed, 3) },
+  sat: { start: offsetDateTime(wed, 3), end: offsetDateTime(wed, 4) },
+  sun: { start: offsetDateTime(wed, 4), end: offsetDateTime(wed, 5) },
+};
 
 export function daysToStartDateTime(days: string): string | undefined {
   const ranges = days
-    .split(',')
+    .split(",")
     .filter((d) => DAY_DATES[d])
     .map((d) => `[${DAY_DATES[d].start},${DAY_DATES[d].end}]`)
-    .join(',')
-  return ranges || undefined
+    .join(",");
+  return ranges || undefined;
 }
 
 export function buildSearchParams(values: SearchFormValues): SearchParams {
-  const params: SearchParams = {}
+  const params: SearchParams = {};
 
   const set = (key: keyof SearchParams, val: string | number | undefined | boolean): void => {
-    if (val === undefined || val === '' || val === false) {
-      return
+    if (val === undefined || val === "" || val === false) {
+      return;
     }
-    ;(params as Record<string, unknown>)[key] = val
-  }
+    (params as Record<string, unknown>)[key] = val;
+  };
 
   const setRange = (
     key: keyof SearchParams,
@@ -33,10 +52,10 @@ export function buildSearchParams(values: SearchFormValues): SearchParams {
     max: string | undefined,
   ): void => {
     if (!min && !max) {
-      return
+      return;
     }
-    ;(params as Record<string, unknown>)[key] = `[${min ?? ''},${max ?? ''}]`
-  }
+    (params as Record<string, unknown>)[key] = `[${min ?? ""},${max ?? ""}]`;
+  };
 
   const setDateRange = (
     key: keyof SearchParams,
@@ -44,53 +63,53 @@ export function buildSearchParams(values: SearchFormValues): SearchParams {
     end: string | undefined,
   ): void => {
     if (!start && !end) {
-      return
+      return;
     }
-    const s = start ? `${start}:00Z` : ''
-    const e = end ? `${end}:00Z` : ''
-    ;(params as Record<string, unknown>)[key] = `[${s},${e}]`
-  }
+    const s = start ? `${start}:00Z` : "";
+    const e = end ? `${end}:00Z` : "";
+    (params as Record<string, unknown>)[key] = `[${s},${e}]`;
+  };
 
-  set('filter', values.filter)
-  set('gameId', values.gameId)
-  set('title', values.title)
-  set('eventType', values.eventType)
-  set('group', values.group)
-  set('shortDescription', values.shortDescription)
-  set('longDescription', values.longDescription)
-  set('gameSystem', values.gameSystem)
-  set('rulesEdition', values.rulesEdition)
-  setRange('minPlayers', values.minPlayersMin, values.minPlayersMax)
-  setRange('maxPlayers', values.maxPlayersMin, values.maxPlayersMax)
-  set('ageRequired', values.ageRequired)
-  set('experienceRequired', values.experienceRequired)
-  set('materialsProvided', values.materialsProvided)
-  set('materialsRequired', values.materialsRequired)
-  set('materialsRequiredDetails', values.materialsRequiredDetails)
+  set("filter", values.filter);
+  set("gameId", values.gameId);
+  set("title", values.title);
+  set("eventType", values.eventType);
+  set("group", values.group);
+  set("shortDescription", values.shortDescription);
+  set("longDescription", values.longDescription);
+  set("gameSystem", values.gameSystem);
+  set("rulesEdition", values.rulesEdition);
+  setRange("minPlayers", values.minPlayersMin, values.minPlayersMax);
+  setRange("maxPlayers", values.maxPlayersMin, values.maxPlayersMax);
+  set("ageRequired", values.ageRequired);
+  set("experienceRequired", values.experienceRequired);
+  set("materialsProvided", values.materialsProvided);
+  set("materialsRequired", values.materialsRequired);
+  set("materialsRequiredDetails", values.materialsRequiredDetails);
   if (values.days) {
-    params.days = values.days
+    params.days = values.days;
   } else {
-    setDateRange('startDateTime', values.startDateTimeStart, values.startDateTimeEnd)
+    setDateRange("startDateTime", values.startDateTimeStart, values.startDateTimeEnd);
   }
-  setRange('duration', values.durationMin, values.durationMax)
-  setDateRange('endDateTime', values.endDateTimeStart, values.endDateTimeEnd)
-  set('gmNames', values.gmNames)
-  set('website', values.website)
-  set('email', values.email)
-  set('tournament', values.tournament)
-  setRange('roundNumber', values.roundNumberMin, values.roundNumberMax)
-  setRange('totalRounds', values.totalRoundsMin, values.totalRoundsMax)
-  setRange('minimumPlayTime', values.minimumPlayTimeMin, values.minimumPlayTimeMax)
-  set('attendeeRegistration', values.attendeeRegistration)
-  setRange('cost', values.costMin, values.costMax)
-  set('location', values.location)
-  set('roomName', values.roomName)
-  set('tableNumber', values.tableNumber)
-  set('specialCategory', values.specialCategory)
-  setRange('ticketsAvailable', values.ticketsAvailableMin, values.ticketsAvailableMax)
-  setDateRange('lastModified', values.lastModifiedStart, values.lastModifiedEnd)
+  setRange("duration", values.durationMin, values.durationMax);
+  setDateRange("endDateTime", values.endDateTimeStart, values.endDateTimeEnd);
+  set("gmNames", values.gmNames);
+  set("website", values.website);
+  set("email", values.email);
+  set("tournament", values.tournament);
+  setRange("roundNumber", values.roundNumberMin, values.roundNumberMax);
+  setRange("totalRounds", values.totalRoundsMin, values.totalRoundsMax);
+  setRange("minimumPlayTime", values.minimumPlayTimeMin, values.minimumPlayTimeMax);
+  set("attendeeRegistration", values.attendeeRegistration);
+  setRange("cost", values.costMin, values.costMax);
+  set("location", values.location);
+  set("roomName", values.roomName);
+  set("tableNumber", values.tableNumber);
+  set("specialCategory", values.specialCategory);
+  setRange("ticketsAvailable", values.ticketsAvailableMin, values.ticketsAvailableMax);
+  setDateRange("lastModified", values.lastModifiedStart, values.lastModifiedEnd);
 
-  return params
+  return params;
 }
 
 export function parseSearchParams(params: SearchParams): SearchFormValues {
@@ -98,42 +117,42 @@ export function parseSearchParams(params: SearchParams): SearchFormValues {
     val: string | undefined,
   ): { min: string | undefined; max: string | undefined } => {
     if (val === undefined) {
-      return { min: undefined, max: undefined }
+      return { min: undefined, max: undefined };
     }
-    const match = val.match(/^\[([^,]*),([^\]]*)\]$/)
+    const match = val.match(/^\[([^,]*),([^\]]*)\]$/);
     if (!match) {
-      return { min: undefined, max: undefined }
+      return { min: undefined, max: undefined };
     }
-    return { min: match[1], max: match[2] }
-  }
+    return { min: match[1], max: match[2] };
+  };
 
   const parseDateRange = (
     val: string | undefined,
   ): { start: string | undefined; end: string | undefined } => {
     if (val === undefined) {
-      return { start: undefined, end: undefined }
+      return { start: undefined, end: undefined };
     }
-    const match = val.match(/^\[([^,]*),([^\]]*)\]$/)
+    const match = val.match(/^\[([^,]*),([^\]]*)\]$/);
     if (!match) {
-      return { start: undefined, end: undefined }
+      return { start: undefined, end: undefined };
     }
     return {
-      start: match[1] ? match[1].replace(/:00Z$/, '') : '',
-      end: match[2] ? match[2].replace(/:00Z$/, '') : '',
-    }
-  }
+      start: match[1] ? match[1].replace(/:00Z$/, "") : "",
+      end: match[2] ? match[2].replace(/:00Z$/, "") : "",
+    };
+  };
 
-  const minPlayers = parseRange(params.minPlayers)
-  const maxPlayers = parseRange(params.maxPlayers)
-  const startDateTime = parseDateRange(params.startDateTime)
-  const endDateTime = parseDateRange(params.endDateTime)
-  const duration = parseRange(params.duration)
-  const roundNumber = parseRange(params.roundNumber)
-  const totalRounds = parseRange(params.totalRounds)
-  const minimumPlayTime = parseRange(params.minimumPlayTime)
-  const cost = parseRange(params.cost)
-  const ticketsAvailable = parseRange(params.ticketsAvailable)
-  const lastModified = parseDateRange(params.lastModified)
+  const minPlayers = parseRange(params.minPlayers);
+  const maxPlayers = parseRange(params.maxPlayers);
+  const startDateTime = parseDateRange(params.startDateTime);
+  const endDateTime = parseDateRange(params.endDateTime);
+  const duration = parseRange(params.duration);
+  const roundNumber = parseRange(params.roundNumber);
+  const totalRounds = parseRange(params.totalRounds);
+  const minimumPlayTime = parseRange(params.minimumPlayTime);
+  const cost = parseRange(params.cost);
+  const ticketsAvailable = parseRange(params.ticketsAvailable);
+  const lastModified = parseDateRange(params.lastModified);
 
   return {
     filter: params.filter,
@@ -182,5 +201,5 @@ export function parseSearchParams(params: SearchParams): SearchFormValues {
     lastModifiedStart: params.lastModified ? lastModified.start : undefined,
     lastModifiedEnd: params.lastModified ? lastModified.end : undefined,
     days: params.days,
-  }
+  };
 }

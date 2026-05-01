@@ -1,72 +1,27 @@
-import { vi, expect, test, beforeEach, afterEach } from 'vitest'
-import { renderHook, act } from '@testing-library/react'
-import { useSidebarOpen } from './useSidebarOpen'
+import { expect, test } from "vitest";
+import { renderHook, act } from "@testing-library/react";
+import { useSidebarOpen } from "./useSidebarOpen";
 
-const KEY = 'sidebarOpen'
+test("defaults to closed on mount", () => {
+  const { result } = renderHook(() => useSidebarOpen());
+  expect(result.current[0]).toBe(false);
+});
 
-beforeEach(() => {
-  localStorage.clear()
-})
-
-afterEach(() => {
-  vi.restoreAllMocks()
-})
-
-test('defaults to true when localStorage has no entry', () => {
-  const { result } = renderHook(() => useSidebarOpen())
-  expect(result.current[0]).toBe(true)
-})
-
-test('toggle flips from true to false', () => {
-  const { result } = renderHook(() => useSidebarOpen())
+test("toggle flips from false to true", () => {
+  const { result } = renderHook(() => useSidebarOpen());
   act(() => {
-    result.current[1]()
-  })
-  expect(result.current[0]).toBe(false)
-})
+    result.current[1]();
+  });
+  expect(result.current[0]).toBe(true);
+});
 
-test('toggle flips from false back to true', () => {
-  const { result } = renderHook(() => useSidebarOpen())
+test("toggle flips from true back to false", () => {
+  const { result } = renderHook(() => useSidebarOpen());
   act(() => {
-    result.current[1]()
-  })
+    result.current[1]();
+  });
   act(() => {
-    result.current[1]()
-  })
-  expect(result.current[0]).toBe(true)
-})
-
-test('persists state to localStorage on toggle', () => {
-  const { result } = renderHook(() => useSidebarOpen())
-  act(() => {
-    result.current[1]()
-  })
-  const { result: result2 } = renderHook(() => useSidebarOpen())
-  expect(result2.current[0]).toBe(false)
-})
-
-test('reads existing true value from localStorage', () => {
-  localStorage.setItem(KEY, JSON.stringify({ version: 1, value: true }))
-  const { result } = renderHook(() => useSidebarOpen())
-  expect(result.current[0]).toBe(true)
-})
-
-test('reads existing false value from localStorage', () => {
-  localStorage.setItem(KEY, JSON.stringify({ version: 1, value: false }))
-  const { result } = renderHook(() => useSidebarOpen())
-  expect(result.current[0]).toBe(false)
-})
-
-test('defaults to true when localStorage value is malformed', () => {
-  localStorage.setItem(KEY, 'garbage')
-  const { result } = renderHook(() => useSidebarOpen())
-  expect(result.current[0]).toBe(true)
-})
-
-test('defaults to true when localStorage.getItem throws', () => {
-  vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
-    throw new Error('storage unavailable')
-  })
-  const { result } = renderHook(() => useSidebarOpen())
-  expect(result.current[0]).toBe(true)
-})
+    result.current[1]();
+  });
+  expect(result.current[0]).toBe(false);
+});

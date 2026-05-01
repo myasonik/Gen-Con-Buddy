@@ -1,5 +1,5 @@
-import { daysToStartDateTime } from './searchParams'
-import { DEFAULT_PAGE_SIZE } from './constants'
+import { daysToStartDateTime } from "./searchParams";
+import { DEFAULT_PAGE_SIZE } from "./constants";
 import type {
   EventSearchResponse,
   SearchParams,
@@ -7,77 +7,77 @@ import type {
   FetchChangelogResponse,
   ChangelogEntry,
   ChangelogSummary,
-} from './types'
+} from "./types";
 
 export async function fetchEvents(params: SearchParams): Promise<EventSearchResponse> {
-  const url = new URL('/api/events/search', window.location.origin)
+  const url = new URL("/api/events/search", window.location.origin);
   if (params.days) {
-    const startDateTime = daysToStartDateTime(params.days)
+    const startDateTime = daysToStartDateTime(params.days);
     if (startDateTime) {
-      url.searchParams.set('startDateTime', startDateTime)
+      url.searchParams.set("startDateTime", startDateTime);
     }
   }
   Object.entries(params).forEach(([key, value]) => {
-    if (value === undefined || value === '') {
-      return
+    if (value === undefined || value === "") {
+      return;
     }
-    if (key === 'days') {
-      return
+    if (key === "days") {
+      return;
     }
-    if (key === 'page') {
+    if (key === "page") {
       // URL uses 1-indexed; API uses 0-indexed. Omit when page=1 (API default is 0).
-      if (typeof value === 'number' && value > 1) {
-        url.searchParams.set('page', String(value - 1))
+      if (typeof value === "number" && value > 1) {
+        url.searchParams.set("page", String(value - 1));
       }
-      return
+      return;
     }
-    if (key === 'limit') {
+    if (key === "limit") {
       // Omit when DEFAULT_PAGE_SIZE (API default).
-      if (typeof value === 'number' && value !== DEFAULT_PAGE_SIZE) {
-        url.searchParams.set('limit', String(value))
+      if (typeof value === "number" && value !== DEFAULT_PAGE_SIZE) {
+        url.searchParams.set("limit", String(value));
       }
-      return
+      return;
     }
-    url.searchParams.set(key, String(value))
-  })
-  const res = await fetch(url)
+    url.searchParams.set(key, String(value));
+  });
+  const res = await fetch(url);
   if (!res.ok) {
-    throw new Error(`HTTP ${res.status}`)
+    throw new Error(`HTTP ${res.status}`);
   }
-  const data = (await res.json()) as EventSearchResponse
+  const data = (await res.json()) as EventSearchResponse;
   if (data.error) {
-    throw new Error(data.error.detail)
+    throw new Error(data.error.detail);
   }
-  return data
+  return data;
 }
 
 export async function fetchChangelogList(limit = 6): Promise<ChangelogSummary[]> {
-  const url = new URL('/api/changelog/list', window.location.origin)
-  url.searchParams.set('limit', String(limit))
-  const res = await fetch(url)
+  const url = new URL("/api/changelog/list", window.location.origin);
+  url.searchParams.set("limit", String(limit));
+  const res = await fetch(url);
   if (!res.ok) {
-    throw new Error(`HTTP ${res.status}`)
+    throw new Error(`HTTP ${res.status}`);
   }
-  const data = (await res.json()) as ListChangelogsResponse
+  const data = (await res.json()) as ListChangelogsResponse;
   if (data.error) {
-    throw new Error(data.error)
+    throw new Error(data.error);
   }
-  return data.entries ?? []
+  return data.entries ?? [];
 }
 
 export async function fetchChangelogEntry(id: string): Promise<ChangelogEntry> {
-  const url = new URL('/api/changelog/fetch', window.location.origin)
-  url.searchParams.set('id', id)
-  const res = await fetch(url)
+  const url = new URL("/api/changelog/fetch", window.location.origin);
+  url.searchParams.set("id", id);
+  const res = await fetch(url);
   if (!res.ok) {
-    throw new Error(`HTTP ${res.status}`)
+    throw new Error(`HTTP ${res.status}`);
   }
-  const data = (await res.json()) as FetchChangelogResponse
+  const data = (await res.json()) as FetchChangelogResponse;
   if (data.error) {
-    throw new Error(data.error)
+    throw new Error(data.error);
   }
   if (!data.entry) {
-    throw new Error('Missing entry in response')
+    throw new Error("Missing entry in response");
   }
-  return data.entry
+  return data.entry;
 }

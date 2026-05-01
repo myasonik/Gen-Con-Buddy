@@ -1,77 +1,77 @@
-import { vi, describe, expect, it } from 'vitest'
-import { act, render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { vi, describe, expect, it } from "vitest";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import {
   Link,
   createRootRoute,
   createRouter,
   RouterProvider,
   createMemoryHistory,
-} from '@tanstack/react-router'
-import { Button } from './Button'
+} from "@tanstack/react-router";
+import { Button } from "./Button";
 
 async function renderWithRouter(ui: React.ReactNode): Promise<void> {
-  const rootRoute = createRootRoute({ component: () => <>{ui}</> })
+  const rootRoute = createRootRoute({ component: () => <>{ui}</> });
   const router = createRouter({
     routeTree: rootRoute,
-    history: createMemoryHistory({ initialEntries: ['/'] }),
-  })
-  await router.load()
+    history: createMemoryHistory({ initialEntries: ["/"] }),
+  });
+  await router.load();
   await act(async () => {
-    render(<RouterProvider router={router} />)
-  })
+    render(<RouterProvider router={router} />);
+  });
 }
 
-describe('button', () => {
-  it('renders children', () => {
-    render(<Button>Click me</Button>)
-    expect(screen.getByRole('button', { name: 'Click me' })).toBeInTheDocument()
-  })
+describe("button", () => {
+  it("renders children", () => {
+    render(<Button>Click me</Button>);
+    expect(screen.getByRole("button", { name: "Click me" })).toBeInTheDocument();
+  });
 
-  it('defaults type to button to prevent accidental form submission', () => {
-    render(<Button>Click me</Button>)
-    expect(screen.getByRole('button')).toHaveAttribute('type', 'button')
-  })
+  it("defaults type to button to prevent accidental form submission", () => {
+    render(<Button>Click me</Button>);
+    expect(screen.getByRole("button")).toHaveAttribute("type", "button");
+  });
 
   it("accepts type='submit'", () => {
-    render(<Button type="submit">Submit</Button>)
-    expect(screen.getByRole('button')).toHaveAttribute('type', 'submit')
-  })
+    render(<Button type="submit">Submit</Button>);
+    expect(screen.getByRole("button")).toHaveAttribute("type", "submit");
+  });
 
-  it('is disabled when disabled prop is set', () => {
-    render(<Button disabled>Disabled</Button>)
-    expect(screen.getByRole('button')).toBeDisabled()
-  })
+  it("is disabled when disabled prop is set", () => {
+    render(<Button disabled>Disabled</Button>);
+    expect(screen.getByRole("button")).toBeDisabled();
+  });
 
-  it('calls onClick when clicked', async () => {
-    const handleClick = vi.fn<() => void>()
-    render(<Button onClick={handleClick}>Click me</Button>)
-    await userEvent.click(screen.getByRole('button'))
-    expect(handleClick).toHaveBeenCalledTimes(1)
-  })
+  it("calls onClick when clicked", async () => {
+    const handleClick = vi.fn<() => void>();
+    render(<Button onClick={handleClick}>Click me</Button>);
+    await userEvent.click(screen.getByRole("button"));
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
 
-  it('does not call onClick when disabled', async () => {
-    const handleClick = vi.fn<() => void>()
+  it("does not call onClick when disabled", async () => {
+    const handleClick = vi.fn<() => void>();
     render(
       <Button disabled onClick={handleClick}>
         Disabled
       </Button>,
-    )
-    await userEvent.click(screen.getByRole('button'), {
+    );
+    await userEvent.click(screen.getByRole("button"), {
       pointerEventsCheck: 0,
-    })
-    expect(handleClick).not.toHaveBeenCalled()
-  })
-})
+    });
+    expect(handleClick).not.toHaveBeenCalled();
+  });
+});
 
-describe('button render prop', () => {
-  it('renders as a link when given a Link render element', async () => {
-    await renderWithRouter(<Button render={<Link to="/" />}>Back</Button>)
-    expect(screen.getByRole('link', { name: 'Back' })).toBeInTheDocument()
-  })
+describe("button render prop", () => {
+  it("renders as a link when given a Link render element", async () => {
+    await renderWithRouter(<Button render={<Link to="/" />}>Back</Button>);
+    expect(screen.getByRole("link", { name: "Back" })).toBeInTheDocument();
+  });
 
-  it('navigates to the given route via render prop', async () => {
-    await renderWithRouter(<Button render={<Link to="/" />}>Back to results</Button>)
-    expect(screen.getByRole('link', { name: 'Back to results' })).toHaveAttribute('href', '/')
-  })
-})
+  it("navigates to the given route via render prop", async () => {
+    await renderWithRouter(<Button render={<Link to="/" />}>Back to results</Button>);
+    expect(screen.getByRole("link", { name: "Back to results" })).toHaveAttribute("href", "/");
+  });
+});

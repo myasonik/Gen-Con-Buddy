@@ -1,11 +1,8 @@
 .page {
   padding: var(--space-4);
   min-width: 0;
-  overflow-x: hidden;
 }
 
 .heading {
-  font-style: italic;
-  color: #000;
   margin-bottom: var(--space-4);
 }

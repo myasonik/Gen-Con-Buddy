@@ -1,12 +1,12 @@
-import React from 'react'
+import React from "react";
 
 interface PawnProps {
-  className?: string
-  style?: React.CSSProperties
-  'aria-hidden'?: true | 'true'
+  className?: string;
+  style?: React.CSSProperties;
+  "aria-hidden"?: true | "true";
 }
 
-export function Pawn({ className, style, 'aria-hidden': ariaHidden }: PawnProps): JSX.Element {
+export function Pawn({ className, style, "aria-hidden": ariaHidden }: PawnProps): JSX.Element {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -21,5 +21,5 @@ export function Pawn({ className, style, 'aria-hidden': ariaHidden }: PawnProps)
         fill="currentColor"
       />
     </svg>
-  )
+  );
 }

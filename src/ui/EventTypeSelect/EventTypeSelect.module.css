@@ -88,7 +88,7 @@
 }
 
 .list {
-  composes: surface from '../../styles/popup.module.css';
+  composes: surface from "../../styles/popup.module.css";
   position: absolute;
   z-index: var(--z-popover);
   padding: var(--space-1) 0;

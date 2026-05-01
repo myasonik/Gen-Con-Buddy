@@ -1,49 +1,49 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 
-type SetStateAction<T> = T | ((prev: T) => T)
+type SetStateAction<T> = T | ((prev: T) => T);
 
 export function useStoredState<T>(
   key: string,
   version: number,
   defaultValue: T,
 ): [T, (next: SetStateAction<T>) => void] {
-  const [value, setValue] = useState<T>(() => readFromStorage(key, version, defaultValue))
+  const [value, setValue] = useState<T>(() => readFromStorage(key, version, defaultValue));
 
   useEffect(() => {
     try {
-      localStorage.setItem(key, JSON.stringify({ version, value }))
+      localStorage.setItem(key, JSON.stringify({ version, value }));
     } catch {
       // ignore write errors
     }
-  }, [key, version, value])
+  }, [key, version, value]);
 
   const setStoredValue = (next: SetStateAction<T>): void => {
-    setValue((prev) => (typeof next === 'function' ? (next as (p: T) => T)(prev) : next))
-  }
+    setValue((prev) => (typeof next === "function" ? (next as (p: T) => T)(prev) : next));
+  };
 
-  return [value, setStoredValue]
+  return [value, setStoredValue];
 }
 
 function readFromStorage<T>(key: string, version: number, defaultValue: T): T {
   try {
-    const raw = localStorage.getItem(key)
+    const raw = localStorage.getItem(key);
     if (!raw) {
-      return defaultValue
+      return defaultValue;
     }
-    const parsed: unknown = JSON.parse(raw)
+    const parsed: unknown = JSON.parse(raw);
     if (
-      typeof parsed !== 'object' ||
+      typeof parsed !== "object" ||
       parsed === null ||
       (parsed as { version?: unknown }).version !== version
     ) {
-      return defaultValue
+      return defaultValue;
     }
-    const stored = parsed as { version: number; value?: T }
+    const stored = parsed as { version: number; value?: T };
     if (stored.value === undefined) {
-      return defaultValue
+      return defaultValue;
     }
-    return stored.value
+    return stored.value;
   } catch {
-    return defaultValue
+    return defaultValue;
   }
 }

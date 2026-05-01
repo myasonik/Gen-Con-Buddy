@@ -1,35 +1,35 @@
-import { Select as BaseSelect } from '@base-ui/react/select'
-import clsx from 'clsx'
-import styles from './Select.module.css'
+import { Select as BaseSelect } from "@base-ui/react/select";
+import clsx from "clsx";
+import styles from "./Select.module.css";
 
 export interface SelectOption {
-  value: string
-  label: string
+  value: string;
+  label: string;
 }
 
 interface SelectProps {
-  value: string
-  onValueChange: (value: string) => void
-  options: SelectOption[]
-  placeholder?: string
-  className?: string
-  'aria-label'?: string
+  value: string;
+  onValueChange: (value: string) => void;
+  options: SelectOption[];
+  placeholder?: string;
+  className?: string;
+  "aria-label"?: string;
 }
 
 export function Select({
   value,
   onValueChange,
   options,
-  placeholder = 'Any',
+  placeholder = "Any",
   className,
-  'aria-label': ariaLabel,
+  "aria-label": ariaLabel,
 }: SelectProps): JSX.Element {
-  const items = [{ value: null, label: placeholder }, ...options]
+  const items = [{ value: null, label: placeholder }, ...options];
 
   return (
     <BaseSelect.Root
       value={value || null}
-      onValueChange={(v) => onValueChange(v ?? '')}
+      onValueChange={(v) => onValueChange(v ?? "")}
       items={items}
     >
       <BaseSelect.Trigger className={clsx(styles.trigger, className)} aria-label={ariaLabel}>
@@ -51,5 +51,5 @@ export function Select({
         </BaseSelect.Positioner>
       </BaseSelect.Portal>
     </BaseSelect.Root>
-  )
+  );
 }

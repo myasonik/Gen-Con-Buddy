@@ -1,15 +1,15 @@
-import React from 'react'
+import React from "react";
 
 interface CalendarPlusProps {
-  className?: string
-  style?: React.CSSProperties
-  'aria-hidden'?: true | 'true'
+  className?: string;
+  style?: React.CSSProperties;
+  "aria-hidden"?: true | "true";
 }
 
 export function CalendarPlus({
   className,
   style,
-  'aria-hidden': ariaHidden,
+  "aria-hidden": ariaHidden,
 }: CalendarPlusProps): JSX.Element {
   return (
     <svg
@@ -31,5 +31,5 @@ export function CalendarPlus({
       <line x1="12" y1="13" x2="12" y2="19" />
       <line x1="9" y1="16" x2="15" y2="16" />
     </svg>
-  )
+  );
 }

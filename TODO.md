@@ -1,11 +1,3 @@
-# Deferred work
-
-## EventType multi-select backend wiring
-
-The `EventTypeSelect` frontend serializes multiple event type codes as a comma-separated string and the UI supports selecting multiple. Full multi-type filtering requires a backend change: switch `NewKeywordSingle` → `NewKeyword` for the `EventType` field in `search.go`. The frontend is ready; the backend is not.
-
----
-
 # Deferred hardening work
 
 ## C4 — Centralize Gen Con year / dates
@@ -16,17 +8,18 @@ The `EventTypeSelect` frontend serializes multiple event type codes as a comma-s
 
 ```ts
 const DAY_DATES: Record<string, string> = {
-  wed: '2024-07-31',
-  thu: '2024-08-01',
-  fri: '2024-08-02',
-  sat: '2024-08-03',
-  sun: '2024-08-04',
-}
+  wed: "2024-07-31",
+  thu: "2024-08-01",
+  fri: "2024-08-02",
+  sat: "2024-08-03",
+  sun: "2024-08-04",
+};
 ```
 
 `searchParams.test.ts` asserts the literal strings `'2024-07-31'` etc. There is no single constant to bump, so updating for Gen Con 2025 requires editing both `searchParams.ts` AND the tests — and it's easy to forget.
 
 Gen Con dates by year:
+
 - 2024: Jul 31 – Aug 4 (Wed–Sun)
 - 2025: Jul 30 – Aug 3 (Wed–Sun)
 - 2026: Jul 29 – Aug 2 (Wed–Sun)
@@ -39,43 +32,43 @@ Gen Con dates by year:
 // src/utils/searchParams.ts
 
 // Update this each year. Gen Con always runs Wed–Sun in late July/early August.
-export const GEN_CON_YEAR = 2024 // currently 2024; bump when API data updates
+export const GEN_CON_YEAR = 2024; // currently 2024; bump when API data updates
 
 // Derive Wed offset: find the Wednesday on or before Aug 1 of that year
 function genConWednesday(year: number): Date {
   // Aug 1 of the year
-  const aug1 = new Date(year, 7, 1)
+  const aug1 = new Date(year, 7, 1);
   // Wednesday = 3; back up to Wednesday
-  const dayOfWeek = aug1.getDay()
-  const daysBack = (dayOfWeek - 3 + 7) % 7
-  return new Date(year, 7, 1 - daysBack)
+  const dayOfWeek = aug1.getDay();
+  const daysBack = (dayOfWeek - 3 + 7) % 7;
+  return new Date(year, 7, 1 - daysBack);
 }
 
 function offsetDate(base: Date, days: number): string {
-  const d = new Date(base)
-  d.setDate(d.getDate() + days)
-  return d.toISOString().slice(0, 10)
+  const d = new Date(base);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
 }
 
-const wed = genConWednesday(GEN_CON_YEAR)
+const wed = genConWednesday(GEN_CON_YEAR);
 const DAY_DATES: Record<string, string> = {
   wed: offsetDate(wed, 0),
   thu: offsetDate(wed, 1),
   fri: offsetDate(wed, 2),
   sat: offsetDate(wed, 3),
   sun: offsetDate(wed, 4),
-}
+};
 ```
 
 **Step 2:** Update `searchParams.test.ts` to use `GEN_CON_YEAR` instead of literal date strings:
 
 ```ts
-import { GEN_CON_YEAR } from './searchParams'
+import { GEN_CON_YEAR } from "./searchParams";
 
-test('daysToStartDateTime for thu includes the correct year', () => {
-  const result = daysToStartDateTime('thu')
-  expect(result).toContain(String(GEN_CON_YEAR))
-})
+test("daysToStartDateTime for thu includes the correct year", () => {
+  const result = daysToStartDateTime("thu");
+  expect(result).toContain(String(GEN_CON_YEAR));
+});
 ```
 
 This way, bumping `GEN_CON_YEAR` automatically updates all tests.
@@ -83,12 +76,11 @@ This way, bumping `GEN_CON_YEAR` automatically updates all tests.
 **Step 3:** Add a test that pins the derivation logic itself (so a wrong algorithm is caught even before year-bump):
 
 ```ts
-test('gen con wednesday is always in late July or early August', () => {
-  const result = daysToStartDateTime('wed')
-  const date = new Date(result!.split('[')[0]) // strip range brackets if present
-  expect(date.getMonth()).toBeGreaterThanOrEqual(6) // July=6
-  expect(date.getMonth()).toBeLessThanOrEqual(7) // August=7
-  expect(date.getDay()).toBe(3) // Wednesday
-})
+test("gen con wednesday is always in late July or early August", () => {
+  const result = daysToStartDateTime("wed");
+  const date = new Date(result!.split("[")[0]); // strip range brackets if present
+  expect(date.getMonth()).toBeGreaterThanOrEqual(6); // July=6
+  expect(date.getMonth()).toBeLessThanOrEqual(7); // August=7
+  expect(date.getDay()).toBe(3); // Wednesday
+});
 ```
-

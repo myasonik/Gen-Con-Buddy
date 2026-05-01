@@ -29,7 +29,7 @@
 }
 
 .popup {
-  composes: surface from '../../styles/popup.module.css';
+  composes: surface from "../../styles/popup.module.css";
   display: flex;
   flex-direction: column;
   min-width: 9.25rem;

@@ -1,12 +1,12 @@
-import React from 'react'
-import { Field as BaseField } from '@base-ui/react/field'
-import clsx from 'clsx'
-import styles from './Field.module.css'
+import React from "react";
+import { Field as BaseField } from "@base-ui/react/field";
+import clsx from "clsx";
+import styles from "./Field.module.css";
 
 interface FieldProps {
-  label: string
-  children: React.ReactElement
-  className?: string
+  label: string;
+  children: React.ReactElement;
+  className?: string;
 }
 
 export function Field({ label, children, className }: FieldProps): JSX.Element {
@@ -15,18 +15,18 @@ export function Field({ label, children, className }: FieldProps): JSX.Element {
       <BaseField.Label className={styles.label}>{label}</BaseField.Label>
       <BaseField.Control render={children} />
     </BaseField.Root>
-  )
+  );
 }
 
 interface RangeFieldProps {
-  label: string
-  children: [React.ReactElement, React.ReactElement]
-  className?: string
-  stack?: boolean
+  label: string;
+  children: [React.ReactElement, React.ReactElement];
+  className?: string;
+  stack?: boolean;
 }
 
 export function RangeField({ label, children, className, stack }: RangeFieldProps): JSX.Element {
-  const [fromInput, toInput] = children
+  const [fromInput, toInput] = children;
   return (
     <div className={clsx(styles.rangeRoot, className)}>
       <span className={styles.rangeLabel}>{label}</span>
@@ -41,5 +41,5 @@ export function RangeField({ label, children, className, stack }: RangeFieldProp
         </BaseField.Root>
       </div>
     </div>
-  )
+  );
 }

@@ -1,75 +1,75 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { SearchForm } from '../components/SearchForm/SearchForm'
-import { SearchResults } from '../components/SearchResults/SearchResults'
-import { ActiveFilters } from '../ui/ActiveFilters/ActiveFilters'
-import { Button } from '../ui/Button/Button'
-import { useSidebarOpen } from '../hooks/useSidebarOpen'
-import { buildSearchParams, parseSearchParams } from '../utils/searchParams'
-import { DEFAULT_PAGE_SIZE } from '../utils/constants'
-import type { SearchFormValues, SearchParams } from '../utils/types'
-import type { ActiveFilter } from '../ui/ActiveFilters/getActiveFilters'
-import styles from './index.module.css'
+import { createFileRoute } from "@tanstack/react-router";
+import { SearchForm } from "../components/SearchForm/SearchForm";
+import { SearchResults } from "../components/SearchResults/SearchResults";
+import { ActiveFilters } from "../ui/ActiveFilters/ActiveFilters";
+import { Button } from "../ui/Button/Button";
+import { useSidebarOpen } from "../hooks/useSidebarOpen";
+import { buildSearchParams, parseSearchParams } from "../utils/searchParams";
+import { DEFAULT_PAGE_SIZE } from "../utils/constants";
+import type { SearchFormValues, SearchParams } from "../utils/types";
+import type { ActiveFilter } from "../ui/ActiveFilters/getActiveFilters";
+import styles from "./index.module.css";
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute("/")({
   validateSearch: (search: Record<string, unknown>): SearchParams => {
     const str = (k: string): string | undefined =>
-      typeof search[k] === 'string' ? (search[k] as string) : undefined
+      typeof search[k] === "string" ? (search[k] as string) : undefined;
     const num = (k: string): number | undefined =>
-      typeof search[k] === 'number' ? (search[k] as number) : undefined
+      typeof search[k] === "number" ? (search[k] as number) : undefined;
     return {
-      limit: num('limit'),
-      page: num('page'),
-      filter: str('filter'),
-      gameId: str('gameId'),
-      title: str('title'),
-      eventType: str('eventType'),
-      group: str('group'),
-      shortDescription: str('shortDescription'),
-      longDescription: str('longDescription'),
-      gameSystem: str('gameSystem'),
-      rulesEdition: str('rulesEdition'),
-      minPlayers: str('minPlayers'),
-      maxPlayers: str('maxPlayers'),
-      ageRequired: str('ageRequired'),
-      experienceRequired: str('experienceRequired'),
-      materialsProvided: str('materialsProvided'),
-      materialsRequired: str('materialsRequired'),
-      materialsRequiredDetails: str('materialsRequiredDetails'),
-      startDateTime: str('startDateTime'),
-      duration: str('duration'),
-      endDateTime: str('endDateTime'),
-      gmNames: str('gmNames'),
-      website: str('website'),
-      email: str('email'),
-      tournament: str('tournament'),
-      roundNumber: str('roundNumber'),
-      totalRounds: str('totalRounds'),
-      minimumPlayTime: str('minimumPlayTime'),
-      attendeeRegistration: str('attendeeRegistration'),
-      cost: str('cost'),
-      location: str('location'),
-      roomName: str('roomName'),
-      tableNumber: str('tableNumber'),
-      specialCategory: str('specialCategory'),
-      ticketsAvailable: str('ticketsAvailable'),
-      lastModified: str('lastModified'),
-      days: str('days'),
-      sort: str('sort'),
-    }
+      limit: num("limit"),
+      page: num("page"),
+      filter: str("filter"),
+      gameId: str("gameId"),
+      title: str("title"),
+      eventType: str("eventType"),
+      group: str("group"),
+      shortDescription: str("shortDescription"),
+      longDescription: str("longDescription"),
+      gameSystem: str("gameSystem"),
+      rulesEdition: str("rulesEdition"),
+      minPlayers: str("minPlayers"),
+      maxPlayers: str("maxPlayers"),
+      ageRequired: str("ageRequired"),
+      experienceRequired: str("experienceRequired"),
+      materialsProvided: str("materialsProvided"),
+      materialsRequired: str("materialsRequired"),
+      materialsRequiredDetails: str("materialsRequiredDetails"),
+      startDateTime: str("startDateTime"),
+      duration: str("duration"),
+      endDateTime: str("endDateTime"),
+      gmNames: str("gmNames"),
+      website: str("website"),
+      email: str("email"),
+      tournament: str("tournament"),
+      roundNumber: str("roundNumber"),
+      totalRounds: str("totalRounds"),
+      minimumPlayTime: str("minimumPlayTime"),
+      attendeeRegistration: str("attendeeRegistration"),
+      cost: str("cost"),
+      location: str("location"),
+      roomName: str("roomName"),
+      tableNumber: str("tableNumber"),
+      specialCategory: str("specialCategory"),
+      ticketsAvailable: str("ticketsAvailable"),
+      lastModified: str("lastModified"),
+      days: str("days"),
+      sort: str("sort"),
+    };
   },
   component: SearchPage,
-})
+});
 
 function SearchPage(): JSX.Element {
-  const navigate = Route.useNavigate()
-  const search = Route.useSearch()
-  const [sidebarOpen, toggleSidebar] = useSidebarOpen()
+  const navigate = Route.useNavigate();
+  const search = Route.useSearch();
+  const [sidebarOpen, toggleSidebar] = useSidebarOpen();
 
   const handleSearch = (values: SearchFormValues): void => {
     void navigate({
       search: (prev) => ({ ...buildSearchParams(values), limit: prev.limit }),
-    })
-  }
+    });
+  };
 
   const handleNavigate = (page: number, limit: number): void => {
     void navigate({
@@ -78,8 +78,8 @@ function SearchPage(): JSX.Element {
         page: page === 1 ? undefined : page,
         limit: limit === DEFAULT_PAGE_SIZE ? undefined : limit,
       }),
-    })
-  }
+    });
+  };
 
   const handleSort = (sort: string | undefined): void => {
     void navigate({
@@ -88,21 +88,18 @@ function SearchPage(): JSX.Element {
         sort,
         page: undefined,
       }),
-    })
-  }
+    });
+  };
 
   const handleRemoveFilter = (filter: ActiveFilter): void => {
-    void navigate({ search: (prev) => filter.remove(prev) })
-  }
+    void navigate({ search: (prev) => filter.remove(prev) });
+  };
 
   return (
     <main className={styles.shell} data-sidebar-open={String(sidebarOpen)}>
       <div className={styles.backdrop} onClick={toggleSidebar} aria-hidden="true" />
       <div id="sidebar" className={styles.sidebar}>
-        <SearchForm
-          values={parseSearchParams(search)}
-          onSearch={handleSearch}
-        />
+        <SearchForm values={parseSearchParams(search)} onSearch={handleSearch} />
       </div>
       <div className={styles.results}>
         <div className={styles.resultsToolbar}>
@@ -112,12 +109,12 @@ function SearchPage(): JSX.Element {
             aria-expanded={sidebarOpen}
             aria-controls="sidebar"
           >
-            {sidebarOpen ? '◀ Filters' : '▶ Filters'}
+            {sidebarOpen ? "◀ Filters" : "▶ Filters"}
           </Button>
         </div>
         <ActiveFilters searchParams={search} onRemove={handleRemoveFilter} />
         <SearchResults searchParams={search} onNavigate={handleNavigate} onSort={handleSort} />
       </div>
     </main>
-  )
+  );
 }

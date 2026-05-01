@@ -17,7 +17,7 @@
 }
 
 .tile::before {
-  content: '';
+  content: "";
   display: inline-block;
   /* stylelint-disable-next-line unit-disallowed-list */
   width: 1em;
@@ -27,8 +27,8 @@
   overflow: hidden;
 }
 
-.tile[aria-pressed='true']::before {
-  content: '♟';
+.tile[aria-pressed="true"]::before {
+  content: "♟";
 }
 
 .group {
