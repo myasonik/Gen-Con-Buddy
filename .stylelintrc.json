@@ -17,6 +17,12 @@
         "ignoreProperties": ["composes"]
       }
     ],
-    "unit-disallowed-list": ["px", "em"]
+    "unit-disallowed-list": ["px", "em"],
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": ["global", "local"]
+      }
+    ]
   }
 }

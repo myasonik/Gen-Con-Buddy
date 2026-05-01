@@ -1,5 +1,7 @@
 .button {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   line-height: 1;
   text-decoration: none;
@@ -7,13 +9,43 @@
 
 .button:disabled {
   cursor: not-allowed;
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+.button:disabled:hover {
+  opacity: 0.4;
+}
+
+.primary {
+  background: black;
+  color: white;
+  border: none;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 0.25rem;
+}
+
+.primary:hover {
+  opacity: 0.8;
+}
+
+.secondary {
+  background: transparent;
+  border: 0.0625rem solid currentcolor;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 0.25rem;
+  color: inherit;
+}
+
+.secondary:hover {
+  opacity: 0.8;
 }
 
 .ghost {
   background: none;
   border: none;
   padding: var(--space-1) var(--space-2);
-  text-align: left;
+  justify-content: flex-start;
   width: 100%;
   color: inherit;
 }
@@ -22,18 +54,19 @@
   opacity: 0.8;
 }
 
+.large {
+  padding: var(--space-2) var(--space-4);
+  font-size: 1rem;
+  gap: var(--space-2);
+}
+
 .icon {
-  background: none;
-  border: none;
   padding: 0.125rem;
-  color: inherit;
+  width: auto;
+  aspect-ratio: 1;
+  text-align: center;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.125rem;
-  line-height: 1;
-}
-
-.icon:hover {
-  opacity: 0.8;
+  border-radius: 50%;
 }

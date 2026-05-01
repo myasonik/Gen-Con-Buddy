@@ -1,4 +1,5 @@
 import { useState, useId } from "react";
+import { ArrowUp, ArrowDown } from "lucide-react";
 import { createPortal } from "react-dom";
 import {
   useReactTable,
@@ -223,7 +224,11 @@ export function EventTable({
                           {flexRender(header.column.columnDef.header, header.getContext())}
                           {isActive && (
                             <span aria-hidden="true" className={styles.sortIndicator}>
-                              {effectiveSortDir === "asc" ? " ▲" : " ▼"}
+                              {effectiveSortDir === "asc" ? (
+                                <ArrowUp size={12} aria-hidden="true" />
+                              ) : (
+                                <ArrowDown size={12} aria-hidden="true" />
+                              )}
                             </span>
                           )}
                         </button>

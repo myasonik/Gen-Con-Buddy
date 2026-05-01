@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Search } from "lucide-react";
 import { Button, BUTTON_VARIANTS } from "./Button";
+import { Meeple } from "../icons/Meeple";
 import { makeMatrix } from "../storyMatrix";
 
 const meta = {
@@ -26,8 +28,23 @@ export const Disabled: Story = {
   args: { disabled: true },
 };
 
+export const Icon: Story = {
+  args: { icon: true, children: <Meeple />, "aria-label": "Meeple" },
+};
+
+export const IconGhost: Story = {
+  args: { icon: true, variant: "ghost", children: <Meeple />, "aria-label": "Meeple" },
+};
+
 export const SubmitType: Story = {
-  args: { type: "submit", children: "▶ Search" },
+  args: {
+    type: "submit",
+    children: (
+      <>
+        <Search size={14} aria-hidden="true" /> Search
+      </>
+    ),
+  },
 };
 
 const { stories, Grid } = makeMatrix(

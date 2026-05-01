@@ -1,5 +1,6 @@
 .tableWrapper {
   overflow-x: scroll;
+  margin-top: -0.0625rem;
 }
 
 .tableWrapper table {
@@ -31,6 +32,8 @@
   cursor: pointer;
   padding: 0;
   text-align: left;
+  display: inline-flex;
+  align-items: center;
 }
 
 .sortButton:hover {
@@ -60,14 +63,45 @@
 
 /* Column visibility panel */
 .visibilityPanel {
-  margin-bottom: var(--space-3);
+  border: 0.0625rem solid;
 }
 
 .visibilityPanel summary {
   cursor: pointer;
   padding: var(--space-2) var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  transition: background-color var(--motion-hover);
+}
+
+.visibilityPanel summary:hover {
+  background-color: #f0ead6;
+}
+
+.visibilityPanel summary::after {
+  content: "▶";
   display: inline-block;
-  margin-bottom: var(--space-2);
+  transform: rotate(0deg);
+  transition: transform var(--motion-expand);
+  flex-shrink: 0;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+:where(.visibilityPanel[open]:not(.is-closing)) summary::after {
+  transform: rotate(90deg);
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+:where(.visibilityPanel[open]) summary {
+  border-bottom: 0.0625rem solid;
+}
+
+.visibilityPanel fieldset {
+  border: none;
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
 }
 
 .sortIndicator {
