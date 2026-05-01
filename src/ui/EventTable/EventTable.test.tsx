@@ -1,5 +1,5 @@
 import { expect, test, beforeEach } from "vitest";
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
   createRootRoute,
@@ -71,7 +71,37 @@ test("toggling a column off hides its header", async () => {
   expect(screen.queryByRole("columnheader", { name: "Title" })).not.toBeInTheDocument();
 });
 
-test.skip("'Customize columns' panel contains the type display slider", async () => {
+test("'Customize columns' panel contains the type display slider", async () => {
   await renderEventTable();
   expect(screen.getByRole("slider", { name: "Type display" })).toBeInTheDocument();
+});
+
+test("changing slider to Code shows only the type code in the Type column", async () => {
+  const user = userEvent.setup();
+  await renderEventTable([makeEvent({ eventType: "RPG" })]);
+  await user.click(screen.getByText("Customize columns"));
+  const slider = screen.getByRole("slider", { name: "Type display" });
+  fireEvent.change(slider, { target: { value: "0" } }); // position 0 = code
+  expect(screen.getByRole("cell", { name: "RPG" })).toBeInTheDocument();
+  expect(screen.queryByText("RPG - Role Playing Game")).not.toBeInTheDocument();
+});
+
+test("changing slider to Name shows only the event type name in the Type column", async () => {
+  const user = userEvent.setup();
+  await renderEventTable([makeEvent({ eventType: "RPG" })]);
+  await user.click(screen.getByText("Customize columns"));
+  const slider = screen.getByRole("slider", { name: "Type display" });
+  fireEvent.change(slider, { target: { value: "1" } }); // position 1 = name
+  expect(screen.getByRole("cell", { name: "Role Playing Game" })).toBeInTheDocument();
+});
+
+test("Reset to defaults restores slider to Both and shows full type label", async () => {
+  const user = userEvent.setup();
+  await renderEventTable([makeEvent({ eventType: "RPG" })]);
+  await user.click(screen.getByText("Customize columns"));
+  const slider = screen.getByRole("slider", { name: "Type display" });
+  fireEvent.change(slider, { target: { value: "0" } }); // move to Code
+  await user.click(screen.getByRole("button", { name: "Reset to defaults" }));
+  expect(slider).toHaveValue("2"); // back to Both
+  expect(screen.getByRole("cell", { name: "RPG - Role Playing Game" })).toBeInTheDocument();
 });

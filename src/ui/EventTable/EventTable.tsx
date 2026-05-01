@@ -12,8 +12,7 @@ import {
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { useTypeDisplay } from "../../hooks/useTypeDisplay";
-import { AnimatedDetails } from "../AnimatedDetails/AnimatedDetails";
-import { Button } from "../Button/Button";
+import { ColumnControlsPanel } from "./ColumnControlsPanel";
 import { ColumnActionsPopover } from "./ColumnActionsPopover";
 import { ColumnResizeDialog } from "./ColumnResizeDialog";
 import { announce } from "../../lib/announce";
@@ -43,13 +42,15 @@ export function EventTable({
 }: EventTableProps): JSX.Element {
   const internalVis = useColumnVisibility();
   const internalSizing = useColumnSizing();
-  const { typeDisplay } = useTypeDisplay();
+  const internalTypeDisplay = useTypeDisplay();
   const visibility = sharedColumnState?.visibility ?? internalVis.visibility;
   const toggleVisibility = sharedColumnState?.toggleVisibility ?? internalVis.toggle;
   const resetVisibility = sharedColumnState?.resetVisibility ?? internalVis.reset;
   const sizing = sharedColumnState?.sizing ?? internalSizing.sizing;
   const setSizing = sharedColumnState?.setSizing ?? internalSizing.setSizing;
   const resetSizing = sharedColumnState?.resetSizing ?? internalSizing.reset;
+  const typeDisplay = sharedColumnState?.typeDisplay ?? internalTypeDisplay.typeDisplay;
+  const setTypeDisplay = sharedColumnState?.setTypeDisplay ?? internalTypeDisplay.setTypeDisplay;
   // Unique prefix so anchor names don't collide when multiple EventTable instances are on the page
   const tableId = useId().replace(/:/g, "");
   const [resizeTarget, setResizeTarget] = useState<{
@@ -145,45 +146,24 @@ export function EventTable({
     getSortedRowModel: getSortedRowModel(),
   });
 
+  const columnStateForPanel: SharedColumnState = {
+    visibility,
+    toggleVisibility,
+    resetVisibility,
+    sizing,
+    setSizing,
+    resetSizing,
+    typeDisplay,
+    setTypeDisplay,
+  };
+
   if (events.length === 0) {
     return <p>No events.</p>;
   }
 
   return (
     <section>
-      {showColumnControls && (
-        <AnimatedDetails className={styles.visibilityPanel} summary="Customize columns">
-          <fieldset>
-            <ul>
-              {COLUMNS.map((col) => (
-                <li key={col.id}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={col.id !== undefined && Boolean(visibility[col.id])}
-                      onChange={() => {
-                        if (col.id !== undefined) {
-                          toggleVisibility(col.id);
-                        }
-                      }}
-                    />
-                    {typeof col.header === "string" ? col.header : col.id}
-                  </label>
-                </li>
-              ))}
-            </ul>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                resetVisibility();
-                resetSizing();
-              }}
-            >
-              Reset to defaults
-            </Button>
-          </fieldset>
-        </AnimatedDetails>
-      )}
+      {showColumnControls && <ColumnControlsPanel columnState={columnStateForPanel} />}
 
       <div className={styles.tableWrapper}>
         <table>
