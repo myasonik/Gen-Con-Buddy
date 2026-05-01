@@ -4,13 +4,14 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Pawn } from "../icons/Pawn";
 import { EXP, EVENT_TYPES } from "../../utils/enums";
 import type { Event } from "../../utils/types";
+import type { TypeDisplay } from "../../hooks/useTypeDisplay";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData, TValue> {
     sortField?: string;
   }
   interface TableMeta<TData> {
-    typeDisplay?: "code" | "name" | "both";
+    typeDisplay?: TypeDisplay;
   }
 }
 
