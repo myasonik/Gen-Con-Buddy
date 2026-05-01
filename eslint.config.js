@@ -1,6 +1,5 @@
 import tsParser from '@typescript-eslint/parser'
 import reactHooks from 'eslint-plugin-react-hooks'
-import eslintConfigPrettier from 'eslint-config-prettier'
 
 const noInlineLiveRegions = {
   meta: { type: 'problem', schema: [] },
@@ -48,5 +47,4 @@ export default [
       'local/no-inline-live-regions': 'error',
     },
   },
-  eslintConfigPrettier,
 ]
