@@ -1,5 +1,5 @@
 import { Button } from "../Button/Button";
-import type { SharedColumnState } from "./EventTable";
+import type { SharedColumnState } from "./types";
 import { AnimatedDetails } from "../AnimatedDetails/AnimatedDetails";
 import { COLUMNS } from "./columns";
 import styles from "./EventTable.module.css";

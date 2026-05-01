@@ -8,7 +8,6 @@ import {
   flexRender,
   type SortingState,
   type ColumnSizingState,
-  type OnChangeFn,
 } from "@tanstack/react-table";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
@@ -20,16 +19,10 @@ import { ColumnResizeDialog } from "./ColumnResizeDialog";
 import { announce } from "../../lib/announce";
 import type { Event } from "../../utils/types";
 import { COLUMNS, SORT_FIELD_BY_COL_ID, COL_ID_BY_SORT_FIELD } from "./columns";
+import type { SharedColumnState } from "./types";
 import styles from "./EventTable.module.css";
 
-export interface SharedColumnState {
-  visibility: Record<string, boolean>;
-  toggleVisibility: (id: string) => void;
-  resetVisibility: () => void;
-  sizing: ColumnSizingState;
-  setSizing: OnChangeFn<ColumnSizingState>;
-  resetSizing: () => void;
-}
+export type { SharedColumnState };
 
 interface EventTableProps {
   events: Event[];

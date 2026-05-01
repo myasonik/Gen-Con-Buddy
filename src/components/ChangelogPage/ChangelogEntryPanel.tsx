@@ -1,5 +1,6 @@
 import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
-import { EventTable, type SharedColumnState } from "../../ui/EventTable/EventTable";
+import { EventTable } from "../../ui/EventTable/EventTable";
+import type { SharedColumnState } from "../../ui/EventTable/types";
 import type { ChangelogEntry } from "../../utils/types";
 import styles from "./ChangelogEntryPanel.module.css";
 
