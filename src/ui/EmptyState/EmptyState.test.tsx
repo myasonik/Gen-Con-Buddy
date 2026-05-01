@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
-import { PixelState } from "./PixelState";
+import { EmptyState } from "./EmptyState";
 import { __reset } from "../../lib/announce";
 
 function setupLiveRegions(): () => void {
@@ -24,20 +24,20 @@ afterEach(() => {
   __reset();
 });
 
-describe("pixelState", () => {
+describe("EmptyState", () => {
   it("renders loading text for loading variant", () => {
-    render(<PixelState variant="loading" text="LOADING QUESTS..." />);
+    render(<EmptyState variant="loading" text="LOADING QUESTS..." />);
     expect(screen.getByText("LOADING QUESTS...")).toBeInTheDocument();
   });
 
   it("does not show die icon for loading variant", () => {
-    render(<PixelState variant="loading" text="LOADING QUESTS..." />);
+    render(<EmptyState variant="loading" text="LOADING QUESTS..." />);
     expect(screen.queryByText("⚄")).not.toBeInTheDocument();
   });
 
   it("renders meeple icon and text for empty variant", () => {
     render(
-      <PixelState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />,
+      <EmptyState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />,
     );
     expect(screen.getByText("NO QUESTS FOUND")).toBeInTheDocument();
     expect(screen.getByText("Try broadening your search.")).toBeInTheDocument();
@@ -46,7 +46,7 @@ describe("pixelState", () => {
 
   it("renders error text and subtext for error variant", () => {
     render(
-      <PixelState
+      <EmptyState
         variant="error"
         text="QUEST FAILED"
         subtext="Unable to load events. Please try again."
@@ -58,20 +58,20 @@ describe("pixelState", () => {
   });
 
   it("shows a progress bar for the loading variant", () => {
-    render(<PixelState variant="loading" text="Loading..." />);
+    render(<EmptyState variant="loading" text="Loading..." />);
     expect(screen.getByTestId("progress-bar")).toBeInTheDocument();
   });
 
   it("does not show subtext element when subtext not provided", () => {
-    const { rerender } = render(<PixelState variant="loading" text="LOADING..." subtext="hint" />);
+    const { rerender } = render(<EmptyState variant="loading" text="LOADING..." subtext="hint" />);
     expect(screen.getByText("hint")).toBeInTheDocument();
-    rerender(<PixelState variant="loading" text="LOADING..." />);
+    rerender(<EmptyState variant="loading" text="LOADING..." />);
     expect(screen.queryByText("hint")).not.toBeInTheDocument();
   });
 
   it("announces loading text politely", async () => {
     const cleanup = setupLiveRegions();
-    render(<PixelState variant="loading" text="LOADING QUESTS..." />);
+    render(<EmptyState variant="loading" text="LOADING QUESTS..." />);
     await waitFor(() => {
       expect(document.getElementById("live-polite")?.textContent).toBe("LOADING QUESTS...");
     });
@@ -80,7 +80,7 @@ describe("pixelState", () => {
 
   it("announces error text assertively", async () => {
     const cleanup = setupLiveRegions();
-    render(<PixelState variant="error" text="QUEST FAILED" />);
+    render(<EmptyState variant="error" text="QUEST FAILED" />);
     await waitFor(() => {
       expect(document.getElementById("live-assertive")?.textContent).toBe("QUEST FAILED");
     });
@@ -89,7 +89,7 @@ describe("pixelState", () => {
 
   it("announces empty text politely", async () => {
     const cleanup = setupLiveRegions();
-    render(<PixelState variant="empty" text="NO QUESTS FOUND" />);
+    render(<EmptyState variant="empty" text="NO QUESTS FOUND" />);
     await waitFor(() => {
       expect(document.getElementById("live-polite")?.textContent).toBe("NO QUESTS FOUND");
     });

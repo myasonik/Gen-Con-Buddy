@@ -5,6 +5,7 @@ import type { ChangelogSummary } from "../../utils/types";
 import { fetchChangelogEntry } from "../../utils/api";
 import { ChangelogEntryPanel } from "./ChangelogEntryPanel";
 import type { SharedColumnState } from "../../ui/EventTable/EventTable";
+import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
 import styles from "./ChangelogRow.module.css";
 
 interface ChangelogRowProps {
@@ -26,8 +27,9 @@ export function ChangelogRow({
   });
 
   return (
-    <details
-      className={`${styles.row} animates-details`}
+    <AnimatedDetails
+      className={styles.row}
+      summaryClassName={styles.summary}
       onToggle={(e) => {
         const { open } = e.currentTarget as HTMLDetailsElement;
         setIsOpen(open);
@@ -35,23 +37,23 @@ export function ChangelogRow({
           onOpen();
         }
       }}
+      summary={
+        <>
+          <time dateTime={summary.date} className={styles.date}>
+            {format(new Date(summary.date), "MMM d, yyyy h:mm a")}
+          </time>
+          <span className={styles.counts}>
+            <span>{summary.createdCount} created</span>
+            <span>{summary.updatedCount} updated</span>
+            <span>{summary.deletedCount} deleted</span>
+          </span>
+        </>
+      }
     >
-      <summary className={styles.summary}>
-        <time dateTime={summary.date} className={styles.date}>
-          {format(new Date(summary.date), "MMM d, yyyy h:mm a")}
-        </time>
-        <span className={styles.counts}>
-          <span>{summary.createdCount} created</span>
-          <span>{summary.updatedCount} updated</span>
-          <span>{summary.deletedCount} deleted</span>
-        </span>
-      </summary>
-      <div>
-        <ChangelogEntryPanel
-          entry={isError ? "error" : entry}
-          sharedColumnState={sharedColumnState}
-        />
-      </div>
-    </details>
+      <ChangelogEntryPanel
+        entry={isError ? "error" : entry}
+        sharedColumnState={sharedColumnState}
+      />
+    </AnimatedDetails>
   );
 }

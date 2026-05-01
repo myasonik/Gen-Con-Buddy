@@ -5,11 +5,6 @@
   text-decoration: none;
 }
 
-.button:focus-visible {
-  outline: 0.125rem solid;
-  outline-offset: 0.125rem;
-}
-
 .button:disabled {
   cursor: not-allowed;
 }

@@ -5,6 +5,7 @@
   padding: var(--space-2) 0;
   list-style: none;
   margin: 0;
+  background-color: red;
 }
 
 .chip {
@@ -13,9 +14,4 @@
   gap: var(--space-1);
   padding: var(--space-1) var(--space-2);
   cursor: pointer;
-}
-
-.chip:focus-visible {
-  outline: 0.125rem solid;
-  outline-offset: 0.125rem;
 }

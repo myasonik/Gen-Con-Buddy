@@ -23,8 +23,35 @@ test("renders advanced filter fields inside a disclosure", () => {
   expect(screen.getByRole("textbox", { name: "Title" })).toBeInTheDocument();
   expect(screen.getByRole("textbox", { name: "Game ID" })).toBeInTheDocument();
   expect(screen.getByRole("textbox", { name: "Location" })).toBeInTheDocument();
-  expect(screen.getByRole("textbox", { name: "Materials Required" })).toBeInTheDocument();
   expect(screen.getByRole("textbox", { name: "Materials Required Details" })).toBeInTheDocument();
+});
+
+test("Tournament and Materials Required render as select dropdowns", () => {
+  render(<SearchForm values={{}} onSearch={noop} />);
+  expect(screen.getByRole("combobox", { name: "Tournament" })).toBeInTheDocument();
+  expect(screen.getByRole("combobox", { name: "Materials Required" })).toBeInTheDocument();
+});
+
+test("selecting Yes for Tournament submits correct value", async () => {
+  const user = userEvent.setup();
+  const handleSearch = vi.fn<(values: SearchFormValues) => void>();
+  render(<SearchForm values={{}} onSearch={handleSearch} />);
+
+  await user.selectOptions(screen.getByRole("combobox", { name: "Tournament" }), "Yes");
+  await user.click(screen.getByRole("button", { name: "▶ Search" }));
+
+  expect(handleSearch.mock.calls[0][0].tournament).toBe("Yes");
+});
+
+test("selecting Yes for Materials Required submits correct value", async () => {
+  const user = userEvent.setup();
+  const handleSearch = vi.fn<(values: SearchFormValues) => void>();
+  render(<SearchForm values={{}} onSearch={handleSearch} />);
+
+  await user.selectOptions(screen.getByRole("combobox", { name: "Materials Required" }), "Yes");
+  await user.click(screen.getByRole("button", { name: "▶ Search" }));
+
+  expect(handleSearch.mock.calls[0][0].materialsRequired).toBe("Yes");
 });
 
 test("populates fields from values", () => {
@@ -77,63 +104,63 @@ test("picks up new values when values prop changes", () => {
 
 const DAYS = ["Wed", "Thu", "Fri", "Sat", "Sun"] as const;
 
-test("renders day tiles as toggle buttons in the DAYS fieldset", () => {
+test("renders day filters as checkboxes in the DAYS fieldset", () => {
   render(<SearchForm values={{}} onSearch={noop} />);
   for (const day of DAYS) {
-    expect(screen.getByRole("button", { name: day })).toBeInTheDocument();
+    expect(screen.getByRole("checkbox", { name: day })).toBeInTheDocument();
   }
 });
 
-test("clicking a day tile submits the correct days value", async () => {
+test("checking a day checkbox submits the correct days value", async () => {
   const user = userEvent.setup();
   const handleSearch = vi.fn<(values: SearchFormValues) => void>();
   render(<SearchForm values={{}} onSearch={handleSearch} />);
 
-  await user.click(screen.getByRole("button", { name: "Thu" }));
+  await user.click(screen.getByRole("checkbox", { name: "Thu" }));
   await user.click(screen.getByRole("button", { name: "▶ Search" }));
 
   expect(handleSearch.mock.calls[0][0].days).toBe("thu");
 });
 
-test("clicking multiple day tiles submits comma-separated days", async () => {
+test("checking multiple day checkboxes submits comma-separated days", async () => {
   const user = userEvent.setup();
   const handleSearch = vi.fn<(values: SearchFormValues) => void>();
   render(<SearchForm values={{}} onSearch={handleSearch} />);
 
-  await user.click(screen.getByRole("button", { name: "Wed" }));
-  await user.click(screen.getByRole("button", { name: "Sun" }));
+  await user.click(screen.getByRole("checkbox", { name: "Wed" }));
+  await user.click(screen.getByRole("checkbox", { name: "Sun" }));
   await user.click(screen.getByRole("button", { name: "▶ Search" }));
 
   expect(handleSearch.mock.calls[0][0].days).toBe("wed,sun");
 });
 
-test("populates day tiles from values using aria-pressed", () => {
+test("populates day checkboxes from values prop", () => {
   render(<SearchForm values={{ days: "fri,sat" }} onSearch={noop} />);
-  expect(screen.getByRole("button", { name: "Fri" })).toHaveAttribute("aria-pressed", "true");
-  expect(screen.getByRole("button", { name: "Sat" })).toHaveAttribute("aria-pressed", "true");
-  expect(screen.getByRole("button", { name: "Wed" })).toHaveAttribute("aria-pressed", "false");
+  expect(screen.getByRole("checkbox", { name: "Fri" })).toBeChecked();
+  expect(screen.getByRole("checkbox", { name: "Sat" })).toBeChecked();
+  expect(screen.getByRole("checkbox", { name: "Wed" })).not.toBeChecked();
 });
 
-test("reset button clears day tiles", async () => {
+test("reset button clears day checkboxes", async () => {
   const user = userEvent.setup();
   render(<SearchForm values={{ days: "thu" }} onSearch={noop} />);
 
   await user.click(screen.getByRole("button", { name: "↺ Reset" }));
 
-  expect(screen.getByRole("button", { name: "Thu" })).toHaveAttribute("aria-pressed", "false");
+  expect(screen.getByRole("checkbox", { name: "Thu" })).not.toBeChecked();
 });
 
-test("day tiles are disabled when startDateTimeStart has a value", () => {
+test("day checkboxes are disabled when startDateTimeStart has a value", () => {
   render(<SearchForm values={{ startDateTimeStart: "2024-08-01T10:00" }} onSearch={noop} />);
   for (const day of DAYS) {
-    expect(screen.getByRole("button", { name: day })).toBeDisabled();
+    expect(screen.getByRole("checkbox", { name: day })).toBeDisabled();
   }
 });
 
-test("day tiles are disabled when startDateTimeEnd has a value", () => {
+test("day checkboxes are disabled when startDateTimeEnd has a value", () => {
   render(<SearchForm values={{ startDateTimeEnd: "2024-08-01T14:00" }} onSearch={noop} />);
   for (const day of DAYS) {
-    expect(screen.getByRole("button", { name: day })).toBeDisabled();
+    expect(screen.getByRole("checkbox", { name: day })).toBeDisabled();
   }
 });
 
@@ -179,13 +206,13 @@ test("toggletip message for disabled day checkboxes explains to clear start date
   expect(screen.getByText(/clear the start date fields/i)).toBeInTheDocument();
 });
 
-test("toggletip message for disabled start date explains to clear day buttons", async () => {
+test("toggletip message for disabled start date explains to clear day checkboxes", async () => {
   const user = userEvent.setup();
   render(<SearchForm values={{ days: "thu" }} onSearch={noop} />);
 
   await user.click(screen.getByRole("button", { name: /why.*start date/i }));
 
-  expect(screen.getByText(/clear the day buttons/i)).toBeInTheDocument();
+  expect(screen.getByText(/clear the day checkboxes/i)).toBeInTheDocument();
 });
 
 test("duration inputs use 0.5-hour steps to match real event data", () => {

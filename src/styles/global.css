@@ -23,16 +23,7 @@ body {
   border: 0;
 }
 
-/* ─── Form Controls ──────────────────────────────────────────────────────── */
-
-/* Normalize input/select/textarea border so all form controls match */
-input,
-select,
-textarea {
-  border: 0.0625rem solid;
-}
-
-/* ─── Scrollbars ─────────────────────────────────────────────────────────── */
+/* ─── Scrollbars ─────────────────────────────────────────────────────── */
 
 /* Classic (non-overlay) scrollbars, always visible when content overflows */
 ::-webkit-scrollbar {
@@ -53,6 +44,21 @@ textarea {
   scrollbar-color: CanvasText Canvas;
 }
 
+/* ─── Focus Ring ─────────────────────────────────────────────────────────── */
+*:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ─── Form Controls ──────────────────────────────────────────────────────── */
+
+/* Normalize input/select/textarea border so all form controls match */
+input,
+select,
+textarea {
+  border: 0.0625rem solid;
+}
+
 /* ─── Reduced Motion ─────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -62,23 +68,4 @@ textarea {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-/* ─── Details Animation Utility ──────────────────────────────────────────── */
-
-/* Apply to any <details> element to get animated open/close. Requires a single
-   <div> wrapping all non-<summary> children inside the <details>. */
-.animates-details > div {
-  display: grid;
-  grid-template-rows: 0fr;
-  overflow: hidden;
-  transition: grid-template-rows var(--motion-expand);
-}
-
-.animates-details[open] > div {
-  grid-template-rows: 1fr;
-}
-
-.animates-details > div > * {
-  min-height: 0;
 }

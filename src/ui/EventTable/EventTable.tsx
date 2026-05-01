@@ -11,6 +11,7 @@ import {
 } from "@tanstack/react-table";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
+import { AnimatedDetails } from "../AnimatedDetails/AnimatedDetails";
 import { Button } from "../Button/Button";
 import { ColumnActionsPopover } from "./ColumnActionsPopover";
 import { ColumnResizeDialog } from "./ColumnResizeDialog";
@@ -152,40 +153,37 @@ export function EventTable({
   return (
     <section>
       {showColumnControls && (
-        <details className={`${styles.visibilityPanel} animates-details`}>
-          <summary>Customize columns</summary>
-          <div>
-            <fieldset>
-              <ul>
-                {COLUMNS.map((col) => (
-                  <li key={col.id}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={col.id !== undefined && Boolean(visibility[col.id])}
-                        onChange={() => {
-                          if (col.id !== undefined) {
-                            toggleVisibility(col.id);
-                          }
-                        }}
-                      />
-                      {typeof col.header === "string" ? col.header : col.id}
-                    </label>
-                  </li>
-                ))}
-              </ul>
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  resetVisibility();
-                  resetSizing();
-                }}
-              >
-                Reset to defaults
-              </Button>
-            </fieldset>
-          </div>
-        </details>
+        <AnimatedDetails className={styles.visibilityPanel} summary="Customize columns">
+          <fieldset>
+            <ul>
+              {COLUMNS.map((col) => (
+                <li key={col.id}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={col.id !== undefined && Boolean(visibility[col.id])}
+                      onChange={() => {
+                        if (col.id !== undefined) {
+                          toggleVisibility(col.id);
+                        }
+                      }}
+                    />
+                    {typeof col.header === "string" ? col.header : col.id}
+                  </label>
+                </li>
+              ))}
+            </ul>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                resetVisibility();
+                resetSizing();
+              }}
+            >
+              Reset to defaults
+            </Button>
+          </fieldset>
+        </AnimatedDetails>
       )}
 
       <div className={styles.tableWrapper}>

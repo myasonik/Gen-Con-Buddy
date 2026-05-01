@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchEvents } from "../../utils/api";
 import { Pagination } from "../Pagination/Pagination";
 import type { SearchParams } from "../../utils/types";
-import { PixelState } from "../../ui/PixelState/PixelState";
+import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { EventTable } from "../../ui/EventTable/EventTable";
 
 interface SearchResultsProps {
@@ -50,16 +50,16 @@ export function SearchResults({
 
   return (
     <section>
-      {isLoading && <PixelState variant="loading" text="LOADING QUESTS..." />}
+      {isLoading && <EmptyState variant="loading" text="LOADING QUESTS..." />}
       {isError && (
-        <PixelState
+        <EmptyState
           variant="error"
           text="QUEST FAILED"
           subtext="Unable to load events. Please try again."
         />
       )}
       {data && data.data.length === 0 && (
-        <PixelState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />
+        <EmptyState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />
       )}
       {data && data.data.length > 0 && (
         <>

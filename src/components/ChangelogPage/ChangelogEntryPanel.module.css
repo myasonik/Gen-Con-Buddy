@@ -1,20 +1,8 @@
-.status {
-  padding: var(--space-3) var(--space-4);
-  color: #666;
-}
-
 .panel {
-  padding: var(--space-2) 0;
   overflow-x: hidden;
+  padding: 0 var(--space-4);
 }
 
-.group {
-  margin-bottom: var(--space-3);
-}
-
-.group summary {
-  cursor: pointer;
-  padding: var(--space-2) var(--space-4);
-  font-weight: 600;
-  color: #000;
+.groupSummary {
+  padding: var(--space-2) 0;
 }

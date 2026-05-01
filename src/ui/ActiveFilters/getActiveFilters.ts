@@ -1,4 +1,4 @@
-import { AGE_GROUPS, CATEGORY, EVENT_TYPES, EXP, REGISTRATION } from "../../utils/enums";
+import { AGE_GROUPS, CATEGORY, EVENT_TYPES, EXP, REGISTRATION, YES_NO } from "../../utils/enums";
 import type { SearchParams } from "../../utils/types";
 
 export interface ActiveFilter {
@@ -115,7 +115,7 @@ const FILTER_DEFS: FilterDef[] = [
   { type: "enum", key: "ageRequired", label: "Age", map: AGE_GROUPS },
   { type: "enum", key: "experienceRequired", label: "Exp", map: EXP },
   { type: "plain", key: "materialsProvided", label: "Materials provided" },
-  { type: "plain", key: "materialsRequired", label: "Materials required" },
+  { type: "enum", key: "materialsRequired", label: "Materials required", map: YES_NO },
   { type: "plain", key: "materialsRequiredDetails", label: "Materials details" },
   { type: "multi", key: "days", map: DAY_LABELS, prefix: "days" },
   { type: "dateRange", key: "startDateTime", label: "Start" },
@@ -126,7 +126,7 @@ const FILTER_DEFS: FilterDef[] = [
   { type: "plain", key: "gmNames", label: "GM" },
   { type: "plain", key: "website", label: "Website" },
   { type: "plain", key: "email", label: "Email" },
-  { type: "plain", key: "tournament", label: "Tournament" },
+  { type: "enum", key: "tournament", label: "Tournament", map: YES_NO },
   { type: "range", key: "roundNumber", label: "Round" },
   { type: "range", key: "totalRounds", label: "Total rounds" },
   { type: "range", key: "minimumPlayTime", label: "Min play time" },

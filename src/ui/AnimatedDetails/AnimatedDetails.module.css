@@ -1,0 +1,31 @@
+.content {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: clip;
+  transition: grid-template-rows var(--motion-expand);
+}
+
+/* Clip all descendant overflow during animation to suppress scrollbar flash. */
+:where(.details.is-animating) * {
+  overflow: clip;
+}
+
+.content > * {
+  min-height: 0;
+}
+
+:where(.details[open]) .content {
+  grid-template-rows: 1fr;
+}
+
+/* JS adds .is-closing before removing [open] so the grid can transition to 0fr
+   before the browser hides the content. */
+:where(.details.is-closing) .content {
+  grid-template-rows: 0fr;
+}
+
+@starting-style {
+  :where(.details[open]) .content {
+    grid-template-rows: 0fr;
+  }
+}

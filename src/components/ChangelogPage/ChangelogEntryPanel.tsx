@@ -1,5 +1,6 @@
-import type { ChangelogEntry } from "../../utils/types";
+import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
 import { EventTable, type SharedColumnState } from "../../ui/EventTable/EventTable";
+import type { ChangelogEntry } from "../../utils/types";
 import styles from "./ChangelogEntryPanel.module.css";
 
 type EntryValue = ChangelogEntry | "loading" | "error" | undefined;
@@ -14,56 +15,53 @@ export function ChangelogEntryPanel({
   sharedColumnState,
 }: ChangelogEntryPanelProps): JSX.Element {
   if (entry === undefined || entry === "loading") {
-    return (
-      <p className={styles.status} aria-busy="true">
-        Loading…
-      </p>
-    );
+    return <p aria-busy="true">Loading…</p>;
   }
 
   if (entry === "error") {
-    return (
-      <p className={styles.status}>Could not load this entry. Collapse and re-expand to retry.</p>
-    );
+    return <p>Could not load this entry. Collapse and re-expand to retry.</p>;
   }
 
   return (
     <div className={styles.panel}>
       {entry.createdEvents.length > 0 && (
-        <details open className={`${styles.group} animates-details`}>
-          <summary>Created ({entry.createdEvents.length})</summary>
-          <div>
-            <EventTable
-              events={entry.createdEvents}
-              sharedColumnState={sharedColumnState}
-              showColumnControls={false}
-            />
-          </div>
-        </details>
+        <AnimatedDetails
+          className={styles.group}
+          summaryClassName={styles.groupSummary}
+          summary={`Created (${entry.createdEvents.length})`}
+        >
+          <EventTable
+            events={entry.createdEvents}
+            sharedColumnState={sharedColumnState}
+            showColumnControls={false}
+          />
+        </AnimatedDetails>
       )}
       {entry.updatedEvents.length > 0 && (
-        <details open className={`${styles.group} animates-details`}>
-          <summary>Updated ({entry.updatedEvents.length})</summary>
-          <div>
-            <EventTable
-              events={entry.updatedEvents}
-              sharedColumnState={sharedColumnState}
-              showColumnControls={false}
-            />
-          </div>
-        </details>
+        <AnimatedDetails
+          className={styles.group}
+          summaryClassName={styles.groupSummary}
+          summary={`Updated (${entry.updatedEvents.length})`}
+        >
+          <EventTable
+            events={entry.updatedEvents}
+            sharedColumnState={sharedColumnState}
+            showColumnControls={false}
+          />
+        </AnimatedDetails>
       )}
       {entry.deletedEvents.length > 0 && (
-        <details open className={`${styles.group} animates-details`}>
-          <summary>Deleted ({entry.deletedEvents.length})</summary>
-          <div>
-            <EventTable
-              events={entry.deletedEvents}
-              sharedColumnState={sharedColumnState}
-              showColumnControls={false}
-            />
-          </div>
-        </details>
+        <AnimatedDetails
+          className={styles.group}
+          summaryClassName={styles.groupSummary}
+          summary={`Deleted (${entry.deletedEvents.length})`}
+        >
+          <EventTable
+            events={entry.deletedEvents}
+            sharedColumnState={sharedColumnState}
+            showColumnControls={false}
+          />
+        </AnimatedDetails>
       )}
     </div>
   );

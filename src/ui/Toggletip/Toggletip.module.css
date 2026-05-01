@@ -2,18 +2,17 @@
   cursor: pointer;
 }
 
-.button:focus-visible {
-  outline: 0.125rem solid;
-  outline-offset: 0.125rem;
-}
-
 .positioner {
   z-index: var(--z-popover);
 }
 
 .tooltip {
   composes: surface from "../../styles/popup.module.css";
-  min-width: 12.5rem;
-  max-width: min(18rem, calc(100dvw - var(--space-4) * 2));
+  min-width: 12.5rem; /* avoid collapsing to a sliver on short content */
+  max-width: min(
+    18rem,
+    calc(100dvw - var(--space-4) * 2)
+  ); /* cap width, but shrink to fit viewport on narrow screens */
+
   padding: var(--space-2) var(--space-3);
 }

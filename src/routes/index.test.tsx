@@ -200,16 +200,16 @@ test("renders DAYS fieldset in search form", async () => {
   expect(screen.getByRole("group", { name: "DAYS" })).toBeInTheDocument();
 });
 
-test("day tiles are toggle buttons with aria-pressed", async () => {
+test("day tiles are checkboxes", async () => {
   await renderSearchPage("/");
-  expect(screen.getByRole("button", { name: "Wed" })).toHaveAttribute("aria-pressed", "false");
+  expect(screen.getByRole("checkbox", { name: "Wed" })).not.toBeChecked();
 });
 
-test("day toggle tiles have no concept color style properties", async () => {
+test("day checkboxes are native form elements", async () => {
   await renderSearchPage();
-  const thuBtn = screen.getByRole("button", { name: "Thu" });
-  expect(thuBtn.style.getPropertyValue("--tile-color")).toBe("");
-  expect(thuBtn.style.getPropertyValue("--tile-color-bg")).toBe("");
+  const thuCheckbox = screen.getByRole("checkbox", { name: "Thu" });
+  expect(thuCheckbox).toBeInstanceOf(HTMLInputElement);
+  expect((thuCheckbox as HTMLInputElement).type).toBe("checkbox");
 });
 
 test("eventType column renders an outline Badge", async () => {

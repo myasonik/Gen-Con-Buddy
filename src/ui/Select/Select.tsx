@@ -1,4 +1,3 @@
-import { Select as BaseSelect } from "@base-ui/react/select";
 import clsx from "clsx";
 import styles from "./Select.module.css";
 
@@ -24,32 +23,19 @@ export function Select({
   className,
   "aria-label": ariaLabel,
 }: SelectProps): JSX.Element {
-  const items = [{ value: null, label: placeholder }, ...options];
-
   return (
-    <BaseSelect.Root
-      value={value || null}
-      onValueChange={(v) => onValueChange(v ?? "")}
-      items={items}
+    <select
+      value={value}
+      onChange={(e) => onValueChange(e.target.value)}
+      className={clsx(styles.select, className)}
+      aria-label={ariaLabel}
     >
-      <BaseSelect.Trigger className={clsx(styles.trigger, className)} aria-label={ariaLabel}>
-        <BaseSelect.Value placeholder={placeholder} />
-        <BaseSelect.Icon className={styles.icon}>▾</BaseSelect.Icon>
-      </BaseSelect.Trigger>
-      <BaseSelect.Portal>
-        <BaseSelect.Positioner className={styles.positioner}>
-          <BaseSelect.Popup className={styles.popup}>
-            <BaseSelect.Item value={null} className={styles.item}>
-              <BaseSelect.ItemText>{placeholder}</BaseSelect.ItemText>
-            </BaseSelect.Item>
-            {options.map(({ value: v, label }) => (
-              <BaseSelect.Item key={v} value={v} className={styles.item}>
-                <BaseSelect.ItemText>{label}</BaseSelect.ItemText>
-              </BaseSelect.Item>
-            ))}
-          </BaseSelect.Popup>
-        </BaseSelect.Positioner>
-      </BaseSelect.Portal>
-    </BaseSelect.Root>
+      <option value="">{placeholder}</option>
+      {options.map(({ value: v, label }) => (
+        <option key={v} value={v}>
+          {label}
+        </option>
+      ))}
+    </select>
   );
 }

@@ -2,15 +2,15 @@ import { useEffect } from "react";
 import clsx from "clsx";
 import { announce } from "../../lib/announce";
 import { MeepleFlat } from "../icons/MeepleFlat";
-import styles from "./PixelState.module.css";
+import styles from "./EmptyState.module.css";
 
-interface PixelStateProps {
+interface EmptyStateProps {
   variant: "loading" | "empty" | "error";
   text: string;
   subtext?: string;
 }
 
-export function PixelState({ variant, text, subtext }: PixelStateProps): JSX.Element {
+export function EmptyState({ variant, text, subtext }: EmptyStateProps): JSX.Element {
   useEffect(() => {
     announce(text, variant === "error" ? "assertive" : "polite");
   }, [variant, text]);

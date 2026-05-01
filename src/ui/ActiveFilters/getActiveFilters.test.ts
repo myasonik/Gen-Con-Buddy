@@ -161,3 +161,27 @@ test("multiple params: filter and days produce correct chips", () => {
   expect(labels).toContain("Search: dragon");
   expect(labels).toContain("Fri");
 });
+
+test("tournament uses YES_NO enum for label", () => {
+  const [chip] = getActiveFilters({ tournament: "Yes" });
+  expect(chip.id).toBe("tournament");
+  expect(chip.label).toBe("Tournament: Yes");
+  expect(chip.remove({ tournament: "Yes", title: "foo" })).toStrictEqual({ title: "foo" });
+});
+
+test("tournament: No value produces correct chip", () => {
+  const [chip] = getActiveFilters({ tournament: "No" });
+  expect(chip.label).toBe("Tournament: No");
+});
+
+test("materialsRequired uses YES_NO enum for label", () => {
+  const [chip] = getActiveFilters({ materialsRequired: "Yes" });
+  expect(chip.id).toBe("materialsRequired");
+  expect(chip.label).toBe("Materials required: Yes");
+  expect(chip.remove({ materialsRequired: "Yes" })).toStrictEqual({});
+});
+
+test("materialsRequired: No value produces correct chip", () => {
+  const [chip] = getActiveFilters({ materialsRequired: "No" });
+  expect(chip.label).toBe("Materials required: No");
+});

@@ -12,17 +12,16 @@
   --size-detail-max: 50rem;
 
   /* Motion */
-  --motion-press: 30ms linear;
   --motion-hover: 80ms ease;
   --motion-expand: 150ms ease-out;
+
+  /* Focus ring */
+  --focus-ring: 0.125rem solid;
+  --focus-ring-offset: 0.125rem;
 
   /* Z-index scale */
   --z-content: 1;
   --z-sticky: 10;
-  --z-header: 20;
-  --z-modal: 40;
-  --z-popover: 50;
-
-  /* interpolate-size: allow <details> height: auto transitions */
-  interpolate-size: allow-keywords;
+  --z-modal: 20;
+  --z-popover: 30;
 }

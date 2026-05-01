@@ -5,7 +5,7 @@ import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { ColumnControlsPanel } from "../../ui/EventTable/ColumnControlsPanel";
 import { ChangelogRow } from "./ChangelogRow";
-import { PixelState } from "../../ui/PixelState/PixelState";
+import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import styles from "./ChangelogPage.module.css";
 
 export function ChangelogPage(): JSX.Element {
@@ -50,7 +50,7 @@ export function ChangelogPage(): JSX.Element {
 
   return (
     <main className={styles.page}>
-      {isLoading && <PixelState variant="loading" text="LOADING CHANGELOG…" />}
+      {isLoading && <EmptyState variant="loading" text="LOADING CHANGELOG…" />}
       {isError && <p>Could not load changelog. Try refreshing.</p>}
       {!isLoading && !isError && summaries.length === 0 && <p>No changelog entries yet.</p>}
       {summaries.length > 0 && (

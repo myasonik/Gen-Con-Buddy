@@ -50,4 +50,9 @@ export const CATEGORY: Record<string, string> = {
   "Premier Event": "Premier Event",
 };
 
+export const YES_NO: Record<string, string> = {
+  Yes: "Yes",
+  No: "No",
+};
+
 export const EST = "America/New_York";

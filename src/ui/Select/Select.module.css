@@ -1,42 +1,8 @@
-.trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
+.select {
   padding: var(--space-1) var(--space-2);
   border: 0.0625rem solid;
   background: Canvas;
   cursor: pointer;
   min-width: 8rem;
-}
-
-.trigger:focus-visible {
-  outline: 0.125rem solid;
-  outline-offset: 0.0625rem;
-}
-
-.icon {
-  margin-left: auto;
-  flex-shrink: 0;
-}
-
-.positioner {
-  z-index: var(--z-popover);
-}
-
-.popup {
-  composes: surface from "../../styles/popup.module.css";
-}
-
-.item {
-  padding: var(--space-1) var(--space-2);
-  cursor: pointer;
-}
-
-.item:hover,
-.item[data-highlighted] {
-  background: color-mix(in srgb, currentcolor 10%, transparent);
-}
-
-.item[data-selected] {
-  font-weight: 600;
+  font: inherit;
 }

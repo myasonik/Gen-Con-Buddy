@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { EllipsisVertical } from "lucide-react";
 import { Popover } from "@base-ui/react/popover";
 import { Button } from "../Button/Button";
 import styles from "./ColumnActionsPopover.module.css";
@@ -31,11 +32,7 @@ export function ColumnActionsPopover({
         className={`${styles.trigger}${open ? ` ${styles.triggerOpen}` : ""}`}
         aria-label="Column actions"
       >
-        <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
-          <circle cx="6" cy="2" r="1.5" fill="currentColor" />
-          <circle cx="6" cy="6" r="1.5" fill="currentColor" />
-          <circle cx="6" cy="10" r="1.5" fill="currentColor" />
-        </svg>
+        <EllipsisVertical size={12} aria-hidden="true" />
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner sideOffset={4} className={styles.positioner}>

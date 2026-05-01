@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { PixelState } from "./PixelState";
+import { EmptyState } from "./EmptyState";
 
 const meta = {
-  title: "UI/PixelState",
-  component: PixelState,
+  title: "UI/EmptyState",
+  component: EmptyState,
   tags: ["autodocs"],
-} satisfies Meta<typeof PixelState>;
+} satisfies Meta<typeof EmptyState>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

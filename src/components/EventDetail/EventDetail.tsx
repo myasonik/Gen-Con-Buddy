@@ -4,11 +4,10 @@ import { Link } from "@tanstack/react-router";
 import { fetchEvents } from "../../utils/api";
 import { buildGoogleCalendarUrl } from "../../utils/googleCalendar";
 import { Button } from "../../ui/Button/Button";
-import { PixelState } from "../../ui/PixelState/PixelState";
+import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { Badge, BoolBadge } from "../../ui/Badge/Badge";
 import { DescriptionList, DescriptionItem } from "../../ui/DescriptionList/DescriptionList";
-import { CalendarPlus } from "../../ui/icons/CalendarPlus";
-import { ExternalLink } from "../../ui/icons/ExternalLink";
+import { CalendarPlus, ExternalLink } from "lucide-react";
 import styles from "./EventDetail.module.css";
 
 interface EventDetailProps {
@@ -22,11 +21,11 @@ export function EventDetail({ gameId }: EventDetailProps): JSX.Element {
   });
 
   if (isLoading) {
-    return <PixelState variant="loading" text="LOADING QUEST..." />;
+    return <EmptyState variant="loading" text="LOADING QUEST..." />;
   }
   if (isError) {
     return (
-      <PixelState
+      <EmptyState
         variant="error"
         text="QUEST FAILED"
         subtext="Unable to load event. Please try again."
@@ -35,7 +34,7 @@ export function EventDetail({ gameId }: EventDetailProps): JSX.Element {
   }
   if (!data || data.data.length === 0) {
     return (
-      <PixelState variant="empty" text="EVENT NOT FOUND" subtext="This quest does not exist." />
+      <EmptyState variant="empty" text="EVENT NOT FOUND" subtext="This quest does not exist." />
     );
   }
 
