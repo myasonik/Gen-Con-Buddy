@@ -144,3 +144,9 @@
     display: none;
   }
 }
+
+.panelDivider {
+  border: none;
+  border-top: 0.0625rem solid;
+  margin: var(--space-2) 0;
+}

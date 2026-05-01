@@ -1,4 +1,6 @@
 import { Button } from "../Button/Button";
+import { TypeDisplaySlider } from "../TypeDisplaySlider/TypeDisplaySlider";
+import { useTypeDisplay } from "../../hooks/useTypeDisplay";
 import type { SharedColumnState } from "./types";
 import { AnimatedDetails } from "../AnimatedDetails/AnimatedDetails";
 import { COLUMNS } from "./columns";
@@ -9,7 +11,21 @@ interface ColumnControlsPanelProps {
 }
 
 export function ColumnControlsPanel({ columnState }: ColumnControlsPanelProps): JSX.Element {
-  const { visibility, toggleVisibility, resetVisibility, resetSizing } = columnState;
+  const {
+    visibility,
+    toggleVisibility,
+    resetVisibility,
+    resetSizing,
+    typeDisplay: externalTypeDisplay,
+    setTypeDisplay: externalSetTypeDisplay,
+  } = columnState;
+  const internal = useTypeDisplay();
+  const typeDisplay = externalTypeDisplay ?? internal.typeDisplay;
+  const setTypeDisplay = externalSetTypeDisplay ?? internal.setTypeDisplay;
+  const resetTypeDisplay = externalSetTypeDisplay
+    ? (): void => externalSetTypeDisplay("both")
+    : internal.reset;
+
   return (
     <AnimatedDetails className={styles.visibilityPanel} summary="Customize columns">
       <fieldset>
@@ -31,11 +47,14 @@ export function ColumnControlsPanel({ columnState }: ColumnControlsPanelProps): 
             </li>
           ))}
         </ul>
+        <hr className={styles.panelDivider} />
+        <TypeDisplaySlider value={typeDisplay} onChange={setTypeDisplay} />
         <Button
           variant="secondary"
           onClick={() => {
             resetVisibility();
             resetSizing();
+            resetTypeDisplay();
           }}
         >
           Reset to defaults

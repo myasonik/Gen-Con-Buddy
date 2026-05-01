@@ -70,3 +70,8 @@ test("toggling a column off hides its header", async () => {
   await user.click(screen.getByRole("checkbox", { name: "Title" }));
   expect(screen.queryByRole("columnheader", { name: "Title" })).not.toBeInTheDocument();
 });
+
+test.skip("'Customize columns' panel contains the type display slider", async () => {
+  await renderEventTable();
+  expect(screen.getByRole("slider", { name: "Type display" })).toBeInTheDocument();
+});
