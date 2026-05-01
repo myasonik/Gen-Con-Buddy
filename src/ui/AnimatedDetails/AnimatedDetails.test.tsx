@@ -71,3 +71,26 @@ test("clicking summary on open details initiates close animation", () => {
   expect(details).toHaveClass("is-closing");
   expect(details).toHaveClass("is-animating");
 });
+
+test("close animation completes and details closes after transitionend on content div", () => {
+  render(
+    <AnimatedDetails summary="Toggle" open>
+      content
+    </AnimatedDetails>,
+  );
+  fireEvent.click(screen.getByText("Toggle"));
+  const details = document.querySelector("details");
+  expect(details).not.toBeNull();
+  if (!details) {
+    return;
+  }
+  const contentDiv = details.querySelector(":scope > div");
+  expect(contentDiv).not.toBeNull();
+  if (!contentDiv) {
+    return;
+  }
+  fireEvent(contentDiv, new Event("transitionend", { bubbles: true }));
+  expect(details).not.toHaveClass("is-closing");
+  expect(details).not.toHaveClass("is-animating");
+  expect(details).not.toHaveAttribute("open");
+});

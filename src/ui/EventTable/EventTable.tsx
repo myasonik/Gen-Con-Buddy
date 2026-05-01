@@ -1,4 +1,4 @@
-import { useState, useId } from "react";
+import { useState, useId, useMemo } from "react";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { createPortal } from "react-dom";
 import {
@@ -17,7 +17,12 @@ import { ColumnActionsPopover } from "./ColumnActionsPopover";
 import { ColumnResizeDialog } from "./ColumnResizeDialog";
 import { announce } from "../../lib/announce";
 import type { Event } from "../../utils/types";
-import { COLUMNS, SORT_FIELD_BY_COL_ID, COL_ID_BY_SORT_FIELD } from "./columns";
+import {
+  COLUMNS,
+  SORT_FIELD_BY_COL_ID,
+  COL_ID_BY_SORT_FIELD,
+  createEventTypeCell,
+} from "./columns";
 import type { SharedColumnState } from "./types";
 import styles from "./EventTable.module.css";
 
@@ -51,6 +56,13 @@ export function EventTable({
   const resetSizing = sharedColumnState?.resetSizing ?? internalSizing.reset;
   const typeDisplay = sharedColumnState?.typeDisplay ?? internalTypeDisplay.typeDisplay;
   const setTypeDisplay = sharedColumnState?.setTypeDisplay ?? internalTypeDisplay.setTypeDisplay;
+  const columns = useMemo(
+    () =>
+      COLUMNS.map((col) =>
+        col.id === "eventType" ? { ...col, cell: createEventTypeCell(typeDisplay) } : col,
+      ),
+    [typeDisplay],
+  );
   // Unique prefix so anchor names don't collide when multiple EventTable instances are on the page
   const tableId = useId().replace(/:/g, "");
   const [resizeTarget, setResizeTarget] = useState<{
@@ -126,15 +138,12 @@ export function EventTable({
 
   const table = useReactTable({
     data: events,
-    columns: COLUMNS,
+    columns,
     columnResizeMode: "onChange",
     state: {
       columnVisibility: visibility,
       columnSizing: sizing,
       sorting: internalSorting,
-    },
-    meta: {
-      typeDisplay,
     },
     onColumnSizingChange: (updater) => {
       setSizing(updater);

@@ -6,6 +6,21 @@ import { EXP, EVENT_TYPES } from "../../utils/enums";
 import type { Event } from "../../utils/types";
 import type { TypeDisplay } from "../../hooks/useTypeDisplay";
 
+export function createEventTypeCell(typeDisplay: TypeDisplay): ColumnDef<Event>["cell"] {
+  return ({ row }) => {
+    const code = row.original.attributes.eventType;
+    if (typeDisplay === "code") {
+      return <>{code}</>;
+    }
+    const full = EVENT_TYPES[code];
+    const name = full?.replace(/^[A-Z]+ - /, "") ?? code;
+    if (typeDisplay === "name") {
+      return <>{name}</>;
+    }
+    return <>{full ?? code}</>;
+  };
+}
+
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData, TValue> {
     sortField?: string;
