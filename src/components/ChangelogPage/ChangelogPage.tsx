@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchChangelogList, fetchChangelogEntry } from "../../utils/api";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
+import { useTypeDisplay } from "../../hooks/useTypeDisplay";
 import { ColumnControlsPanel } from "../../ui/EventTable/ColumnControlsPanel";
 import { ChangelogRow } from "./ChangelogRow";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
@@ -12,6 +13,7 @@ export function ChangelogPage(): JSX.Element {
   const queryClient = useQueryClient();
   const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility();
   const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
+  const { typeDisplay, setTypeDisplay } = useTypeDisplay();
   const sharedColumnState = {
     visibility,
     toggleVisibility,
@@ -19,6 +21,8 @@ export function ChangelogPage(): JSX.Element {
     sizing,
     setSizing,
     resetSizing,
+    typeDisplay,
+    setTypeDisplay,
   };
   const {
     data: summaries = [],
