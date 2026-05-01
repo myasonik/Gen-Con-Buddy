@@ -12,35 +12,37 @@ export function ColumnControlsPanel({ columnState }: ColumnControlsPanelProps): 
   return (
     <details className={`${styles.visibilityPanel} animates-details`}>
       <summary>Customize columns</summary>
-      <div><fieldset>
-        <ul>
-          {COLUMNS.map((col) => (
-            <li key={col.id}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={col.id !== undefined && Boolean(visibility[col.id])}
-                  onChange={() => {
-                    if (col.id !== undefined) {
-                      toggleVisibility(col.id);
-                    }
-                  }}
-                />
-                {typeof col.header === "string" ? col.header : col.id}
-              </label>
-            </li>
-          ))}
-        </ul>
-        <Button
-          variant="secondary"
-          onClick={() => {
-            resetVisibility();
-            resetSizing();
-          }}
-        >
-          Reset to defaults
-        </Button>
-      </fieldset></div>
+      <div>
+        <fieldset>
+          <ul>
+            {COLUMNS.map((col) => (
+              <li key={col.id}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={col.id !== undefined && Boolean(visibility[col.id])}
+                    onChange={() => {
+                      if (col.id !== undefined) {
+                        toggleVisibility(col.id);
+                      }
+                    }}
+                  />
+                  {typeof col.header === "string" ? col.header : col.id}
+                </label>
+              </li>
+            ))}
+          </ul>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              resetVisibility();
+              resetSizing();
+            }}
+          >
+            Reset to defaults
+          </Button>
+        </fieldset>
+      </div>
     </details>
   );
 }
