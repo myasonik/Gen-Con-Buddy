@@ -40,7 +40,7 @@
   cursor: not-allowed;
 }
 
-.dayTiles {
+.dayCheckboxes {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);

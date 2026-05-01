@@ -110,7 +110,7 @@ export function SearchForm({ values, onSearch }: SearchFormProps): JSX.Element {
                 message="Clear the Start Date fields in the TIME section to enable the day checkboxes."
               />
             )}
-            <div className={styles.dayTiles}>
+            <div className={styles.dayCheckboxes}>
               {DAY_KEYS.map((key) => (
                 <label key={key} className={styles.dayLabel}>
                   <input
