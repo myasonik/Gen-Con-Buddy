@@ -1,9 +1,8 @@
 import { useForm } from "react-hook-form";
-import { AGE_GROUPS, CATEGORY, EXP, REGISTRATION } from "../../utils/enums";
+import { AGE_GROUPS, CATEGORY, EXP, REGISTRATION, YES_NO } from "../../utils/enums";
 import type { SearchFormValues } from "../../utils/types";
 import { Button } from "../../ui/Button/Button";
 import { Toggletip } from "../../ui/Toggletip/Toggletip";
-import { ToggleTile, ToggleTileGroup } from "../../ui/ToggleTile/ToggleTile";
 import { EventTypeSelect } from "../../ui/EventTypeSelect/EventTypeSelect";
 import { Select } from "../../ui/Select/Select";
 import { Field, RangeField } from "../../ui/Field/Field";
@@ -108,23 +107,28 @@ export function SearchForm({ values, onSearch }: SearchFormProps): JSX.Element {
             {daysDisabled && (
               <Toggletip
                 label="Why are day filters disabled?"
-                message="Clear the Start Date fields in the TIME section to enable the day buttons."
+                message="Clear the Start Date fields in the TIME section to enable the day checkboxes."
               />
             )}
-            <ToggleTileGroup
-              value={days ? days.split(",") : []}
-              onValueChange={(v) =>
-                setValue("days", DAY_KEYS.filter((d) => v.includes(d)).join(","))
-              }
-              disabled={daysDisabled}
-              className={styles.dayTiles}
-            >
+            <div className={styles.dayTiles}>
               {DAY_KEYS.map((key) => (
-                <ToggleTile key={key} value={key}>
+                <label key={key} className={styles.dayLabel}>
+                  <input
+                    type="checkbox"
+                    checked={(days ?? "").split(",").includes(key)}
+                    onChange={(e) => {
+                      const current = days ? days.split(",") : [];
+                      const next = e.target.checked
+                        ? DAY_KEYS.filter((d) => current.includes(d) || d === key)
+                        : current.filter((d) => d !== key);
+                      setValue("days", next.join(","));
+                    }}
+                    disabled={daysDisabled}
+                  />
                   {DAY_LABELS[key]}
-                </ToggleTile>
+                </label>
               ))}
-            </ToggleTileGroup>
+            </div>
           </div>
         </fieldset>
 
@@ -136,7 +140,7 @@ export function SearchForm({ values, onSearch }: SearchFormProps): JSX.Element {
               {startDateDisabled && (
                 <Toggletip
                   label="Why are Start Date fields disabled?"
-                  message="Clear the day buttons in the DAYS section to enable custom Start Date fields."
+                  message="Clear the day checkboxes in the DAYS section to enable custom Start Date fields."
                 />
               )}
               <RangeField label="Start Date" stack>
@@ -174,7 +178,7 @@ export function SearchForm({ values, onSearch }: SearchFormProps): JSX.Element {
               {startDateDisabled && (
                 <Toggletip
                   label="Why are End Date fields disabled?"
-                  message="Clear the day buttons in the DAYS section to enable custom End Date fields."
+                  message="Clear the day checkboxes in the DAYS section to enable custom End Date fields."
                 />
               )}
               <RangeField label="End Date" stack>
@@ -316,9 +320,15 @@ export function SearchForm({ values, onSearch }: SearchFormProps): JSX.Element {
             <Field label="Materials Provided">
               <input type="text" className={styles.input} {...register("materialsProvided")} />
             </Field>
-            <Field label="Materials Required">
-              <input type="text" className={styles.input} {...register("materialsRequired")} />
-            </Field>
+            <label className={styles.label}>
+              Materials Required
+              <Select
+                value={watch("materialsRequired") ?? ""}
+                onValueChange={(v) => setValue("materialsRequired", v)}
+                options={Object.entries(YES_NO).map(([k, v]) => ({ value: k, label: v }))}
+                aria-label="Materials Required"
+              />
+            </label>
             <Field label="Materials Required Details">
               <input
                 type="text"
@@ -335,9 +345,15 @@ export function SearchForm({ values, onSearch }: SearchFormProps): JSX.Element {
             <Field label="Email">
               <input type="text" className={styles.input} {...register("email")} />
             </Field>
-            <Field label="Tournament">
-              <input type="text" className={styles.input} {...register("tournament")} />
-            </Field>
+            <label className={styles.label}>
+              Tournament
+              <Select
+                value={watch("tournament") ?? ""}
+                onValueChange={(v) => setValue("tournament", v)}
+                options={Object.entries(YES_NO).map(([k, v]) => ({ value: k, label: v }))}
+                aria-label="Tournament"
+              />
+            </label>
             <RangeField label="Round Number">
               <input
                 type="number"
