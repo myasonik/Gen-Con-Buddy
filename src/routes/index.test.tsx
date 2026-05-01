@@ -76,7 +76,7 @@ test("submitting a new search resets page to 1", async () => {
   await screen.findByRole("navigation", { name: "Pagination, top" });
   latestUrl = null;
   // Submit the search form (clicking Search button resets page)
-  await user.click(screen.getByRole("button", { name: "▶ Search" }));
+  await user.click(screen.getByRole("button", { name: "Search" }));
   await screen.findByRole("navigation", { name: "Pagination, top" });
   // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(latestUrl!.searchParams.has("page")).toBe(false);
@@ -103,7 +103,7 @@ test("navigating to page 2 sends page=1 to API (0-indexed)", async () => {
   latestUrl = null;
   // click Next on the first pagination nav
   const topNav = screen.getByRole("navigation", { name: "Pagination, top" });
-  await user.click(within(topNav).getByRole("button", { name: "Next ▶" }));
+  await user.click(within(topNav).getByRole("button", { name: "Next" }));
   // wait for re-render after navigation
   await screen.findByRole("navigation", { name: "Pagination, top" });
   // oxlint-disable-next-line typescript/no-non-null-assertion
@@ -184,7 +184,7 @@ test("navigating back to page 1 omits page from URL and API call", async () => {
   await screen.findByRole("navigation", { name: "Pagination, top" });
   latestUrl = null;
   const topNav = screen.getByRole("navigation", { name: "Pagination, top" });
-  await user.click(within(topNav).getByRole("button", { name: "◀ Previous" }));
+  await user.click(within(topNav).getByRole("button", { name: "Previous" }));
   await screen.findByRole("navigation", { name: "Pagination, top" });
   // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(latestUrl!.searchParams.has("page")).toBe(false);
@@ -212,7 +212,7 @@ test("day checkboxes are native form elements", async () => {
   expect((thuCheckbox as HTMLInputElement).type).toBe("checkbox");
 });
 
-test("eventType column renders an outline Badge", async () => {
+test("eventType column renders the event type", async () => {
   server.use(
     http.get("/api/events/search", () =>
       HttpResponse.json({
@@ -225,7 +225,7 @@ test("eventType column renders an outline Badge", async () => {
   );
   await renderSearchPage();
   await screen.findByRole("table");
-  expect(screen.getByText("RPG")).toBeInTheDocument();
+  expect(screen.getByText("RPG - Role Playing Game")).toBeInTheDocument();
 });
 
 describe("sidebar toggle and active filters", () => {

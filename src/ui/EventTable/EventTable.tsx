@@ -12,6 +12,7 @@ import {
 } from "@tanstack/react-table";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
+import { useTypeDisplay } from "../../hooks/useTypeDisplay";
 import { AnimatedDetails } from "../AnimatedDetails/AnimatedDetails";
 import { Button } from "../Button/Button";
 import { ColumnActionsPopover } from "./ColumnActionsPopover";
@@ -49,6 +50,7 @@ export function EventTable({
 }: EventTableProps): JSX.Element {
   const internalVis = useColumnVisibility();
   const internalSizing = useColumnSizing();
+  const { typeDisplay } = useTypeDisplay();
   const visibility = sharedColumnState?.visibility ?? internalVis.visibility;
   const toggleVisibility = sharedColumnState?.toggleVisibility ?? internalVis.toggle;
   const resetVisibility = sharedColumnState?.resetVisibility ?? internalVis.reset;
@@ -136,6 +138,9 @@ export function EventTable({
       columnVisibility: visibility,
       columnSizing: sizing,
       sorting: internalSorting,
+    },
+    meta: {
+      typeDisplay,
     },
     onColumnSizingChange: (updater) => {
       setSizing(updater);

@@ -1,14 +1,16 @@
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "../Badge/Badge";
 import { Pawn } from "../icons/Pawn";
-import { EXP } from "../../utils/enums";
+import { EXP, EVENT_TYPES } from "../../utils/enums";
 import type { Event } from "../../utils/types";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData, TValue> {
     sortField?: string;
+  }
+  interface TableMeta<TData> {
+    typeDisplay?: "code" | "name" | "both";
   }
 }
 
@@ -43,7 +45,19 @@ export const COLUMNS: ColumnDef<Event>[] = [
     id: "eventType",
     header: "Type",
     meta: { sortField: "eventType" },
-    cell: ({ row }) => <Badge variant="outline">{row.original.attributes.eventType}</Badge>,
+    cell: ({ row, table }) => {
+      const code = row.original.attributes.eventType;
+      const typeDisplay = table.options.meta?.typeDisplay ?? "both";
+      if (typeDisplay === "code") {
+        return <>{code}</>;
+      }
+      const full = EVENT_TYPES[code];
+      const name = full?.replace(/^[A-Z]+ - /, "") ?? code;
+      if (typeDisplay === "name") {
+        return <>{name}</>;
+      }
+      return <>{full ?? code}</>;
+    },
   },
   {
     id: "group",
@@ -81,7 +95,7 @@ export const COLUMNS: ColumnDef<Event>[] = [
     meta: { sortField: "minPlayers" },
     cell: ({ row }) => (
       <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-        <Pawn aria-hidden="true" style={{ width: 10, height: 12 }} />
+        <Pawn aria-hidden="true" width={10} height={12} />
         {row.original.attributes.minPlayers}
       </span>
     ),
@@ -92,7 +106,7 @@ export const COLUMNS: ColumnDef<Event>[] = [
     meta: { sortField: "maxPlayers" },
     cell: ({ row }) => (
       <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-        <Pawn aria-hidden="true" style={{ width: 10, height: 12 }} />
+        <Pawn aria-hidden="true" width={10} height={12} />
         {row.original.attributes.maxPlayers}
       </span>
     ),
@@ -109,7 +123,7 @@ export const COLUMNS: ColumnDef<Event>[] = [
     meta: { sortField: "experienceRequired" },
     cell: ({ row }) => {
       const raw = row.original.attributes.experienceRequired;
-      return <Badge variant="outline">{EXP[raw] ?? raw}</Badge>;
+      return <>{EXP[raw] ?? raw}</>;
     },
   },
   {
@@ -136,7 +150,7 @@ export const COLUMNS: ColumnDef<Event>[] = [
     meta: { sortField: "startDateTime" },
     cell: ({ row }) => {
       const dayName = format(new Date(row.original.attributes.startDateTime), "EEEE");
-      return <Badge variant="outline">{dayName}</Badge>;
+      return <>{dayName}</>;
     },
   },
   {
