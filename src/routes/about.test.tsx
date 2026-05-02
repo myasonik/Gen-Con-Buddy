@@ -40,7 +40,7 @@ test("renders the about page heading", async () => {
 
 test("renders a GitHub link with correct href and security attributes", async () => {
   await renderAboutPage();
-  const link = screen.getByRole("link", { name: /view on github/i });
+  const link = screen.getByRole("link", { name: /open source on github/i });
   expect(link).toHaveAttribute("href", "https://github.com/myasonik/Gen-Con-Buddy");
   expect(link).toHaveAttribute("target", "_blank");
   expect(link).toHaveAttribute("rel", "noopener noreferrer");

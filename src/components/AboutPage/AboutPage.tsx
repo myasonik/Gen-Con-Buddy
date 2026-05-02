@@ -5,28 +5,22 @@ export function AboutPage(): JSX.Element {
     <main className={styles.page}>
       <div className={styles.content}>
         <h1 className={styles.heading}>About Gen Con Buddy</h1>
-        <p className={styles.intro}>
-          A fast, deeply filterable event search tool for Gen Con attendees. Search across 30+
-          criteria — type, time, location, cost, player counts, game system — and navigate from
-          results to detail and back.
-        </p>
-
         <hr className={styles.divider} />
 
         <section className={styles.section}>
           <h2 className={styles.sectionLabel}>Contribute</h2>
           <p className={styles.bodyText}>
-            Gen Con Buddy is open source. Found a bug or have a feature request? Open an issue on
-            GitHub.
+            Gen Con Buddy is{" "}
+            <a
+              href="https://github.com/myasonik/Gen-Con-Buddy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.bodyLink}
+            >
+              open source on GitHub
+            </a>
+            . Found a bug or have a feature request? Open an issue there.
           </p>
-          <a
-            href="https://github.com/myasonik/Gen-Con-Buddy"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.githubLink}
-          >
-            View on GitHub
-          </a>
         </section>
 
         <hr className={styles.divider} />
