@@ -10,6 +10,13 @@
   z-index: calc(var(--z-modal) - 1);
   background: oklch(22% 0.03 48deg / 0.4);
   cursor: pointer;
+  opacity: 1;
+  transition: opacity var(--motion-expand);
+}
+
+.backdrop[data-starting-style],
+.backdrop[data-ending-style] {
+  opacity: 0;
 }
 
 /* ─── Advanced Drawer ────────────────────────────────────────────────────── */
@@ -24,14 +31,13 @@
   flex-direction: column;
   background: var(--color-surface-panel);
   border-right: 0.0625rem solid var(--color-ink-border);
-  transform: translateX(-100%);
+  transform: translateX(0);
   transition: transform var(--motion-expand);
-  visibility: hidden;
 }
 
-.drawer[data-open="true"] {
-  transform: translateX(0);
-  visibility: visible;
+.drawer[data-starting-style],
+.drawer[data-ending-style] {
+  transform: translateX(-100%);
 }
 
 .drawerHeader {
@@ -242,7 +248,7 @@
 }
 
 .timeInput {
-  width: 7rem;
+  width: 5rem;
   height: 2rem;
   padding: var(--space-1) var(--space-2);
   font-size: 0.875rem;

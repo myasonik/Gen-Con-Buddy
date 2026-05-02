@@ -1,8 +1,8 @@
-import clsx from "clsx";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "../../ui/Button/Button";
-import { Toggletip } from "../../ui/Toggletip/Toggletip";
 import { Select } from "../../ui/Select/Select";
-import { PAGE_SIZE_OPTIONS, BACKEND_MAX_RESULTS } from "../../utils/constants";
+import { Toggletip } from "../../ui/Toggletip/Toggletip";
+import { BACKEND_MAX_RESULTS, PAGE_SIZE_OPTIONS } from "../../utils/constants";
 import styles from "./Pagination.module.css";
 
 function getPageNumbers(page: number, totalPages: number): (number | "...")[] {
@@ -31,6 +31,7 @@ interface PaginationProps {
   total: number;
   onNavigate: (page: number, limit: number) => void;
   "aria-label"?: string;
+  singleLine?: boolean;
 }
 
 export function Pagination({
@@ -39,6 +40,7 @@ export function Pagination({
   total,
   onNavigate,
   "aria-label": ariaLabel = "Pagination",
+  singleLine = false,
 }: PaginationProps): JSX.Element {
   const naturalTotalPages = Math.ceil(total / limit);
   const maxPages = Math.floor(BACKEND_MAX_RESULTS / limit);
@@ -49,23 +51,19 @@ export function Pagination({
   return (
     <nav aria-label={ariaLabel} className={styles.nav}>
       <div className={styles.controls}>
+        {total.toLocaleString()} events
         <Button
           variant="secondary"
           className={styles.navButton}
           onClick={() => onNavigate(page - 1, limit)}
           disabled={page === 1}
+          aria-label="Previous"
         >
-          ◀ Previous
+          <ChevronLeft size={14} aria-hidden="true" />
         </Button>
         <span className={styles.pageLabel}>
           Page {page} of {totalPages}
         </span>
-        {isTruncated && (
-          <Toggletip
-            label="Why are some pages unavailable?"
-            message={`Results are capped at ${BACKEND_MAX_RESULTS.toLocaleString()} events. Narrow your search to see more.`}
-          />
-        )}
         {pageNumbers.map((p, i) =>
           p === "..." ? (
             <span key={`ellipsis-${i}`} aria-hidden className={styles.ellipsis}>
@@ -75,9 +73,6 @@ export function Pagination({
             <Button
               key={p}
               variant="secondary"
-              className={clsx(styles.pageButton, {
-                [styles.activePage]: p === page,
-              })}
               onClick={() => onNavigate(p, limit)}
               aria-current={p === page ? "page" : undefined}
               disabled={p === page}
@@ -91,21 +86,29 @@ export function Pagination({
           className={styles.navButton}
           onClick={() => onNavigate(page + 1, limit)}
           disabled={page === totalPages}
+          aria-label="Next"
         >
-          Next ▶
+          <ChevronRight size={14} aria-hidden="true" />
         </Button>
       </div>
-      <div className={styles.summary}>
-        {total.toLocaleString()} events
-        <label className={styles.perPageLabel}>
-          Per page
-          <Select
-            value={String(limit)}
-            onValueChange={(v) => onNavigate(1, Number(v))}
-            options={PAGE_SIZE_OPTIONS.map((opt) => ({ value: String(opt), label: String(opt) }))}
-          />
-        </label>
-      </div>
+      {!singleLine && (
+        <div className={styles.summary}>
+          {isTruncated && (
+            <Toggletip
+              label="Why are some pages unavailable?"
+              message={`Results are capped at ${BACKEND_MAX_RESULTS.toLocaleString()} events. Narrow your search to see more.`}
+            />
+          )}
+          <label className={styles.perPageLabel}>
+            Per page
+            <Select
+              value={String(limit)}
+              onValueChange={(v) => onNavigate(1, Number(v))}
+              options={PAGE_SIZE_OPTIONS.map((opt) => ({ value: String(opt), label: String(opt) }))}
+            />
+          </label>
+        </div>
+      )}
     </nav>
   );
 }
