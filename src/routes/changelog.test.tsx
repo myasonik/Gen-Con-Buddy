@@ -116,7 +116,7 @@ test("expanding a row fetches and displays the event table", async () => {
   );
   await renderChangelogPage();
   await user.click(await screen.findByText(/1 created/));
-  await expect(screen.findByText("Dragon Hunt")).resolves.toBeInTheDocument();
+  await expect(screen.findAllByText("Dragon Hunt")).resolves.not.toHaveLength(0);
 });
 
 test("shows entry error message when entry fetch fails", async () => {
@@ -162,7 +162,9 @@ test("does not render section headers for empty event groups", async () => {
   );
   await renderChangelogPage();
   await user.click(await screen.findByText(/1 created/));
-  await expect(screen.findByText("Created (1)")).resolves.toBeInTheDocument();
-  expect(screen.queryByText("Updated (0)")).not.toBeInTheDocument();
-  expect(screen.queryByText("Deleted (0)")).not.toBeInTheDocument();
+  await screen.findAllByText("Dragon Hunt");
+  const createdEl = screen.getByText("Created");
+  expect(createdEl.closest("summary")).toHaveTextContent("(1)");
+  expect(screen.queryByText("Updated")).not.toBeInTheDocument();
+  expect(screen.queryByText("Deleted")).not.toBeInTheDocument();
 });

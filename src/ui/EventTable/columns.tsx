@@ -1,29 +1,27 @@
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Pawn } from "../icons/Pawn";
-import { EXP, EVENT_TYPES } from "../../utils/enums";
+import { Meeple } from "../icons/Meeple";
+import { MeepleGroup } from "../icons/MeepleGroup";
+import { MeepleArmy } from "../icons/MeepleArmy";
+import { EXP } from "../../utils/enums";
 import type { Event } from "../../utils/types";
-import type { TypeDisplay } from "../../hooks/useTypeDisplay";
 
-export function renderEventType(code: string, typeDisplay: TypeDisplay): string {
-  if (typeDisplay === "code") {
-    return code;
+export function playerCountIcon(
+  count: number,
+): typeof Meeple | typeof MeepleGroup | typeof MeepleArmy {
+  if (count === 1) {
+    return Meeple;
   }
-  const full = EVENT_TYPES[code];
-  const name = full?.replace(/^[A-Z]+ - /, "") ?? code;
-  if (typeDisplay === "name") {
-    return name;
+  if (count <= 4) {
+    return MeepleGroup;
   }
-  return full ?? code;
+  return MeepleArmy;
 }
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData, TValue> {
     sortField?: string;
-  }
-  interface TableMeta<TData> {
-    typeDisplay?: TypeDisplay;
   }
 }
 
@@ -58,8 +56,7 @@ export const COLUMNS: ColumnDef<Event>[] = [
     id: "eventType",
     header: "Type",
     meta: { sortField: "eventType" },
-    cell: ({ row, table }) =>
-      renderEventType(row.original.attributes.eventType, table.options.meta?.typeDisplay ?? "both"),
+    cell: ({ row }) => <>{row.original.attributes.eventType}</>,
   },
   {
     id: "group",
@@ -95,23 +92,31 @@ export const COLUMNS: ColumnDef<Event>[] = [
     id: "minPlayers",
     header: "Min Players",
     meta: { sortField: "minPlayers" },
-    cell: ({ row }) => (
-      <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-        <Pawn aria-hidden="true" width={10} height={12} />
-        {row.original.attributes.minPlayers}
-      </span>
-    ),
+    cell: ({ row }) => {
+      const count = row.original.attributes.minPlayers;
+      const Icon = playerCountIcon(count);
+      return (
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+          <Icon aria-hidden="true" size={14} />
+          {count}
+        </span>
+      );
+    },
   },
   {
     id: "maxPlayers",
     header: "Max Players",
     meta: { sortField: "maxPlayers" },
-    cell: ({ row }) => (
-      <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-        <Pawn aria-hidden="true" width={10} height={12} />
-        {row.original.attributes.maxPlayers}
-      </span>
-    ),
+    cell: ({ row }) => {
+      const count = row.original.attributes.maxPlayers;
+      const Icon = playerCountIcon(count);
+      return (
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+          <Icon aria-hidden="true" size={14} />
+          {count}
+        </span>
+      );
+    },
   },
   {
     id: "ageRequired",
