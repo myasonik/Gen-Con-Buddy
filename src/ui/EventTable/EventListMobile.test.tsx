@@ -11,9 +11,12 @@ import { makeEvent } from "../../test/msw/factory";
 import { EventListMobile } from "./EventListMobile";
 import type { Event } from "../../utils/types";
 
-async function renderList(events: Event[] = [makeEvent()]): Promise<ReturnType<typeof render>> {
+async function renderList(
+  events: Event[] = [makeEvent()],
+  visibility?: Record<string, boolean>,
+): Promise<ReturnType<typeof render>> {
   const rootRoute = createRootRoute({
-    component: () => <EventListMobile events={events} />,
+    component: () => <EventListMobile events={events} visibility={visibility} />,
   });
   const eventRoute = createRoute({
     getParentRoute: () => rootRoute,
@@ -99,4 +102,67 @@ test("shows single player count when min equals max", async () => {
 test("renders an icon for a known event type", async () => {
   const { container } = await renderList([makeEvent({ eventType: "RPG" })]);
   expect(container.querySelector("svg")).not.toBeNull();
+});
+
+test("hides title when visibility.title is false", async () => {
+  await renderList([makeEvent({ title: "Dragon Hunt" })], { title: false });
+  expect(screen.queryByText("Dragon Hunt")).not.toBeInTheDocument();
+});
+
+test("shows title when visibility.title is true", async () => {
+  await renderList([makeEvent({ title: "Dragon Hunt" })], { title: true });
+  expect(screen.getByText("Dragon Hunt")).toBeInTheDocument();
+});
+
+test("hides event type when visibility.eventType is false", async () => {
+  await renderList([makeEvent({ eventType: "TCG" })], { eventType: false });
+  expect(screen.queryByText("TCG")).not.toBeInTheDocument();
+});
+
+test("hides tickets when visibility.ticketsAvailable is false", async () => {
+  await renderList([makeEvent({ ticketsAvailable: 5 })], { ticketsAvailable: false });
+  expect(screen.queryByText("5 tickets")).not.toBeInTheDocument();
+});
+
+test("hides day but shows start time when only startDateTime is visible", async () => {
+  await renderList([makeEvent()], { day: false, startDateTime: true, endDateTime: false });
+  expect(screen.queryByText(/Thu/)).not.toBeInTheDocument();
+  expect(screen.getByText(/06:00/)).toBeInTheDocument();
+});
+
+test("hides all time info when day, startDateTime, and endDateTime are all false", async () => {
+  await renderList([makeEvent()], { day: false, startDateTime: false, endDateTime: false });
+  expect(screen.queryByText(/Thu/)).not.toBeInTheDocument();
+  expect(screen.queryByText(/06:00/)).not.toBeInTheDocument();
+});
+
+test("hides player count when both minPlayers and maxPlayers are false", async () => {
+  await renderList([makeEvent({ minPlayers: 2, maxPlayers: 6 })], {
+    minPlayers: false,
+    maxPlayers: false,
+  });
+  expect(screen.queryByText("2–6")).not.toBeInTheDocument();
+});
+
+test("shows only minPlayers value when maxPlayers is hidden", async () => {
+  await renderList([makeEvent({ minPlayers: 2, maxPlayers: 6 })], {
+    minPlayers: true,
+    maxPlayers: false,
+  });
+  expect(screen.getByText("2")).toBeInTheDocument();
+  expect(screen.queryByText("2–6")).not.toBeInTheDocument();
+});
+
+test("shows only maxPlayers value when minPlayers is hidden", async () => {
+  await renderList([makeEvent({ minPlayers: 2, maxPlayers: 6 })], {
+    minPlayers: false,
+    maxPlayers: true,
+  });
+  expect(screen.getByText("6")).toBeInTheDocument();
+  expect(screen.queryByText("2–6")).not.toBeInTheDocument();
+});
+
+test("uses COLUMN_VISIBILITY_DEFAULTS when no visibility prop is passed", async () => {
+  await renderList([makeEvent({ title: "Dragon Hunt" })]);
+  expect(screen.getByText("Dragon Hunt")).toBeInTheDocument();
 });
