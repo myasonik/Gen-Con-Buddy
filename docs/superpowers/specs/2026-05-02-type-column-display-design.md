@@ -130,21 +130,23 @@ className={[textClass, iconClass].filter(Boolean).join(" ") || undefined}
 
 ### `columns.tsx` — eventType cell
 
-The existing single-string render is replaced by four explicit spans. `indexOf(" - ")` rather than `split` prevents issues if a name ever contains the delimiter sequence.
+The API returns `eventType` as the short code only (e.g., `"RPG"`). The full label is looked up from `EVENT_TYPES` in `enums.ts` (e.g., `"RPG - Role Playing Game"`). The name portion is extracted by stripping the code prefix.
 
 ```tsx
 import typeCellStyles from "./typeCell.module.css";
+import { EVENT_TYPES } from "../../utils/enums";
 
 cell: ({ row }) => {
   const { eventType } = row.original.attributes;
-  const dashIdx = eventType.indexOf(" - ");
-  const code = dashIdx >= 0 ? eventType.slice(0, dashIdx) : eventType;
-  const name = dashIdx >= 0 ? eventType.slice(dashIdx + 3) : "";
-  const Icon = EVENT_TYPE_ICONS[code];
+  const Icon = EVENT_TYPE_ICONS[eventType];
+  const fullLabel = EVENT_TYPES[eventType] ?? eventType;
+  const name = fullLabel.startsWith(`${eventType} - `)
+    ? fullLabel.slice(eventType.length + 3)
+    : "";
   return (
     <span className={typeCellStyles.typeCell}>
       {Icon && <span className={typeCellStyles.typeIcon}><Icon size={14} /></span>}
-      <span className={typeCellStyles.typeCode}>{code}</span>
+      <span className={typeCellStyles.typeCode}>{eventType}</span>
       {name && <span className={typeCellStyles.typeSep}> - </span>}
       {name && <span className={typeCellStyles.typeName}>{name}</span>}
     </span>
@@ -156,7 +158,7 @@ No changes to TanStack Table setup. No conditional rendering based on `typeDispl
 
 ### `EventListMobile.tsx` — typeTag
 
-Same restructuring applied to the type tag span. `EventListMobile` accepts a new `typeDisplay?: TypeDisplay` and `showTypeIcon?: boolean` prop pair (both optional — absence degrades gracefully to "both" + icon shown, since no parent class = full display). Imports `typeCell.module.css` for both cell-part classes and parent mode class.
+Same restructuring applied to the type tag span — same `EVENT_TYPES` lookup, same span structure. `EventListMobile` accepts new `typeDisplay?: TypeDisplay` and `showTypeIcon?: boolean` props (both optional — absence degrades gracefully to "both" + icon shown, since no parent class = full display). Imports `typeCell.module.css` for both cell-part classes and parent mode class.
 
 ---
 
