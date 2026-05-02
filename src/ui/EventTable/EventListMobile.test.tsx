@@ -175,6 +175,8 @@ test("shows day and end time with no separator when startDateTime is hidden", as
     endDateTime: true,
     minPlayers: false,
     maxPlayers: false,
+    minimumPlayTime: false,
+    duration: false,
   });
   expect(screen.getByText(/Thu/)).toBeInTheDocument();
   expect(screen.getByText(/10:00/)).toBeInTheDocument();
@@ -283,4 +285,37 @@ test("shows totalRounds alone when roundNumber is hidden", async () => {
   expect(screen.queryByText("Round")).not.toBeInTheDocument();
   expect(screen.queryByText("2 out of 4")).not.toBeInTheDocument();
   expect(screen.getByText("4")).toBeInTheDocument();
+});
+
+test("combines minimumPlayTime and duration into a single 'Duration' row when both visible", async () => {
+  await renderList([makeEvent({ minimumPlayTime: 1, duration: 3 })], {
+    ...COLUMN_VISIBILITY_DEFAULTS,
+    minimumPlayTime: true,
+    duration: true,
+  });
+  expect(screen.getByText("Duration")).toBeInTheDocument();
+  expect(screen.getByText("1h – 3h")).toBeInTheDocument();
+  expect(screen.queryByText("Min Time")).not.toBeInTheDocument();
+  expect(screen.queryByText("1h")).not.toBeInTheDocument();
+  expect(screen.queryByText("3h")).not.toBeInTheDocument();
+});
+
+test("shows duration alone when minimumPlayTime is hidden", async () => {
+  await renderList([makeEvent({ minimumPlayTime: 1, duration: 3 })], {
+    ...COLUMN_VISIBILITY_DEFAULTS,
+    minimumPlayTime: false,
+    duration: true,
+  });
+  expect(screen.queryByText("1h – 3h")).not.toBeInTheDocument();
+  expect(screen.getByText("3h")).toBeInTheDocument();
+});
+
+test("shows minimumPlayTime alone when duration is hidden", async () => {
+  await renderList([makeEvent({ minimumPlayTime: 1, duration: 3 })], {
+    ...COLUMN_VISIBILITY_DEFAULTS,
+    minimumPlayTime: true,
+    duration: false,
+  });
+  expect(screen.queryByText("1h – 3h")).not.toBeInTheDocument();
+  expect(screen.getByText("1h")).toBeInTheDocument();
 });

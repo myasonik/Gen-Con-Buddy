@@ -149,6 +149,23 @@ export function EventListMobile({ events, visibility }: EventListMobileProps): J
             );
         }
 
+        if (
+          extraFields.some((f) => f.id === "minimumPlayTime") &&
+          extraFields.some((f) => f.id === "duration")
+        ) {
+          extraFields = extraFields
+            .filter((f) => f.id !== "minimumPlayTime")
+            .map((f) =>
+              f.id === "duration"
+                ? {
+                    id: "duration",
+                    label: "Duration",
+                    value: `${a.minimumPlayTime}h – ${a.duration}h`,
+                  }
+                : f,
+            );
+        }
+
         return (
           <li key={event.id} className={styles.item}>
             <Link to="/event/$id" params={{ id: a.gameId }} className={styles.row}>
