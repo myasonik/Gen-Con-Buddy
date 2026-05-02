@@ -10,10 +10,14 @@ import { expect, test } from "vitest";
 import { makeEvent } from "../../test/msw/factory";
 import { EventListMobile } from "./EventListMobile";
 import type { Event } from "../../utils/types";
+import type { TypeDisplay } from "./types";
 
-async function renderList(events: Event[] = [makeEvent()]): Promise<ReturnType<typeof render>> {
+async function renderList(
+  events: Event[] = [makeEvent()],
+  props: { typeDisplay?: TypeDisplay; showTypeIcon?: boolean } = {},
+): Promise<ReturnType<typeof render>> {
   const rootRoute = createRootRoute({
-    component: () => <EventListMobile events={events} />,
+    component: () => <EventListMobile events={events} {...props} />,
   });
   const eventRoute = createRoute({
     getParentRoute: () => rootRoute,
@@ -99,4 +103,30 @@ test("shows single player count when min equals max", async () => {
 test("renders an icon for a known event type", async () => {
   const { container } = await renderList([makeEvent({ eventType: "RPG" })]);
   expect(container.querySelector("svg")).not.toBeNull();
+});
+
+test("renders event type name in the DOM", async () => {
+  await renderList([makeEvent({ eventType: "RPG" })]);
+  expect(screen.getByText("Role Playing Game")).toBeInTheDocument();
+});
+
+test("applies typeDisplayName class to list when typeDisplay is name", async () => {
+  const { container } = await renderList([makeEvent()], { typeDisplay: "name" });
+  expect(container.querySelector('[class*="typeDisplayName"]')).not.toBeNull();
+});
+
+test("applies typeDisplayCode class to list when typeDisplay is code", async () => {
+  const { container } = await renderList([makeEvent()], { typeDisplay: "code" });
+  expect(container.querySelector('[class*="typeDisplayCode"]')).not.toBeNull();
+});
+
+test("applies typeHideIcon class when showTypeIcon is false", async () => {
+  const { container } = await renderList([makeEvent()], { showTypeIcon: false });
+  expect(container.querySelector('[class*="typeHideIcon"]')).not.toBeNull();
+});
+
+test("no text mode class applied when typeDisplay is both", async () => {
+  const { container } = await renderList([makeEvent()], { typeDisplay: "both" });
+  expect(container.querySelector('[class*="typeDisplayCode"]')).toBeNull();
+  expect(container.querySelector('[class*="typeDisplayName"]')).toBeNull();
 });
