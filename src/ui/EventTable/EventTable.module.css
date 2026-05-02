@@ -285,3 +285,52 @@
   border-top: 0.0625rem solid var(--color-ink-divider);
   margin: var(--space-2) 0;
 }
+
+/* Radio button indicator — circular counterpart to .columnCheckbox */
+.radioIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 0.0625rem solid var(--color-ink-border);
+  border-radius: 50%;
+  background: var(--color-surface-page);
+  flex-shrink: 0;
+  transition:
+    background-color var(--motion-hover),
+    border-color var(--motion-hover),
+    color var(--motion-hover);
+  color: transparent;
+  overflow: hidden;
+}
+
+.radioIndicator svg {
+  display: block;
+}
+
+.columnToggle input:checked + .radioIndicator {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-surface-page);
+}
+
+.columnToggle input:focus-visible + .radioIndicator {
+  outline: var(--focus-ring) var(--color-accent);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Divider between type display section and column groups */
+.typeDisplayDivider {
+  border: none;
+  border-top: 0.0625rem solid var(--color-ink-divider);
+  margin: var(--space-2) 0;
+}
+
+/* Horizontal row layout for the three radio options */
+.typeDisplayRadioGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  padding-top: var(--space-1);
+}
