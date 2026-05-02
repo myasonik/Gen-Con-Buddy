@@ -1,4 +1,5 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, X } from "lucide-react";
+import { Dialog } from "@base-ui/react/dialog";
 import { Button } from "../Button/Button";
 import type { SharedColumnState } from "./types";
 import { AnimatedDetails } from "../AnimatedDetails/AnimatedDetails";
@@ -68,8 +69,37 @@ export function ColumnControlsPanel({
   columnState,
   variant = "inline",
 }: ColumnControlsPanelProps): JSX.Element {
-  // variant is reserved for Task 6 (drawer variant); currently unused
-  void variant;
+  if (variant === "drawer") {
+    return (
+      <Dialog.Root>
+        <Dialog.Trigger
+          render={
+            <Button type="button" variant="secondary">
+              Customize columns
+            </Button>
+          }
+        />
+        <Dialog.Portal>
+          <Dialog.Backdrop className={styles.columnsBackdrop} />
+          <Dialog.Popup className={styles.columnsDrawer}>
+            <div className={styles.columnsDrawerHeader}>
+              <Dialog.Title className={styles.columnsDrawerTitle}>Customize columns</Dialog.Title>
+              <Dialog.Close
+                render={
+                  <Button type="button" variant="ghost" icon aria-label="Close">
+                    <X size={16} />
+                  </Button>
+                }
+              />
+            </div>
+            <div className={styles.columnsDrawerScroll}>
+              <ColumnCheckboxContent columnState={columnState} />
+            </div>
+          </Dialog.Popup>
+        </Dialog.Portal>
+      </Dialog.Root>
+    );
+  }
 
   return (
     <AnimatedDetails
