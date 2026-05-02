@@ -20,17 +20,16 @@ export function useColumnMinSizes(
     }
 
     const sampleTd = table.querySelector<HTMLTableCellElement>("tbody td");
-    if (!sampleTd) {
-      return;
+    let paddingH = 0;
+    if (sampleTd) {
+      const tdStyle = getComputedStyle(sampleTd);
+      ctx.font = tdStyle.font;
+      paddingH =
+        (parseFloat(tdStyle.paddingLeft) || 0) +
+        (parseFloat(tdStyle.paddingRight) || 0) +
+        (parseFloat(tdStyle.borderLeftWidth) || 0) +
+        (parseFloat(tdStyle.borderRightWidth) || 0);
     }
-
-    const tdStyle = getComputedStyle(sampleTd);
-    ctx.font = tdStyle.font;
-    const paddingH =
-      (parseFloat(tdStyle.paddingLeft) || 0) +
-      (parseFloat(tdStyle.paddingRight) || 0) +
-      (parseFloat(tdStyle.borderLeftWidth) || 0) +
-      (parseFloat(tdStyle.borderRightWidth) || 0);
 
     const gapCache = new Map<Element, number>();
     const result: Record<string, number> = {};
@@ -52,7 +51,7 @@ export function useColumnMinSizes(
       const svgWidth = svgs.reduce((sum, svg) => sum + (Number(svg.getAttribute("width")) || 0), 0);
 
       let gap = 0;
-      if (svgWidth > 0) {
+      if (svgs.length > 0) {
         const parent = svgs[0].parentElement;
         if (parent) {
           if (!gapCache.has(parent)) {
