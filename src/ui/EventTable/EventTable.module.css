@@ -1,3 +1,8 @@
+.tableClipWrapper {
+  position: relative;
+  overflow: clip;
+}
+
 .tableWrapper {
   overflow-x: scroll;
   margin-top: -0.0625rem;
@@ -236,9 +241,10 @@
   display: inline-block;
 }
 
-/* Column resize handle — portaled to document.body, anchor-positioned to <th> */
+/* Column resize handle — portaled to tableClipWrapper, anchor-positioned to <th> */
 .resizeHandle {
-  position: fixed;
+  position: absolute;
+  position-visibility: anchors-visible;
   left: anchor(right);
   top: anchor(top);
   height: anchor-size(height);
