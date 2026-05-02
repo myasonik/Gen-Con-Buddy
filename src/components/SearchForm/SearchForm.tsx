@@ -7,6 +7,7 @@ import { Button } from "../../ui/Button/Button";
 import { EventTypeSelect } from "../../ui/EventTypeSelect/EventTypeSelect";
 import { Select } from "../../ui/Select/Select";
 import { Field, RangeField } from "../../ui/Field/Field";
+import { decodeDays, encodeDays } from "../../utils/searchParams";
 import styles from "./SearchForm.module.css";
 
 const EMPTY_VALUES: SearchFormValues = {
@@ -113,7 +114,7 @@ export function SearchForm({ values, onSearch }: SearchFormProps): JSX.Element {
               </span>
               <div className={styles.dayToggles} role="group" aria-label="Days">
                 {DAY_KEYS.map((key) => {
-                  const selected = days.split(",").includes(key);
+                  const selected = decodeDays(days).includes(key);
                   return (
                     <div className={styles.dayToggleWrapper} key={key}>
                       <input
@@ -122,11 +123,11 @@ export function SearchForm({ values, onSearch }: SearchFormProps): JSX.Element {
                         className="sr-only"
                         checked={selected}
                         onChange={(e) => {
-                          const current = days ? days.split(",") : [];
+                          const current = decodeDays(days);
                           const next = e.target.checked
                             ? DAY_KEYS.filter((d) => current.includes(d) || d === key)
                             : current.filter((d) => d !== key);
-                          setValue("days", next.join(","));
+                          setValue("days", encodeDays(next));
                         }}
                       />
                       <label htmlFor={`day-${key}`} className={styles.dayToggle}>

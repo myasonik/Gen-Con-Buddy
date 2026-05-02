@@ -55,6 +55,17 @@ export function daysAndTimeToStartDateTime(
   return ranges.join(",");
 }
 
+export function decodeDays(str?: string): string[] {
+  if (!str) {
+    return [];
+  }
+  return str.split(",");
+}
+
+export function encodeDays(days: string[]): string {
+  return days.join(",");
+}
+
 export function buildSearchParams(values: SearchFormValues): SearchParams {
   const params: SearchParams = {};
 

@@ -324,3 +324,19 @@ export const COL_ID_BY_SORT_FIELD = new Map(
     c.id as string,
   ]),
 );
+
+export function getSortField(colId: string): string {
+  const field = SORT_FIELD_BY_COL_ID.get(colId);
+  if (field === undefined) {
+    throw new Error(`Unknown column id: ${colId}`);
+  }
+  return field;
+}
+
+export function getColId(sortField: string): string {
+  const colId = COL_ID_BY_SORT_FIELD.get(sortField);
+  if (colId === undefined) {
+    throw new Error(`Unknown sort field: ${sortField}`);
+  }
+  return colId;
+}
