@@ -3,3 +3,4 @@ storybook-static
 public/mockServiceWorker.js
 src/routeTree.gen.ts
 src/test/setup.ts
+.claude/

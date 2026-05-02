@@ -1,5 +1,6 @@
 # git worktrees
 .worktrees/
+.claude/worktrees/
 
 # tanstack router generated files
 /.tanstack/tmp/

@@ -157,109 +157,116 @@ export function EventTable({
     <section>
       {showColumnControls && <ColumnControlsPanel columnState={columnStateForPanel} />}
 
-      <div ref={setClipWrapper} className={styles.tableClipWrapper} data-testid="table-clip-wrapper">
-      <div className={styles.tableWrapper}>
-        <table>
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  const sortField = header.column.columnDef.meta?.sortField;
-                  const colHeader = header.column.columnDef.header;
-                  const label =
-                    typeof colHeader === "string" ? colHeader : (header.column.id ?? "");
-                  const isActive = Boolean(sortField) && effectiveSortField === sortField;
-                  let ariaSort: "ascending" | "descending" | "none" = "none";
-                  if (isActive) {
-                    ariaSort = effectiveSortDir === "asc" ? "ascending" : "descending";
-                  }
-                  return (
-                    <th
-                      key={header.id}
-                      aria-sort={sortField ? ariaSort : undefined}
-                      scope="col"
-                      className={styles.resizableTh}
-                      style={
-                        {
-                          width: header.getSize(),
-                          anchorName: `--col-${tableId}-${header.id}`,
-                        } as React.CSSProperties & { anchorName: string }
-                      }
-                    >
-                      <div className={styles.thContent}>
-                        <button
-                          type="button"
-                          className={styles.sortButton}
-                          onClick={() => sortField && handleHeaderSortClick(sortField, label)}
-                        >
-                          {flexRender(header.column.columnDef.header, header.getContext())}
-                          {isActive && (
-                            <span aria-hidden="true" className={styles.sortIndicator}>
-                              {effectiveSortDir === "asc" ? (
-                                <ArrowUp size={12} aria-hidden="true" />
-                              ) : (
-                                <ArrowDown size={12} aria-hidden="true" />
-                              )}
-                            </span>
+      <div
+        ref={setClipWrapper}
+        className={styles.tableClipWrapper}
+        data-testid="table-clip-wrapper"
+      >
+        <div className={styles.tableWrapper}>
+          <table>
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    const sortField = header.column.columnDef.meta?.sortField;
+                    const colHeader = header.column.columnDef.header;
+                    const label =
+                      typeof colHeader === "string" ? colHeader : (header.column.id ?? "");
+                    const isActive = Boolean(sortField) && effectiveSortField === sortField;
+                    let ariaSort: "ascending" | "descending" | "none" = "none";
+                    if (isActive) {
+                      ariaSort = effectiveSortDir === "asc" ? "ascending" : "descending";
+                    }
+                    return (
+                      <th
+                        key={header.id}
+                        aria-sort={sortField ? ariaSort : undefined}
+                        scope="col"
+                        className={styles.resizableTh}
+                        style={
+                          {
+                            width: header.getSize(),
+                            anchorName: `--col-${tableId}-${header.id}`,
+                          } as React.CSSProperties & { anchorName: string }
+                        }
+                      >
+                        <div className={styles.thContent}>
+                          <button
+                            type="button"
+                            className={styles.sortButton}
+                            onClick={() => sortField && handleHeaderSortClick(sortField, label)}
+                          >
+                            {flexRender(header.column.columnDef.header, header.getContext())}
+                            {isActive && (
+                              <span aria-hidden="true" className={styles.sortIndicator}>
+                                {effectiveSortDir === "asc" ? (
+                                  <ArrowUp size={12} aria-hidden="true" />
+                                ) : (
+                                  <ArrowDown size={12} aria-hidden="true" />
+                                )}
+                              </span>
+                            )}
+                          </button>
+                          {header.column.getCanResize() && (
+                            <ColumnActionsPopover
+                              sortField={sortField}
+                              activeSortField={effectiveSortField}
+                              activeSortDir={effectiveSortDir}
+                              onSort={(s) => handlePopoverSort(s, label)}
+                              onOpenResize={() =>
+                                setResizeTarget({
+                                  columnId: header.column.id,
+                                  columnName: label,
+                                  currentWidth: header.getSize(),
+                                })
+                              }
+                            />
                           )}
-                        </button>
-                        {header.column.getCanResize() && (
-                          <ColumnActionsPopover
-                            sortField={sortField}
-                            activeSortField={effectiveSortField}
-                            activeSortDir={effectiveSortDir}
-                            onSort={(s) => handlePopoverSort(s, label)}
-                            onOpenResize={() =>
-                              setResizeTarget({
-                                columnId: header.column.id,
-                                columnName: label,
-                                currentWidth: header.getSize(),
-                              })
-                            }
-                          />
-                        )}
-                      </div>
-                    </th>
-                  );
-                })}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                        </div>
+                      </th>
+                    );
+                  })}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {clipWrapper && createPortal(
-        table
-          .getHeaderGroups()
-          .flatMap((hg) => hg.headers)
-          .filter((h) => h.column.getCanResize())
-          .map((header) => (
-            <div
-              key={header.id}
-              className={styles.resizeHandle}
-              style={
-                {
-                  positionAnchor: `--col-${tableId}-${header.id}`,
-                } as React.CSSProperties & { positionAnchor: string }
-              }
-              onPointerDown={header.getResizeHandler()}
-              aria-hidden="true"
-              data-testid={`resize-handle-${header.id}`}
-              data-resizing={header.column.getIsResizing() || undefined}
-            />
-          )),
-        clipWrapper,
-      )}
+      {clipWrapper &&
+        createPortal(
+          table
+            .getHeaderGroups()
+            .flatMap((hg) => hg.headers)
+            .filter((h) => h.column.getCanResize())
+            .map((header) => (
+              <div
+                key={header.id}
+                className={styles.resizeHandle}
+                style={
+                  {
+                    positionAnchor: `--col-${tableId}-${header.id}`,
+                  } as React.CSSProperties & { positionAnchor: string }
+                }
+                onPointerDown={header.getResizeHandler()}
+                aria-hidden="true"
+                data-testid={`resize-handle-${header.id}`}
+                data-resizing={header.column.getIsResizing() || undefined}
+              />
+            )),
+          clipWrapper,
+        )}
 
       {resizeTarget && (
         <ColumnResizeDialog

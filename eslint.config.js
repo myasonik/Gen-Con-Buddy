@@ -29,7 +29,7 @@ const noInlineLiveRegions = {
 };
 
 export default [
-  { ignores: ["dist", "public/mockServiceWorker.js", "src/routeTree.gen.ts"] },
+  { ignores: ["dist", "public/mockServiceWorker.js", "src/routeTree.gen.ts", ".claude/"] },
   {
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
