@@ -28,9 +28,12 @@ const stubColumnState: SharedColumnState = {
 };
 
 // For tests that render EventTable (which uses Link), a router context is required.
-function renderPanelWithRouter(entry: ChangelogEntry): ReturnType<typeof render> {
+function renderPanelWithRouter(
+  entry: ChangelogEntry,
+  columnState: SharedColumnState = stubColumnState,
+): ReturnType<typeof render> {
   const rootRoute = createRootRoute({
-    component: () => <ChangelogEntryPanel entry={entry} sharedColumnState={stubColumnState} />,
+    component: () => <ChangelogEntryPanel entry={entry} sharedColumnState={columnState} />,
   });
   const eventRoute = createRoute({
     getParentRoute: () => rootRoute,
@@ -130,6 +133,20 @@ test("renders all three sections when all groups have events", async () => {
   await expect(screen.findByText("Created")).resolves.toBeInTheDocument();
   expect(screen.getByText("Updated")).toBeInTheDocument();
   expect(screen.getByText("Deleted")).toBeInTheDocument();
+});
+
+test("passes typeDisplay mode class to EventListMobile in each event group", async () => {
+  const entry = makeChangelogEntry({
+    createdEvents: [makeEvent()],
+    updatedEvents: [],
+    deletedEvents: [],
+  });
+  const { container } = renderPanelWithRouter(entry, {
+    ...stubColumnState,
+    typeDisplay: "code",
+  });
+  await screen.findByText("Created");
+  expect(container.querySelector('[class*="typeDisplayCode"]')).not.toBeNull();
 });
 
 test("shows empty state when all event arrays are empty", () => {
