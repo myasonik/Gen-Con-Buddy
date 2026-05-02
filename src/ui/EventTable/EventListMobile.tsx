@@ -122,7 +122,7 @@ export function EventListMobile({ events, visibility }: EventListMobileProps): J
 
         const TypeIcon = EVENT_TYPE_ICONS[a.eventType.split(" - ")[0]];
 
-        const extraFields = EXTRA_COLUMN_IDS.filter((id) => vis[id] === true)
+        const extraFields = EXTRA_COLUMN_IDS.filter((id) => isVisible(id))
           .map((id) => {
             const col = COL_BY_ID.get(id);
             const label = typeof col?.header === "string" ? col.header : id;

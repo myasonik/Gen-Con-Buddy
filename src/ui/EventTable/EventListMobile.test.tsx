@@ -210,6 +210,33 @@ test("shows gameId as a detail row when toggled on", async () => {
 });
 
 test("does not render a dl element when no extra columns are toggled on", async () => {
-  const { container } = await renderList([makeEvent()], {});
+  const { container } = await renderList([makeEvent()], {
+    gameId: false,
+    group: false,
+    shortDescription: false,
+    longDescription: false,
+    gameSystem: false,
+    rulesEdition: false,
+    specialCategory: false,
+    ageRequired: false,
+    experienceRequired: false,
+    tournament: false,
+    roundNumber: false,
+    totalRounds: false,
+    duration: false,
+    minimumPlayTime: false,
+    location: false,
+    roomName: false,
+    tableNumber: false,
+    cost: false,
+    attendeeRegistration: false,
+    materialsProvided: false,
+    materialsRequired: false,
+    materialsRequiredDetails: false,
+    gmNames: false,
+    website: false,
+    email: false,
+    lastModified: false,
+  });
   expect(container.querySelector("dl")).toBeNull();
 });
