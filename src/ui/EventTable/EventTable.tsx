@@ -12,6 +12,7 @@ import {
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { useTypeDisplay } from "../../hooks/useTypeDisplay";
+import { useSortState } from "../../hooks/useSortState";
 import typeCellStyles from "./typeCell.module.css";
 import { ColumnControlsPanel } from "./ColumnControlsPanel";
 import { ColumnActionsPopover } from "./ColumnActionsPopover";
@@ -76,6 +77,16 @@ export function EventTable({
   } | null>(null);
   const [internalSorting, setInternalSorting] = useState<SortingState>([]);
 
+  const externalSort = useSortState({
+    activeSortField,
+    activeSortDir,
+    onSort: (field, dir) => {
+      if (onSort) {
+        onSort(`${field}.${dir}`);
+      }
+    },
+  });
+
   let effectiveSortField: string | undefined = undefined;
   if (onSort) {
     effectiveSortField = activeSortField;
@@ -93,10 +104,10 @@ export function EventTable({
   const handleHeaderSortClick = (sortField: string, label: string): void => {
     if (onSort) {
       if (effectiveSortField !== sortField) {
-        onSort(`${sortField}.asc`);
+        externalSort.handleColumnClick(COL_ID_BY_SORT_FIELD.get(sortField) ?? sortField);
         announce(`Sorted by ${label}, ascending`);
       } else if (effectiveSortDir === "asc") {
-        onSort(`${sortField}.desc`);
+        externalSort.handleColumnClick(COL_ID_BY_SORT_FIELD.get(sortField) ?? sortField);
         announce(`Sorted by ${label}, descending`);
       } else {
         onSort(undefined);

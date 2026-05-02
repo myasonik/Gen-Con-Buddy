@@ -9,6 +9,7 @@ import type { EventSearchResponse } from "../utils/types";
 import { RouterProvider, createRouter, createMemoryHistory } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { routeTree } from "../routeTree.gen";
+import { renderRoute } from "../test/renderRoute";
 
 // oxlint-disable-next-line typescript/explicit-function-return-type
 async function renderSearchPage(initialEntry = "/") {
@@ -31,7 +32,7 @@ async function renderSearchPage(initialEntry = "/") {
 }
 
 test("populates eventType dropdown from URL search param on load", async () => {
-  await renderSearchPage("/?eventType=BGM");
+  await renderRoute("/", { searchParams: { eventType: "BGM" } });
   expect(screen.getByRole("button", { name: "Remove BGM" })).toBeInTheDocument();
 });
 
@@ -48,12 +49,12 @@ test("updates form when URL search params change after initial render", async ()
 });
 
 test("page param is read from URL without crashing", async () => {
-  await renderSearchPage("/?page=3");
+  await renderRoute("/", { searchParams: { page: 3 } });
   expect(screen.getByRole("main")).toBeInTheDocument();
 });
 
 test("limit param is read from URL without crashing", async () => {
-  await renderSearchPage("/?limit=500");
+  await renderRoute("/", { searchParams: { limit: 500 } });
   expect(screen.getByRole("main")).toBeInTheDocument();
 });
 

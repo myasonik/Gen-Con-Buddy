@@ -82,8 +82,8 @@ test("shows loading state while fetching", async () => {
 test("renders a table row for each event", async () => {
   renderSearchResults();
   const rows = await screen.findAllByRole("row");
-  // 1 header row + 2 data rows (default handler returns 2 events)
-  expect(rows).toHaveLength(3);
+  // 1 header row + 20 data rows (default handler pool has 20 events)
+  expect(rows).toHaveLength(21);
 });
 
 test("renders empty state when no events are returned", async () => {

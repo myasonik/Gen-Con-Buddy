@@ -4,6 +4,8 @@ import {
   daysAndTimeToStartDateTime,
   GEN_CON_YEAR,
   parseSearchParams,
+  decodeDays,
+  encodeDays,
 } from "./searchParams";
 
 describe("buildSearchParams", () => {
@@ -279,5 +281,51 @@ describe("daysAndTimeToStartDateTime", () => {
     // Thu and Fri should have different date prefixes
     const [thursdayRange, fridayRange] = ranges;
     expect(thursdayRange).not.toStrictEqual(fridayRange);
+  });
+});
+
+describe("decodeDays", () => {
+  it("returns empty array for undefined", () => {
+    expect(decodeDays(undefined)).toStrictEqual([]);
+  });
+
+  it("returns empty array for empty string", () => {
+    expect(decodeDays("")).toStrictEqual([]);
+  });
+
+  it("returns single day array for one day", () => {
+    expect(decodeDays("thu")).toStrictEqual(["thu"]);
+  });
+
+  it("returns multiple days for comma-separated string", () => {
+    expect(decodeDays("wed,fri,sun")).toStrictEqual(["wed", "fri", "sun"]);
+  });
+
+  it("passes through unknown day names without dropping them", () => {
+    expect(decodeDays("mon,tue")).toStrictEqual(["mon", "tue"]);
+  });
+});
+
+describe("encodeDays", () => {
+  it("returns empty string for empty array", () => {
+    expect(encodeDays([])).toBe("");
+  });
+
+  it("returns single day for one-element array", () => {
+    expect(encodeDays(["thu"])).toBe("thu");
+  });
+
+  it("joins multiple days with commas", () => {
+    expect(encodeDays(["wed", "fri", "sun"])).toBe("wed,fri,sun");
+  });
+
+  it("roundtrips: encodeDays then decodeDays returns original array", () => {
+    const days = ["thu", "fri", "sat"];
+    expect(decodeDays(encodeDays(days))).toStrictEqual(days);
+  });
+
+  it("roundtrips: decodeDays then encodeDays returns original string", () => {
+    const str = "wed,sun";
+    expect(encodeDays(decodeDays(str))).toBe(str);
   });
 });
