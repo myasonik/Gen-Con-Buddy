@@ -13,7 +13,7 @@ import type { Event } from "../../utils/types";
 
 async function renderList(
   events: Event[] = [makeEvent()],
-  visibility?: Record<string, boolean>,
+  visibility?: Partial<Record<string, boolean>>,
 ): Promise<ReturnType<typeof render>> {
   const rootRoute = createRootRoute({
     component: () => <EventListMobile events={events} visibility={visibility} />,
@@ -165,4 +165,17 @@ test("shows only maxPlayers value when minPlayers is hidden", async () => {
 test("uses COLUMN_VISIBILITY_DEFAULTS when no visibility prop is passed", async () => {
   await renderList([makeEvent({ title: "Dragon Hunt" })]);
   expect(screen.getByText("Dragon Hunt")).toBeInTheDocument();
+});
+
+test("shows day and end time with no separator when startDateTime is hidden", async () => {
+  await renderList([makeEvent()], {
+    day: true,
+    startDateTime: false,
+    endDateTime: true,
+    minPlayers: false,
+    maxPlayers: false,
+  });
+  expect(screen.getByText(/Thu/)).toBeInTheDocument();
+  expect(screen.getByText(/10:00/)).toBeInTheDocument();
+  expect(screen.queryByText(/–/)).not.toBeInTheDocument();
 });

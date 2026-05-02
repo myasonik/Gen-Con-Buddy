@@ -7,12 +7,20 @@ import styles from "./EventListMobile.module.css";
 
 interface EventListMobileProps {
   events: Event[];
-  visibility?: Record<string, boolean>;
+  visibility?: Partial<Record<string, boolean>>;
 }
 
 export function EventListMobile({ events, visibility }: EventListMobileProps): JSX.Element {
   const vis = visibility ?? COLUMN_VISIBILITY_DEFAULTS;
   const isVisible = (id: string): boolean => vis[id] !== false;
+
+  const showTime = isVisible("day") || isVisible("startDateTime") || isVisible("endDateTime");
+  const showMeta =
+    isVisible("eventType") ||
+    showTime ||
+    isVisible("minPlayers") ||
+    isVisible("maxPlayers") ||
+    isVisible("ticketsAvailable");
 
   return (
     <ul role="list" className={styles.list}>
@@ -34,12 +42,6 @@ export function EventListMobile({ events, visibility }: EventListMobileProps): J
         }
 
         const TypeIcon = EVENT_TYPE_ICONS[a.eventType.split(" - ")[0]];
-        const showTime = isVisible("day") || isVisible("startDateTime") || isVisible("endDateTime");
-        const showMeta =
-          isVisible("eventType") ||
-          showTime ||
-          playersText !== null ||
-          isVisible("ticketsAvailable");
 
         return (
           <li key={event.id} className={styles.item}>
