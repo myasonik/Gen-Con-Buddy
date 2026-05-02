@@ -7,7 +7,6 @@ import {
   getSortedRowModel,
   flexRender,
   type SortingState,
-  type ColumnSizingState,
 } from "@tanstack/react-table";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
@@ -282,7 +281,7 @@ export function EventTable({
           currentWidth={resizeTarget.currentWidth}
           minWidth={columnMinSizes[resizeTarget.columnId] ?? 0}
           onApply={(width) => {
-            setSizing((prev: ColumnSizingState) => ({ ...prev, [resizeTarget.columnId]: width }));
+            table.setColumnSizing((prev) => ({ ...prev, [resizeTarget.columnId]: width }));
           }}
           onClose={() => setResizeTarget(null)}
         />
