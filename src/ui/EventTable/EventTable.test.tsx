@@ -81,3 +81,12 @@ test("ticketsAvailable column shows 'Sold out' when ticketsAvailable is 0", asyn
   await renderEventTable([makeEvent({ ticketsAvailable: 0 })]);
   expect(screen.getByText("Sold out")).toBeInTheDocument();
 });
+
+test("resize handles portal into the table clip wrapper, not document.body", async () => {
+  await renderEventTable([makeEvent()]);
+  const handles = screen.getAllByTestId(/^resize-handle-/);
+  expect(handles.length).toBeGreaterThan(0);
+  const clipWrapper = document.querySelector("[data-testid='table-clip-wrapper']");
+  expect(clipWrapper).not.toBeNull();
+  expect(clipWrapper).toContainElement(handles[0]);
+});

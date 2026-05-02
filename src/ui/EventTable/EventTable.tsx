@@ -49,6 +49,7 @@ export function EventTable({
   const resetSizing = sharedColumnState?.resetSizing ?? internalSizing.reset;
   // Unique prefix so anchor names don't collide when multiple EventTable instances are on the page
   const tableId = useId().replace(/:/g, "");
+  const [clipWrapper, setClipWrapper] = useState<HTMLDivElement | null>(null);
   const [resizeTarget, setResizeTarget] = useState<{
     columnId: string;
     columnName: string;
@@ -156,6 +157,7 @@ export function EventTable({
     <section>
       {showColumnControls && <ColumnControlsPanel columnState={columnStateForPanel} />}
 
+      <div ref={setClipWrapper} className={styles.tableClipWrapper} data-testid="table-clip-wrapper">
       <div className={styles.tableWrapper}>
         <table>
           <thead>
@@ -234,8 +236,9 @@ export function EventTable({
           </tbody>
         </table>
       </div>
+      </div>
 
-      {createPortal(
+      {clipWrapper && createPortal(
         table
           .getHeaderGroups()
           .flatMap((hg) => hg.headers)
@@ -255,7 +258,7 @@ export function EventTable({
               data-resizing={header.column.getIsResizing() || undefined}
             />
           )),
-        document.body,
+        clipWrapper,
       )}
 
       {resizeTarget && (
