@@ -11,13 +11,17 @@ import { makeEvent } from "../../test/msw/factory";
 import { EventListMobile } from "./EventListMobile";
 import { COLUMN_VISIBILITY_DEFAULTS } from "../../hooks/useColumnVisibility";
 import type { Event } from "../../utils/types";
+import type { TypeDisplay } from "./types";
 
 async function renderList(
   events: Event[] = [makeEvent()],
   visibility?: Partial<Record<string, boolean>>,
+  typeDisplayProps: { typeDisplay?: TypeDisplay; showTypeIcon?: boolean } = {},
 ): Promise<ReturnType<typeof render>> {
   const rootRoute = createRootRoute({
-    component: () => <EventListMobile events={events} visibility={visibility} />,
+    component: () => (
+      <EventListMobile events={events} visibility={visibility} {...typeDisplayProps} />
+    ),
   });
   const eventRoute = createRoute({
     getParentRoute: () => rootRoute,
@@ -318,4 +322,30 @@ test("shows minimumPlayTime alone when duration is hidden", async () => {
   });
   expect(screen.queryByText("1h – 3h")).not.toBeInTheDocument();
   expect(screen.getByText("1h")).toBeInTheDocument();
+});
+
+test("renders event type name in the DOM", async () => {
+  await renderList([makeEvent({ eventType: "RPG" })]);
+  expect(screen.getByText("Role Playing Game")).toBeInTheDocument();
+});
+
+test("applies typeDisplayName class to list when typeDisplay is name", async () => {
+  const { container } = await renderList([makeEvent()], undefined, { typeDisplay: "name" });
+  expect(container.querySelector('[class*="typeDisplayName"]')).not.toBeNull();
+});
+
+test("applies typeDisplayCode class to list when typeDisplay is code", async () => {
+  const { container } = await renderList([makeEvent()], undefined, { typeDisplay: "code" });
+  expect(container.querySelector('[class*="typeDisplayCode"]')).not.toBeNull();
+});
+
+test("applies typeHideIcon class when showTypeIcon is false", async () => {
+  const { container } = await renderList([makeEvent()], undefined, { showTypeIcon: false });
+  expect(container.querySelector('[class*="typeHideIcon"]')).not.toBeNull();
+});
+
+test("no text mode class applied when typeDisplay is both", async () => {
+  const { container } = await renderList([makeEvent()], undefined, { typeDisplay: "both" });
+  expect(container.querySelector('[class*="typeDisplayCode"]')).toBeNull();
+  expect(container.querySelector('[class*="typeDisplayName"]')).toBeNull();
 });

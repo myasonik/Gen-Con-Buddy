@@ -1,0 +1,29 @@
+.typeCell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.typeIcon {
+  display: flex;
+  flex-shrink: 0;
+}
+
+/* "code" mode — hide separator and name */
+.typeDisplayCode .typeSep,
+.typeDisplayCode .typeName {
+  display: none;
+}
+
+/* "name" mode — hide code and separator */
+.typeDisplayName .typeCode,
+.typeDisplayName .typeSep {
+  display: none;
+}
+
+/* "both" mode — no class needed; raw DOM shows everything */
+
+/* Icon toggle */
+.typeHideIcon .typeIcon {
+  display: none;
+}

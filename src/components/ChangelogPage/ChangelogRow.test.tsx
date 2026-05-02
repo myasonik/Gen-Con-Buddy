@@ -24,6 +24,11 @@ const stubColumnState: SharedColumnState = {
   sizing: {},
   setSizing: () => {},
   resetSizing: () => {},
+  typeDisplay: "name",
+  setTypeDisplay: () => {},
+  showTypeIcon: true,
+  setShowTypeIcon: () => {},
+  resetTypeDisplay: () => {},
 };
 
 beforeEach(() => {

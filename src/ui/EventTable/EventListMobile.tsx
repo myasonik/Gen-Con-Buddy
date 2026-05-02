@@ -1,11 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import type { Event } from "../../utils/types";
-import { EXP } from "../../utils/enums";
+import type { TypeDisplay } from "./types";
+import { EXP, EVENT_TYPES } from "../../utils/enums";
 import { EVENT_TYPE_ICONS } from "../icons/eventTypeIcons";
 import { COLUMN_VISIBILITY_DEFAULTS } from "../../hooks/useColumnVisibility";
 import { COLUMNS, COLUMN_GROUPS } from "./columns";
 import { DescriptionList, DescriptionItem } from "../DescriptionList/DescriptionList";
+import typeCellStyles from "./typeCell.module.css";
 import styles from "./EventListMobile.module.css";
 
 const META_COLUMN_IDS = new Set([
@@ -88,9 +90,16 @@ function getMobileValue(id: string, a: Event["attributes"]): string {
 interface EventListMobileProps {
   events: Event[];
   visibility?: Partial<Record<string, boolean>>;
+  typeDisplay?: TypeDisplay;
+  showTypeIcon?: boolean;
 }
 
-export function EventListMobile({ events, visibility }: EventListMobileProps): JSX.Element {
+export function EventListMobile({
+  events,
+  visibility,
+  typeDisplay,
+  showTypeIcon,
+}: EventListMobileProps): JSX.Element {
   const vis = visibility ?? COLUMN_VISIBILITY_DEFAULTS;
   const isVisible = (id: string): boolean => vis[id] !== false;
 
@@ -102,8 +111,17 @@ export function EventListMobile({ events, visibility }: EventListMobileProps): J
     isVisible("maxPlayers") ||
     isVisible("ticketsAvailable");
 
+  let textClass: string | undefined = undefined;
+  if (typeDisplay === "code") {
+    textClass = typeCellStyles.typeDisplayCode;
+  } else if (typeDisplay === "name") {
+    textClass = typeCellStyles.typeDisplayName;
+  }
+  const iconClass = showTypeIcon === false ? typeCellStyles.typeHideIcon : undefined;
+  const modeClass = [textClass, iconClass].filter(Boolean).join(" ") || undefined;
+
   return (
-    <ul role="list" className={styles.list}>
+    <ul role="list" className={[styles.list, modeClass].filter(Boolean).join(" ") || styles.list}>
       {events.map((event) => {
         const a = event.attributes;
         const start = new Date(a.startDateTime);
@@ -121,7 +139,11 @@ export function EventListMobile({ events, visibility }: EventListMobileProps): J
           playersText = String(a.maxPlayers);
         }
 
-        const TypeIcon = EVENT_TYPE_ICONS[a.eventType.split(" - ")[0]];
+        const TypeIcon = EVENT_TYPE_ICONS[a.eventType];
+        const fullLabel = EVENT_TYPES[a.eventType] ?? a.eventType;
+        const name = fullLabel.startsWith(`${a.eventType} - `)
+          ? fullLabel.slice(a.eventType.length + 3)
+          : "";
 
         let extraFields = EXTRA_COLUMN_IDS.filter((id) => isVisible(id))
           .map((id) => {
@@ -174,8 +196,14 @@ export function EventListMobile({ events, visibility }: EventListMobileProps): J
                 <span className={styles.meta}>
                   {isVisible("eventType") && (
                     <span className={styles.typeTag}>
-                      {TypeIcon && <TypeIcon size={14} />}
-                      {a.eventType}
+                      {TypeIcon && (
+                        <span className={typeCellStyles.typeIcon}>
+                          <TypeIcon size={14} />
+                        </span>
+                      )}
+                      <span className={typeCellStyles.typeCode}>{a.eventType}</span>
+                      {name && <span className={typeCellStyles.typeSep}> - </span>}
+                      {name && <span className={typeCellStyles.typeName}>{name}</span>}
                     </span>
                   )}
                   {showTime && (

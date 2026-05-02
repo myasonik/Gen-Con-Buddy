@@ -1,10 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import type { ColumnDef } from "@tanstack/react-table";
-import { EXP } from "../../utils/enums";
+import { EXP, EVENT_TYPES } from "../../utils/enums";
 import type { Event } from "../../utils/types";
 import { EVENT_TYPE_ICONS } from "../icons/eventTypeIcons";
 import styles from "./columns.module.css";
+import typeCellStyles from "./typeCell.module.css";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData, TValue> {
@@ -45,11 +46,21 @@ export const COLUMNS: ColumnDef<Event>[] = [
     meta: { sortField: "eventType" },
     cell: ({ row }) => {
       const { eventType } = row.original.attributes;
-      const Icon = EVENT_TYPE_ICONS[eventType.split(" - ")[0]];
+      const Icon = EVENT_TYPE_ICONS[eventType];
+      const fullLabel = EVENT_TYPES[eventType] ?? eventType;
+      const name = fullLabel.startsWith(`${eventType} - `)
+        ? fullLabel.slice(eventType.length + 3)
+        : "";
       return (
-        <span className={styles.typeCell}>
-          {Icon && <Icon size={14} />}
-          {eventType}
+        <span className={typeCellStyles.typeCell}>
+          {Icon && (
+            <span className={typeCellStyles.typeIcon}>
+              <Icon size={14} />
+            </span>
+          )}
+          <span className={typeCellStyles.typeCode}>{eventType}</span>
+          {name && <span className={typeCellStyles.typeSep}> - </span>}
+          {name && <span className={typeCellStyles.typeName}>{name}</span>}
         </span>
       );
     },

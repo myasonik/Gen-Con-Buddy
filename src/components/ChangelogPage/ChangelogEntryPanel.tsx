@@ -30,7 +30,11 @@ function EventGroup({
         />
       </div>
       <div className={styles.mobileView}>
-        <EventListMobile events={events} />
+        <EventListMobile
+          events={events}
+          typeDisplay={sharedColumnState.typeDisplay}
+          showTypeIcon={sharedColumnState.showTypeIcon}
+        />
       </div>
     </>
   );

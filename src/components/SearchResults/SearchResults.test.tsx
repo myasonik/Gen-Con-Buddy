@@ -550,3 +550,80 @@ test("submitting resize dialog updates column width in localStorage", async () =
   const stored = JSON.parse(localStorage.getItem("gcb-column-sizing") ?? "{}");
   expect(stored).toStrictEqual({ version: 1, value: { title: 400 } });
 });
+
+test("eventType cell renders code and name spans in the DOM", async () => {
+  server.use(
+    http.get("/api/events/search", () =>
+      HttpResponse.json({
+        data: [makeEvent({ eventType: "RPG" })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      }),
+    ),
+  );
+  renderSearchResults();
+  await screen.findAllByRole("row");
+  // Both code and name are always in the DOM; CSS controls which is visible
+  expect(screen.getAllByText("RPG").length).toBeGreaterThan(0);
+  expect(screen.getAllByText("Role Playing Game").length).toBeGreaterThan(0);
+});
+
+test("applies typeDisplayName class to EventTable section when mode is name", async () => {
+  localStorage.setItem(
+    "gen-con-buddy-type-display",
+    JSON.stringify({ version: 1, value: { textMode: "name", showIcon: true } }),
+  );
+  const { container } = renderSearchResults();
+  await screen.findAllByRole("row");
+  expect(container.querySelector('[class*="typeDisplayName"]')).not.toBeNull();
+});
+
+test("applies typeHideIcon class to EventTable section when showTypeIcon is false", async () => {
+  localStorage.setItem(
+    "gen-con-buddy-type-display",
+    JSON.stringify({ version: 1, value: { textMode: "name", showIcon: false } }),
+  );
+  const { container } = renderSearchResults();
+  await screen.findAllByRole("row");
+  expect(container.querySelector('[class*="typeHideIcon"]')).not.toBeNull();
+});
+
+test("no text mode class on EventTable section when typeDisplay is both", async () => {
+  localStorage.setItem(
+    "gen-con-buddy-type-display",
+    JSON.stringify({ version: 1, value: { textMode: "both", showIcon: true } }),
+  );
+  const { container } = renderSearchResults();
+  await screen.findAllByRole("row");
+  expect(container.querySelector('[class*="typeDisplayCode"]')).toBeNull();
+  expect(container.querySelector('[class*="typeDisplayName"]')).toBeNull();
+});
+
+test("type display radio buttons are present with Name checked by default", async () => {
+  renderSearchResults();
+  await screen.findAllByRole("row");
+  expect(screen.getByRole("radio", { name: "Code" })).toBeInTheDocument();
+  expect(screen.getByRole("radio", { name: "Name" })).toBeChecked();
+  expect(screen.getByRole("radio", { name: "Both" })).toBeInTheDocument();
+});
+
+test("Show icon checkbox is present and checked by default", async () => {
+  renderSearchResults();
+  await screen.findAllByRole("row");
+  expect(screen.getByRole("checkbox", { name: "Show icon" })).toBeChecked();
+});
+
+test("reset to defaults resets type display to name and icon shown", async () => {
+  const user = userEvent.setup();
+  localStorage.setItem(
+    "gen-con-buddy-type-display",
+    JSON.stringify({ version: 1, value: { textMode: "code", showIcon: false } }),
+  );
+  renderSearchResults();
+  await screen.findAllByRole("row");
+  expect(screen.getByRole("radio", { name: "Code" })).toBeChecked();
+  await user.click(screen.getByRole("button", { name: "Reset to defaults" }));
+  expect(screen.getByRole("radio", { name: "Name" })).toBeChecked();
+  expect(screen.getByRole("checkbox", { name: "Show icon" })).toBeChecked();
+});

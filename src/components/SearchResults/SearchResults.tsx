@@ -8,6 +8,7 @@ import { EventListMobile } from "../../ui/EventTable/EventListMobile";
 import { ColumnControlsPanel } from "../../ui/EventTable/ColumnControlsPanel";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
+import { useTypeDisplay } from "../../hooks/useTypeDisplay";
 import styles from "./SearchResults.module.css";
 
 interface SearchResultsProps {
@@ -25,6 +26,13 @@ export function SearchResults({
   const limit = searchParams.limit ?? 100;
   const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility();
   const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
+  const {
+    typeDisplay,
+    setTypeDisplay,
+    showTypeIcon,
+    setShowTypeIcon,
+    reset: resetTypeDisplay,
+  } = useTypeDisplay();
   const sharedColumnState = {
     visibility,
     toggleVisibility,
@@ -32,6 +40,11 @@ export function SearchResults({
     sizing,
     setSizing,
     resetSizing,
+    typeDisplay,
+    setTypeDisplay,
+    showTypeIcon,
+    setShowTypeIcon,
+    resetTypeDisplay,
   };
   const { data, isLoading, isError } = useQuery({
     queryKey: ["events", searchParams],
@@ -88,7 +101,12 @@ export function SearchResults({
             <div className={styles.mobileControls}>
               <ColumnControlsPanel variant="drawer" columnState={sharedColumnState} />
             </div>
-            <EventListMobile events={data.data} visibility={sharedColumnState.visibility} />
+            <EventListMobile
+              events={data.data}
+              visibility={sharedColumnState.visibility}
+              typeDisplay={typeDisplay}
+              showTypeIcon={showTypeIcon}
+            />
           </div>
           <Pagination
             page={page}

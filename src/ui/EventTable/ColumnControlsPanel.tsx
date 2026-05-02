@@ -1,9 +1,11 @@
+import { useId } from "react";
 import { ChevronRight, X } from "lucide-react";
 import { Dialog } from "@base-ui/react/dialog";
 import { Button } from "../Button/Button";
 import type { SharedColumnState } from "./types";
 import { AnimatedDetails } from "../AnimatedDetails/AnimatedDetails";
 import { D6Face } from "../icons/D6Face";
+import { Targeted } from "../icons/Targeted";
 import { COLUMNS, COLUMN_GROUPS } from "./columns";
 import styles from "./EventTable.module.css";
 
@@ -13,11 +15,64 @@ interface ColumnControlsPanelProps {
 }
 
 function ColumnCheckboxContent({ columnState }: { columnState: SharedColumnState }): JSX.Element {
-  const { visibility, toggleVisibility, resetVisibility, resetSizing } = columnState;
+  const {
+    visibility,
+    toggleVisibility,
+    resetVisibility,
+    resetSizing,
+    typeDisplay,
+    setTypeDisplay,
+    showTypeIcon,
+    setShowTypeIcon,
+    resetTypeDisplay,
+  } = columnState;
+
+  const panelId = useId();
+  const radioName = `${panelId}-typeDisplay`;
   const colById = new Map(COLUMNS.filter((c) => c.id !== undefined).map((c) => [c.id, c]));
 
   return (
     <fieldset className={styles.columnFieldset}>
+      <fieldset>
+        <legend>Event type column</legend>
+        <label className={styles.columnToggle}>
+          <input
+            type="checkbox"
+            className="sr-only"
+            checked={showTypeIcon}
+            onChange={(e) => setShowTypeIcon(e.target.checked)}
+          />
+          <span className={styles.columnCheckbox} aria-hidden="true">
+            <D6Face size={16} />
+          </span>
+          <span className={styles.columnLabel}>Show icon</span>
+        </label>
+        <div className={styles.typeDisplayRadioGroup}>
+          {(
+            [
+              { value: "code", label: "Code" },
+              { value: "name", label: "Name" },
+              { value: "both", label: "Both" },
+            ] as const
+          ).map(({ value, label }) => (
+            <label key={value} className={styles.columnToggle}>
+              <input
+                type="radio"
+                name={radioName}
+                value={value}
+                className="sr-only"
+                checked={typeDisplay === value}
+                onChange={() => setTypeDisplay(value)}
+              />
+              <span className={styles.radioIndicator} aria-hidden="true">
+                <Targeted size={16} />
+              </span>
+              <span className={styles.columnLabel}>{label}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <hr className={styles.typeDisplayDivider} />
       {COLUMN_GROUPS.map((group) => (
         <fieldset key={group.label} className={styles.columnGroup}>
           <legend className={styles.columnGroupLegend}>{group.label}</legend>
@@ -56,6 +111,7 @@ function ColumnCheckboxContent({ columnState }: { columnState: SharedColumnState
           onClick={() => {
             resetVisibility();
             resetSizing();
+            resetTypeDisplay();
           }}
         >
           Reset to defaults
