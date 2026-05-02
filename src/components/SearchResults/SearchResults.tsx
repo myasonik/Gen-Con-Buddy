@@ -85,7 +85,7 @@ export function SearchResults({
             />
           </div>
           <div className={styles.mobileView}>
-            <EventListMobile events={data.data} />
+            <EventListMobile events={data.data} visibility={sharedColumnState.visibility} />
           </div>
           <Pagination
             page={page}
