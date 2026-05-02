@@ -1,25 +1,52 @@
 /* ─── Design Tokens ──────────────────────────────────────────────────────── */
 :root {
-  /* Spacing — 8px grid */
+  /* ── Color ────────────────────────────────────────────────────────────── */
+  --color-surface-page: oklch(92.5% 0.016 72deg);
+  --color-surface-panel: oklch(88.5% 0.02 72deg);
+  --color-surface-row-alt: oklch(90.5% 0.018 72deg);
+  --color-surface-hover: oklch(86.5% 0.022 72deg);
+  --color-ink: oklch(22% 0.03 48deg);
+  --color-ink-muted: oklch(42% 0.04 52deg);
+  --color-ink-faint: oklch(58% 0.03 52deg);
+  --color-ink-border: oklch(73% 0.024 60deg);
+  --color-ink-divider: oklch(82% 0.018 60deg);
+  --color-accent: oklch(48% 0.14 34deg);
+  --color-accent-deep: oklch(42% 0.13 34deg);
+  --color-accent-surface: oklch(92% 0.04 42deg);
+  --color-error: oklch(52% 0.18 22deg);
+
+  /* ── Typography ───────────────────────────────────────────────────────── */
+  --font-display: "Cormorant Garamond", georgia, serif;
+  --font-slab: "Zilla Slab", georgia, serif;
+  --font-body: "Source Sans 3", system-ui, sans-serif;
+  --font-mono: "Courier Prime", "Courier New", monospace;
+
+  /* ── Spacing (8px grid) ───────────────────────────────────────────────── */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 1rem;
   --space-4: 1.5rem;
   --space-5: 2rem;
+  --space-6: 3rem;
 
-  /* Sizes */
-  --size-sidebar: 22.5rem;
+  /* ── Radius ───────────────────────────────────────────────────────────── */
+  --radius-subtle: 0.125rem;
+  --radius-card: 0.25rem;
+  --radius-pill: 624.9375rem;
+
+  /* ── Sizes ────────────────────────────────────────────────────────────── */
+  --size-drawer: 22.5rem;
   --size-detail-max: 50rem;
 
-  /* Motion */
+  /* ── Motion ───────────────────────────────────────────────────────────── */
   --motion-hover: 80ms ease;
   --motion-expand: 150ms ease-out;
 
-  /* Focus ring */
+  /* ── Focus ────────────────────────────────────────────────────────────── */
   --focus-ring: 0.125rem solid;
   --focus-ring-offset: 0.125rem;
 
-  /* Z-index scale */
+  /* ── Z-index ──────────────────────────────────────────────────────────── */
   --z-content: 1;
   --z-sticky: 10;
   --z-modal: 20;

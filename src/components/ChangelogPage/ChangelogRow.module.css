@@ -1,26 +1,50 @@
 .row {
-  border: 0.0625rem solid #ccc;
-  border-radius: 0.25rem;
+  border: 0.0625rem solid var(--color-ink-divider);
+  border-radius: var(--radius-card);
   margin-bottom: var(--space-2);
-  background: #fff;
+  background: var(--color-surface-page);
 }
 
 .row:nth-child(even) {
-  background: #f5f5f5;
+  background: var(--color-surface-row-alt);
 }
 
 .summary {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
   cursor: pointer;
   list-style: none;
+  user-select: none;
   transition: background var(--motion-hover);
 }
 
 .summary:hover {
-  background: #ddd;
+  background: var(--color-surface-hover);
+}
+
+.row[open] .summary {
+  border-bottom: 0.0625rem solid var(--color-ink-divider);
+}
+
+.summary::after {
+  content: "";
+  display: block;
+  flex-shrink: 0;
+  width: 0.4375rem;
+  height: 0.4375rem;
+  border-right: 0.125rem solid var(--color-ink-muted);
+  border-bottom: 0.125rem solid var(--color-ink-muted);
+  transform: rotate(45deg) translate(-0.0625rem, -0.0625rem);
+  transition:
+    transform var(--motion-expand),
+    border-color var(--motion-hover);
+}
+
+.row[open] .summary::after {
+  transform: rotate(-135deg) translate(-0.0625rem, -0.0625rem);
+  border-color: var(--color-accent);
 }
 
 .summary::-webkit-details-marker {
@@ -28,12 +52,33 @@
 }
 
 .date {
-  color: #000;
+  color: var(--color-ink);
   flex: 1;
+  font-family: var(--font-slab);
+  font-weight: 600;
 }
 
 .counts {
   display: flex;
-  gap: var(--space-3);
-  color: #666;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.counts span {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1875rem 0.5rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-panel);
+  border: 0.0625rem solid var(--color-ink-divider);
+  font-family: var(--font-slab);
+  font-size: 0.75rem;
+  letter-spacing: 0.03rem;
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+  transition: border-color var(--motion-hover);
+}
+
+.summary:hover .counts span {
+  border-color: var(--color-ink-border);
 }

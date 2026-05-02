@@ -1,23 +1,86 @@
-.form {
+/* ─── Form Root ──────────────────────────────────────────────────────────── */
+.formRoot {
+  position: relative;
+}
+
+/* ─── Backdrop ───────────────────────────────────────────────────────────── */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-modal) - 1);
+  background: oklch(22% 0.03 48deg / 0.4);
+  cursor: pointer;
+}
+
+/* ─── Advanced Drawer ────────────────────────────────────────────────────── */
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--size-drawer);
+  z-index: var(--z-modal);
   display: flex;
   flex-direction: column;
-  height: 100%;
+  background: var(--color-surface-panel);
+  border-right: 0.0625rem solid var(--color-ink-border);
+  transform: translateX(-100%);
+  transition: transform var(--motion-expand);
+  visibility: hidden;
 }
 
-.filterScroll {
+.drawer[data-open="true"] {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 0.0625rem solid var(--color-ink-divider);
+  flex-shrink: 0;
+}
+
+.drawerTitle {
+  font-family: var(--font-slab);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.05rem;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.drawerScroll {
   flex: 1;
-  overflow: hidden auto;
-  padding: var(--space-3);
+  overflow-y: scroll;
+  padding: var(--space-3) var(--space-4);
 }
 
+/* ─── Drawer Fieldsets ───────────────────────────────────────────────────── */
 .fieldset {
-  margin: 0 0 var(--space-3) 0;
+  margin: 0 0 var(--space-4) 0;
   padding: 0;
   min-width: 0;
+  border: none;
+}
+
+.legend {
+  font-family: var(--font-slab);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06rem;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  padding: 0 0 var(--space-2) 0;
+  border-bottom: 0.0625rem solid var(--color-ink-divider);
+  width: 100%;
+  margin-bottom: var(--space-2);
 }
 
 .fieldsetBody {
-  padding: var(--space-2) var(--space-3) var(--space-3);
+  padding: 0;
 }
 
 .label {
@@ -25,45 +88,242 @@
   flex-direction: column;
   gap: var(--space-1);
   margin-bottom: var(--space-2);
+  font-size: 0.8125rem;
+  color: var(--color-ink-muted);
 }
 
-.input,
-.select {
+.input {
   display: block;
   width: 100%;
   padding: var(--space-1) var(--space-2);
-  margin-top: var(--space-1);
-  margin-bottom: var(--space-2);
+  border-radius: var(--radius-subtle);
+  font-size: 0.875rem;
 }
 
 .input:disabled {
   cursor: not-allowed;
+  opacity: 0.5;
 }
 
-.dayCheckboxes {
+/* ─── Primary Strip ──────────────────────────────────────────────────────── */
+.strip {
   display: flex;
+  align-items: flex-end;
   flex-wrap: wrap;
   gap: var(--space-2);
-  margin-top: var(--space-1);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-surface-panel);
+  border-bottom: 0.0625rem solid var(--color-ink-divider);
 }
 
-.dayLabel {
+/* Strip control label */
+.stripLabel {
+  display: block;
+  margin-bottom: var(--space-1);
+  font-family: var(--font-slab);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04rem;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+/* Keyword search */
+.searchField {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 10rem;
+  max-width: 18rem;
+}
+
+.searchGroup {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Day/time row — flex row at narrow viewports */
+.dayTimeRow {
+  display: contents;
+}
+
+/* Day and time labeled groups */
+.dayField,
+.timeField {
+  display: flex;
+  flex-direction: column;
+}
+
+.searchIcon {
+  position: absolute;
+  left: var(--space-2);
+  color: var(--color-ink-faint);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  height: 2rem;
+  padding: var(--space-1) var(--space-2) var(--space-1) calc(var(--space-2) + 1.25rem);
+  border-radius: var(--radius-subtle);
+  font-size: 0.875rem;
+}
+
+/* Event type (let the component size itself, cap at a reasonable width) */
+.eventTypeWrap {
+  flex: 1;
+  min-width: 8rem;
+  max-width: 16rem;
+}
+
+/* Day toggles */
+.dayToggles {
+  display: flex;
+  gap: 0.1875rem;
+}
+
+.dayToggleWrapper {
+  position: relative;
+}
+
+.dayToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2rem;
+  padding: 0 var(--space-2);
+  font-family: var(--font-slab);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04rem;
+  text-transform: uppercase;
+  border: 0.0625rem solid var(--color-ink-border);
+  border-radius: var(--radius-subtle);
+  color: var(--color-ink-muted);
+  background: var(--color-surface-page);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--motion-hover),
+    color var(--motion-hover),
+    border-color var(--motion-hover);
+}
+
+.dayToggle:hover {
+  border-color: var(--color-ink-muted);
+  color: var(--color-ink);
+}
+
+.dayToggleWrapper:has(:checked) .dayToggle {
+  background: var(--color-accent);
+  color: var(--color-surface-page);
+  border-color: var(--color-accent);
+}
+
+.dayToggleWrapper:has(:focus-visible) .dayToggle {
+  outline: var(--focus-ring);
+  outline-color: var(--color-accent);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.dayToggleWrapper:has(:checked) .dayToggle:hover {
+  background: var(--color-accent-deep);
+  border-color: var(--color-accent-deep);
+  color: var(--color-surface-page);
+}
+
+/* Time range */
+.timeRange {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.timeInput {
+  width: 7rem;
+  height: 2rem;
+  padding: var(--space-1) var(--space-2);
+  font-size: 0.875rem;
+  border-radius: var(--radius-subtle);
+}
+
+.timeSep {
+  color: var(--color-ink-faint);
+  font-size: 0.875rem;
+}
+
+/* Strip action buttons */
+.stripActions {
+  display: flex;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+.filtersButton,
+.resetButton,
+.searchButton {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  cursor: pointer;
+  height: 2rem;
+  white-space: nowrap;
 }
 
-.buttonBar {
-  position: sticky;
-  bottom: 0;
-  padding: var(--space-3);
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
+/* ─── Responsive ─────────────────────────────────────────────────────────── */
+@media (width <= 60rem) {
+  .strip {
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--space-2) var(--space-3);
+  }
 
-.actionButton {
-  width: 100%;
+  .searchField {
+    max-width: none;
+  }
+
+  .eventTypeWrap {
+    max-width: none;
+  }
+
+  .dayTimeRow {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-end;
+    gap: var(--space-2);
+  }
+
+  .dayToggles {
+    justify-content: flex-start;
+  }
+
+  .dayToggle {
+    height: 2.75rem;
+    min-width: 2.75rem;
+  }
+
+  .searchInput,
+  .timeInput {
+    height: 2.75rem;
+  }
+
+  .filtersButton,
+  .resetButton,
+  .searchButton {
+    height: 2.75rem;
+  }
+
+  .timeRange {
+    justify-content: flex-start;
+  }
+
+  .stripActions {
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+
+  .drawer {
+    width: min(80vw, var(--size-drawer));
+  }
 }

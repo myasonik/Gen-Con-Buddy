@@ -1,7 +1,7 @@
 import { expect, describe, it } from "vitest";
 import {
   buildSearchParams,
-  daysToStartDateTime,
+  daysAndTimeToStartDateTime,
   GEN_CON_YEAR,
   parseSearchParams,
 } from "./searchParams";
@@ -35,22 +35,6 @@ describe("buildSearchParams", () => {
     expect(result).not.toHaveProperty("minPlayers");
   });
 
-  it("encodes a date range appending :00Z to each side", () => {
-    const result = buildSearchParams({
-      startDateTimeStart: "2024-08-01T10:00",
-      startDateTimeEnd: "2024-08-01T14:00",
-    });
-    expect(result.startDateTime).toBe("[2024-08-01T10:00:00Z,2024-08-01T14:00:00Z]");
-  });
-
-  it("encodes a partial date range", () => {
-    const result = buildSearchParams({
-      startDateTimeStart: "2024-08-01T10:00",
-      startDateTimeEnd: "",
-    });
-    expect(result.startDateTime).toBe("[2024-08-01T10:00:00Z,]");
-  });
-
   it("passes materialsProvided text through unchanged", () => {
     const result = buildSearchParams({ materialsProvided: "Yes" });
     expect(result.materialsProvided).toBe("Yes");
@@ -71,46 +55,48 @@ describe("buildSearchParams", () => {
     expect(result).not.toHaveProperty("tournament");
   });
 
-  it("sets only days in URL when days is selected (no startDateTime)", () => {
+  it("sets days in URL params", () => {
     const result = buildSearchParams({ days: "thu" });
     expect(result.days).toBe("thu");
     expect(result).not.toHaveProperty("startDateTime");
   });
 
-  it("sets only days in URL for multiple non-contiguous days (no startDateTime)", () => {
+  it("sets multiple days in URL params", () => {
     const result = buildSearchParams({ days: "wed,sun" });
     expect(result.days).toBe("wed,sun");
     expect(result).not.toHaveProperty("startDateTime");
   });
 
-  it("sets only days in URL for all five days (no startDateTime)", () => {
-    const result = buildSearchParams({ days: "wed,thu,fri,sat,sun" });
-    expect(result.days).toBe("wed,thu,fri,sat,sun");
-    expect(result).not.toHaveProperty("startDateTime");
-  });
-
-  it("does not set startDateTime when days is empty", () => {
+  it("does not set days when empty", () => {
     const result = buildSearchParams({ days: "" });
-    expect(result).not.toHaveProperty("startDateTime");
     expect(result).not.toHaveProperty("days");
   });
 
-  it("uses explicit startDateTime fields when days is not set", () => {
-    const result = buildSearchParams({
-      startDateTimeStart: "2024-08-01T10:00",
-      startDateTimeEnd: "",
-    });
-    expect(result.startDateTime).toBe("[2024-08-01T10:00:00Z,]");
+  it("sets timeStart in URL params", () => {
+    const result = buildSearchParams({ timeStart: "09:00" });
+    expect(result.timeStart).toBe("09:00");
   });
 
-  it("days takes priority over explicit startDateTime fields when both are set", () => {
-    const result = buildSearchParams({
-      days: "fri",
-      startDateTimeStart: "2024-08-01T10:00",
-      startDateTimeEnd: "2024-08-01T14:00",
-    });
+  it("sets timeEnd in URL params", () => {
+    const result = buildSearchParams({ timeEnd: "17:00" });
+    expect(result.timeEnd).toBe("17:00");
+  });
+
+  it("omits empty timeStart", () => {
+    const result = buildSearchParams({ timeStart: "" });
+    expect(result).not.toHaveProperty("timeStart");
+  });
+
+  it("omits empty timeEnd", () => {
+    const result = buildSearchParams({ timeEnd: "" });
+    expect(result).not.toHaveProperty("timeEnd");
+  });
+
+  it("sets both days and time together", () => {
+    const result = buildSearchParams({ days: "fri", timeStart: "09:00", timeEnd: "17:00" });
     expect(result.days).toBe("fri");
-    expect(result).not.toHaveProperty("startDateTime");
+    expect(result.timeStart).toBe("09:00");
+    expect(result.timeEnd).toBe("17:00");
   });
 });
 
@@ -138,21 +124,11 @@ describe("parseSearchParams", () => {
     expect(result.minPlayersMax).toBe("");
   });
 
-  it("strips :00Z from date range values", () => {
-    const result = parseSearchParams({
-      startDateTime: "[2024-08-01T10:00:00Z,2024-08-01T14:00:00Z]",
-    });
-    expect(result.startDateTimeStart).toBe("2024-08-01T10:00");
-    expect(result.startDateTimeEnd).toBe("2024-08-01T14:00");
-  });
-
   it("roundtrips: buildSearchParams then parseSearchParams returns original values", () => {
     const original = {
       title: "Test",
       minPlayersMin: "2",
       minPlayersMax: "6",
-      startDateTimeStart: "2024-08-01T10:00",
-      startDateTimeEnd: "2024-08-01T14:00",
       materialsProvided: "Yes",
       tournament: "Grand Prix",
     };
@@ -161,8 +137,6 @@ describe("parseSearchParams", () => {
     expect(parsed.title).toBe("Test");
     expect(parsed.minPlayersMin).toBe("2");
     expect(parsed.minPlayersMax).toBe("6");
-    expect(parsed.startDateTimeStart).toBe("2024-08-01T10:00");
-    expect(parsed.startDateTimeEnd).toBe("2024-08-01T14:00");
     expect(parsed.materialsProvided).toBe("Yes");
     expect(parsed.tournament).toBe("Grand Prix");
   });
@@ -217,24 +191,32 @@ describe("parseSearchParams", () => {
     expect(parsed.days).toBe("fri,sat");
   });
 
-  it("does not populate startDateTimeStart/End when days is present (single day)", () => {
-    const params = buildSearchParams({ days: "thu" });
+  it("round-trips timeStart through buildSearchParams then parseSearchParams", () => {
+    const params = buildSearchParams({ timeStart: "09:00" });
     const parsed = parseSearchParams(params);
-    expect(parsed.startDateTimeStart).toBeUndefined();
-    expect(parsed.startDateTimeEnd).toBeUndefined();
+    expect(parsed.timeStart).toBe("09:00");
   });
 
-  it("does not populate startDateTimeStart/End when days is present (multiple days)", () => {
-    const params = buildSearchParams({ days: "wed,sun" });
+  it("round-trips timeEnd through buildSearchParams then parseSearchParams", () => {
+    const params = buildSearchParams({ timeEnd: "17:00" });
     const parsed = parseSearchParams(params);
-    expect(parsed.startDateTimeStart).toBeUndefined();
-    expect(parsed.startDateTimeEnd).toBeUndefined();
+    expect(parsed.timeEnd).toBe("17:00");
+  });
+
+  it("returns undefined timeStart when not in params", () => {
+    const result = parseSearchParams({});
+    expect(result.timeStart).toBeUndefined();
+  });
+
+  it("returns undefined timeEnd when not in params", () => {
+    const result = parseSearchParams({});
+    expect(result.timeEnd).toBeUndefined();
   });
 });
 
-describe("daysToStartDateTime", () => {
+describe("daysAndTimeToStartDateTime", () => {
   it("gen con wednesday falls in late July or early August and is a Wednesday", () => {
-    const result = daysToStartDateTime("wed");
+    const result = daysAndTimeToStartDateTime("wed");
     const [, dateStr] = result?.match(/\[([^,]+),/) ?? [];
     const date = new Date(dateStr);
     expect(date.getDay()).toBe(3); // Wednesday
@@ -243,24 +225,59 @@ describe("daysToStartDateTime", () => {
   });
 
   it("converts a single day to a bracket range for the configured year", () => {
-    const result = daysToStartDateTime("thu");
+    const result = daysAndTimeToStartDateTime("thu");
     expect(result).toContain(String(GEN_CON_YEAR));
     expect(result).toMatch(/^\[.+,.+\]$/);
   });
 
   it("converts two non-contiguous days to comma-separated ranges", () => {
-    const result = daysToStartDateTime("wed,sun");
+    const result = daysAndTimeToStartDateTime("wed,sun");
     expect(result).toContain(String(GEN_CON_YEAR));
     expect(result?.split("],[").length).toBe(2);
   });
 
   it("converts all five days to five ranges", () => {
-    const result = daysToStartDateTime("wed,thu,fri,sat,sun");
+    const result = daysAndTimeToStartDateTime("wed,thu,fri,sat,sun");
     expect(result).toContain(String(GEN_CON_YEAR));
     expect(result?.split("],[").length).toBe(5);
   });
 
   it("returns undefined for an empty string", () => {
-    expect(daysToStartDateTime("")).toBeUndefined();
+    expect(daysAndTimeToStartDateTime("")).toBeUndefined();
+  });
+
+  it("applies time bounds when timeStart and timeEnd are provided", () => {
+    const result = daysAndTimeToStartDateTime("thu", "09:00", "17:00");
+    expect(result).toContain("T09:00:00-04:00");
+    expect(result).toContain("T17:00:00-04:00");
+  });
+
+  it("generates one time-windowed range per day", () => {
+    const result = daysAndTimeToStartDateTime("thu,fri", "09:00", "17:00");
+    expect(result?.split("],[").length).toBe(2);
+    expect(result).toContain("T09:00:00-04:00");
+    expect(result).toContain("T17:00:00-04:00");
+  });
+
+  it("uses start-of-day when only timeEnd is provided", () => {
+    const result = daysAndTimeToStartDateTime("thu", undefined, "12:00");
+    expect(result).toContain("T00:00:00-04:00");
+    expect(result).toContain("T12:00:00-04:00");
+  });
+
+  it("uses end-of-day when only timeStart is provided", () => {
+    const result = daysAndTimeToStartDateTime("thu", "09:00", undefined);
+    expect(result).toContain("T09:00:00-04:00");
+    // end falls back to next day midnight (the pre-computed end)
+    expect(result).toContain("T00:00:00-04:00");
+  });
+
+  it("each day in a multi-day selection gets its own date", () => {
+    const result = daysAndTimeToStartDateTime("thu,fri", "10:00", "18:00");
+    const ranges = result?.split("],[") ?? [];
+    expect(ranges).toHaveLength(2);
+    // Thu and Fri should have different date prefixes
+    const [thursdayRange, fridayRange] = ranges;
+    expect(thursdayRange).not.toStrictEqual(fridayRange);
   });
 });

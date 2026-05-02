@@ -2,43 +2,47 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-1);
   cursor: pointer;
   line-height: 1;
   text-decoration: none;
+  font-family: var(--font-slab);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.03rem;
+  border-radius: var(--radius-subtle);
+  transition:
+    background-color var(--motion-hover),
+    color var(--motion-hover),
+    opacity var(--motion-hover);
 }
 
 .button:disabled {
   cursor: not-allowed;
   opacity: 0.4;
-  filter: grayscale(1);
-}
-
-.button:disabled:hover {
-  opacity: 0.4;
 }
 
 .primary {
-  background: black;
-  color: white;
+  background: var(--color-accent);
+  color: var(--color-surface-page);
   border: none;
   padding: var(--space-1) var(--space-3);
-  border-radius: 0.25rem;
 }
 
-.primary:hover {
-  opacity: 0.8;
+.primary:hover:not(:disabled) {
+  background: var(--color-accent-deep);
 }
 
 .secondary {
   background: transparent;
-  border: 0.0625rem solid currentcolor;
+  border: 0.0625rem solid var(--color-ink-border);
   padding: var(--space-1) var(--space-3);
-  border-radius: 0.25rem;
-  color: inherit;
+  color: var(--color-ink);
 }
 
-.secondary:hover {
-  opacity: 0.8;
+.secondary:hover:not(:disabled) {
+  border-color: var(--color-ink-muted);
+  background: var(--color-surface-hover);
 }
 
 .ghost {
@@ -47,26 +51,25 @@
   padding: var(--space-1) var(--space-2);
   justify-content: flex-start;
   width: 100%;
-  color: inherit;
+  color: var(--color-ink);
 }
 
-.ghost:hover {
-  opacity: 0.8;
+.ghost:hover:not(:disabled) {
+  background: var(--color-surface-hover);
 }
 
 .large {
   padding: var(--space-2) var(--space-4);
   font-size: 1rem;
-  gap: var(--space-2);
 }
 
 .icon {
-  padding: 0.125rem;
-  width: auto;
-  aspect-ratio: 1;
+  padding: 0.25rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
   text-align: center;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
 }

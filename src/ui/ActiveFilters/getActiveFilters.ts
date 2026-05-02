@@ -61,6 +61,15 @@ function fmtCostRange(val: string): string {
   return `Cost: ${min}${dash}${max}`;
 }
 
+function fmtTime(hhmm: string): string {
+  const [hStr, mStr] = hhmm.split(":");
+  const h = parseInt(hStr, 10);
+  const m = parseInt(mStr, 10);
+  const ampm = h >= 12 ? "PM" : "AM";
+  const hour = h % 12 || 12;
+  return m === 0 ? `${hour} ${ampm}` : `${hour}:${mStr} ${ampm}`;
+}
+
 function removeKey(key: keyof SearchParams): (prev: SearchParams) => SearchParams {
   return (prev) => {
     const { [key]: _r, ...rest } = prev;
@@ -118,9 +127,7 @@ const FILTER_DEFS: FilterDef[] = [
   { type: "enum", key: "materialsRequired", label: "Materials required", map: YES_NO },
   { type: "plain", key: "materialsRequiredDetails", label: "Materials details" },
   { type: "multi", key: "days", map: DAY_LABELS, prefix: "days" },
-  { type: "dateRange", key: "startDateTime", label: "Start" },
   { type: "range", key: "duration", label: "Duration", suffix: "hrs" },
-  { type: "dateRange", key: "endDateTime", label: "End" },
   { type: "range", key: "minPlayers", label: "Min players" },
   { type: "range", key: "maxPlayers", label: "Max players" },
   { type: "plain", key: "gmNames", label: "GM" },
@@ -142,6 +149,25 @@ const FILTER_DEFS: FilterDef[] = [
 
 export function getActiveFilters(params: SearchParams): ActiveFilter[] {
   const filters: ActiveFilter[] = [];
+
+  // Time range chip — combines timeStart and timeEnd into one removable chip
+  const { timeStart, timeEnd } = params;
+  if (timeStart || timeEnd) {
+    let label = `Before ${fmtTime(timeEnd ?? "")}`;
+    if (timeStart && timeEnd) {
+      label = `${fmtTime(timeStart)}–${fmtTime(timeEnd)}`;
+    } else if (timeStart) {
+      label = `After ${fmtTime(timeStart)}`;
+    }
+    filters.push({
+      id: "timeRange",
+      label,
+      remove: (prev) => {
+        const { timeStart: _s, timeEnd: _e, ...rest } = prev;
+        return rest;
+      },
+    });
+  }
 
   for (const def of FILTER_DEFS) {
     const val = params[def.key];
