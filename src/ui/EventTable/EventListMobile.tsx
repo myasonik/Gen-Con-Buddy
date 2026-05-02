@@ -5,6 +5,7 @@ import { EXP } from "../../utils/enums";
 import { EVENT_TYPE_ICONS } from "../icons/eventTypeIcons";
 import { COLUMN_VISIBILITY_DEFAULTS } from "../../hooks/useColumnVisibility";
 import { COLUMNS, COLUMN_GROUPS } from "./columns";
+import { DescriptionList, DescriptionItem } from "../DescriptionList/DescriptionList";
 import styles from "./EventListMobile.module.css";
 
 const META_COLUMN_IDS = new Set([
@@ -165,14 +166,13 @@ export function EventListMobile({ events, visibility }: EventListMobileProps): J
                 </span>
               )}
               {extraFields.length > 0 && (
-                <dl className={styles.details}>
+                <DescriptionList>
                   {extraFields.map(({ id, label, value }) => (
-                    <div key={id} className={styles.detailRow}>
-                      <dt className={styles.detailTerm}>{label}</dt>
-                      <dd className={styles.detailValue}>{value}</dd>
-                    </div>
+                    <DescriptionItem key={id} term={label}>
+                      {value}
+                    </DescriptionItem>
                   ))}
-                </dl>
+                </DescriptionList>
               )}
             </Link>
           </li>

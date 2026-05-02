@@ -9,6 +9,7 @@ import {
 import { expect, test } from "vitest";
 import { makeEvent } from "../../test/msw/factory";
 import { EventListMobile } from "./EventListMobile";
+import { COLUMN_VISIBILITY_DEFAULTS } from "../../hooks/useColumnVisibility";
 import type { Event } from "../../utils/types";
 
 async function renderList(
@@ -181,7 +182,10 @@ test("shows day and end time with no separator when startDateTime is hidden", as
 });
 
 test("shows location as a detail row when visibility.location is true", async () => {
-  await renderList([makeEvent({ location: "ICC" })], { location: true });
+  await renderList([makeEvent({ location: "ICC" })], {
+    ...COLUMN_VISIBILITY_DEFAULTS,
+    location: true,
+  });
   expect(screen.getByText("Location")).toBeInTheDocument();
   expect(screen.getByText("ICC")).toBeInTheDocument();
 });
@@ -192,19 +196,25 @@ test("does not show location detail row when visibility.location is false", asyn
 });
 
 test("shows cost formatted with dollar sign as a detail row", async () => {
-  await renderList([makeEvent({ cost: 4 })], { cost: true });
+  await renderList([makeEvent({ cost: 4 })], { ...COLUMN_VISIBILITY_DEFAULTS, cost: true });
   expect(screen.getByText("Cost")).toBeInTheDocument();
   expect(screen.getByText("$4.00")).toBeInTheDocument();
 });
 
 test("shows shortDescription as a detail row when toggled on", async () => {
-  await renderList([makeEvent({ shortDescription: "Quick fun" })], { shortDescription: true });
+  await renderList([makeEvent({ shortDescription: "Quick fun" })], {
+    ...COLUMN_VISIBILITY_DEFAULTS,
+    shortDescription: true,
+  });
   expect(screen.getByText("Short Description")).toBeInTheDocument();
   expect(screen.getByText("Quick fun")).toBeInTheDocument();
 });
 
 test("shows gameId as a detail row when toggled on", async () => {
-  await renderList([makeEvent({ gameId: "RPG24000001" })], { gameId: true });
+  await renderList([makeEvent({ gameId: "RPG24000001" })], {
+    ...COLUMN_VISIBILITY_DEFAULTS,
+    gameId: true,
+  });
   expect(screen.getByText("Game ID")).toBeInTheDocument();
   expect(screen.getByText("RPG24000001")).toBeInTheDocument();
 });
