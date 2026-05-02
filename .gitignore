@@ -1,6 +1,9 @@
 # git worktrees
 .worktrees/
 
+# tanstack router generated files
+/.tanstack/tmp/
+
 # compiled output
 /dist/
 /declarations/
