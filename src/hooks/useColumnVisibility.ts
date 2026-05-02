@@ -3,7 +3,7 @@ import { useStoredState } from "./useStoredState";
 const STORAGE_KEY = "gen-con-buddy-columns";
 const VERSION = 1;
 
-const DEFAULTS: Record<string, boolean> = {
+export const COLUMN_VISIBILITY_DEFAULTS: Record<string, boolean> = {
   gameId: false,
   title: true,
   eventType: true,
@@ -45,14 +45,16 @@ export function useColumnVisibility(): {
   toggle: (column: string) => void;
   reset: () => void;
 } {
-  const [visibility, setVisibility] = useStoredState(STORAGE_KEY, VERSION, { ...DEFAULTS });
+  const [visibility, setVisibility] = useStoredState(STORAGE_KEY, VERSION, {
+    ...COLUMN_VISIBILITY_DEFAULTS,
+  });
 
   const toggle = (column: string): void => {
     setVisibility((prev) => ({ ...prev, [column]: !prev[column] }));
   };
 
   const reset = (): void => {
-    setVisibility({ ...DEFAULTS });
+    setVisibility({ ...COLUMN_VISIBILITY_DEFAULTS });
   };
 
   return { visibility, toggle, reset };
