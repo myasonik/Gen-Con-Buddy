@@ -55,7 +55,8 @@ export function useColumnMinSizes(
         const parent = svgs[0].parentElement;
         if (parent) {
           if (!gapCache.has(parent)) {
-            gapCache.set(parent, parseFloat(getComputedStyle(parent).gap) || 4);
+            const parsed = parseFloat(getComputedStyle(parent).gap);
+            gapCache.set(parent, Number.isNaN(parsed) ? 4 : parsed);
           }
           gap = gapCache.get(parent) ?? 4;
         }
