@@ -85,7 +85,9 @@ export function SearchResults({
             />
           </div>
           <div className={styles.mobileView}>
-            <ColumnControlsPanel variant="drawer" columnState={sharedColumnState} />
+            <div className={styles.mobileControls}>
+              <ColumnControlsPanel variant="drawer" columnState={sharedColumnState} />
+            </div>
             <EventListMobile events={data.data} visibility={sharedColumnState.visibility} />
           </div>
           <Pagination

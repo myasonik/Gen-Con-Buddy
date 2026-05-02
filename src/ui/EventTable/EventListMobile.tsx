@@ -166,7 +166,7 @@ export function EventListMobile({ events, visibility }: EventListMobileProps): J
                 </span>
               )}
               {extraFields.length > 0 && (
-                <DescriptionList>
+                <DescriptionList className={styles.mobileDetails}>
                   {extraFields.map(({ id, label, value }) => (
                     <DescriptionItem key={id} term={label}>
                       {value}
