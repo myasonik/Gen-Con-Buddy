@@ -14,11 +14,6 @@
   font-family: var(--font-mono);
 }
 
-.typeCell svg {
-  vertical-align: middle;
-  margin-inline-end: var(--space-1);
-}
-
 .soldOut {
   color: var(--color-error);
   font-weight: 600;
