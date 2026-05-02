@@ -97,9 +97,7 @@ test("clicking Code radio calls setTypeDisplay with code", async () => {
   const user = userEvent.setup();
   const setTypeDisplay = vi.fn<SharedColumnState["setTypeDisplay"]>();
   render(
-    <ColumnControlsPanel
-      columnState={makeColumnState({ typeDisplay: "name", setTypeDisplay })}
-    />,
+    <ColumnControlsPanel columnState={makeColumnState({ typeDisplay: "name", setTypeDisplay })} />,
   );
   await user.click(screen.getByRole("radio", { name: "Code" }));
   expect(setTypeDisplay).toHaveBeenCalledWith("code");
@@ -109,9 +107,7 @@ test("clicking Both radio calls setTypeDisplay with both", async () => {
   const user = userEvent.setup();
   const setTypeDisplay = vi.fn<SharedColumnState["setTypeDisplay"]>();
   render(
-    <ColumnControlsPanel
-      columnState={makeColumnState({ typeDisplay: "name", setTypeDisplay })}
-    />,
+    <ColumnControlsPanel columnState={makeColumnState({ typeDisplay: "name", setTypeDisplay })} />,
   );
   await user.click(screen.getByRole("radio", { name: "Both" }));
   expect(setTypeDisplay).toHaveBeenCalledWith("both");
@@ -122,5 +118,5 @@ test("Reset to defaults calls resetTypeDisplay", async () => {
   const resetTypeDisplay = vi.fn<SharedColumnState["resetTypeDisplay"]>();
   render(<ColumnControlsPanel columnState={makeColumnState({ resetTypeDisplay })} />);
   await user.click(screen.getByRole("button", { name: "Reset to defaults" }));
-  expect(resetTypeDisplay).toHaveBeenCalledOnce();
+  expect(resetTypeDisplay).toHaveBeenCalledTimes(1);
 });

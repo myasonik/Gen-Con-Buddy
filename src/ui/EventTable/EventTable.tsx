@@ -52,20 +52,17 @@ export function EventTable({
 
   const internalTypeDisplay = useTypeDisplay();
   const typeDisplay = sharedColumnState?.typeDisplay ?? internalTypeDisplay.typeDisplay;
-  const setTypeDisplay =
-    sharedColumnState?.setTypeDisplay ?? internalTypeDisplay.setTypeDisplay;
+  const setTypeDisplay = sharedColumnState?.setTypeDisplay ?? internalTypeDisplay.setTypeDisplay;
   const showTypeIcon = sharedColumnState?.showTypeIcon ?? internalTypeDisplay.showTypeIcon;
-  const setShowTypeIcon =
-    sharedColumnState?.setShowTypeIcon ?? internalTypeDisplay.setShowTypeIcon;
-  const resetTypeDisplay =
-    sharedColumnState?.resetTypeDisplay ?? internalTypeDisplay.reset;
+  const setShowTypeIcon = sharedColumnState?.setShowTypeIcon ?? internalTypeDisplay.setShowTypeIcon;
+  const resetTypeDisplay = sharedColumnState?.resetTypeDisplay ?? internalTypeDisplay.reset;
 
-  const textClass =
-    typeDisplay === "code"
-      ? typeCellStyles.typeDisplayCode
-      : typeDisplay === "name"
-        ? typeCellStyles.typeDisplayName
-        : undefined;
+  let textClass: string | undefined = undefined;
+  if (typeDisplay === "code") {
+    textClass = typeCellStyles.typeDisplayCode;
+  } else if (typeDisplay === "name") {
+    textClass = typeCellStyles.typeDisplayName;
+  }
   const iconClass = showTypeIcon ? undefined : typeCellStyles.typeHideIcon;
   const typeDisplayClass = [textClass, iconClass].filter(Boolean).join(" ") || undefined;
 

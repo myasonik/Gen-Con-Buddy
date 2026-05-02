@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
+import { useTypeDisplay } from "../../hooks/useTypeDisplay";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { ColumnControlsPanel } from "../../ui/EventTable/ColumnControlsPanel";
 import { fetchChangelogEntry, fetchChangelogList } from "../../utils/api";
@@ -12,6 +13,13 @@ export function ChangelogPage(): JSX.Element {
   const queryClient = useQueryClient();
   const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility();
   const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
+  const {
+    typeDisplay,
+    setTypeDisplay,
+    showTypeIcon,
+    setShowTypeIcon,
+    reset: resetTypeDisplay,
+  } = useTypeDisplay();
   const sharedColumnState = {
     visibility,
     toggleVisibility,
@@ -19,6 +27,11 @@ export function ChangelogPage(): JSX.Element {
     sizing,
     setSizing,
     resetSizing,
+    typeDisplay,
+    setTypeDisplay,
+    showTypeIcon,
+    setShowTypeIcon,
+    resetTypeDisplay,
   };
   const {
     data: summaries = [],

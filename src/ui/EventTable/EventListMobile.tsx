@@ -18,12 +18,12 @@ export function EventListMobile({
   typeDisplay,
   showTypeIcon,
 }: EventListMobileProps): JSX.Element {
-  const textClass =
-    typeDisplay === "code"
-      ? typeCellStyles.typeDisplayCode
-      : typeDisplay === "name"
-        ? typeCellStyles.typeDisplayName
-        : undefined;
+  let textClass: string | undefined = undefined;
+  if (typeDisplay === "code") {
+    textClass = typeCellStyles.typeDisplayCode;
+  } else if (typeDisplay === "name") {
+    textClass = typeCellStyles.typeDisplayName;
+  }
   const iconClass = showTypeIcon === false ? typeCellStyles.typeHideIcon : undefined;
   const modeClass = [textClass, iconClass].filter(Boolean).join(" ") || undefined;
 

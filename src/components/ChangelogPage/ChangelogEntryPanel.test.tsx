@@ -20,6 +20,11 @@ const stubColumnState: SharedColumnState = {
   sizing: {},
   setSizing: () => {},
   resetSizing: () => {},
+  typeDisplay: "name",
+  setTypeDisplay: () => {},
+  showTypeIcon: true,
+  setShowTypeIcon: () => {},
+  resetTypeDisplay: () => {},
 };
 
 // For tests that render EventTable (which uses Link), a router context is required.

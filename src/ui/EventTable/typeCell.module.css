@@ -9,15 +9,6 @@
   flex-shrink: 0;
 }
 
-.typeCode {
-}
-
-.typeSep {
-}
-
-.typeName {
-}
-
 /* "code" mode — hide separator and name */
 .typeDisplayCode .typeSep,
 .typeDisplayCode .typeName {

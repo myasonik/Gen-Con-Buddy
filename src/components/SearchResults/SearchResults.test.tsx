@@ -566,7 +566,7 @@ test("eventType cell renders code and name spans in the DOM", async () => {
   await screen.findAllByRole("row");
   // Both code and name are always in the DOM; CSS controls which is visible
   expect(screen.getAllByText("RPG").length).toBeGreaterThan(0);
-  expect(screen.getByText("Role Playing Game")).toBeInTheDocument();
+  expect(screen.getAllByText("Role Playing Game").length).toBeGreaterThan(0);
 });
 
 test("applies typeDisplayName class to EventTable section when mode is name", async () => {
@@ -598,4 +598,32 @@ test("no text mode class on EventTable section when typeDisplay is both", async 
   await screen.findAllByRole("row");
   expect(container.querySelector('[class*="typeDisplayCode"]')).toBeNull();
   expect(container.querySelector('[class*="typeDisplayName"]')).toBeNull();
+});
+
+test("type display radio buttons are present with Name checked by default", async () => {
+  renderSearchResults();
+  await screen.findAllByRole("row");
+  expect(screen.getByRole("radio", { name: "Code" })).toBeInTheDocument();
+  expect(screen.getByRole("radio", { name: "Name" })).toBeChecked();
+  expect(screen.getByRole("radio", { name: "Both" })).toBeInTheDocument();
+});
+
+test("Show icon checkbox is present and checked by default", async () => {
+  renderSearchResults();
+  await screen.findAllByRole("row");
+  expect(screen.getByRole("checkbox", { name: "Show icon" })).toBeChecked();
+});
+
+test("reset to defaults resets type display to name and icon shown", async () => {
+  const user = userEvent.setup();
+  localStorage.setItem(
+    "gen-con-buddy-type-display",
+    JSON.stringify({ version: 1, value: { textMode: "code", showIcon: false } }),
+  );
+  renderSearchResults();
+  await screen.findAllByRole("row");
+  expect(screen.getByRole("radio", { name: "Code" })).toBeChecked();
+  await user.click(screen.getByRole("button", { name: "Reset to defaults" }));
+  expect(screen.getByRole("radio", { name: "Name" })).toBeChecked();
+  expect(screen.getByRole("checkbox", { name: "Show icon" })).toBeChecked();
 });

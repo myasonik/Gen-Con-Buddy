@@ -57,7 +57,13 @@ export function ColumnControlsPanel({ columnState }: ColumnControlsPanelProps): 
             <span className={styles.columnLabel}>Show icon</span>
           </label>
           <div className={styles.typeDisplayRadioGroup}>
-            {(["code", "name", "both"] as const).map((value) => (
+            {(
+              [
+                { value: "code", label: "Code" },
+                { value: "name", label: "Name" },
+                { value: "both", label: "Both" },
+              ] as const
+            ).map(({ value, label }) => (
               <label key={value} className={styles.columnToggle}>
                 <input
                   type="radio"
@@ -70,9 +76,7 @@ export function ColumnControlsPanel({ columnState }: ColumnControlsPanelProps): 
                 <span className={styles.radioIndicator} aria-hidden="true">
                   <Targeted size={16} />
                 </span>
-                <span className={styles.columnLabel}>
-                  {value === "code" ? "Code" : value === "name" ? "Name" : "Both"}
-                </span>
+                <span className={styles.columnLabel}>{label}</span>
               </label>
             ))}
           </div>
