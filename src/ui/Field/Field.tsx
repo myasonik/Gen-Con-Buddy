@@ -1,12 +1,15 @@
-import React from "react";
 import { Field as BaseField } from "@base-ui/react/field";
 import clsx from "clsx";
+import React from "react";
 import styles from "./Field.module.css";
 
-interface FieldProps {
+interface FieldBase {
   label: string;
-  children: React.ReactElement;
   className?: string;
+}
+
+interface FieldProps extends FieldBase {
+  children: React.ReactElement;
 }
 
 export function Field({ label, children, className }: FieldProps): JSX.Element {
@@ -18,27 +21,34 @@ export function Field({ label, children, className }: FieldProps): JSX.Element {
   );
 }
 
-interface RangeFieldProps {
+function SubField({
+  label,
+  children,
+}: {
   label: string;
+  children: React.ReactElement;
+}): JSX.Element {
+  return (
+    <BaseField.Root>
+      <BaseField.Label className={styles.rangeFieldLabel}>{label}</BaseField.Label>
+      <BaseField.Control render={children} />
+    </BaseField.Root>
+  );
+}
+
+interface RangeFieldProps extends FieldBase {
   children: [React.ReactElement, React.ReactElement];
-  className?: string;
   stack?: boolean;
 }
 
 export function RangeField({ label, children, className, stack }: RangeFieldProps): JSX.Element {
   const [fromInput, toInput] = children;
   return (
-    <div className={clsx(styles.rangeRoot, className)}>
-      <span className={styles.rangeLabel}>{label}</span>
+    <div className={clsx(styles.root, className)}>
+      <span className={styles.label}>{label}</span>
       <div className={clsx(styles.rangeFields, stack && styles.rangeFieldsStacked)}>
-        <BaseField.Root>
-          <BaseField.Label className={styles.rangeFieldLabel}>from</BaseField.Label>
-          <BaseField.Control render={fromInput} />
-        </BaseField.Root>
-        <BaseField.Root>
-          <BaseField.Label className={styles.rangeFieldLabel}>to</BaseField.Label>
-          <BaseField.Control render={toInput} />
-        </BaseField.Root>
+        <SubField label="from">{fromInput}</SubField>
+        <SubField label="to">{toInput}</SubField>
       </div>
     </div>
   );
