@@ -5,8 +5,8 @@ import { fetchEvents } from "../../utils/api";
 import { buildGoogleCalendarUrl } from "../../utils/googleCalendar";
 import { Button } from "../../ui/Button/Button";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
-import { Badge, BoolBadge } from "../../ui/Badge/Badge";
 import { DescriptionList, DescriptionItem } from "../../ui/DescriptionList/DescriptionList";
+import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
 import { CalendarPlus, ExternalLink } from "lucide-react";
 import styles from "./EventDetail.module.css";
 
@@ -55,7 +55,7 @@ export function EventDetail({ gameId }: EventDetailProps): JSX.Element {
             render={
               <a href={buildGoogleCalendarUrl(a)} target="_blank" rel="noopener noreferrer" />
             }
-            variant="ghost"
+            variant="secondary"
             className={styles.actionButton}
           >
             <CalendarPlus aria-hidden="true" className={styles.actionIcon} />
@@ -69,7 +69,7 @@ export function EventDetail({ gameId }: EventDetailProps): JSX.Element {
                 rel="noopener noreferrer"
               />
             }
-            variant="ghost"
+            variant="secondary"
             className={styles.actionButton}
           >
             <ExternalLink aria-hidden="true" className={styles.actionIcon} />
@@ -87,7 +87,17 @@ export function EventDetail({ gameId }: EventDetailProps): JSX.Element {
             <DescriptionItem term="Long Description" span="full">
               {a.longDescription}
             </DescriptionItem>
-            <DescriptionItem term="Event Type">{a.eventType}</DescriptionItem>
+            <DescriptionItem term="Event Type">
+              {(() => {
+                const Icon = EVENT_TYPE_ICONS[a.eventType.split(" - ")[0]];
+                return (
+                  <span className={styles.eventType}>
+                    {Icon && <Icon size={16} />}
+                    {a.eventType}
+                  </span>
+                );
+              })()}
+            </DescriptionItem>
             <DescriptionItem term="Group">{a.group}</DescriptionItem>
             <DescriptionItem term="Game System">{a.gameSystem}</DescriptionItem>
             <DescriptionItem term="Rules Edition">{a.rulesEdition}</DescriptionItem>
@@ -103,9 +113,7 @@ export function EventDetail({ gameId }: EventDetailProps): JSX.Element {
             <DescriptionItem term="Max Players">{a.maxPlayers}</DescriptionItem>
             <DescriptionItem term="Age Required">{a.ageRequired}</DescriptionItem>
             <DescriptionItem term="Experience Required">{a.experienceRequired}</DescriptionItem>
-            <DescriptionItem term="Tournament">
-              <BoolBadge value={a.tournament} />
-            </DescriptionItem>
+            <DescriptionItem term="Tournament">{a.tournament}</DescriptionItem>
             <DescriptionItem term="Round">
               {a.roundNumber} of {a.totalRounds}
             </DescriptionItem>
@@ -129,15 +137,9 @@ export function EventDetail({ gameId }: EventDetailProps): JSX.Element {
             <DescriptionItem term="Room">{a.roomName}</DescriptionItem>
             <DescriptionItem term="Table">{a.tableNumber}</DescriptionItem>
             <DescriptionItem term="Cost">${a.cost.toFixed(2)}</DescriptionItem>
-            <DescriptionItem term="Attendee Registration">
-              <Badge variant={a.attendeeRegistration === "ticketed" ? "filled" : "outline"}>
-                {a.attendeeRegistration}
-              </Badge>
-            </DescriptionItem>
+            <DescriptionItem term="Attendee Registration">{a.attendeeRegistration}</DescriptionItem>
             <DescriptionItem term="Tickets Available">{a.ticketsAvailable}</DescriptionItem>
-            <DescriptionItem term="Materials Provided">
-              <BoolBadge value={a.materialsProvided} />
-            </DescriptionItem>
+            <DescriptionItem term="Materials Provided">{a.materialsProvided}</DescriptionItem>
             <DescriptionItem term="Materials Required" span="full">
               {a.materialsRequired}
             </DescriptionItem>
@@ -152,8 +154,8 @@ export function EventDetail({ gameId }: EventDetailProps): JSX.Element {
           <h2 className={styles.sectionHeading}>CONTACT</h2>
           <DescriptionList>
             <DescriptionItem term="GMs">{a.gmNames}</DescriptionItem>
-            <DescriptionItem term="Website">{a.website || "—"}</DescriptionItem>
-            <DescriptionItem term="Email">{a.email || "—"}</DescriptionItem>
+            <DescriptionItem term="Website">{a.website}</DescriptionItem>
+            <DescriptionItem term="Email">{a.email}</DescriptionItem>
             <DescriptionItem term="Last Modified">
               {format(new Date(a.lastModified), "yyyy-MM-dd")}
             </DescriptionItem>

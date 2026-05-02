@@ -1,4 +1,7 @@
 .brandingTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-family: var(--font-display);
   font-size: 1.75rem;
   font-weight: 700;
@@ -40,6 +43,29 @@
 
 .nav a[data-status="active"] {
   color: var(--color-accent);
+}
+
+.footer {
+  padding: var(--space-2) var(--space-4);
+  border-top: 0.0625rem solid var(--color-ink-divider);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footerLink {
+  font-family: var(--font-slab);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.05rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-ink-faint);
+  transition: color var(--motion-hover);
+}
+
+.footerLink:hover {
+  color: var(--color-ink-muted);
 }
 
 @media (width <= 60rem) {

@@ -1,7 +1,7 @@
 .list {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-3);
+  gap: var(--space-3) var(--space-4);
   margin: 0;
 }
 
@@ -9,6 +9,26 @@
   grid-column: 1 / -1;
 }
 
+.dt {
+  font-family: var(--font-slab);
+  font-size: 0.75rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+  color: var(--color-ink-muted);
+  margin-bottom: var(--space-2);
+}
+
 .dd {
   margin: 0;
+}
+
+.full .dd {
+  max-width: 68ch;
+}
+
+.empty {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-ink-faint);
 }

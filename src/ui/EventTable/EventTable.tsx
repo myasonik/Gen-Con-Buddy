@@ -11,13 +11,12 @@ import {
 } from "@tanstack/react-table";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
-import { useTypeDisplay } from "../../hooks/useTypeDisplay";
 import { ColumnControlsPanel } from "./ColumnControlsPanel";
 import { ColumnActionsPopover } from "./ColumnActionsPopover";
 import { ColumnResizeDialog } from "./ColumnResizeDialog";
 import { announce } from "../../lib/announce";
 import type { Event } from "../../utils/types";
-import { COLUMNS, SORT_FIELD_BY_COL_ID, COL_ID_BY_SORT_FIELD, renderEventType } from "./columns";
+import { COLUMNS, SORT_FIELD_BY_COL_ID, COL_ID_BY_SORT_FIELD } from "./columns";
 import type { SharedColumnState } from "./types";
 import styles from "./EventTable.module.css";
 
@@ -42,15 +41,12 @@ export function EventTable({
 }: EventTableProps): JSX.Element {
   const internalVis = useColumnVisibility();
   const internalSizing = useColumnSizing();
-  const internalTypeDisplay = useTypeDisplay();
   const visibility = sharedColumnState?.visibility ?? internalVis.visibility;
   const toggleVisibility = sharedColumnState?.toggleVisibility ?? internalVis.toggle;
   const resetVisibility = sharedColumnState?.resetVisibility ?? internalVis.reset;
   const sizing = sharedColumnState?.sizing ?? internalSizing.sizing;
   const setSizing = sharedColumnState?.setSizing ?? internalSizing.setSizing;
   const resetSizing = sharedColumnState?.resetSizing ?? internalSizing.reset;
-  const typeDisplay = sharedColumnState?.typeDisplay ?? internalTypeDisplay.typeDisplay;
-  const setTypeDisplay = sharedColumnState?.setTypeDisplay ?? internalTypeDisplay.setTypeDisplay;
   // Unique prefix so anchor names don't collide when multiple EventTable instances are on the page
   const tableId = useId().replace(/:/g, "");
   const [resizeTarget, setResizeTarget] = useState<{
@@ -128,7 +124,6 @@ export function EventTable({
     data: events,
     columns: COLUMNS,
     columnResizeMode: "onChange",
-    meta: { typeDisplay },
     state: {
       columnVisibility: visibility,
       columnSizing: sizing,
@@ -151,8 +146,6 @@ export function EventTable({
     sizing,
     setSizing,
     resetSizing,
-    typeDisplay,
-    setTypeDisplay,
   };
 
   if (events.length === 0) {
@@ -234,11 +227,7 @@ export function EventTable({
             {table.getRowModel().rows.map((row) => (
               <tr key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {cell.column.id === "eventType"
-                      ? renderEventType(row.original.attributes.eventType, typeDisplay)
-                      : flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
+                  <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
                 ))}
               </tr>
             ))}

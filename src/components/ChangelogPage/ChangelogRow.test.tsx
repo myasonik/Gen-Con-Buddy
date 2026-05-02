@@ -95,7 +95,7 @@ test("fetches entry and shows content when opened", async () => {
   );
   renderRow();
   await user.click(await screen.findByText(/created/));
-  await expect(screen.findByText("Dragon Hunt")).resolves.toBeInTheDocument();
+  await expect(screen.findAllByText("Dragon Hunt")).resolves.not.toHaveLength(0);
 });
 
 test("calls onOpen when row is expanded", async () => {

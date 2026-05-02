@@ -1,0 +1,364 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-01T00:00:00Z",
+  "title": "Design System: Gen Con Buddy",
+  "extensions": {
+    "colorMeta": {
+      "surface-page": {
+        "role": "neutral",
+        "displayName": "Con Paper",
+        "canonical": "oklch(93.5% 0.014 80)",
+        "tonalRamp": [
+          "#1e1b12",
+          "#38321f",
+          "#5e5336",
+          "#8c8069",
+          "#b2a893",
+          "#d4cdb9",
+          "#e4ddd0",
+          "#f2ece0"
+        ]
+      },
+      "surface-panel": {
+        "role": "neutral",
+        "displayName": "Worn Tan",
+        "canonical": "oklch(88.5% 0.018 78)",
+        "tonalRamp": [
+          "#1e1b13",
+          "#383222",
+          "#5c5437",
+          "#8d8470",
+          "#b0a995",
+          "#cec7b6",
+          "#e4dccf",
+          "#f1eadf"
+        ]
+      },
+      "surface-row-alt": {
+        "role": "neutral",
+        "displayName": "Table Tint",
+        "canonical": "oklch(90.5% 0.016 79)",
+        "tonalRamp": [
+          "#1e1b12",
+          "#3a3321",
+          "#605941",
+          "#908570",
+          "#b4ac97",
+          "#d2cbbe",
+          "#ece5d5",
+          "#f5f0e7"
+        ]
+      },
+      "surface-hover": {
+        "role": "neutral",
+        "displayName": "Row Hover",
+        "canonical": "oklch(85.5% 0.020 77)",
+        "tonalRamp": [
+          "#1e1b12",
+          "#38311e",
+          "#5c5436",
+          "#8e8675",
+          "#b0a893",
+          "#cbc2b0",
+          "#dbd2c3",
+          "#f0eade"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Deep Ink",
+        "canonical": "oklch(21% 0.018 52)",
+        "tonalRamp": [
+          "#2a201a",
+          "#3e2e22",
+          "#573c2c",
+          "#6e5140",
+          "#8a6f5c",
+          "#a89080",
+          "#ccc3b8",
+          "#eae4db"
+        ]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Worn Ink",
+        "canonical": "oklch(45% 0.022 54)",
+        "tonalRamp": [
+          "#281e14",
+          "#3e2c1e",
+          "#63503f",
+          "#7c6754",
+          "#9a8872",
+          "#b8aa98",
+          "#d4ccbf",
+          "#ede8e0"
+        ]
+      },
+      "ink-faint": {
+        "role": "neutral",
+        "displayName": "Faded Ink",
+        "canonical": "oklch(62% 0.018 65)",
+        "tonalRamp": [
+          "#201d14",
+          "#3c3627",
+          "#5c543c",
+          "#7a7059",
+          "#988a7a",
+          "#b5ab9c",
+          "#d0cbbf",
+          "#e8e4da"
+        ]
+      },
+      "ink-border": {
+        "role": "neutral",
+        "displayName": "Ruled Line",
+        "canonical": "oklch(75% 0.016 72)",
+        "tonalRamp": [
+          "#1e1b15",
+          "#383129",
+          "#5e5548",
+          "#7d7567",
+          "#9e9688",
+          "#c2b5a5",
+          "#d4c9bb",
+          "#ece8e0"
+        ]
+      },
+      "ink-divider": {
+        "role": "neutral",
+        "displayName": "Ghost Line",
+        "canonical": "oklch(84% 0.012 75)",
+        "tonalRamp": [
+          "#1e1c14",
+          "#38331e",
+          "#5e5740",
+          "#8d877a",
+          "#a8a395",
+          "#c4c0b4",
+          "#d8d0c2",
+          "#ebe8e2"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Sienna",
+        "canonical": "oklch(46% 0.14 40)",
+        "tonalRamp": [
+          "#2b0e04",
+          "#4a1a08",
+          "#6b2c12",
+          "#954528",
+          "#bd6542",
+          "#d48462",
+          "#e8a888",
+          "#f5d6c0"
+        ]
+      },
+      "accent-deep": {
+        "role": "primary",
+        "displayName": "Deep Sienna",
+        "canonical": "oklch(38% 0.13 38)",
+        "tonalRamp": [
+          "#320e04",
+          "#55190a",
+          "#7c3a1e",
+          "#9d4b2c",
+          "#c06840",
+          "#d58862",
+          "#e8ab88",
+          "#f5d8c4"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "App title in the site header and any hero-scale heading. One use per screen. Cormorant Garamond 700 with OpenType ligatures and oldstyle figures."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Event name on the detail page. The primary H1 for a piece of content."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Filter fieldset headers (SEARCH, DAYS, PLAYERS), table column headers, EventDetail section headers (THE EVENT, LOGISTICS). Always uppercase."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Event descriptions, running content, form helper text. Max 68ch line length. Source Sans 3 for warm legibility at text scale."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Form field labels, metadata keys, column sub-labels. Zilla Slab at small scale. Always uppercase with tracked spacing."
+      },
+      "code": {
+        "displayName": "Code",
+        "purpose": "Event IDs, game system codes, timestamps. Courier Prime with tabular numbers — values that must read as official printed references."
+      }
+    },
+    "shadows": [
+      {
+        "name": "overlay-lift",
+        "value": "0 2px 8px rgba(42, 32, 26, 0.12)",
+        "purpose": "Popovers, dropdowns, toggletips. The minimum shadow to read as floating above the page."
+      },
+      {
+        "name": "modal-depth",
+        "value": "0 8px 32px rgba(42, 32, 26, 0.20)",
+        "purpose": "Dialogs and full modal overlays. Deeper shadow for elements that sit furthest from the page."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state",
+        "value": "80ms ease",
+        "purpose": "Default transition for all state changes: hover backgrounds, border-color shifts, color transitions. The whole system is this one value."
+      },
+      {
+        "name": "expand",
+        "value": "150ms ease-out",
+        "purpose": "Expand/collapse for AnimatedDetails and filter sidebar. Slightly longer to feel deliberate, not instant."
+      },
+      {
+        "name": "no-layout",
+        "value": "never",
+        "purpose": "Never animate layout properties (height, width, margin, padding). Animate opacity or transform instead."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sidebar-collapse",
+        "value": "768px",
+        "purpose": "Below this breakpoint, the filter sidebar collapses into a slide-out overlay."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single most-emphasized action on any surface. Add to Calendar, primary form submit.",
+      "html": "<button class=\"ds-btn-primary\">Add to Calendar</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 0.375rem; background-color: #954528; color: #f2ece0; font-family: 'Zilla Slab', Georgia, serif; font-size: 0.8125rem; font-weight: 600; line-height: 1.35; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.625rem 1.25rem; border: none; border-radius: 2px; cursor: pointer; transition: background-color 80ms ease; } .ds-btn-primary:hover { background-color: #7c3a1e; } .ds-btn-primary:focus-visible { outline: 2px solid #954528; outline-offset: 2px; background-color: #7c3a1e; } .ds-btn-primary:active { background-color: #6a3018; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Secondary actions: View on Gen Con, column visibility toggles, filter clear.",
+      "html": "<button class=\"ds-btn-secondary\">View on Gen Con</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; gap: 0.375rem; background-color: transparent; color: #2a201a; font-family: 'Zilla Slab', Georgia, serif; font-size: 0.8125rem; font-weight: 600; line-height: 1.35; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.625rem 1.25rem; border: 1px solid #c2b5a5; border-radius: 2px; cursor: pointer; transition: background-color 80ms ease, border-color 80ms ease; } .ds-btn-secondary:hover { background-color: #e4dccf; border-color: #63503f; } .ds-btn-secondary:focus-visible { outline: 2px solid #954528; outline-offset: 2px; background-color: #e4dccf; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Tertiary and inline controls: back navigation, close buttons, icon-only actions.",
+      "html": "<button class=\"ds-btn-ghost\">← Back to results</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 0.375rem; background-color: transparent; color: #63503f; font-family: 'Source Sans 3', system-ui, sans-serif; font-size: 1rem; font-weight: 400; line-height: 1.6; padding: 0.5rem 0.875rem; border: none; border-radius: 2px; cursor: pointer; transition: background-color 80ms ease; } .ds-btn-ghost:hover { background-color: #dbd2c3; } .ds-btn-ghost:focus-visible { outline: 2px solid #954528; outline-offset: 2px; }"
+    },
+    {
+      "name": "Filter Chip (Active)",
+      "kind": "chip",
+      "refersTo": "filter-chip-active",
+      "description": "Applied search filter — visible in the ActiveFilters bar. Dismissible.",
+      "html": "<span class=\"ds-chip-active\">RPG <button class=\"ds-chip-remove\" aria-label=\"Remove RPG filter\">×</button></span>",
+      "css": ".ds-chip-active { display: inline-flex; align-items: center; gap: 0.25rem; background-color: #954528; color: #f2ece0; font-family: 'Zilla Slab', Georgia, serif; font-size: 0.75rem; font-weight: 400; line-height: 1.4; letter-spacing: 0.05em; text-transform: uppercase; padding: 0.25rem 0.5rem 0.25rem 0.625rem; border-radius: 9999px; } .ds-chip-remove { background: none; border: none; color: #f2ece0; opacity: 0.7; cursor: pointer; font-size: 1rem; line-height: 1; padding: 0 0.125rem; border-radius: 9999px; transition: opacity 80ms ease; } .ds-chip-remove:hover { opacity: 1; } .ds-chip-remove:focus-visible { outline: 2px solid #f2ece0; outline-offset: 1px; }"
+    },
+    {
+      "name": "Filter Chip (Inactive)",
+      "kind": "chip",
+      "refersTo": "filter-chip",
+      "description": "Presentational tag for event types or metadata. Not dismissible.",
+      "html": "<span class=\"ds-chip\">Board Game</span>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; background-color: #e4dccf; color: #63503f; font-family: 'Zilla Slab', Georgia, serif; font-size: 0.75rem; font-weight: 400; line-height: 1.4; letter-spacing: 0.05em; text-transform: uppercase; padding: 0.25rem 0.625rem; border-radius: 9999px; }"
+    },
+    {
+      "name": "Text Input / Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Search keyword input, filter text fields. Label above, input below.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-label\" for=\"ds-input-demo\">Keywords</label><input class=\"ds-input\" id=\"ds-input-demo\" type=\"text\" placeholder=\"Game name, system, publisher...\" /></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 0.25rem; } .ds-label { font-family: 'Zilla Slab', Georgia, serif; font-size: 0.75rem; font-weight: 400; line-height: 1.4; letter-spacing: 0.05em; text-transform: uppercase; color: #63503f; } .ds-input { background-color: #f2ece0; color: #2a201a; font-family: 'Source Sans 3', system-ui, sans-serif; font-size: 1rem; font-weight: 400; line-height: 1.6; padding: 0.5rem 0.75rem; border: 1px solid #c2b5a5; border-radius: 2px; width: 100%; box-sizing: border-box; transition: border-color 80ms ease; } .ds-input::placeholder { color: #988a7a; } .ds-input:focus { outline: none; border-color: #2a201a; } .ds-input:focus-visible { outline: 2px solid #954528; outline-offset: 2px; border-color: #2a201a; } .ds-input:disabled { background-color: #e4dccf; color: #988a7a; cursor: not-allowed; }"
+    },
+    {
+      "name": "Navigation Header",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Site header: Display-scale app title with Courier Prime tagline, and Zilla Slab nav links.",
+      "html": "<header class=\"ds-header\" role=\"banner\"><div class=\"ds-brand\"><span class=\"ds-brand-name\">Gen Con Buddy</span><span class=\"ds-brand-tagline\">your guide to the best four days in gaming</span></div><nav class=\"ds-nav\"><a class=\"ds-nav-link ds-nav-link--active\" href=\"#\">Search</a><a class=\"ds-nav-link\" href=\"#\">Changelog</a></nav></header>",
+      "css": ".ds-header { display: flex; align-items: baseline; justify-content: space-between; padding: 1rem 1.5rem; background-color: #f2ece0; border-bottom: 1px solid #d8d0c2; gap: 1.5rem; } .ds-brand { display: flex; flex-direction: column; gap: 0.125rem; } .ds-brand-name { font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.01em; color: #2a201a; } .ds-brand-tagline { font-family: 'Courier Prime', 'Courier New', monospace; font-size: 0.8125rem; font-weight: 400; line-height: 1.5; color: #63503f; } .ds-nav { display: flex; align-items: center; gap: 1.5rem; } .ds-nav-link { font-family: 'Zilla Slab', Georgia, serif; font-size: 0.8125rem; font-weight: 600; line-height: 1.35; letter-spacing: 0.06em; text-transform: uppercase; color: #63503f; text-decoration: none; transition: color 80ms ease; border-radius: 2px; } .ds-nav-link:hover { color: #2a201a; } .ds-nav-link--active { color: #954528; } .ds-nav-link:focus-visible { outline: 2px solid #954528; outline-offset: 2px; }"
+    },
+    {
+      "name": "Event Table",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "The primary content surface. Alternating warm rows, slab serif headers, monospace event IDs.",
+      "html": "<table class=\"ds-table\"><thead><tr><th class=\"ds-th\">Event ID</th><th class=\"ds-th\">Title</th><th class=\"ds-th\">Type</th><th class=\"ds-th\">When</th></tr></thead><tbody><tr class=\"ds-tr\"><td class=\"ds-td ds-td--code\">RPG24010001</td><td class=\"ds-td\">Curse of the Crimson Throne</td><td class=\"ds-td\">RPG</td><td class=\"ds-td\">Thu 8:00am</td></tr><tr class=\"ds-tr ds-tr--alt\"><td class=\"ds-td ds-td--code\">BGM24005882</td><td class=\"ds-td\">Wingspan: European Expansion</td><td class=\"ds-td\">BGM</td><td class=\"ds-td\">Fri 2:00pm</td></tr><tr class=\"ds-tr\"><td class=\"ds-td ds-td--code\">TCG24022145</td><td class=\"ds-td\">Magic: The Gathering Sealed Draft</td><td class=\"ds-td\">TCG</td><td class=\"ds-td\">Sat 10:00am</td></tr></tbody></table>",
+      "css": ".ds-table { width: 100%; border-collapse: collapse; font-family: 'Source Sans 3', system-ui, sans-serif; font-size: 1rem; background-color: #f2ece0; } .ds-th { background-color: #e4dccf; color: #2a201a; font-family: 'Zilla Slab', Georgia, serif; font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid #d8d0c2; } .ds-tr { transition: background-color 80ms ease; } .ds-tr:hover { background-color: #dbd2c3; } .ds-tr--alt { background-color: #ece5d5; } .ds-tr--alt:hover { background-color: #dbd2c3; } .ds-td { padding: 0.625rem 0.75rem; color: #2a201a; border-bottom: 1px solid #d8d0c2; line-height: 1.5; } .ds-td--code { font-family: 'Courier Prime', 'Courier New', monospace; font-size: 0.875rem; color: #63503f; white-space: nowrap; font-variant-numeric: tabular-nums; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Good Rulebook",
+    "overview": "Every gamer knows the difference between a bad rulebook and a good one. The bad one is walls of text, amateur layout, inconsistent terminology. The good one is a pleasure to hold: warm paper, clear hierarchy, confident typography, organized by someone who respected the reader's intelligence. Gen Con Buddy is the good rulebook. It handles dense, complex information and makes it feel navigable rather than overwhelming.\n\nThe visual reference is the shelf of modern euro games: Root, Arcs, Old King's Crown, Ticket to Ride. Objects made with craft. Their colors come from ink on cardboard, not a UI kit. Their typography comes from printing tradition: slab serifs for catalog text, elegant display faces for titles, monospace for codes and references. Warmth comes from the paper itself.\n\nWhat this system explicitly rejects: the gray-on-white SaaS look; the corporate event app aesthetic that strips all personality; and the digital-retro gaming look that mistakes the medium for the subject.",
+    "keyCharacteristics": [
+      "Warm paper base, not white — cream stock that reads as physical before it reads as digital",
+      "Ink-and-cardboard color palette: three deliberate roles, nothing borrowed",
+      "Four-font typographic system, each with a distinct job — display, catalog, reading, data",
+      "Minimal rounding — game cards have corners, not pills",
+      "Flat by default — printed materials do not have shadows",
+      "Sienna accent, used sparingly — the color of a wooden meeple, not a call-to-action button"
+    ],
+    "rules": [
+      {
+        "name": "The Three Roles Rule",
+        "body": "Surface, ink, accent — that is the complete palette. Never add a fourth role. Semantic states are expressed through typographic weight and sienna combination, not additional hues. The restraint is what makes the sienna mean something.",
+        "section": "colors"
+      },
+      {
+        "name": "The No Pure Black Rule",
+        "body": "No #000000 or #ffffff anywhere in the system. Every neutral is tinted toward the warm orange-yellow axis (hue 50–80° in OKLCH). This keeps the system cohesive and analog-feeling at every tier.",
+        "section": "colors"
+      },
+      {
+        "name": "The Right Font for the Job Rule",
+        "body": "Cormorant for display character. Zilla Slab for catalog order. Source Sans 3 for long reads. Courier Prime for official records. Never substitute one for another's job.",
+        "section": "typography"
+      },
+      {
+        "name": "The Uppercase Threshold Rule",
+        "body": "Uppercase is only for Title and Label roles. Every other typographic role is sentence case or title case. Uppercase at body size reads as shouting; at 0.8125rem with appropriate tracking, it reads as print.",
+        "section": "typography"
+      },
+      {
+        "name": "The Print Is Flat Rule",
+        "body": "No decorative shadows on cards, rows, panels, or static UI elements. If it sits on the page, it has no shadow — it IS the page. Shadows appear only to answer a real spatial question: is this above the content or on it?",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use #f2ece0 as the page background everywhere. If something reads as white, it's wrong.",
+      "Do use Sienna (#954528) only for primary interactive affordances. Its rarity is what makes it readable as 'action.'",
+      "Do use Zilla Slab for every UI label, filter section header, and table column header.",
+      "Do use Courier Prime for any value that is a code, ID, reference number, or timestamp.",
+      "Do use the overlay lift shadow (0 2px 8px rgba(42,32,26,0.12)) for popovers and dropdowns, and nothing else.",
+      "Do keep button radius at 2px. The system's analog credibility depends on edges that feel cut, not molded.",
+      "Do set max line length to 68ch on body text.",
+      "Do use uppercase with letter-spacing: 0.06em for every Title and Label instance.",
+      "Do respect prefers-reduced-motion. All transitions are 80ms or less and should degrade gracefully to instant."
+    ],
+    "donts": [
+      "Don't use generic SaaS aesthetics: no gray-on-white, no rounded card shadows, no blue accent, no san-serif-everything.",
+      "Don't use corporate event app styling (Eventbrite, conference app templates). Functional neutrality is not this product's identity.",
+      "Don't use digital retro or pixel-art styling: no chiptune fonts, no neon-on-dark, no pixel grids.",
+      "Don't use fantasy or medieval theming: no parchment texture imagery, no Gothic letterforms, no sword-and-sorcery decoration.",
+      "Don't use #000000 or #ffffff anywhere.",
+      "Don't add a fourth color role. Surface, ink, and sienna are complete.",
+      "Don't use pill-shaped buttons. Pills are for filter chips — ephemeral, dismissible.",
+      "Don't use border-left as a colored accent stripe on any element.",
+      "Don't use Cormorant Garamond below 1.375rem.",
+      "Don't use Source Sans 3 for UI section headers or labels. That is Zilla Slab's job."
+    ]
+  }
+}

@@ -190,14 +190,14 @@ test("navigating back to page 1 omits page from URL and API call", async () => {
   expect(latestUrl!.searchParams.has("page")).toBe(false);
 });
 
-test("renders SEARCH fieldset in search form", async () => {
+test("renders keyword search input in the filter strip", async () => {
   await renderSearchPage("/");
-  expect(screen.getByRole("group", { name: "SEARCH" })).toBeInTheDocument();
+  expect(screen.getByRole("textbox", { name: "Search" })).toBeInTheDocument();
 });
 
-test("renders DAYS fieldset in search form", async () => {
+test("renders day toggles as a group in the filter strip", async () => {
   await renderSearchPage("/");
-  expect(screen.getByRole("group", { name: "DAYS" })).toBeInTheDocument();
+  expect(screen.getByRole("group", { name: "Days" })).toBeInTheDocument();
 });
 
 test("day tiles are checkboxes", async () => {
@@ -224,8 +224,8 @@ test("eventType column renders the event type", async () => {
     ),
   );
   await renderSearchPage();
-  await screen.findByRole("table");
-  expect(screen.getByText("RPG - Role Playing Game")).toBeInTheDocument();
+  const table = await screen.findByRole("table");
+  expect(within(table).getByText("RPG")).toBeInTheDocument();
 });
 
 describe("sidebar toggle and active filters", () => {
@@ -254,15 +254,15 @@ describe("sidebar toggle and active filters", () => {
     expect(btn).toHaveAttribute("aria-expanded", "true");
   });
 
-  it("clicking the backdrop closes the sidebar", async () => {
+  it("clicking the backdrop closes the drawer", async () => {
     const user = userEvent.setup();
     await renderSearchPage("/");
     const btn = screen.getByRole("button", { name: /Filters/ });
-    // Open the sidebar first
+    // Open the drawer first
     await user.click(btn);
     expect(btn).toHaveAttribute("aria-expanded", "true");
-    // The backdrop is the first child of <main> — aria-hidden, not in a11y tree
-    const backdrop = document.querySelector("main")?.firstElementChild as HTMLElement;
+    // Find the backdrop by data-testid — aria-hidden, not in a11y tree
+    const backdrop = document.querySelector("[data-testid='drawer-backdrop']") as HTMLElement;
     await user.click(backdrop);
     expect(btn).toHaveAttribute("aria-expanded", "false");
   });

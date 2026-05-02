@@ -1,0 +1,27 @@
+.controlsBar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: var(--space-3);
+}
+
+.tableView {
+  margin-top: -0.0625rem;
+}
+
+.mobileView {
+  display: none;
+}
+
+@media (width <= 60rem) {
+  .controlsBar {
+    display: none;
+  }
+
+  .tableView {
+    display: none;
+  }
+
+  .mobileView {
+    display: block;
+  }
+}

@@ -135,7 +135,7 @@ test("opening a row shows data immediately from cache without a loading flash", 
 
   // Open the row — staleTime: Infinity means no background refetch; count stays the same
   await user.click(await screen.findByText(/1 created/));
-  await screen.findByText("Dragon Hunt");
+  await screen.findAllByText("Dragon Hunt");
   expect(entryFetchCount).toBe(countAfterPrefetch);
 });
 

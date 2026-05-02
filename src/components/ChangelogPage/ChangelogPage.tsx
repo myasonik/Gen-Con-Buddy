@@ -1,19 +1,17 @@
-import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchChangelogList, fetchChangelogEntry } from "../../utils/api";
-import { useColumnVisibility } from "../../hooks/useColumnVisibility";
+import { useEffect } from "react";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
-import { useTypeDisplay } from "../../hooks/useTypeDisplay";
-import { ColumnControlsPanel } from "../../ui/EventTable/ColumnControlsPanel";
-import { ChangelogRow } from "./ChangelogRow";
+import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
+import { ColumnControlsPanel } from "../../ui/EventTable/ColumnControlsPanel";
+import { fetchChangelogEntry, fetchChangelogList } from "../../utils/api";
 import styles from "./ChangelogPage.module.css";
+import { ChangelogRow } from "./ChangelogRow";
 
 export function ChangelogPage(): JSX.Element {
   const queryClient = useQueryClient();
   const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility();
   const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
-  const { typeDisplay, setTypeDisplay } = useTypeDisplay();
   const sharedColumnState = {
     visibility,
     toggleVisibility,
@@ -21,8 +19,6 @@ export function ChangelogPage(): JSX.Element {
     sizing,
     setSizing,
     resetSizing,
-    typeDisplay,
-    setTypeDisplay,
   };
   const {
     data: summaries = [],
@@ -61,7 +57,7 @@ export function ChangelogPage(): JSX.Element {
         <>
           <h1 className={styles.heading}>Changelog</h1>
           <ColumnControlsPanel columnState={sharedColumnState} />
-          <section>
+          <section className={styles.changelogSection}>
             {summaries.map((summary, i) => (
               <ChangelogRow
                 key={summary.id}

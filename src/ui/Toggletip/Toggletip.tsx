@@ -1,4 +1,6 @@
 import { Popover } from "@base-ui/react/popover";
+import { Button } from "../Button/Button";
+import { QuestionMark } from "../icons/QuestionMark";
 import styles from "./Toggletip.module.css";
 
 interface ToggletipProps {
@@ -9,8 +11,8 @@ interface ToggletipProps {
 export function Toggletip({ label, message }: ToggletipProps): JSX.Element {
   return (
     <Popover.Root>
-      <Popover.Trigger aria-label={label} className={styles.button}>
-        ?
+      <Popover.Trigger render={<Button icon />} aria-label={label}>
+        <QuestionMark size={16} />
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner sideOffset={4} className={styles.positioner}>

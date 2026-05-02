@@ -4,6 +4,11 @@ import { Pagination } from "../Pagination/Pagination";
 import type { SearchParams } from "../../utils/types";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { EventTable } from "../../ui/EventTable/EventTable";
+import { EventListMobile } from "../../ui/EventTable/EventListMobile";
+import { ColumnControlsPanel } from "../../ui/EventTable/ColumnControlsPanel";
+import { useColumnVisibility } from "../../hooks/useColumnVisibility";
+import { useColumnSizing } from "../../hooks/useColumnSizing";
+import styles from "./SearchResults.module.css";
 
 interface SearchResultsProps {
   searchParams: SearchParams;
@@ -18,6 +23,16 @@ export function SearchResults({
 }: SearchResultsProps): JSX.Element {
   const page = searchParams.page ?? 1;
   const limit = searchParams.limit ?? 100;
+  const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility();
+  const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
+  const sharedColumnState = {
+    visibility,
+    toggleVisibility,
+    resetVisibility,
+    sizing,
+    setSizing,
+    resetSizing,
+  };
   const { data, isLoading, isError } = useQuery({
     queryKey: ["events", searchParams],
     queryFn: () => fetchEvents(searchParams),
@@ -31,21 +46,6 @@ export function SearchResults({
       activeSortField = field;
       activeSortDir = dir;
     }
-  }
-
-  function renderPagination(ariaLabel: string): JSX.Element | null {
-    if (!data || data.data.length === 0) {
-      return null;
-    }
-    return (
-      <Pagination
-        page={page}
-        limit={limit}
-        total={data.meta.total}
-        onNavigate={onNavigate}
-        aria-label={ariaLabel}
-      />
-    );
   }
 
   return (
@@ -63,14 +63,37 @@ export function SearchResults({
       )}
       {data && data.data.length > 0 && (
         <>
-          {renderPagination("Pagination, top")}
-          <EventTable
-            events={data.data}
-            activeSortField={activeSortField}
-            activeSortDir={activeSortDir}
-            onSort={onSort}
+          <div className={styles.controlsBar}>
+            <Pagination
+              page={page}
+              limit={limit}
+              total={data.meta.total}
+              onNavigate={onNavigate}
+              aria-label="Pagination, top"
+              singleLine
+            />
+          </div>
+          <ColumnControlsPanel columnState={sharedColumnState} />
+          <div className={styles.tableView}>
+            <EventTable
+              events={data.data}
+              activeSortField={activeSortField}
+              activeSortDir={activeSortDir}
+              onSort={onSort}
+              sharedColumnState={sharedColumnState}
+              showColumnControls={false}
+            />
+          </div>
+          <div className={styles.mobileView}>
+            <EventListMobile events={data.data} />
+          </div>
+          <Pagination
+            page={page}
+            limit={limit}
+            total={data.meta.total}
+            onNavigate={onNavigate}
+            aria-label="Pagination, bottom"
           />
-          {renderPagination("Pagination, bottom")}
         </>
       )}
     </section>

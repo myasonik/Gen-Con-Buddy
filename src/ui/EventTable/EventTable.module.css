@@ -77,6 +77,10 @@
   border-radius: var(--radius-card);
 }
 
+.visibilityPanel[open] {
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+}
+
 .visibilityPanel summary {
   cursor: pointer;
   padding: var(--space-2) var(--space-3);
@@ -98,16 +102,15 @@
   background-color: var(--color-surface-hover);
 }
 
-.visibilityPanel summary::after {
-  content: "▶";
-  display: inline-block;
-  transform: rotate(0deg);
-  transition: transform var(--motion-expand);
+.summaryChevron {
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
+  transition: transform var(--motion-expand);
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
-:where(.visibilityPanel[open]:not(.is-closing)) summary::after {
+:where(.visibilityPanel[open]:not(:global(.is-closing))) .summaryChevron {
   transform: rotate(90deg);
 }
 
@@ -117,17 +120,37 @@
   border-radius: var(--radius-card) var(--radius-card) 0 0;
 }
 
-.visibilityPanel fieldset {
+:where(.visibilityPanel) fieldset {
   border: none;
   margin: 0;
   padding: 0;
 }
 
 .columnFieldset {
-  padding: var(--space-2) var(--space-3) var(--space-3);
+  padding: var(--space-3);
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+}
+
+.columnGroup {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.columnGroupLegend {
+  display: block;
+  width: 100%;
+  padding: 0 0 var(--space-1) var(--space-2);
+  margin-bottom: var(--space-2);
+  border-bottom: 0.0625rem solid var(--color-ink-divider);
+  font-family: var(--font-slab);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06rem;
+  color: var(--color-ink-muted);
 }
 
 .columnList {
@@ -135,7 +158,7 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
 }
 
 .columnToggle {
@@ -152,6 +175,15 @@
   letter-spacing: 0.04rem;
   color: var(--color-ink);
   user-select: none;
+  overflow: hidden;
+}
+
+.columnLabel {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .columnToggle:hover {
@@ -163,8 +195,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 0.9375rem;
-  height: 0.9375rem;
+  width: 1.25rem;
+  height: 1.25rem;
   border: 0.0625rem solid var(--color-ink-border);
   border-radius: var(--radius-subtle);
   background: var(--color-surface-page);
@@ -174,6 +206,11 @@
     border-color var(--motion-hover),
     color var(--motion-hover);
   color: transparent;
+  overflow: hidden;
+}
+
+.columnCheckbox svg {
+  display: block;
 }
 
 .columnToggle input:checked + .columnCheckbox {
@@ -190,6 +227,9 @@
 .columnActions {
   display: flex;
   justify-content: flex-end;
+  border-top: 0.0625rem solid var(--color-ink-divider);
+  padding-top: var(--space-2);
+  margin-top: var(--space-1);
 }
 
 .sortIndicator {

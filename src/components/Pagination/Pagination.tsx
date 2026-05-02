@@ -52,6 +52,12 @@ export function Pagination({
     <nav aria-label={ariaLabel} className={styles.nav}>
       <div className={styles.controls}>
         {total.toLocaleString()} events
+        {!singleLine && isTruncated && (
+          <Toggletip
+            label="Why are some pages unavailable?"
+            message={`Results are capped at ${BACKEND_MAX_RESULTS.toLocaleString()} events. Narrow your search to see more.`}
+          />
+        )}
         <Button
           variant="secondary"
           className={styles.navButton}
@@ -61,9 +67,6 @@ export function Pagination({
         >
           <ChevronLeft size={14} aria-hidden="true" />
         </Button>
-        <span className={styles.pageLabel}>
-          Page {page} of {totalPages}
-        </span>
         {pageNumbers.map((p, i) =>
           p === "..." ? (
             <span key={`ellipsis-${i}`} aria-hidden className={styles.ellipsis}>
@@ -93,12 +96,6 @@ export function Pagination({
       </div>
       {!singleLine && (
         <div className={styles.summary}>
-          {isTruncated && (
-            <Toggletip
-              label="Why are some pages unavailable?"
-              message={`Results are capped at ${BACKEND_MAX_RESULTS.toLocaleString()} events. Narrow your search to see more.`}
-            />
-          )}
           <label className={styles.perPageLabel}>
             Per page
             <Select

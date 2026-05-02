@@ -116,6 +116,85 @@ test("removing a chip calls onValueChange without that code", async () => {
   expect(handleChange).toHaveBeenCalledWith("BGM");
 });
 
+test("dropdown opens when Tab moves focus into the input", async () => {
+  const user = userEvent.setup();
+  render(
+    <>
+      <button type="button">Previous element</button>
+      <EventTypeSelect value="" onValueChange={() => {}} />
+    </>,
+  );
+
+  await user.click(screen.getByRole("button", { name: "Previous element" }));
+  await user.tab();
+
+  expect(screen.getByRole("option", { name: /Board Game/ })).toBeInTheDocument();
+});
+
+test("pills expand to show full name when Tab moves focus into the input", async () => {
+  const user = userEvent.setup();
+  render(
+    <>
+      <button type="button">Previous element</button>
+      <EventTypeSelect value="RPG" onValueChange={() => {}} />
+    </>,
+  );
+
+  await user.click(screen.getByRole("button", { name: "Previous element" }));
+  await user.tab(); // → Remove RPG chip button
+  await user.tab(); // → input
+
+  const chip = screen.getByTestId("chip");
+  expect(chip).toHaveTextContent("Role Playing Game");
+});
+
+test("pills expand to show full name when Tab moves focus onto a chip button", async () => {
+  const user = userEvent.setup();
+  render(
+    <>
+      <button type="button">Previous element</button>
+      <EventTypeSelect value="RPG" onValueChange={() => {}} />
+    </>,
+  );
+
+  await user.click(screen.getByRole("button", { name: "Previous element" }));
+  await user.tab(); // → Remove RPG chip button (first tab stop in the component)
+
+  const chip = screen.getByTestId("chip");
+  expect(chip).toHaveTextContent("Role Playing Game");
+});
+
+test("dropdown closes when Tab moves focus out of the component", async () => {
+  const user = userEvent.setup();
+  render(
+    <>
+      <EventTypeSelect value="" onValueChange={() => {}} />
+      <button type="button">Next element</button>
+    </>,
+  );
+
+  await user.click(screen.getByRole("combobox", { name: "Event Type" }));
+  expect(screen.getByRole("option", { name: /Board Game/ })).toBeInTheDocument();
+
+  await user.tab();
+
+  expect(screen.queryByRole("option", { name: /Board Game/ })).not.toBeInTheDocument();
+});
+
+test("selected chip renders an icon alongside the code", () => {
+  render(<EventTypeSelect value="RPG" onValueChange={() => {}} />);
+  const chip = screen.getByTestId("chip");
+  expect(chip.querySelector("svg")).not.toBeNull();
+});
+
+test("dropdown list items render an icon for each option", async () => {
+  const user = userEvent.setup();
+  render(<EventTypeSelect value="" onValueChange={() => {}} />);
+  await user.click(screen.getByRole("combobox", { name: "Event Type" }));
+  const [firstOption] = screen.getAllByRole("option");
+  expect(firstOption.querySelector("svg")).not.toBeNull();
+});
+
 test("two mounted EventTypeSelect instances have distinct input ids", () => {
   render(
     <>

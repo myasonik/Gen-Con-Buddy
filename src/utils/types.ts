@@ -97,6 +97,8 @@ export interface SearchParams {
   ticketsAvailable?: string;
   lastModified?: string;
   days?: string;
+  timeStart?: string;
+  timeEnd?: string;
   sort?: string;
 }
 
@@ -120,12 +122,8 @@ export interface SearchFormValues {
   materialsProvided?: string;
   materialsRequired?: string;
   materialsRequiredDetails?: string;
-  startDateTimeStart?: string;
-  startDateTimeEnd?: string;
   durationMin?: string;
   durationMax?: string;
-  endDateTimeStart?: string;
-  endDateTimeEnd?: string;
   gmNames?: string;
   website?: string;
   email?: string;
@@ -148,6 +146,8 @@ export interface SearchFormValues {
   lastModifiedStart?: string;
   lastModifiedEnd?: string;
   days?: string;
+  timeStart?: string;
+  timeEnd?: string;
 }
 
 export interface ChangelogSummary {

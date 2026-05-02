@@ -231,3 +231,21 @@ test("action links appear after the event title and before THE EVENT section", a
     Node.DOCUMENT_POSITION_FOLLOWING,
   );
 });
+
+test("event type field renders an icon alongside the type code", async () => {
+  server.use(
+    http.get("/api/events/search", () => {
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId: "RPG24000001", eventType: "RPG" })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }),
+  );
+  renderEventDetail("RPG24000001");
+  await screen.findByText("THE EVENT");
+  const dd = screen.getByText("RPG").closest("dd");
+  expect(dd?.querySelector("svg")).not.toBeNull();
+});

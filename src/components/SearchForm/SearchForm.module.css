@@ -64,6 +64,18 @@
   padding: var(--space-3) var(--space-4);
 }
 
+.drawerFooter {
+  flex-shrink: 0;
+  padding: var(--space-3) var(--space-4);
+  border-top: 0.0625rem solid var(--color-ink-divider);
+}
+
+.applyButton {
+  width: 100%;
+  justify-content: center;
+  height: 2rem;
+}
+
 /* ─── Drawer Fieldsets ───────────────────────────────────────────────────── */
 .fieldset {
   margin: 0 0 var(--space-4) 0;
@@ -140,7 +152,6 @@
   flex-direction: column;
   flex: 1;
   min-width: 10rem;
-  max-width: 18rem;
 }
 
 .searchGroup {
@@ -180,7 +191,6 @@
 .eventTypeWrap {
   flex: 1;
   min-width: 8rem;
-  max-width: 16rem;
 }
 
 /* Day toggles */
@@ -280,24 +290,17 @@
 /* ─── Responsive ─────────────────────────────────────────────────────────── */
 @media (width <= 60rem) {
   .strip {
-    flex-direction: column;
-    align-items: stretch;
     padding: var(--space-2) var(--space-3);
   }
 
-  .searchField {
-    max-width: none;
-  }
-
-  .eventTypeWrap {
-    max-width: none;
-  }
-
+  /* Becomes a real flex item instead of display:contents;
+     flex-basis:100% forces it to always start on a new line after search+eventType */
   .dayTimeRow {
     display: flex;
     flex-flow: row wrap;
     align-items: flex-end;
     gap: var(--space-2);
+    flex: 1 1 100%;
   }
 
   .dayToggles {
@@ -324,12 +327,22 @@
     justify-content: flex-start;
   }
 
-  .stripActions {
-    margin-left: 0;
-    justify-content: flex-end;
-  }
-
   .drawer {
     width: min(80vw, var(--size-drawer));
+  }
+}
+
+/* Mobile: action buttons fill the full row */
+@media (width <= 40rem) {
+  .stripActions {
+    flex: 1 1 auto;
+    margin-left: 0;
+  }
+
+  .filtersButton,
+  .resetButton,
+  .searchButton {
+    flex: 1;
+    justify-content: center;
   }
 }

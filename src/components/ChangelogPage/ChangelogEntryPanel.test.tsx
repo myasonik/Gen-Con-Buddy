@@ -67,7 +67,19 @@ test("renders event table with created events when entry has data", async () => 
     deletedEvents: [],
   });
   renderPanelWithRouter(entry);
-  await expect(screen.findByText("Epic Quest")).resolves.toBeInTheDocument();
+  await expect(screen.findAllByText("Epic Quest")).resolves.not.toHaveLength(0);
+});
+
+test("renders mobile list alongside table for each event group", async () => {
+  const entry = makeChangelogEntry({
+    createdEvents: [makeEvent({ title: "Dragon Hunt" })],
+    updatedEvents: [],
+    deletedEvents: [],
+  });
+  renderPanelWithRouter(entry);
+  // EventTable cell + EventListMobile row both render the title
+  const titles = await screen.findAllByText("Dragon Hunt");
+  expect(titles).toHaveLength(2);
 });
 
 test("renders Created section heading with count", async () => {
@@ -77,7 +89,8 @@ test("renders Created section heading with count", async () => {
     deletedEvents: [],
   });
   renderPanelWithRouter(entry);
-  await expect(screen.findByText("Created (2)")).resolves.toBeInTheDocument();
+  const verbEl = await screen.findByText("Created");
+  expect(verbEl.closest("summary")).toHaveTextContent("2");
 });
 
 test("does not render Updated section when updatedEvents is empty", async () => {
@@ -87,8 +100,8 @@ test("does not render Updated section when updatedEvents is empty", async () => 
     deletedEvents: [],
   });
   renderPanelWithRouter(entry);
-  await screen.findByText("Created (1)");
-  expect(screen.queryByText(/Updated/)).not.toBeInTheDocument();
+  await screen.findByText("Created");
+  expect(screen.queryByText("Updated")).not.toBeInTheDocument();
 });
 
 test("does not render Deleted section when deletedEvents is empty", async () => {
@@ -98,8 +111,8 @@ test("does not render Deleted section when deletedEvents is empty", async () => 
     deletedEvents: [],
   });
   renderPanelWithRouter(entry);
-  await screen.findByText("Created (1)");
-  expect(screen.queryByText(/Deleted/)).not.toBeInTheDocument();
+  await screen.findByText("Created");
+  expect(screen.queryByText("Deleted")).not.toBeInTheDocument();
 });
 
 test("renders all three sections when all groups have events", async () => {
@@ -109,7 +122,17 @@ test("renders all three sections when all groups have events", async () => {
     deletedEvents: [makeEvent()],
   });
   renderPanelWithRouter(entry);
-  await expect(screen.findByText("Created (1)")).resolves.toBeInTheDocument();
-  expect(screen.getByText("Updated (1)")).toBeInTheDocument();
-  expect(screen.getByText("Deleted (1)")).toBeInTheDocument();
+  await expect(screen.findByText("Created")).resolves.toBeInTheDocument();
+  expect(screen.getByText("Updated")).toBeInTheDocument();
+  expect(screen.getByText("Deleted")).toBeInTheDocument();
+});
+
+test("shows empty state when all event arrays are empty", () => {
+  const entry = makeChangelogEntry({
+    createdEvents: [],
+    updatedEvents: [],
+    deletedEvents: [],
+  });
+  render(<ChangelogEntryPanel entry={entry} sharedColumnState={stubColumnState} />);
+  expect(screen.getByText("NO CHANGES")).toBeInTheDocument();
 });

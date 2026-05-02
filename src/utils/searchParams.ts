@@ -27,13 +27,32 @@ const DAY_DATES: Record<string, { start: string; end: string }> = {
   sun: { start: offsetDateTime(wed, 4), end: offsetDateTime(wed, 5) },
 };
 
-export function daysToStartDateTime(days: string): string | undefined {
-  const ranges = days
-    .split(",")
-    .filter((d) => DAY_DATES[d])
-    .map((d) => `[${DAY_DATES[d].start},${DAY_DATES[d].end}]`)
-    .join(",");
-  return ranges || undefined;
+/**
+ * Convert day codes (e.g. "thu,fri") and optional HH:MM time bounds into the
+ * bracket-range syntax the API expects for startDateTime.
+ *
+ * When timeStart/timeEnd are provided, each selected day gets a time-windowed
+ * range: [2024-08-01T09:00:00-04:00,2024-08-01T17:00:00-04:00]
+ * When omitted, each day gets its full midnight-to-midnight range.
+ */
+export function daysAndTimeToStartDateTime(
+  days: string,
+  timeStart?: string,
+  timeEnd?: string,
+): string | undefined {
+  const dayList = days.split(",").filter((d) => DAY_DATES[d]);
+  if (dayList.length === 0) {
+    return undefined;
+  }
+
+  const ranges = dayList.map((d) => {
+    const dayDate = DAY_DATES[d].start.substring(0, 10); // "2024-08-01"
+    const start = timeStart ? `${dayDate}T${timeStart}:00-04:00` : DAY_DATES[d].start;
+    const end = timeEnd ? `${dayDate}T${timeEnd}:00-04:00` : DAY_DATES[d].end;
+    return `[${start},${end}]`;
+  });
+
+  return ranges.join(",");
 }
 
 export function buildSearchParams(values: SearchFormValues): SearchParams {
@@ -86,13 +105,10 @@ export function buildSearchParams(values: SearchFormValues): SearchParams {
   set("materialsProvided", values.materialsProvided);
   set("materialsRequired", values.materialsRequired);
   set("materialsRequiredDetails", values.materialsRequiredDetails);
-  if (values.days) {
-    params.days = values.days;
-  } else {
-    setDateRange("startDateTime", values.startDateTimeStart, values.startDateTimeEnd);
-  }
+  set("days", values.days);
+  set("timeStart", values.timeStart);
+  set("timeEnd", values.timeEnd);
   setRange("duration", values.durationMin, values.durationMax);
-  setDateRange("endDateTime", values.endDateTimeStart, values.endDateTimeEnd);
   set("gmNames", values.gmNames);
   set("website", values.website);
   set("email", values.email);
@@ -144,8 +160,6 @@ export function parseSearchParams(params: SearchParams): SearchFormValues {
 
   const minPlayers = parseRange(params.minPlayers);
   const maxPlayers = parseRange(params.maxPlayers);
-  const startDateTime = parseDateRange(params.startDateTime);
-  const endDateTime = parseDateRange(params.endDateTime);
   const duration = parseRange(params.duration);
   const roundNumber = parseRange(params.roundNumber);
   const totalRounds = parseRange(params.totalRounds);
@@ -173,12 +187,8 @@ export function parseSearchParams(params: SearchParams): SearchFormValues {
     materialsProvided: params.materialsProvided,
     materialsRequired: params.materialsRequired,
     materialsRequiredDetails: params.materialsRequiredDetails,
-    startDateTimeStart: !params.days && params.startDateTime ? startDateTime.start : undefined,
-    startDateTimeEnd: !params.days && params.startDateTime ? startDateTime.end : undefined,
     durationMin: params.duration ? duration.min : undefined,
     durationMax: params.duration ? duration.max : undefined,
-    endDateTimeStart: params.endDateTime ? endDateTime.start : undefined,
-    endDateTimeEnd: params.endDateTime ? endDateTime.end : undefined,
     gmNames: params.gmNames,
     website: params.website,
     email: params.email,
@@ -201,5 +211,7 @@ export function parseSearchParams(params: SearchParams): SearchFormValues {
     lastModifiedStart: params.lastModified ? lastModified.start : undefined,
     lastModifiedEnd: params.lastModified ? lastModified.end : undefined,
     days: params.days,
+    timeStart: params.timeStart,
+    timeEnd: params.timeEnd,
   };
 }

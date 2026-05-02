@@ -102,6 +102,16 @@ test("renders empty state when no events are returned", async () => {
   await expect(screen.findByText("NO QUESTS FOUND")).resolves.toBeInTheDocument();
 });
 
+test("renders empty state when API omits data field from response", async () => {
+  server.use(
+    http.get("/api/events/search", () =>
+      HttpResponse.json({ meta: { total: 0 }, links: { self: "" }, error: null }),
+    ),
+  );
+  renderSearchResults();
+  await expect(screen.findByText("NO QUESTS FOUND")).resolves.toBeInTheDocument();
+});
+
 test("title column is visible by default and shows event title", async () => {
   server.use(
     http.get("/api/events/search", () => {
@@ -316,7 +326,7 @@ test("calls onNavigate when Next is clicked", async () => {
   renderSearchResults({ page: 1 }, onNavigate);
   // wait for both pagination navs to render
   await screen.findByRole("navigation", { name: "Pagination, top" });
-  await user.click(screen.getAllByRole("button", { name: "Next ▶" })[0]);
+  await user.click(screen.getAllByRole("button", { name: "Next" })[0]);
   expect(onNavigate).toHaveBeenCalledWith(2, 100);
 });
 

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { clsx } from "clsx";
+import { Wanted } from "../icons/Wanted";
 import styles from "./DescriptionList.module.css";
 
 interface DescriptionListProps {
@@ -13,7 +14,7 @@ export function DescriptionList({ children, className }: DescriptionListProps): 
 
 interface DescriptionItemProps {
   term: ReactNode;
-  children: ReactNode;
+  children?: ReactNode;
   span?: "full";
   className?: string;
 }
@@ -24,10 +25,21 @@ export function DescriptionItem({
   span,
   className,
 }: DescriptionItemProps): JSX.Element {
+  const isEmpty = children === null || children === undefined || children === "";
+
   return (
     <div data-span={span} className={clsx(span === "full" ? styles.full : undefined, className)}>
-      <dt>{term}</dt>
-      <dd className={styles.dd}>{children}</dd>
+      <dt className={styles.dt}>{term}</dt>
+      <dd className={styles.dd}>
+        {isEmpty ? (
+          <span className={styles.empty}>
+            <Wanted size={28} />
+            <span className="sr-only">not available</span>
+          </span>
+        ) : (
+          children
+        )}
+      </dd>
     </div>
   );
 }

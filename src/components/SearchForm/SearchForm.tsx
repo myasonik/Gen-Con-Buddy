@@ -80,7 +80,7 @@ export function SearchForm({ values, onSearch }: SearchFormProps): JSX.Element {
 
   return (
     <Dialog.Root>
-      <form onSubmit={handleSubmit(onSearch)} className={styles.formRoot}>
+      <form id="search-form" onSubmit={handleSubmit(onSearch)} className={styles.formRoot}>
         {/* Primary filter strip */}
         <div className={styles.strip}>
           {/* Keyword search */}
@@ -105,7 +105,7 @@ export function SearchForm({ values, onSearch }: SearchFormProps): JSX.Element {
             <EventTypeSelect value={eventType} onValueChange={(v) => setValue("eventType", v)} />
           </div>
 
-          {/* Day toggles + Time range */}
+          {/* Day toggles + Time range + actions grouped so they share line 2 at narrow widths */}
           <div className={styles.dayTimeRow}>
             <div className={styles.dayField}>
               <span aria-hidden="true" className={styles.stripLabel}>
@@ -163,28 +163,29 @@ export function SearchForm({ values, onSearch }: SearchFormProps): JSX.Element {
                 />
               </div>
             </div>
-          </div>
 
-          {/* Strip actions */}
-          <div className={styles.stripActions}>
-            <Dialog.Trigger
-              render={
-                <Button type="button" variant="secondary" className={styles.filtersButton}>
-                  <SlidersHorizontal size={14} aria-hidden="true" /> Filters
-                </Button>
-              }
-            />
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => reset(EMPTY_VALUES)}
-              className={styles.resetButton}
-            >
-              <RotateCcw size={14} aria-hidden="true" /> Reset
-            </Button>
-            <Button type="submit" variant="primary" className={styles.searchButton}>
-              <Search size={14} aria-hidden="true" /> Search
-            </Button>
+            {/* Strip actions — inside dayTimeRow so they share line 2 at narrow widths;
+                at desktop dayTimeRow is display:contents so this becomes a strip-level flex item */}
+            <div className={styles.stripActions}>
+              <Dialog.Trigger
+                render={
+                  <Button type="button" variant="secondary" className={styles.filtersButton}>
+                    <SlidersHorizontal size={14} aria-hidden="true" /> Filters
+                  </Button>
+                }
+              />
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => reset(EMPTY_VALUES)}
+                className={styles.resetButton}
+              >
+                <RotateCcw size={14} aria-hidden="true" /> Reset
+              </Button>
+              <Button type="submit" variant="primary" className={styles.searchButton}>
+                <Search size={14} aria-hidden="true" /> Search
+              </Button>
+            </div>
           </div>
         </div>
       </form>
@@ -449,6 +450,21 @@ export function SearchForm({ values, onSearch }: SearchFormProps): JSX.Element {
                 </RangeField>
               </div>
             </fieldset>
+          </div>
+
+          <div className={styles.drawerFooter}>
+            <Dialog.Close
+              render={
+                <Button
+                  type="submit"
+                  form="search-form"
+                  variant="primary"
+                  className={styles.applyButton}
+                >
+                  Apply Filters
+                </Button>
+              }
+            />
           </div>
         </Dialog.Popup>
       </Dialog.Portal>

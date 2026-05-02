@@ -1,23 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Meeple } from "../icons/Meeple";
-import { MeepleGroup } from "../icons/MeepleGroup";
-import { MeepleArmy } from "../icons/MeepleArmy";
 import { EXP } from "../../utils/enums";
 import type { Event } from "../../utils/types";
-
-export function playerCountIcon(
-  count: number,
-): typeof Meeple | typeof MeepleGroup | typeof MeepleArmy {
-  if (count === 1) {
-    return Meeple;
-  }
-  if (count <= 4) {
-    return MeepleGroup;
-  }
-  return MeepleArmy;
-}
+import { EVENT_TYPE_ICONS } from "../icons/eventTypeIcons";
+import styles from "./columns.module.css";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData, TValue> {
@@ -33,7 +20,7 @@ export const COLUMNS: ColumnDef<Event>[] = [
     cell: ({ row }) => {
       const { gameId } = row.original.attributes;
       return (
-        <Link to="/event/$id" params={{ id: gameId }}>
+        <Link to="/event/$id" params={{ id: gameId }} className={styles.gameIdLink}>
           {gameId}
         </Link>
       );
@@ -46,7 +33,7 @@ export const COLUMNS: ColumnDef<Event>[] = [
     cell: ({ row }) => {
       const { gameId, title } = row.original.attributes;
       return (
-        <Link to="/event/$id" params={{ id: gameId }}>
+        <Link to="/event/$id" params={{ id: gameId }} className={styles.tableLink}>
           {title}
         </Link>
       );
@@ -56,7 +43,16 @@ export const COLUMNS: ColumnDef<Event>[] = [
     id: "eventType",
     header: "Type",
     meta: { sortField: "eventType" },
-    cell: ({ row }) => <>{row.original.attributes.eventType}</>,
+    cell: ({ row }) => {
+      const { eventType } = row.original.attributes;
+      const Icon = EVENT_TYPE_ICONS[eventType.split(" - ")[0]];
+      return (
+        <span className={styles.typeCell}>
+          {Icon && <Icon size={14} />}
+          {eventType}
+        </span>
+      );
+    },
   },
   {
     id: "group",
@@ -92,31 +88,13 @@ export const COLUMNS: ColumnDef<Event>[] = [
     id: "minPlayers",
     header: "Min Players",
     meta: { sortField: "minPlayers" },
-    cell: ({ row }) => {
-      const count = row.original.attributes.minPlayers;
-      const Icon = playerCountIcon(count);
-      return (
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-          <Icon aria-hidden="true" size={14} />
-          {count}
-        </span>
-      );
-    },
+    cell: ({ row }) => <>{row.original.attributes.minPlayers}</>,
   },
   {
     id: "maxPlayers",
     header: "Max Players",
     meta: { sortField: "maxPlayers" },
-    cell: ({ row }) => {
-      const count = row.original.attributes.maxPlayers;
-      const Icon = playerCountIcon(count);
-      return (
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-          <Icon aria-hidden="true" size={14} />
-          {count}
-        </span>
-      );
-    },
+    cell: ({ row }) => <>{row.original.attributes.maxPlayers}</>,
   },
   {
     id: "ageRequired",
@@ -260,13 +238,68 @@ export const COLUMNS: ColumnDef<Event>[] = [
     id: "ticketsAvailable",
     header: "Tickets Available",
     meta: { sortField: "ticketsAvailable" },
-    cell: ({ row }) => <>{row.original.attributes.ticketsAvailable}</>,
+    cell: ({ row }) => {
+      const n = row.original.attributes.ticketsAvailable;
+      return n === 0 ? <span className={styles.soldOut}>Sold out</span> : <>{n}</>;
+    },
   },
   {
     id: "lastModified",
     header: "Last Modified",
     meta: { sortField: "lastModified" },
     cell: ({ row }) => <>{format(new Date(row.original.attributes.lastModified), "yyyy-MM-dd")}</>,
+  },
+];
+
+export const COLUMN_GROUPS: { label: string; columnIds: string[] }[] = [
+  {
+    label: "The Event",
+    columnIds: [
+      "gameId",
+      "title",
+      "eventType",
+      "group",
+      "shortDescription",
+      "longDescription",
+      "gameSystem",
+      "rulesEdition",
+      "specialCategory",
+    ],
+  },
+  {
+    label: "Players",
+    columnIds: [
+      "minPlayers",
+      "maxPlayers",
+      "ageRequired",
+      "experienceRequired",
+      "tournament",
+      "roundNumber",
+      "totalRounds",
+    ],
+  },
+  {
+    label: "Logistics",
+    columnIds: [
+      "day",
+      "startDateTime",
+      "endDateTime",
+      "duration",
+      "minimumPlayTime",
+      "location",
+      "roomName",
+      "tableNumber",
+      "cost",
+      "attendeeRegistration",
+      "ticketsAvailable",
+      "materialsProvided",
+      "materialsRequired",
+      "materialsRequiredDetails",
+    ],
+  },
+  {
+    label: "Contact",
+    columnIds: ["gmNames", "website", "email", "lastModified"],
   },
 ];
 

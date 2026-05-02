@@ -14,15 +14,6 @@
   justify-content: flex-end;
 }
 
-.pageLabel {
-  font-family: var(--font-slab);
-  font-size: 0.8125rem;
-  font-weight: 400;
-  letter-spacing: 0.04rem;
-  color: var(--color-ink-muted);
-  white-space: nowrap;
-}
-
 .ellipsis {
   padding: 0 var(--space-1);
   color: var(--color-ink-faint);

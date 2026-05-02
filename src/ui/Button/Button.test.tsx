@@ -9,6 +9,7 @@ import {
   createMemoryHistory,
 } from "@tanstack/react-router";
 import { Button } from "./Button";
+import styles from "./Button.module.css";
 
 async function renderWithRouter(ui: React.ReactNode): Promise<void> {
   const rootRoute = createRootRoute({ component: () => <>{ui}</> });
@@ -61,6 +62,41 @@ describe("button", () => {
       pointerEventsCheck: 0,
     });
     expect(handleClick).not.toHaveBeenCalled();
+  });
+});
+
+describe("size prop", () => {
+  it("does not apply large class by default", () => {
+    render(<Button>Click me</Button>);
+    expect(screen.getByRole("button")).not.toHaveClass(styles.large);
+  });
+
+  it("applies large class when size='large'", () => {
+    render(<Button size="large">Click me</Button>);
+    expect(screen.getByRole("button")).toHaveClass(styles.large);
+  });
+});
+
+describe("icon prop", () => {
+  it("defaults to secondary variant when icon is set without explicit variant", () => {
+    render(<Button icon aria-label="Close" />);
+    const btn = screen.getByRole("button");
+    expect(btn).toHaveClass(styles.secondary);
+    expect(btn).toHaveClass(styles.icon);
+  });
+
+  it("uses the explicit variant when combined with icon", () => {
+    render(<Button icon variant="ghost" aria-label="Close" />);
+    const btn = screen.getByRole("button");
+    expect(btn).toHaveClass(styles.ghost);
+    expect(btn).toHaveClass(styles.icon);
+  });
+
+  it("uses primary variant when icon is combined with explicit primary", () => {
+    render(<Button icon variant="primary" aria-label="Close" />);
+    const btn = screen.getByRole("button");
+    expect(btn).toHaveClass(styles.primary);
+    expect(btn).toHaveClass(styles.icon);
   });
 });
 

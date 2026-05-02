@@ -62,3 +62,26 @@ test("renders a list with accessible label when filters are active", () => {
   render(<ActiveFilters searchParams={{ filter: "dragon" }} onRemove={() => {}} />);
   expect(screen.getByRole("list", { name: "Active filters" })).toBeInTheDocument();
 });
+
+test("renders icon before label when filter has an icon", () => {
+  // tournament: "Yes" → Trophy icon wired in via getActiveFilters
+  const { container } = render(
+    <ActiveFilters
+      searchParams={{ tournament: "Yes" }}
+      onRemove={vi.fn<(filter: ActiveFilter) => void>()}
+    />,
+  );
+  expect(container.querySelector("svg")).not.toBeNull();
+  expect(screen.getByText(/Tournament: Yes/)).toBeInTheDocument();
+});
+
+test("renders no svg when filter has no icon", () => {
+  // title has no icon assigned in FILTER_DEFS
+  const { container } = render(
+    <ActiveFilters
+      searchParams={{ title: "dragon" }}
+      onRemove={vi.fn<(filter: ActiveFilter) => void>()}
+    />,
+  );
+  expect(container.querySelector("svg")).toBeNull();
+});

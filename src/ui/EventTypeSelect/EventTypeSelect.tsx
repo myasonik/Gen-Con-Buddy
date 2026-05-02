@@ -1,6 +1,8 @@
 import { useState, useId, useRef } from "react";
+import { ChevronDown, Check } from "lucide-react";
 import { Combobox } from "@base-ui/react/combobox";
 import { EVENT_TYPES } from "../../utils/enums";
+import { EVENT_TYPE_ICONS } from "../icons/eventTypeIcons";
 import styles from "./EventTypeSelect.module.css";
 
 export interface EventTypeSelectProps {
@@ -34,7 +36,16 @@ export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps):
   }
 
   return (
-    <div className={styles.root}>
+    <div
+      className={styles.root}
+      onFocus={() => setOpen(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+          setOpen(false);
+          setFilterText("");
+        }
+      }}
+    >
       <Combobox.Root
         multiple
         open={open}
@@ -64,27 +75,31 @@ export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps):
           }}
         >
           <div className={styles.inputGroupInner}>
-            {selectedCodes.map((code) => (
-              <div key={code} data-testid="chip" className={styles.chip}>
-                <span className={styles.chipText}>
-                  {code}
-                  {open && (
-                    <span>
-                      {" – "}
-                      {EVENT_TYPES[code]?.replace(/^[A-Z]+ - /, "")}
-                    </span>
-                  )}
-                </span>
-                <button
-                  type="button"
-                  className={styles.chipRemove}
-                  aria-label={`Remove ${code}`}
-                  onClick={() => removeCode(code)}
-                >
-                  ×
-                </button>
-              </div>
-            ))}
+            {selectedCodes.map((code) => {
+              const ChipIcon = EVENT_TYPE_ICONS[code];
+              return (
+                <div key={code} data-testid="chip" className={styles.chip}>
+                  {ChipIcon && <ChipIcon size={12} />}
+                  <span className={styles.chipText}>
+                    {code}
+                    {open && (
+                      <span>
+                        {" – "}
+                        {EVENT_TYPES[code]?.replace(/^[A-Z]+ - /, "")}
+                      </span>
+                    )}
+                  </span>
+                  <button
+                    type="button"
+                    className={styles.chipRemove}
+                    aria-label={`Remove ${code}`}
+                    onClick={() => removeCode(code)}
+                  >
+                    ×
+                  </button>
+                </div>
+              );
+            })}
             <Combobox.Input
               ref={inputRef}
               id={inputId}
@@ -102,20 +117,26 @@ export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps):
             />
           </div>
           <Combobox.Trigger className={styles.trigger} aria-label="Toggle event type list">
-            ▾
+            <ChevronDown size={14} aria-hidden="true" />
           </Combobox.Trigger>
         </Combobox.InputGroup>
         {open && (
           <Combobox.List className={styles.list}>
-            {filteredOptions.map(({ code, name }) => (
-              <Combobox.Item key={code} value={code} aria-label={name} className={styles.item}>
-                <span aria-hidden className={styles.itemBadge}>
-                  {code}
-                </span>
-                <span className={styles.itemName}>{name}</span>
-                <Combobox.ItemIndicator className={styles.itemIndicator}>✓</Combobox.ItemIndicator>
-              </Combobox.Item>
-            ))}
+            {filteredOptions.map(({ code, name }) => {
+              const ItemIcon = EVENT_TYPE_ICONS[code];
+              return (
+                <Combobox.Item key={code} value={code} aria-label={name} className={styles.item}>
+                  {ItemIcon && <ItemIcon size={16} aria-hidden="true" />}
+                  <span aria-hidden className={styles.itemBadge}>
+                    {code}
+                  </span>
+                  <span className={styles.itemName}>{name}</span>
+                  <Combobox.ItemIndicator className={styles.itemIndicator}>
+                    <Check size={12} aria-hidden="true" />
+                  </Combobox.ItemIndicator>
+                </Combobox.Item>
+              );
+            })}
           </Combobox.List>
         )}
       </Combobox.Root>

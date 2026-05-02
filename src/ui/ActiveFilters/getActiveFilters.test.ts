@@ -1,5 +1,12 @@
 import { expect, test } from "vitest";
 import { getActiveFilters } from "./getActiveFilters";
+import { DiceTwentyFacesTwenty } from "../icons/DiceTwentyFacesTwenty";
+import { RollingDices } from "../icons/RollingDices";
+import { Calendar } from "../icons/Calendar";
+import { Hourglass } from "../icons/Hourglass";
+import { Trophy } from "../icons/Trophy";
+import { Coins } from "../icons/Coins";
+import { MagnifyingGlass } from "../icons/MagnifyingGlass";
 
 test("returns empty array when no filters are set", () => {
   expect(getActiveFilters({})).toStrictEqual([]);
@@ -141,11 +148,29 @@ test("duration range with only max", () => {
   expect(chip.label).toBe("Duration: –4 hrs");
 });
 
-test("startDateTime date range formats dates", () => {
-  const [chip] = getActiveFilters({
-    startDateTime: "[2024-08-02T00:00:00Z,2024-08-03T00:00:00Z]",
+test("timeStart and timeEnd produce a combined time range chip", () => {
+  const [chip] = getActiveFilters({ timeStart: "09:00", timeEnd: "17:00" });
+  expect(chip.id).toBe("timeRange");
+  expect(chip.label).toBe("9 AM–5 PM");
+});
+
+test("only timeStart produces an 'After' chip", () => {
+  const [chip] = getActiveFilters({ timeStart: "09:00" });
+  expect(chip.id).toBe("timeRange");
+  expect(chip.label).toBe("After 9 AM");
+});
+
+test("only timeEnd produces a 'Before' chip", () => {
+  const [chip] = getActiveFilters({ timeEnd: "17:00" });
+  expect(chip.id).toBe("timeRange");
+  expect(chip.label).toBe("Before 5 PM");
+});
+
+test("time range chip remove clears both timeStart and timeEnd", () => {
+  const [chip] = getActiveFilters({ timeStart: "09:00", timeEnd: "17:00", title: "foo" });
+  expect(chip.remove({ timeStart: "09:00", timeEnd: "17:00", title: "foo" })).toStrictEqual({
+    title: "foo",
   });
-  expect(chip.label).toMatch(/^Start:/);
 });
 
 test("plain string params show their value", () => {
@@ -184,4 +209,56 @@ test("materialsRequired uses YES_NO enum for label", () => {
 test("materialsRequired: No value produces correct chip", () => {
   const [chip] = getActiveFilters({ materialsRequired: "No" });
   expect(chip.label).toBe("Materials required: No");
+});
+
+// ── Icon assertions ────────────────────────────────────────────────────────
+
+test("eventType:RPG chip has DiceTwentyFacesTwenty icon", () => {
+  const [chip] = getActiveFilters({ eventType: "RPG" });
+  expect(chip.icon).toBe(DiceTwentyFacesTwenty);
+});
+
+test("eventType:BGM chip has RollingDices icon", () => {
+  const [chip] = getActiveFilters({ eventType: "BGM" });
+  expect(chip.icon).toBe(RollingDices);
+});
+
+test("days chip has Calendar icon", () => {
+  const [chip] = getActiveFilters({ days: "fri" });
+  expect(chip.icon).toBe(Calendar);
+});
+
+test("timeRange chip has Hourglass icon", () => {
+  const [chip] = getActiveFilters({ timeStart: "09:00" });
+  expect(chip.icon).toBe(Hourglass);
+});
+
+test("duration chip has Hourglass icon", () => {
+  const [chip] = getActiveFilters({ duration: "[1,4]" });
+  expect(chip.icon).toBe(Hourglass);
+});
+
+test("tournament chip has Trophy icon", () => {
+  const [chip] = getActiveFilters({ tournament: "Yes" });
+  expect(chip.icon).toBe(Trophy);
+});
+
+test("cost chip has Coins icon", () => {
+  const [chip] = getActiveFilters({ cost: "[0,5]" });
+  expect(chip.icon).toBe(Coins);
+});
+
+test("filter (search) chip has MagnifyingGlass icon", () => {
+  const [chip] = getActiveFilters({ filter: "dragon" });
+  expect(chip.icon).toBe(MagnifyingGlass);
+});
+
+test("title chip has no icon", () => {
+  const [chip] = getActiveFilters({ title: "dragon" });
+  expect(chip.icon).toBeUndefined();
+});
+
+test("gmNames chip has no icon", () => {
+  const [chip] = getActiveFilters({ gmNames: "Alice" });
+  expect(chip.icon).toBeUndefined();
 });

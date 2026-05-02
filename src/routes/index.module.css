@@ -1,43 +1,7 @@
 .page {
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto 1fr auto;
   height: 100dvh;
-}
-
-.shell {
-  display: grid;
-  grid-template-columns: var(--size-sidebar) 1fr;
-  overflow: hidden;
-  transition: grid-template-columns var(--motion-expand);
-}
-
-.shell[data-sidebar-open="false"] {
-  grid-template-columns: 0 1fr;
-}
-
-.resultsToolbar {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-1);
-}
-
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  overflow-y: scroll;
-  background: white;
-  box-shadow: 0.25rem 0 1rem rgba(0, 0, 0, 0.15);
-  z-index: var(--z-content);
-}
-
-.shell[data-sidebar-open="false"] .sidebar {
-  visibility: hidden;
-}
-
-.results {
-  overflow-y: scroll;
-  padding: var(--space-3);
 }
 
 .header {
@@ -45,52 +9,39 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-2) var(--space-4);
+  background: var(--color-surface-panel);
+  border-bottom: 0.0625rem solid var(--color-ink-divider);
 }
 
-/* backdrop is desktop-invisible; shown by mobile media query */
-.backdrop {
-  display: none;
+.shell {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-@media (width <= 48rem) {
+.results {
+  flex: 1;
+  overflow-y: scroll;
+  padding: var(--space-3) var(--space-4);
+}
+
+@media (width <= 60rem) {
   .page {
     height: auto;
     min-height: 100dvh;
   }
 
+  .header {
+    flex-wrap: wrap;
+    padding: var(--space-2) var(--space-3);
+  }
+
   .shell {
-    display: block;
+    overflow: visible;
   }
 
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: min(80vw, var(--size-sidebar));
-    z-index: var(--z-modal);
-    overflow-y: scroll;
-    transform: translateX(-100%);
-    transition: transform var(--motion-expand);
-  }
-
-  .shell[data-sidebar-open="true"] .sidebar {
-    transform: translateX(0);
-    visibility: visible;
-  }
-
-  .shell[data-sidebar-open="false"] .sidebar {
-    visibility: hidden;
-  }
-
-  .backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: calc(var(--z-modal) - 1);
-  }
-
-  .shell[data-sidebar-open="true"] .backdrop {
-    display: block;
+  .results {
+    overflow: visible;
+    padding: var(--space-3);
   }
 }

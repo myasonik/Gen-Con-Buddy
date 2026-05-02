@@ -6,7 +6,7 @@
 }
 
 /* Clip all descendant overflow during animation to suppress scrollbar flash. */
-:where(.details.is-animating) * {
+:where(.details:global(.is-animating)) * {
   overflow: clip;
 }
 
@@ -20,7 +20,7 @@
 
 /* JS adds .is-closing before removing [open] so the grid can transition to 0fr
    before the browser hides the content. */
-:where(.details.is-closing) .content {
+:where(.details:global(.is-closing)) .content {
   grid-template-rows: 0fr;
 }
 

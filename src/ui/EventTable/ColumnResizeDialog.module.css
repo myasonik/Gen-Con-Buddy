@@ -31,11 +31,6 @@
   width: 100%;
 }
 
-.input:focus {
-  outline: 0.125rem solid;
-  outline-offset: 0.0625rem;
-}
-
 .actions {
   display: flex;
   gap: var(--space-2);

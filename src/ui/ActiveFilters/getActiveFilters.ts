@@ -1,9 +1,25 @@
+import type React from "react";
 import { AGE_GROUPS, CATEGORY, EVENT_TYPES, EXP, REGISTRATION, YES_NO } from "../../utils/enums";
 import type { SearchParams } from "../../utils/types";
+import { EVENT_TYPE_ICONS } from "../icons/eventTypeIcons";
+import { MagnifyingGlass } from "../icons/MagnifyingGlass";
+import { Calendar } from "../icons/Calendar";
+import { Hourglass } from "../icons/Hourglass";
+import { Meeple } from "../icons/Meeple";
+import { Coins } from "../icons/Coins";
+import { Ticket } from "../icons/Ticket";
+import { Trophy } from "../icons/Trophy";
+import { Ages } from "../icons/Ages";
+import { Skills } from "../icons/Skills";
+import { PositionMarker } from "../icons/PositionMarker";
+import { BeveledStar } from "../icons/BeveledStar";
+import { RuleBook } from "../icons/RuleBook";
+import { Backpack } from "../icons/Backpack";
 
 export interface ActiveFilter {
   id: string;
   label: string;
+  icon?: React.ComponentType<{ size?: number | string }>;
   remove: (prev: SearchParams) => SearchParams;
 }
 
@@ -81,70 +97,95 @@ interface PlainDef {
   type: "plain";
   key: keyof SearchParams;
   label: string;
+  icon?: React.ComponentType<{ size?: number | string }>;
 }
 interface EnumDef {
   type: "enum";
   key: keyof SearchParams;
   label: string;
   map: Record<string, string>;
+  icon?: React.ComponentType<{ size?: number | string }>;
 }
 interface RangeDef {
   type: "range";
   key: keyof SearchParams;
   label: string;
   suffix?: string;
+  icon?: React.ComponentType<{ size?: number | string }>;
 }
 interface DateRangeDef {
   type: "dateRange";
   key: keyof SearchParams;
   label: string;
+  icon?: React.ComponentType<{ size?: number | string }>;
 }
 interface CostDef {
   type: "cost";
   key: "cost";
+  icon?: React.ComponentType<{ size?: number | string }>;
 }
 interface MultiDef {
   type: "multi";
   key: keyof SearchParams;
   map: Record<string, string>;
   prefix: string;
+  icon?: React.ComponentType<{ size?: number | string }>;
+  iconMap?: Record<string, React.ComponentType<{ size?: number | string }>>;
 }
 type FilterDef = PlainDef | EnumDef | RangeDef | DateRangeDef | CostDef | MultiDef;
 
 const FILTER_DEFS: FilterDef[] = [
-  { type: "plain", key: "filter", label: "Search" },
+  { type: "plain", key: "filter", label: "Search", icon: MagnifyingGlass },
   { type: "plain", key: "gameId", label: "Game ID" },
   { type: "plain", key: "title", label: "Title" },
-  { type: "multi", key: "eventType", map: EVENT_TYPES, prefix: "eventType" },
+  {
+    type: "multi",
+    key: "eventType",
+    map: EVENT_TYPES,
+    prefix: "eventType",
+    iconMap: EVENT_TYPE_ICONS,
+  },
   { type: "plain", key: "group", label: "Group" },
   { type: "plain", key: "shortDescription", label: "Short desc" },
   { type: "plain", key: "longDescription", label: "Long desc" },
-  { type: "plain", key: "gameSystem", label: "System" },
-  { type: "plain", key: "rulesEdition", label: "Rules" },
-  { type: "enum", key: "ageRequired", label: "Age", map: AGE_GROUPS },
-  { type: "enum", key: "experienceRequired", label: "Exp", map: EXP },
-  { type: "plain", key: "materialsProvided", label: "Materials provided" },
-  { type: "enum", key: "materialsRequired", label: "Materials required", map: YES_NO },
-  { type: "plain", key: "materialsRequiredDetails", label: "Materials details" },
-  { type: "multi", key: "days", map: DAY_LABELS, prefix: "days" },
-  { type: "range", key: "duration", label: "Duration", suffix: "hrs" },
-  { type: "range", key: "minPlayers", label: "Min players" },
-  { type: "range", key: "maxPlayers", label: "Max players" },
+  { type: "plain", key: "gameSystem", label: "System", icon: RuleBook },
+  { type: "plain", key: "rulesEdition", label: "Rules", icon: RuleBook },
+  { type: "enum", key: "ageRequired", label: "Age", map: AGE_GROUPS, icon: Ages },
+  { type: "enum", key: "experienceRequired", label: "Exp", map: EXP, icon: Skills },
+  { type: "plain", key: "materialsProvided", label: "Materials provided", icon: Backpack },
+  {
+    type: "enum",
+    key: "materialsRequired",
+    label: "Materials required",
+    map: YES_NO,
+    icon: Backpack,
+  },
+  { type: "plain", key: "materialsRequiredDetails", label: "Materials details", icon: Backpack },
+  { type: "multi", key: "days", map: DAY_LABELS, prefix: "days", icon: Calendar },
+  { type: "range", key: "duration", label: "Duration", suffix: "hrs", icon: Hourglass },
+  { type: "range", key: "minPlayers", label: "Min players", icon: Meeple },
+  { type: "range", key: "maxPlayers", label: "Max players", icon: Meeple },
   { type: "plain", key: "gmNames", label: "GM" },
   { type: "plain", key: "website", label: "Website" },
   { type: "plain", key: "email", label: "Email" },
-  { type: "enum", key: "tournament", label: "Tournament", map: YES_NO },
+  { type: "enum", key: "tournament", label: "Tournament", map: YES_NO, icon: Trophy },
   { type: "range", key: "roundNumber", label: "Round" },
   { type: "range", key: "totalRounds", label: "Total rounds" },
-  { type: "range", key: "minimumPlayTime", label: "Min play time" },
-  { type: "enum", key: "attendeeRegistration", label: "Registration", map: REGISTRATION },
-  { type: "cost", key: "cost" },
-  { type: "plain", key: "location", label: "Location" },
-  { type: "plain", key: "roomName", label: "Room" },
+  { type: "range", key: "minimumPlayTime", label: "Min play time", icon: Hourglass },
+  {
+    type: "enum",
+    key: "attendeeRegistration",
+    label: "Registration",
+    map: REGISTRATION,
+    icon: Ticket,
+  },
+  { type: "cost", key: "cost", icon: Coins },
+  { type: "plain", key: "location", label: "Location", icon: PositionMarker },
+  { type: "plain", key: "roomName", label: "Room", icon: PositionMarker },
   { type: "plain", key: "tableNumber", label: "Table" },
-  { type: "enum", key: "specialCategory", label: "Category", map: CATEGORY },
-  { type: "range", key: "ticketsAvailable", label: "Tickets" },
-  { type: "dateRange", key: "lastModified", label: "Modified" },
+  { type: "enum", key: "specialCategory", label: "Category", map: CATEGORY, icon: BeveledStar },
+  { type: "range", key: "ticketsAvailable", label: "Tickets", icon: Ticket },
+  { type: "dateRange", key: "lastModified", label: "Modified", icon: Calendar },
 ];
 
 export function getActiveFilters(params: SearchParams): ActiveFilter[] {
@@ -162,6 +203,7 @@ export function getActiveFilters(params: SearchParams): ActiveFilter[] {
     filters.push({
       id: "timeRange",
       label,
+      icon: Hourglass,
       remove: (prev) => {
         const { timeStart: _s, timeEnd: _e, ...rest } = prev;
         return rest;
@@ -173,39 +215,50 @@ export function getActiveFilters(params: SearchParams): ActiveFilter[] {
     const val = params[def.key];
     if (val) {
       if (def.type === "plain") {
-        filters.push({ id: def.key, label: `${def.label}: ${val}`, remove: removeKey(def.key) });
+        filters.push({
+          id: def.key,
+          label: `${def.label}: ${val}`,
+          icon: def.icon,
+          remove: removeKey(def.key),
+        });
       } else if (def.type === "enum") {
         const display = def.map[val as string] ?? (val as string);
         filters.push({
           id: def.key,
           label: `${def.label}: ${display}`,
+          icon: def.icon,
           remove: removeKey(def.key),
         });
       } else if (def.type === "range") {
         filters.push({
           id: def.key,
           label: fmtRange(val as string, `${def.label}: `, def.suffix),
+          icon: def.icon,
           remove: removeKey(def.key),
         });
       } else if (def.type === "dateRange") {
         filters.push({
           id: def.key,
           label: fmtDateRange(val as string, `${def.label}: `),
+          icon: def.icon,
           remove: removeKey(def.key),
         });
       } else if (def.type === "cost") {
         filters.push({
           id: def.key,
           label: fmtCostRange(val as string),
+          icon: def.icon,
           remove: removeKey(def.key),
         });
       } else if (def.type === "multi") {
         for (const code of (val as string).split(",").filter(Boolean)) {
           const label = def.map[code] ?? code;
           const k = def.key;
+          const chipIcon = def.iconMap ? def.iconMap[code] : def.icon;
           filters.push({
             id: `${def.prefix}:${code}`,
             label,
+            icon: chipIcon,
             remove: (prev) => {
               const remaining = ((prev[k] ?? "") as string)
                 .split(",")

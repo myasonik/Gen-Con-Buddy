@@ -1,0 +1,25 @@
+.tableLink {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+  transition: color var(--motion-hover);
+}
+
+.tableLink:hover {
+  color: var(--color-accent-deep);
+}
+
+.gameIdLink {
+  composes: tableLink;
+  font-family: var(--font-mono);
+}
+
+.typeCell svg {
+  vertical-align: middle;
+  margin-inline-end: var(--space-1);
+}
+
+.soldOut {
+  color: var(--color-error);
+  font-weight: 600;
+}

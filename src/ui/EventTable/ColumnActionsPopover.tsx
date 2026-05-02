@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { EllipsisVertical } from "lucide-react";
 import { Popover } from "@base-ui/react/popover";
 import { Button } from "../Button/Button";
@@ -19,17 +18,15 @@ export function ColumnActionsPopover({
   onSort,
   onOpenResize,
 }: ColumnActionsPopoverProps): JSX.Element {
-  const [open, setOpen] = useState(false);
-
   const isSortedAsc =
     Boolean(sortField) && activeSortField === sortField && activeSortDir === "asc";
   const isSortedDesc =
     Boolean(sortField) && activeSortField === sortField && activeSortDir === "desc";
 
   return (
-    <Popover.Root open={open} onOpenChange={setOpen}>
+    <Popover.Root>
       <Popover.Trigger
-        className={`${styles.trigger}${open ? ` ${styles.triggerOpen}` : ""}`}
+        render={<Button icon className={styles.trigger} />}
         aria-label="Column actions"
       >
         <EllipsisVertical size={12} aria-hidden="true" />
@@ -39,37 +36,28 @@ export function ColumnActionsPopover({
           <Popover.Popup className={styles.popup}>
             {sortField && (
               <>
-                <Button
-                  variant="ghost"
+                <Popover.Close
+                  render={<Button variant="ghost" className={styles.menuItem} />}
                   aria-pressed={isSortedAsc}
-                  onClick={() => {
-                    onSort(isSortedAsc ? undefined : `${sortField}.asc`);
-                    setOpen(false);
-                  }}
+                  onClick={() => onSort(isSortedAsc ? undefined : `${sortField}.asc`)}
                 >
                   Sort ascending
-                </Button>
-                <Button
-                  variant="ghost"
+                </Popover.Close>
+                <Popover.Close
+                  render={<Button variant="ghost" className={styles.menuItem} />}
                   aria-pressed={isSortedDesc}
-                  onClick={() => {
-                    onSort(isSortedDesc ? undefined : `${sortField}.desc`);
-                    setOpen(false);
-                  }}
+                  onClick={() => onSort(isSortedDesc ? undefined : `${sortField}.desc`)}
                 >
                   Sort descending
-                </Button>
+                </Popover.Close>
               </>
             )}
-            <Button
-              variant="ghost"
-              onClick={() => {
-                setOpen(false);
-                onOpenResize();
-              }}
+            <Popover.Close
+              render={<Button variant="ghost" className={styles.menuItem} />}
+              onClick={onOpenResize}
             >
               Resize…
-            </Button>
+            </Popover.Close>
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>

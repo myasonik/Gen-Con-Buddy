@@ -1,4 +1,4 @@
-import { daysToStartDateTime } from "./searchParams";
+import { daysAndTimeToStartDateTime } from "./searchParams";
 import { DEFAULT_PAGE_SIZE } from "./constants";
 import type {
   EventSearchResponse,
@@ -11,17 +11,20 @@ import type {
 
 export async function fetchEvents(params: SearchParams): Promise<EventSearchResponse> {
   const url = new URL("/api/events/search", window.location.origin);
-  if (params.days) {
-    const startDateTime = daysToStartDateTime(params.days);
+
+  if (params.days || params.timeStart || params.timeEnd) {
+    const days = params.days ?? "wed,thu,fri,sat,sun";
+    const startDateTime = daysAndTimeToStartDateTime(days, params.timeStart, params.timeEnd);
     if (startDateTime) {
       url.searchParams.set("startDateTime", startDateTime);
     }
   }
+
   Object.entries(params).forEach(([key, value]) => {
     if (value === undefined || value === "") {
       return;
     }
-    if (key === "days") {
+    if (key === "days" || key === "timeStart" || key === "timeEnd") {
       return;
     }
     if (key === "page") {
@@ -48,7 +51,7 @@ export async function fetchEvents(params: SearchParams): Promise<EventSearchResp
   if (data.error) {
     throw new Error(data.error.detail);
   }
-  return data;
+  return { ...data, data: data.data ?? [] };
 }
 
 export async function fetchChangelogList(limit = 6): Promise<ChangelogSummary[]> {

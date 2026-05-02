@@ -2,8 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SearchForm } from "../components/SearchForm/SearchForm";
 import { SearchResults } from "../components/SearchResults/SearchResults";
 import { ActiveFilters } from "../ui/ActiveFilters/ActiveFilters";
-import { Button } from "../ui/Button/Button";
-import { useSidebarOpen } from "../hooks/useSidebarOpen";
 import { buildSearchParams, parseSearchParams } from "../utils/searchParams";
 import { DEFAULT_PAGE_SIZE } from "../utils/constants";
 import type { SearchFormValues, SearchParams } from "../utils/types";
@@ -54,6 +52,8 @@ export const Route = createFileRoute("/")({
       ticketsAvailable: str("ticketsAvailable"),
       lastModified: str("lastModified"),
       days: str("days"),
+      timeStart: str("timeStart"),
+      timeEnd: str("timeEnd"),
       sort: str("sort"),
     };
   },
@@ -63,7 +63,6 @@ export const Route = createFileRoute("/")({
 function SearchPage(): JSX.Element {
   const navigate = Route.useNavigate();
   const search = Route.useSearch();
-  const [sidebarOpen, toggleSidebar] = useSidebarOpen();
 
   const handleSearch = (values: SearchFormValues): void => {
     void navigate({
@@ -96,22 +95,9 @@ function SearchPage(): JSX.Element {
   };
 
   return (
-    <main className={styles.shell} data-sidebar-open={String(sidebarOpen)}>
-      <div className={styles.backdrop} onClick={toggleSidebar} aria-hidden="true" />
-      <div id="sidebar" className={styles.sidebar}>
-        <SearchForm values={parseSearchParams(search)} onSearch={handleSearch} />
-      </div>
+    <main className={styles.shell}>
+      <SearchForm values={parseSearchParams(search)} onSearch={handleSearch} />
       <div className={styles.results}>
-        <div className={styles.resultsToolbar}>
-          <Button
-            variant="secondary"
-            onClick={toggleSidebar}
-            aria-expanded={sidebarOpen}
-            aria-controls="sidebar"
-          >
-            {sidebarOpen ? "◀ Filters" : "▶ Filters"}
-          </Button>
-        </div>
         <ActiveFilters searchParams={search} onRemove={handleRemoveFilter} />
         <SearchResults searchParams={search} onNavigate={handleNavigate} onSort={handleSort} />
       </div>

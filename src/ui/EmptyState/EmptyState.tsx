@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import clsx from "clsx";
 import { announce } from "../../lib/announce";
-import { MeepleFlat } from "../icons/MeepleFlat";
+import { Meeple } from "../icons/Meeple";
 import styles from "./EmptyState.module.css";
 
 interface EmptyStateProps {
@@ -23,10 +23,10 @@ export function EmptyState({ variant, text, subtext }: EmptyStateProps): JSX.Ele
         </div>
       )}
       {variant === "empty" && (
-        <MeepleFlat className={styles.icon} aria-hidden="true" data-testid="empty-icon" />
+        <Meeple className={styles.icon} aria-hidden="true" data-testid="empty-icon" />
       )}
       {variant === "error" && (
-        <MeepleFlat
+        <Meeple
           className={clsx(styles.icon, styles.iconError)}
           aria-hidden="true"
           data-testid="error-icon"

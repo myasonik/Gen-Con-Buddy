@@ -45,6 +45,9 @@
 }
 
 .typeTag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
   font-weight: 600;
   letter-spacing: 0.06rem;
   text-transform: uppercase;

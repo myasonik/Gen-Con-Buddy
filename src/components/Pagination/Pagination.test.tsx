@@ -3,18 +3,6 @@ import userEvent from "@testing-library/user-event";
 import { vi, expect, test } from "vitest";
 import { Pagination } from "./Pagination";
 
-test('shows "Page X of Y" label', () => {
-  render(
-    <Pagination
-      page={2}
-      limit={100}
-      total={350}
-      onNavigate={vi.fn<(page: number, limit: number) => void>()}
-    />,
-  );
-  expect(screen.getByText("Page 2 of 4")).toBeInTheDocument();
-});
-
 test("prev button is disabled on page 1", () => {
   render(
     <Pagination
@@ -123,7 +111,8 @@ test("caps page count at 10,000-result backend limit", () => {
       onNavigate={vi.fn<(page: number, limit: number) => void>()}
     />,
   );
-  expect(screen.getByText("Page 1 of 100")).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "100" })).toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "101" })).not.toBeInTheDocument();
 });
 
 test("next is disabled when on the last accessible page due to backend limit", () => {
@@ -216,6 +205,6 @@ test("singleLine: still shows page numbers and event count", () => {
       singleLine
     />,
   );
-  expect(screen.getByText("Page 2 of 4")).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "2" })).toHaveAttribute("aria-current", "page");
   expect(screen.getByText("350 events")).toBeInTheDocument();
 });

@@ -266,3 +266,32 @@ test("clicking the close button closes the filters dialog", async () => {
   await user.click(screen.getByRole("button", { name: "Close advanced filters" }));
   expect(screen.queryByRole("dialog", { name: "Advanced Filters" })).not.toBeInTheDocument();
 });
+
+test("renders an Apply Filters button in the drawer", async () => {
+  const user = userEvent.setup();
+  render(<SearchForm values={{}} onSearch={noop} />);
+  await user.click(screen.getByRole("button", { name: "Filters" }));
+  expect(
+    within(screen.getByRole("dialog", { name: "Advanced Filters" })).getByRole("button", {
+      name: "Apply Filters",
+    }),
+  ).toBeInTheDocument();
+});
+
+test("clicking Apply Filters submits form values and closes the drawer", async () => {
+  const user = userEvent.setup();
+  const handleSearch = vi.fn<(values: SearchFormValues) => void>();
+  render(<SearchForm values={{}} onSearch={handleSearch} />);
+
+  await user.click(screen.getByRole("button", { name: "Filters" }));
+  await user.type(screen.getByRole("textbox", { name: "Title" }), "Dragons");
+  await user.click(
+    within(screen.getByRole("dialog", { name: "Advanced Filters" })).getByRole("button", {
+      name: "Apply Filters",
+    }),
+  );
+
+  expect(handleSearch).toHaveBeenCalledTimes(1);
+  expect(handleSearch.mock.calls[0][0]).toMatchObject({ title: "Dragons" });
+  expect(screen.queryByRole("dialog", { name: "Advanced Filters" })).not.toBeInTheDocument();
+});
