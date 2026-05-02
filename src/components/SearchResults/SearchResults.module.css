@@ -4,10 +4,6 @@
   margin-bottom: var(--space-3);
 }
 
-.tableView {
-  margin-top: -0.0625rem;
-}
-
 .mobileView {
   display: none;
 }

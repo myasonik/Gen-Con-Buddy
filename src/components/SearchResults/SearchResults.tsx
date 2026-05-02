@@ -73,8 +73,8 @@ export function SearchResults({
               singleLine
             />
           </div>
-          <ColumnControlsPanel columnState={sharedColumnState} />
           <div className={styles.tableView}>
+            <ColumnControlsPanel variant="inline" columnState={sharedColumnState} />
             <EventTable
               events={data.data}
               activeSortField={activeSortField}
@@ -85,6 +85,7 @@ export function SearchResults({
             />
           </div>
           <div className={styles.mobileView}>
+            <ColumnControlsPanel variant="drawer" columnState={sharedColumnState} />
             <EventListMobile events={data.data} visibility={sharedColumnState.visibility} />
           </div>
           <Pagination
