@@ -11,6 +11,8 @@ import {
 } from "@tanstack/react-table";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
+import { useTypeDisplay } from "../../hooks/useTypeDisplay";
+import typeCellStyles from "./typeCell.module.css";
 import { ColumnControlsPanel } from "./ColumnControlsPanel";
 import { ColumnActionsPopover } from "./ColumnActionsPopover";
 import { ColumnResizeDialog } from "./ColumnResizeDialog";
@@ -47,6 +49,26 @@ export function EventTable({
   const sizing = sharedColumnState?.sizing ?? internalSizing.sizing;
   const setSizing = sharedColumnState?.setSizing ?? internalSizing.setSizing;
   const resetSizing = sharedColumnState?.resetSizing ?? internalSizing.reset;
+
+  const internalTypeDisplay = useTypeDisplay();
+  const typeDisplay = sharedColumnState?.typeDisplay ?? internalTypeDisplay.typeDisplay;
+  const setTypeDisplay =
+    sharedColumnState?.setTypeDisplay ?? internalTypeDisplay.setTypeDisplay;
+  const showTypeIcon = sharedColumnState?.showTypeIcon ?? internalTypeDisplay.showTypeIcon;
+  const setShowTypeIcon =
+    sharedColumnState?.setShowTypeIcon ?? internalTypeDisplay.setShowTypeIcon;
+  const resetTypeDisplay =
+    sharedColumnState?.resetTypeDisplay ?? internalTypeDisplay.reset;
+
+  const textClass =
+    typeDisplay === "code"
+      ? typeCellStyles.typeDisplayCode
+      : typeDisplay === "name"
+        ? typeCellStyles.typeDisplayName
+        : undefined;
+  const iconClass = showTypeIcon ? undefined : typeCellStyles.typeHideIcon;
+  const typeDisplayClass = [textClass, iconClass].filter(Boolean).join(" ") || undefined;
+
   // Unique prefix so anchor names don't collide when multiple EventTable instances are on the page
   const tableId = useId().replace(/:/g, "");
   const [clipWrapper, setClipWrapper] = useState<HTMLDivElement | null>(null);
@@ -147,6 +169,11 @@ export function EventTable({
     sizing,
     setSizing,
     resetSizing,
+    typeDisplay,
+    setTypeDisplay,
+    showTypeIcon,
+    setShowTypeIcon,
+    resetTypeDisplay,
   };
 
   if (events.length === 0) {
@@ -154,7 +181,7 @@ export function EventTable({
   }
 
   return (
-    <section>
+    <section className={typeDisplayClass}>
       {showColumnControls && <ColumnControlsPanel columnState={columnStateForPanel} />}
 
       <div

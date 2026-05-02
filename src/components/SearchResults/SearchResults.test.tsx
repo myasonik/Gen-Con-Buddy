@@ -568,3 +568,34 @@ test("eventType cell renders code and name spans in the DOM", async () => {
   expect(screen.getAllByText("RPG").length).toBeGreaterThan(0);
   expect(screen.getByText("Role Playing Game")).toBeInTheDocument();
 });
+
+test("applies typeDisplayName class to EventTable section when mode is name", async () => {
+  localStorage.setItem(
+    "gen-con-buddy-type-display",
+    JSON.stringify({ version: 1, value: { textMode: "name", showIcon: true } }),
+  );
+  const { container } = renderSearchResults();
+  await screen.findAllByRole("row");
+  expect(container.querySelector('[class*="typeDisplayName"]')).not.toBeNull();
+});
+
+test("applies typeHideIcon class to EventTable section when showTypeIcon is false", async () => {
+  localStorage.setItem(
+    "gen-con-buddy-type-display",
+    JSON.stringify({ version: 1, value: { textMode: "name", showIcon: false } }),
+  );
+  const { container } = renderSearchResults();
+  await screen.findAllByRole("row");
+  expect(container.querySelector('[class*="typeHideIcon"]')).not.toBeNull();
+});
+
+test("no text mode class on EventTable section when typeDisplay is both", async () => {
+  localStorage.setItem(
+    "gen-con-buddy-type-display",
+    JSON.stringify({ version: 1, value: { textMode: "both", showIcon: true } }),
+  );
+  const { container } = renderSearchResults();
+  await screen.findAllByRole("row");
+  expect(container.querySelector('[class*="typeDisplayCode"]')).toBeNull();
+  expect(container.querySelector('[class*="typeDisplayName"]')).toBeNull();
+});
