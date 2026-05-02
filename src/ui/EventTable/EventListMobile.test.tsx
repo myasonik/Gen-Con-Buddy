@@ -179,3 +179,37 @@ test("shows day and end time with no separator when startDateTime is hidden", as
   expect(screen.getByText(/10:00/)).toBeInTheDocument();
   expect(screen.queryByText(/–/)).not.toBeInTheDocument();
 });
+
+test("shows location as a detail row when visibility.location is true", async () => {
+  await renderList([makeEvent({ location: "ICC" })], { location: true });
+  expect(screen.getByText("Location")).toBeInTheDocument();
+  expect(screen.getByText("ICC")).toBeInTheDocument();
+});
+
+test("does not show location detail row when visibility.location is false", async () => {
+  await renderList([makeEvent({ location: "ICC" })], { location: false });
+  expect(screen.queryByText("Location")).not.toBeInTheDocument();
+});
+
+test("shows cost formatted with dollar sign as a detail row", async () => {
+  await renderList([makeEvent({ cost: 4 })], { cost: true });
+  expect(screen.getByText("Cost")).toBeInTheDocument();
+  expect(screen.getByText("$4.00")).toBeInTheDocument();
+});
+
+test("shows shortDescription as a detail row when toggled on", async () => {
+  await renderList([makeEvent({ shortDescription: "Quick fun" })], { shortDescription: true });
+  expect(screen.getByText("Short Description")).toBeInTheDocument();
+  expect(screen.getByText("Quick fun")).toBeInTheDocument();
+});
+
+test("shows gameId as a detail row when toggled on", async () => {
+  await renderList([makeEvent({ gameId: "RPG24000001" })], { gameId: true });
+  expect(screen.getByText("Game ID")).toBeInTheDocument();
+  expect(screen.getByText("RPG24000001")).toBeInTheDocument();
+});
+
+test("does not render a dl element when no extra columns are toggled on", async () => {
+  const { container } = await renderList([makeEvent()], {});
+  expect(container.querySelector("dl")).toBeNull();
+});
