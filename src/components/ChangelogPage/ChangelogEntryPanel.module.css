@@ -58,7 +58,7 @@
 
 .groupVerb {
   font-family: var(--font-slab);
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   font-weight: 600;
   letter-spacing: 0.06rem;
   text-transform: uppercase;
@@ -81,7 +81,7 @@
   background: var(--color-surface-panel);
   border: 0.0625rem solid var(--color-ink-divider);
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--color-ink-muted);
   line-height: 1.3;
   transition: border-color var(--motion-hover);

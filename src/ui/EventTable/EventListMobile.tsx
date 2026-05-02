@@ -123,7 +123,7 @@ export function EventListMobile({ events, visibility }: EventListMobileProps): J
 
         const TypeIcon = EVENT_TYPE_ICONS[a.eventType.split(" - ")[0]];
 
-        const extraFields = EXTRA_COLUMN_IDS.filter((id) => isVisible(id))
+        let extraFields = EXTRA_COLUMN_IDS.filter((id) => isVisible(id))
           .map((id) => {
             const col = COL_BY_ID.get(id);
             const label = typeof col?.header === "string" ? col.header : id;
@@ -131,6 +131,23 @@ export function EventListMobile({ events, visibility }: EventListMobileProps): J
             return { id, label, value };
           })
           .filter(({ value }) => value !== "");
+
+        if (
+          extraFields.some((f) => f.id === "roundNumber") &&
+          extraFields.some((f) => f.id === "totalRounds")
+        ) {
+          extraFields = extraFields
+            .filter((f) => f.id !== "totalRounds")
+            .map((f) =>
+              f.id === "roundNumber"
+                ? {
+                    id: "roundNumber",
+                    label: "Round",
+                    value: `${a.roundNumber} out of ${a.totalRounds}`,
+                  }
+                : f,
+            );
+        }
 
         return (
           <li key={event.id} className={styles.item}>

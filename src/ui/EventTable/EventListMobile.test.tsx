@@ -250,3 +250,37 @@ test("does not render a dl element when no extra columns are toggled on", async 
   });
   expect(container.querySelector("dl")).toBeNull();
 });
+
+test("combines roundNumber and totalRounds into a single 'Round' row when both visible", async () => {
+  await renderList([makeEvent({ roundNumber: 2, totalRounds: 4 })], {
+    ...COLUMN_VISIBILITY_DEFAULTS,
+    roundNumber: true,
+    totalRounds: true,
+  });
+  expect(screen.getByText("Round")).toBeInTheDocument();
+  expect(screen.getByText("2 out of 4")).toBeInTheDocument();
+  expect(screen.queryByText("Round Number")).not.toBeInTheDocument();
+  expect(screen.queryByText("Total Rounds")).not.toBeInTheDocument();
+});
+
+test("shows roundNumber alone when totalRounds is hidden", async () => {
+  await renderList([makeEvent({ roundNumber: 2, totalRounds: 4 })], {
+    ...COLUMN_VISIBILITY_DEFAULTS,
+    roundNumber: true,
+    totalRounds: false,
+  });
+  expect(screen.queryByText("Round")).not.toBeInTheDocument();
+  expect(screen.queryByText("2 out of 4")).not.toBeInTheDocument();
+  expect(screen.getByText("2")).toBeInTheDocument();
+});
+
+test("shows totalRounds alone when roundNumber is hidden", async () => {
+  await renderList([makeEvent({ roundNumber: 2, totalRounds: 4 })], {
+    ...COLUMN_VISIBILITY_DEFAULTS,
+    roundNumber: false,
+    totalRounds: true,
+  });
+  expect(screen.queryByText("Round")).not.toBeInTheDocument();
+  expect(screen.queryByText("2 out of 4")).not.toBeInTheDocument();
+  expect(screen.getByText("4")).toBeInTheDocument();
+});

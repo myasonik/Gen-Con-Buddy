@@ -51,7 +51,7 @@
 
 .drawerTitle {
   font-family: var(--font-slab);
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   font-weight: 600;
   letter-spacing: 0.05rem;
   text-transform: uppercase;
@@ -86,7 +86,7 @@
 
 .legend {
   font-family: var(--font-slab);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.06rem;
   text-transform: uppercase;
@@ -106,7 +106,7 @@
   flex-direction: column;
   gap: var(--space-1);
   margin-bottom: var(--space-2);
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   color: var(--color-ink-muted);
 }
 
@@ -115,7 +115,7 @@
   width: 100%;
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-subtle);
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .input:disabled {
@@ -139,7 +139,7 @@
   display: block;
   margin-bottom: var(--space-1);
   font-family: var(--font-slab);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.04rem;
   text-transform: uppercase;
@@ -184,7 +184,7 @@
   height: 2rem;
   padding: var(--space-1) var(--space-2) var(--space-1) calc(var(--space-2) + 1.25rem);
   border-radius: var(--radius-subtle);
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 /* Event type (let the component size itself, cap at a reasonable width) */
@@ -211,7 +211,7 @@
   height: 2rem;
   padding: 0 var(--space-2);
   font-family: var(--font-slab);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.04rem;
   text-transform: uppercase;
@@ -261,13 +261,13 @@
   width: 5rem;
   height: 2rem;
   padding: var(--space-1) var(--space-2);
-  font-size: 0.875rem;
+  font-size: 1rem;
   border-radius: var(--radius-subtle);
 }
 
 .timeSep {
   color: var(--color-ink-faint);
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 /* Strip action buttons */
