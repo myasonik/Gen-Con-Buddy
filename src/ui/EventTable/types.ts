@@ -1,5 +1,7 @@
 import type { OnChangeFn, ColumnSizingState } from "@tanstack/react-table";
 
+export type TypeDisplay = "code" | "name" | "both";
+
 export interface SharedColumnState {
   visibility: Record<string, boolean>;
   toggleVisibility: (id: string) => void;
@@ -7,4 +9,9 @@ export interface SharedColumnState {
   sizing: ColumnSizingState;
   setSizing: OnChangeFn<ColumnSizingState>;
   resetSizing: () => void;
+  typeDisplay: TypeDisplay;
+  setTypeDisplay: (v: TypeDisplay) => void;
+  showTypeIcon: boolean;
+  setShowTypeIcon: (v: boolean) => void;
+  resetTypeDisplay: () => void;
 }
