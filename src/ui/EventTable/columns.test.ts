@@ -19,11 +19,11 @@ describe("getSortField", () => {
   });
 
   it("throws for an unknown column id", () => {
-    expect(() => getSortField("unknownColumn")).toThrow();
+    expect(() => getSortField("unknownColumn")).toThrow("Unknown column id: unknownColumn");
   });
 
   it("throws for an empty string column id", () => {
-    expect(() => getSortField("")).toThrow();
+    expect(() => getSortField("")).toThrow("Unknown column id: ");
   });
 });
 
@@ -41,10 +41,10 @@ describe("getColId", () => {
   });
 
   it("throws for an unknown sort field", () => {
-    expect(() => getColId("unknownField")).toThrow();
+    expect(() => getColId("unknownField")).toThrow("Unknown sort field: unknownField");
   });
 
   it("throws for an empty string sort field", () => {
-    expect(() => getColId("")).toThrow();
+    expect(() => getColId("")).toThrow("Unknown sort field: ");
   });
 });
