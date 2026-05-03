@@ -148,7 +148,7 @@ test("resize dialog input has min attribute reflecting measured cell content", a
   } as unknown as CanvasRenderingContext2D);
 
   const user = userEvent.setup();
-  // 2024-08-07 is a Wednesday — longest day name = 9 chars × 8 = 72px (padding = 0 in jsdom)
+  // 2024-08-07 is a Wednesday — longest day name = 9 chars × 8 = 72px + 2px jsdom padding = 74
   await renderEventTable([makeEvent({ startDateTime: "2024-08-07T10:00:00Z" })]);
 
   const dayHeader = screen.getByRole("columnheader", { name: /Day/ });
@@ -156,7 +156,7 @@ test("resize dialog input has min attribute reflecting measured cell content", a
   await user.click(screen.getByRole("button", { name: "Resize…" }));
 
   await waitFor(() => {
-    expect(screen.getByRole("spinbutton", { name: "Width (px)" })).toHaveAttribute("min", "72");
+    expect(screen.getByRole("spinbutton", { name: "Width (px)" })).toHaveAttribute("min", "74");
   });
 });
 

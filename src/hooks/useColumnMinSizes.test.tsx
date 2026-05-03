@@ -47,7 +47,7 @@ function TestTable({
 
 test("measures the longest word per column across all rows", async () => {
   // "Wednesday" = 9 chars × 8 = 72; "Monday" = 6 chars × 8 = 48 → max = 72
-  // padding/borders = 0 in jsdom → min = 72
+  // jsdom reports 2px horizontal padding on <td> → min = 74
   render(
     <TestTable
       events={[makeEvent()]}
@@ -56,12 +56,12 @@ test("measures the longest word per column across all rows", async () => {
   );
   await waitFor(() => {
     const result = JSON.parse(screen.getByTestId("result").textContent ?? "");
-    expect(result.day).toBe(72);
+    expect(result.day).toBe(74);
   });
 });
 
 test("uses longest word by char count, not full text", async () => {
-  // "A short description" → longest word "description" = 11 chars × 8 = 88
+  // "A short description" → longest word "description" = 11 chars × 8 = 88 + 2px jsdom padding = 90
   render(
     <TestTable
       events={[makeEvent()]}
@@ -70,12 +70,12 @@ test("uses longest word by char count, not full text", async () => {
   );
   await waitFor(() => {
     const result = JSON.parse(screen.getByTestId("result").textContent ?? "");
-    expect(result.desc).toBe(88);
+    expect(result.desc).toBe(90);
   });
 });
 
 test("adds SVG width and gap to the minimum", async () => {
-  // "Board" = 5 chars × 8 = 40; svg width = 14; gap fallback = 4 → total = 58
+  // "Board" = 5 chars × 8 = 40; svg width = 14; gap fallback = 4; 2px jsdom padding → total = 60
   render(
     <TestTable
       events={[makeEvent()]}
@@ -96,7 +96,7 @@ test("adds SVG width and gap to the minimum", async () => {
   );
   await waitFor(() => {
     const result = JSON.parse(screen.getByTestId("result").textContent ?? "");
-    expect(result.eventType).toBe(58);
+    expect(result.eventType).toBe(60);
   });
 });
 
@@ -151,13 +151,13 @@ test("remeasures when visibility changes", async () => {
   render(<VisibilityRerender />);
   await waitFor(() => {
     const result = JSON.parse(screen.getByTestId("result").textContent ?? "");
-    expect(result.day).toBe(72); // "Wednesday" = 9 × 8
+    expect(result.day).toBe(74); // "Wednesday" = 9 × 8 + 2px jsdom padding
     expect(result.extra).toBeUndefined();
   });
   await user.click(screen.getByRole("button", { name: "show extra" }));
   await waitFor(() => {
     const result = JSON.parse(screen.getByTestId("result").textContent ?? "");
-    expect(result.extra).toBe(64); // "Longword" = 8 × 8
+    expect(result.extra).toBe(66); // "Longword" = 8 × 8 + 2px jsdom padding
   });
 });
 
@@ -189,10 +189,10 @@ test("remeasures when events change", async () => {
   const user = (await import("@testing-library/user-event")).default.setup();
   render(<Rerender />);
   await waitFor(() => {
-    expect(JSON.parse(screen.getByTestId("result").textContent ?? "").day).toBe(48); // "Monday"
+    expect(JSON.parse(screen.getByTestId("result").textContent ?? "").day).toBe(50); // "Monday" = 6 × 8 + 2px jsdom padding
   });
   await user.click(screen.getByRole("button", { name: "next page" }));
   await waitFor(() => {
-    expect(JSON.parse(screen.getByTestId("result").textContent ?? "").day).toBe(72); // "Wednesday"
+    expect(JSON.parse(screen.getByTestId("result").textContent ?? "").day).toBe(74); // "Wednesday" = 9 × 8 + 2px jsdom padding
   });
 });
