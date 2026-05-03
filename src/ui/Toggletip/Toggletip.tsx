@@ -1,3 +1,4 @@
+import React from "react";
 import { Popover } from "@base-ui/react/popover";
 import { Button } from "../Button/Button";
 import { QuestionMark } from "../icons/QuestionMark";
@@ -8,7 +9,7 @@ interface ToggletipProps {
   message: string;
 }
 
-export function Toggletip({ label, message }: ToggletipProps): JSX.Element {
+export function Toggletip({ label, message }: ToggletipProps): React.JSX.Element {
   return (
     <Popover.Root>
       <Popover.Trigger render={<Button icon />} aria-label={label}>

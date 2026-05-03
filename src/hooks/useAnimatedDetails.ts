@@ -1,8 +1,8 @@
-import { useRef, useCallback, type MouseEvent } from "react";
+import { useRef, useCallback, type RefObject, type MouseEvent } from "react";
 
 export function useAnimatedDetails(): {
-  ref: React.RefObject<HTMLDetailsElement>;
-  contentRef: React.RefObject<HTMLDivElement>;
+  ref: RefObject<HTMLDetailsElement | null>;
+  contentRef: RefObject<HTMLDivElement | null>;
   onSummaryClick: (e: MouseEvent) => void;
 } {
   const ref = useRef<HTMLDetailsElement>(null);

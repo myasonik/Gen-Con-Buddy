@@ -1,4 +1,4 @@
-import { useState, useId } from "react";
+import React, { useState, useId } from "react";
 import { Dialog } from "@base-ui/react/dialog";
 import { Button } from "../Button/Button";
 import styles from "./ColumnResizeDialog.module.css";
@@ -17,7 +17,7 @@ export function ColumnResizeDialog({
   minWidth = 0,
   onApply,
   onClose,
-}: ColumnResizeDialogProps): JSX.Element {
+}: ColumnResizeDialogProps): React.JSX.Element {
   const [value, setValue] = useState(String(currentWidth));
   const inputId = useId();
 

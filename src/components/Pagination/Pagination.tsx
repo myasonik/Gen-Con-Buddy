@@ -1,3 +1,4 @@
+import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "../../ui/Button/Button";
 import { Select } from "../../ui/Select/Select";
@@ -41,7 +42,7 @@ export function Pagination({
   onNavigate,
   "aria-label": ariaLabel = "Pagination",
   singleLine = false,
-}: PaginationProps): JSX.Element {
+}: PaginationProps): React.JSX.Element {
   const naturalTotalPages = Math.ceil(total / limit);
   const maxPages = Math.floor(BACKEND_MAX_RESULTS / limit);
   const totalPages = Math.min(naturalTotalPages, maxPages);

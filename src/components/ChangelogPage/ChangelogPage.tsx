@@ -1,5 +1,5 @@
+import React, { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useTypeDisplay } from "../../hooks/useTypeDisplay";
@@ -9,7 +9,7 @@ import { fetchChangelogEntry, fetchChangelogList } from "../../utils/api";
 import styles from "./ChangelogPage.module.css";
 import { ChangelogRow } from "./ChangelogRow";
 
-export function ChangelogPage(): JSX.Element {
+export function ChangelogPage(): React.JSX.Element {
   const queryClient = useQueryClient();
   const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility();
   const { sizing, setSizing, reset: resetSizing } = useColumnSizing();

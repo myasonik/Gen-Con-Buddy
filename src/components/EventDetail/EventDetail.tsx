@@ -1,3 +1,4 @@
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Link } from "@tanstack/react-router";
@@ -14,7 +15,7 @@ interface EventDetailProps {
   gameId: string;
 }
 
-export function EventDetail({ gameId }: EventDetailProps): JSX.Element {
+export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["event", gameId],
     queryFn: () => fetchEvents({ gameId, limit: 1 }),

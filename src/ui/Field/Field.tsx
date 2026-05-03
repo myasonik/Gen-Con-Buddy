@@ -12,7 +12,7 @@ interface FieldProps extends FieldBase {
   children: React.ReactElement;
 }
 
-export function Field({ label, children, className }: FieldProps): JSX.Element {
+export function Field({ label, children, className }: FieldProps): React.JSX.Element {
   return (
     <BaseField.Root className={clsx(styles.root, className)}>
       <BaseField.Label className={styles.label}>{label}</BaseField.Label>
@@ -27,7 +27,7 @@ function SubField({
 }: {
   label: string;
   children: React.ReactElement;
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <BaseField.Root>
       <BaseField.Label className={styles.rangeFieldLabel}>{label}</BaseField.Label>
@@ -41,7 +41,12 @@ interface RangeFieldProps extends FieldBase {
   stack?: boolean;
 }
 
-export function RangeField({ label, children, className, stack }: RangeFieldProps): JSX.Element {
+export function RangeField({
+  label,
+  children,
+  className,
+  stack,
+}: RangeFieldProps): React.JSX.Element {
   const [fromInput, toInput] = children;
   return (
     <div className={clsx(styles.root, className)}>
