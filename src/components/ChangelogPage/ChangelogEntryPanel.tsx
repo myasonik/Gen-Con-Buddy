@@ -70,7 +70,7 @@ export function ChangelogEntryPanel({
           summaryClassName={styles.groupSummary}
           summary={
             <span>
-              <span className={styles.groupVerb}>Created</span>{" "}
+              <span className={styles.groupVerbCreated}>Created</span>{" "}
               <span className={styles.groupCount}>({entry.createdEvents.length})</span>
             </span>
           }
@@ -84,7 +84,7 @@ export function ChangelogEntryPanel({
           summaryClassName={styles.groupSummary}
           summary={
             <span>
-              <span className={styles.groupVerb}>Updated</span>{" "}
+              <span className={styles.groupVerbUpdated}>Updated</span>{" "}
               <span className={styles.groupCount}>({entry.updatedEvents.length})</span>
             </span>
           }
@@ -98,7 +98,7 @@ export function ChangelogEntryPanel({
           summaryClassName={styles.groupSummary}
           summary={
             <span>
-              <span className={styles.groupVerb}>Deleted</span>{" "}
+              <span className={styles.groupVerbDeleted}>Deleted</span>{" "}
               <span className={styles.groupCount}>({entry.deletedEvents.length})</span>
             </span>
           }

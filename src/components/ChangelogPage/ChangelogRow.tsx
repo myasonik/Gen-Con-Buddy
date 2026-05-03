@@ -43,9 +43,9 @@ export function ChangelogRow({
             {format(new Date(summary.date), "MMM d, yyyy h:mm a")}
           </time>
           <span className={styles.counts}>
-            <span>{summary.createdCount} created</span>
-            <span>{summary.updatedCount} updated</span>
-            <span>{summary.deletedCount} deleted</span>
+            <span data-change="created">{summary.createdCount} created</span>
+            <span data-change="updated">{summary.updatedCount} updated</span>
+            <span data-change="deleted">{summary.deletedCount} deleted</span>
           </span>
         </>
       }

@@ -56,18 +56,42 @@
   border-color: var(--color-accent);
 }
 
-.groupVerb {
+.groupVerb,
+.groupVerbCreated,
+.groupVerbUpdated,
+.groupVerbDeleted {
   font-family: var(--font-slab);
   font-size: 0.9375rem;
   font-weight: 600;
   letter-spacing: 0.06rem;
   text-transform: uppercase;
-  color: var(--color-ink-muted);
   transition: color var(--motion-hover);
 }
 
+.groupVerb {
+  color: var(--color-ink-muted);
+}
+
+.groupVerbCreated {
+  color: var(--color-jade);
+}
+
+.groupVerbUpdated {
+  color: var(--color-cobalt);
+}
+
+.groupVerbDeleted {
+  color: var(--color-amber);
+}
+
 .groupSummary:hover .groupVerb,
-.group[open] .groupSummary .groupVerb {
+.groupSummary:hover .groupVerbCreated,
+.groupSummary:hover .groupVerbUpdated,
+.groupSummary:hover .groupVerbDeleted,
+.group[open] .groupSummary .groupVerb,
+.group[open] .groupSummary .groupVerbCreated,
+.group[open] .groupSummary .groupVerbUpdated,
+.group[open] .groupSummary .groupVerbDeleted {
   color: var(--color-ink);
 }
 
