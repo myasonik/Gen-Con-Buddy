@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import React, { type ReactNode } from "react";
 import { clsx } from "clsx";
 import { Wanted } from "../icons/Wanted";
 import styles from "./DescriptionList.module.css";
@@ -8,7 +8,7 @@ interface DescriptionListProps {
   className?: string;
 }
 
-export function DescriptionList({ children, className }: DescriptionListProps): JSX.Element {
+export function DescriptionList({ children, className }: DescriptionListProps): React.JSX.Element {
   return <dl className={[styles.list, className].filter(Boolean).join(" ")}>{children}</dl>;
 }
 
@@ -24,7 +24,7 @@ export function DescriptionItem({
   children,
   span,
   className,
-}: DescriptionItemProps): JSX.Element {
+}: DescriptionItemProps): React.JSX.Element {
   const isEmpty = children === null || children === undefined || children === "";
 
   return (

@@ -1,3 +1,4 @@
+import React from "react";
 import { EllipsisVertical } from "lucide-react";
 import { Popover } from "@base-ui/react/popover";
 import { Button } from "../Button/Button";
@@ -17,7 +18,7 @@ export function ColumnActionsPopover({
   activeSortDir,
   onSort,
   onOpenResize,
-}: ColumnActionsPopoverProps): JSX.Element {
+}: ColumnActionsPopoverProps): React.JSX.Element {
   const isSortedAsc =
     Boolean(sortField) && activeSortField === sortField && activeSortDir === "asc";
   const isSortedDesc =

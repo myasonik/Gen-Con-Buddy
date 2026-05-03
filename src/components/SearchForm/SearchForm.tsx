@@ -1,3 +1,4 @@
+import React from "react";
 import { useForm } from "react-hook-form";
 import { Search, RotateCcw, SlidersHorizontal, X } from "lucide-react";
 import { Dialog } from "@base-ui/react/dialog";
@@ -71,7 +72,7 @@ interface SearchFormProps {
   onSearch: (values: SearchFormValues) => void;
 }
 
-export function SearchForm({ values, onSearch }: SearchFormProps): JSX.Element {
+export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Element {
   const { register, handleSubmit, reset, watch, setValue } = useForm<SearchFormValues>({
     values,
   });
