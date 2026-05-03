@@ -1,7 +1,6 @@
-/// <reference types="vitest" />
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 
 const apiTarget = process.env.VITE_API_URL ?? "http://localhost:8080";
 
@@ -24,11 +23,7 @@ export default defineConfig({
     setupFiles: ["./src/test/setup.ts"],
     exclude: ["**/node_modules/**", "**/.claude/worktrees/**"],
     pool: "forks",
-    poolOptions: {
-      forks: {
-        minForks: 1,
-        maxForks: 8,
-      },
-    },
+    minWorkers: 1,
+    maxWorkers: 8,
   },
 });
