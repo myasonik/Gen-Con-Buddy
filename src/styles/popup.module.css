@@ -1,4 +1,4 @@
 .surface {
   background-color: var(--color-surface-panel);
-  border: 0.0625rem solid var(--color-ink-border);
+  border: var(--border-width) solid var(--color-ink-border);
 }

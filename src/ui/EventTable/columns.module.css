@@ -19,12 +19,12 @@
   padding: 0.0625rem 0.375rem;
   border-radius: var(--radius-pill);
   background: var(--color-error-surface);
-  border: 0.0625rem solid oklch(78% 0.07 22deg);
+  border: var(--border-width) solid var(--color-error-border);
   color: var(--color-error-deep);
   font-family: var(--font-slab);
-  font-size: 0.75rem;
+  font-size: var(--text-2xs);
   font-weight: 700;
-  letter-spacing: 0.04rem;
+  letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
   white-space: nowrap;
 }

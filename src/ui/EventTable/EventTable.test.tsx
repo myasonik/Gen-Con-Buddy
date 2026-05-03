@@ -93,7 +93,7 @@ async function renderEventTable(
           showColumnControls={false}
         />
       ) : (
-        <EventTableWithHooks events={events} showColumnControls={true} />
+        <EventTableWithHooks events={events} showColumnControls />
       ),
   });
   const eventRoute = createRoute({

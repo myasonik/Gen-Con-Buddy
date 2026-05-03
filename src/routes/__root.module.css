@@ -14,7 +14,7 @@
 
 .tagline {
   font-family: var(--font-mono);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: var(--color-ink-muted);
   margin: 0;
   flex: 1;
@@ -25,9 +25,9 @@
   gap: var(--space-3);
   margin-left: auto;
   font-family: var(--font-slab);
-  font-size: 0.9375rem;
+  font-size: var(--text-md);
   font-weight: 600;
-  letter-spacing: 0.05rem;
+  letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
 }
 
@@ -47,7 +47,7 @@
 
 .footer {
   padding: var(--space-2) var(--space-4);
-  border-top: 0.0625rem solid var(--color-ink-divider);
+  border-top: var(--border-width) solid var(--color-ink-divider);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,9 +55,9 @@
 
 .footerLink {
   font-family: var(--font-slab);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   font-weight: 400;
-  letter-spacing: 0.05rem;
+  letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
   text-decoration: none;
   color: var(--color-ink-faint);

@@ -14,16 +14,16 @@
 
 .text {
   font-family: var(--font-slab);
-  font-size: 1rem;
+  font-size: var(--text-base);
   font-weight: 600;
-  letter-spacing: 0.05rem;
+  letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
   color: var(--color-ink-muted);
   margin: var(--space-2) 0;
 }
 
 .subtext {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: var(--color-ink-faint);
   margin: 0;
 }
@@ -38,7 +38,7 @@
   height: var(--space-3);
   margin: 0 auto var(--space-3);
   background-color: var(--color-surface-panel);
-  border: 0.0625rem solid var(--color-ink-border);
+  border: var(--border-width) solid var(--color-ink-border);
   border-radius: var(--radius-pill);
   overflow: hidden;
 }
