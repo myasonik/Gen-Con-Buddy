@@ -43,3 +43,17 @@ One global utility class in `src/styles/global.css` is intentionally used as a b
 Never use inline `aria-live` regions or `role="alert"` / `role="status"` on rendered elements. Windows screen readers are buggy around dynamically inserted live regions, which all React apps produce. Always use the `announce()` utility from `src/lib/announce.ts` instead. Call `announce()` imperatively (e.g., in a `useEffect` or event handler) when something needs to be read out to screen readers.
 
 This is enforced by the `local/no-inline-live-regions` ESLint rule in `eslint.config.js`. The rule is an error, not a warning — the build will fail if violated.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues (`myasonik/Gen-Con-Buddy`). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default label strings — `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context repo — `CONTEXT.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
