@@ -1,10 +1,11 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Search, RotateCcw, SlidersHorizontal, X } from "lucide-react";
+import { Search, RotateCcw, SlidersHorizontal } from "lucide-react";
 import { Dialog } from "@base-ui/react/dialog";
 import { AGE_GROUPS, CATEGORY, EXP, REGISTRATION, YES_NO } from "../../utils/enums";
 import type { SearchFormValues } from "../../utils/types";
 import { Button } from "../../ui/Button/Button";
+import { Drawer } from "../../ui/Drawer/Drawer";
 import { EventTypeSelect } from "../../ui/EventTypeSelect/EventTypeSelect";
 import { Select } from "../../ui/Select/Select";
 import { Field, RangeField } from "../../ui/Field/Field";
@@ -81,8 +82,8 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
   const eventType = watch("eventType") ?? "";
 
   return (
-    <Dialog.Root>
-      <form id="search-form" onSubmit={handleSubmit(onSearch)} className={styles.formRoot}>
+    <div className={styles.formRoot}>
+      <form id="search-form" onSubmit={handleSubmit(onSearch)}>
         {/* Primary filter strip */}
         <div className={styles.strip}>
           {/* Keyword search */}
@@ -169,13 +170,300 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
             {/* Strip actions — inside dayTimeRow so they share line 2 at narrow widths;
                 at desktop dayTimeRow is display:contents so this becomes a strip-level flex item */}
             <div className={styles.stripActions}>
-              <Dialog.Trigger
-                render={
+              <Drawer
+                trigger={
                   <Button type="button" variant="secondary" className={styles.filtersButton}>
                     <SlidersHorizontal size={14} aria-hidden="true" /> Filters
                   </Button>
                 }
-              />
+                title="Advanced Filters"
+                footer={
+                  <Dialog.Close
+                    render={
+                      <Button
+                        type="submit"
+                        form="search-form"
+                        variant="primary"
+                        className={styles.applyButton}
+                      >
+                        Apply Filters
+                      </Button>
+                    }
+                  />
+                }
+              >
+                {/* DURATION */}
+                <fieldset className={styles.fieldset}>
+                  <legend className={styles.legend}>Duration</legend>
+                  <div className={styles.fieldsetBody}>
+                    <RangeField label="Duration (hours)">
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.5"
+                        className={styles.input}
+                        {...register("durationMin")}
+                      />
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.5"
+                        className={styles.input}
+                        {...register("durationMax")}
+                      />
+                    </RangeField>
+                  </div>
+                </fieldset>
+
+                {/* PLAYERS */}
+                <fieldset className={styles.fieldset}>
+                  <legend className={styles.legend}>Players</legend>
+                  <div className={styles.fieldsetBody}>
+                    <RangeField label="Min Players">
+                      <input
+                        type="number"
+                        min="0"
+                        className={styles.input}
+                        {...register("minPlayersMin")}
+                      />
+                      <input
+                        type="number"
+                        min="0"
+                        className={styles.input}
+                        {...register("minPlayersMax")}
+                      />
+                    </RangeField>
+                    <RangeField label="Max Players">
+                      <input
+                        type="number"
+                        min="0"
+                        className={styles.input}
+                        {...register("maxPlayersMin")}
+                      />
+                      <input
+                        type="number"
+                        min="0"
+                        className={styles.input}
+                        {...register("maxPlayersMax")}
+                      />
+                    </RangeField>
+                    <label className={styles.label}>
+                      Age Required
+                      <Select
+                        value={watch("ageRequired") ?? ""}
+                        onValueChange={(v) => setValue("ageRequired", v)}
+                        options={Object.entries(AGE_GROUPS).map(([k, v]) => ({
+                          value: k,
+                          label: v,
+                        }))}
+                      />
+                    </label>
+                    <label className={styles.label}>
+                      Experience Required
+                      <Select
+                        value={watch("experienceRequired") ?? ""}
+                        onValueChange={(v) => setValue("experienceRequired", v)}
+                        options={Object.entries(EXP).map(([k, v]) => ({ value: k, label: v }))}
+                      />
+                    </label>
+                  </div>
+                </fieldset>
+
+                {/* LOGISTICS */}
+                <fieldset className={styles.fieldset}>
+                  <legend className={styles.legend}>Logistics</legend>
+                  <div className={styles.fieldsetBody}>
+                    <Field label="Location">
+                      <input type="text" className={styles.input} {...register("location")} />
+                    </Field>
+                    <Field label="Room Name">
+                      <input type="text" className={styles.input} {...register("roomName")} />
+                    </Field>
+                    <Field label="Table">
+                      <input type="text" className={styles.input} {...register("tableNumber")} />
+                    </Field>
+                    <RangeField label="Cost">
+                      <input
+                        type="number"
+                        min="0"
+                        className={styles.input}
+                        {...register("costMin")}
+                      />
+                      <input
+                        type="number"
+                        min="0"
+                        className={styles.input}
+                        {...register("costMax")}
+                      />
+                    </RangeField>
+                    <RangeField label="Tickets Available">
+                      <input
+                        type="number"
+                        min="0"
+                        className={styles.input}
+                        {...register("ticketsAvailableMin")}
+                      />
+                      <input
+                        type="number"
+                        min="0"
+                        className={styles.input}
+                        {...register("ticketsAvailableMax")}
+                      />
+                    </RangeField>
+                    <label className={styles.label}>
+                      Attendee Registration
+                      <Select
+                        value={watch("attendeeRegistration") ?? ""}
+                        onValueChange={(v) => setValue("attendeeRegistration", v)}
+                        options={Object.entries(REGISTRATION).map(([k, v]) => ({
+                          value: k,
+                          label: v,
+                        }))}
+                      />
+                    </label>
+                  </div>
+                </fieldset>
+
+                {/* DETAILS */}
+                <fieldset className={styles.fieldset}>
+                  <legend className={styles.legend}>Details</legend>
+                  <div className={styles.fieldsetBody}>
+                    <Field label="Game ID">
+                      <input type="text" className={styles.input} {...register("gameId")} />
+                    </Field>
+                    <Field label="Title">
+                      <input type="text" className={styles.input} {...register("title")} />
+                    </Field>
+                    <Field label="Group">
+                      <input type="text" className={styles.input} {...register("group")} />
+                    </Field>
+                    <Field label="Short Description">
+                      <input
+                        type="text"
+                        className={styles.input}
+                        {...register("shortDescription")}
+                      />
+                    </Field>
+                    <Field label="Long Description">
+                      <input
+                        type="text"
+                        className={styles.input}
+                        {...register("longDescription")}
+                      />
+                    </Field>
+                    <Field label="Game System">
+                      <input type="text" className={styles.input} {...register("gameSystem")} />
+                    </Field>
+                    <Field label="Rules Edition">
+                      <input type="text" className={styles.input} {...register("rulesEdition")} />
+                    </Field>
+                    <Field label="Materials Provided">
+                      <input
+                        type="text"
+                        className={styles.input}
+                        {...register("materialsProvided")}
+                      />
+                    </Field>
+                    <label className={styles.label}>
+                      Materials Required
+                      <Select
+                        value={watch("materialsRequired") ?? ""}
+                        onValueChange={(v) => setValue("materialsRequired", v)}
+                        options={Object.entries(YES_NO).map(([k, v]) => ({ value: k, label: v }))}
+                        aria-label="Materials Required"
+                      />
+                    </label>
+                    <Field label="Materials Required Details">
+                      <input
+                        type="text"
+                        className={styles.input}
+                        {...register("materialsRequiredDetails")}
+                      />
+                    </Field>
+                    <Field label="Game Masters">
+                      <input type="text" className={styles.input} {...register("gmNames")} />
+                    </Field>
+                    <Field label="Website">
+                      <input type="text" className={styles.input} {...register("website")} />
+                    </Field>
+                    <Field label="Email">
+                      <input type="text" className={styles.input} {...register("email")} />
+                    </Field>
+                    <label className={styles.label}>
+                      Tournament
+                      <Select
+                        value={watch("tournament") ?? ""}
+                        onValueChange={(v) => setValue("tournament", v)}
+                        options={Object.entries(YES_NO).map(([k, v]) => ({ value: k, label: v }))}
+                        aria-label="Tournament"
+                      />
+                    </label>
+                    <RangeField label="Round Number">
+                      <input
+                        type="number"
+                        min="0"
+                        className={styles.input}
+                        {...register("roundNumberMin")}
+                      />
+                      <input
+                        type="number"
+                        min="0"
+                        className={styles.input}
+                        {...register("roundNumberMax")}
+                      />
+                    </RangeField>
+                    <RangeField label="Total Rounds">
+                      <input
+                        type="number"
+                        min="0"
+                        className={styles.input}
+                        {...register("totalRoundsMin")}
+                      />
+                      <input
+                        type="number"
+                        min="0"
+                        className={styles.input}
+                        {...register("totalRoundsMax")}
+                      />
+                    </RangeField>
+                    <RangeField label="Minimum Play Time">
+                      <input
+                        type="number"
+                        min="0"
+                        className={styles.input}
+                        {...register("minimumPlayTimeMin")}
+                      />
+                      <input
+                        type="number"
+                        min="0"
+                        className={styles.input}
+                        {...register("minimumPlayTimeMax")}
+                      />
+                    </RangeField>
+                    <label className={styles.label}>
+                      Special Category
+                      <Select
+                        value={watch("specialCategory") ?? ""}
+                        onValueChange={(v) => setValue("specialCategory", v)}
+                        options={Object.entries(CATEGORY).map(([k, v]) => ({ value: k, label: v }))}
+                      />
+                    </label>
+                    <RangeField label="Last Modified" stack>
+                      <input
+                        type="datetime-local"
+                        className={styles.input}
+                        {...register("lastModifiedStart")}
+                      />
+                      <input
+                        type="datetime-local"
+                        className={styles.input}
+                        {...register("lastModifiedEnd")}
+                      />
+                    </RangeField>
+                  </div>
+                </fieldset>
+              </Drawer>
+
               <Button
                 type="button"
                 variant="secondary"
@@ -191,285 +479,6 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
           </div>
         </div>
       </form>
-
-      <Dialog.Portal>
-        <Dialog.Backdrop className={styles.backdrop} data-testid="drawer-backdrop" />
-        <Dialog.Popup className={styles.drawer}>
-          <div className={styles.drawerHeader}>
-            <Dialog.Title className={styles.drawerTitle}>Advanced Filters</Dialog.Title>
-            <Dialog.Close
-              render={
-                <Button type="button" variant="ghost" icon aria-label="Close advanced filters">
-                  <X size={16} aria-hidden="true" />
-                </Button>
-              }
-            />
-          </div>
-
-          <div className={styles.drawerScroll}>
-            {/* DURATION */}
-            <fieldset className={styles.fieldset}>
-              <legend className={styles.legend}>Duration</legend>
-              <div className={styles.fieldsetBody}>
-                <RangeField label="Duration (hours)">
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.5"
-                    className={styles.input}
-                    {...register("durationMin")}
-                  />
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.5"
-                    className={styles.input}
-                    {...register("durationMax")}
-                  />
-                </RangeField>
-              </div>
-            </fieldset>
-
-            {/* PLAYERS */}
-            <fieldset className={styles.fieldset}>
-              <legend className={styles.legend}>Players</legend>
-              <div className={styles.fieldsetBody}>
-                <RangeField label="Min Players">
-                  <input
-                    type="number"
-                    min="0"
-                    className={styles.input}
-                    {...register("minPlayersMin")}
-                  />
-                  <input
-                    type="number"
-                    min="0"
-                    className={styles.input}
-                    {...register("minPlayersMax")}
-                  />
-                </RangeField>
-                <RangeField label="Max Players">
-                  <input
-                    type="number"
-                    min="0"
-                    className={styles.input}
-                    {...register("maxPlayersMin")}
-                  />
-                  <input
-                    type="number"
-                    min="0"
-                    className={styles.input}
-                    {...register("maxPlayersMax")}
-                  />
-                </RangeField>
-                <label className={styles.label}>
-                  Age Required
-                  <Select
-                    value={watch("ageRequired") ?? ""}
-                    onValueChange={(v) => setValue("ageRequired", v)}
-                    options={Object.entries(AGE_GROUPS).map(([k, v]) => ({ value: k, label: v }))}
-                  />
-                </label>
-                <label className={styles.label}>
-                  Experience Required
-                  <Select
-                    value={watch("experienceRequired") ?? ""}
-                    onValueChange={(v) => setValue("experienceRequired", v)}
-                    options={Object.entries(EXP).map(([k, v]) => ({ value: k, label: v }))}
-                  />
-                </label>
-              </div>
-            </fieldset>
-
-            {/* LOGISTICS */}
-            <fieldset className={styles.fieldset}>
-              <legend className={styles.legend}>Logistics</legend>
-              <div className={styles.fieldsetBody}>
-                <Field label="Location">
-                  <input type="text" className={styles.input} {...register("location")} />
-                </Field>
-                <Field label="Room Name">
-                  <input type="text" className={styles.input} {...register("roomName")} />
-                </Field>
-                <Field label="Table">
-                  <input type="text" className={styles.input} {...register("tableNumber")} />
-                </Field>
-                <RangeField label="Cost">
-                  <input type="number" min="0" className={styles.input} {...register("costMin")} />
-                  <input type="number" min="0" className={styles.input} {...register("costMax")} />
-                </RangeField>
-                <RangeField label="Tickets Available">
-                  <input
-                    type="number"
-                    min="0"
-                    className={styles.input}
-                    {...register("ticketsAvailableMin")}
-                  />
-                  <input
-                    type="number"
-                    min="0"
-                    className={styles.input}
-                    {...register("ticketsAvailableMax")}
-                  />
-                </RangeField>
-                <label className={styles.label}>
-                  Attendee Registration
-                  <Select
-                    value={watch("attendeeRegistration") ?? ""}
-                    onValueChange={(v) => setValue("attendeeRegistration", v)}
-                    options={Object.entries(REGISTRATION).map(([k, v]) => ({
-                      value: k,
-                      label: v,
-                    }))}
-                  />
-                </label>
-              </div>
-            </fieldset>
-
-            {/* DETAILS */}
-            <fieldset className={styles.fieldset}>
-              <legend className={styles.legend}>Details</legend>
-              <div className={styles.fieldsetBody}>
-                <Field label="Game ID">
-                  <input type="text" className={styles.input} {...register("gameId")} />
-                </Field>
-                <Field label="Title">
-                  <input type="text" className={styles.input} {...register("title")} />
-                </Field>
-                <Field label="Group">
-                  <input type="text" className={styles.input} {...register("group")} />
-                </Field>
-                <Field label="Short Description">
-                  <input type="text" className={styles.input} {...register("shortDescription")} />
-                </Field>
-                <Field label="Long Description">
-                  <input type="text" className={styles.input} {...register("longDescription")} />
-                </Field>
-                <Field label="Game System">
-                  <input type="text" className={styles.input} {...register("gameSystem")} />
-                </Field>
-                <Field label="Rules Edition">
-                  <input type="text" className={styles.input} {...register("rulesEdition")} />
-                </Field>
-                <Field label="Materials Provided">
-                  <input type="text" className={styles.input} {...register("materialsProvided")} />
-                </Field>
-                <label className={styles.label}>
-                  Materials Required
-                  <Select
-                    value={watch("materialsRequired") ?? ""}
-                    onValueChange={(v) => setValue("materialsRequired", v)}
-                    options={Object.entries(YES_NO).map(([k, v]) => ({ value: k, label: v }))}
-                    aria-label="Materials Required"
-                  />
-                </label>
-                <Field label="Materials Required Details">
-                  <input
-                    type="text"
-                    className={styles.input}
-                    {...register("materialsRequiredDetails")}
-                  />
-                </Field>
-                <Field label="Game Masters">
-                  <input type="text" className={styles.input} {...register("gmNames")} />
-                </Field>
-                <Field label="Website">
-                  <input type="text" className={styles.input} {...register("website")} />
-                </Field>
-                <Field label="Email">
-                  <input type="text" className={styles.input} {...register("email")} />
-                </Field>
-                <label className={styles.label}>
-                  Tournament
-                  <Select
-                    value={watch("tournament") ?? ""}
-                    onValueChange={(v) => setValue("tournament", v)}
-                    options={Object.entries(YES_NO).map(([k, v]) => ({ value: k, label: v }))}
-                    aria-label="Tournament"
-                  />
-                </label>
-                <RangeField label="Round Number">
-                  <input
-                    type="number"
-                    min="0"
-                    className={styles.input}
-                    {...register("roundNumberMin")}
-                  />
-                  <input
-                    type="number"
-                    min="0"
-                    className={styles.input}
-                    {...register("roundNumberMax")}
-                  />
-                </RangeField>
-                <RangeField label="Total Rounds">
-                  <input
-                    type="number"
-                    min="0"
-                    className={styles.input}
-                    {...register("totalRoundsMin")}
-                  />
-                  <input
-                    type="number"
-                    min="0"
-                    className={styles.input}
-                    {...register("totalRoundsMax")}
-                  />
-                </RangeField>
-                <RangeField label="Minimum Play Time">
-                  <input
-                    type="number"
-                    min="0"
-                    className={styles.input}
-                    {...register("minimumPlayTimeMin")}
-                  />
-                  <input
-                    type="number"
-                    min="0"
-                    className={styles.input}
-                    {...register("minimumPlayTimeMax")}
-                  />
-                </RangeField>
-                <label className={styles.label}>
-                  Special Category
-                  <Select
-                    value={watch("specialCategory") ?? ""}
-                    onValueChange={(v) => setValue("specialCategory", v)}
-                    options={Object.entries(CATEGORY).map(([k, v]) => ({ value: k, label: v }))}
-                  />
-                </label>
-                <RangeField label="Last Modified" stack>
-                  <input
-                    type="datetime-local"
-                    className={styles.input}
-                    {...register("lastModifiedStart")}
-                  />
-                  <input
-                    type="datetime-local"
-                    className={styles.input}
-                    {...register("lastModifiedEnd")}
-                  />
-                </RangeField>
-              </div>
-            </fieldset>
-          </div>
-
-          <div className={styles.drawerFooter}>
-            <Dialog.Close
-              render={
-                <Button
-                  type="submit"
-                  form="search-form"
-                  variant="primary"
-                  className={styles.applyButton}
-                >
-                  Apply Filters
-                </Button>
-              }
-            />
-          </div>
-        </Dialog.Popup>
-      </Dialog.Portal>
-    </Dialog.Root>
+    </div>
   );
 }
