@@ -566,35 +566,35 @@ test("eventType cell renders code and name spans in the DOM", async () => {
   expect(screen.getAllByText("Role Playing Game").length).toBeGreaterThan(0);
 });
 
-test("applies typeDisplayName class to EventTable section when mode is name", async () => {
+test("EventTable section carries data-type-display=name when mode is name", async () => {
   localStorage.setItem(
     "gcb-type-display",
     JSON.stringify({ version: 3, value: { textMode: "name", showIcon: true } }),
   );
   const { container } = renderSearchResults();
   await screen.findAllByRole("row");
-  expect(container.querySelector('[class*="typeDisplayName"]')).not.toBeNull();
+  expect(container.querySelector('[data-type-display="name"]')).not.toBeNull();
 });
 
-test("applies typeHideIcon class to EventTable section when showTypeIcon is false", async () => {
+test("EventTable section carries data-show-icon=false when showTypeIcon is false", async () => {
   localStorage.setItem(
     "gcb-type-display",
     JSON.stringify({ version: 3, value: { textMode: "name", showIcon: false } }),
   );
   const { container } = renderSearchResults();
   await screen.findAllByRole("row");
-  expect(container.querySelector('[class*="typeHideIcon"]')).not.toBeNull();
+  expect(container.querySelector('[data-show-icon="false"]')).not.toBeNull();
 });
 
-test("no text mode class on EventTable section when typeDisplay is both", async () => {
+test("EventTable section has no data-type-display attribute when typeDisplay is both", async () => {
   localStorage.setItem(
     "gcb-type-display",
     JSON.stringify({ version: 3, value: { textMode: "both", showIcon: true } }),
   );
   const { container } = renderSearchResults();
   await screen.findAllByRole("row");
-  expect(container.querySelector('[class*="typeDisplayCode"]')).toBeNull();
-  expect(container.querySelector('[class*="typeDisplayName"]')).toBeNull();
+  expect(container.querySelector('[data-type-display="code"]')).toBeNull();
+  expect(container.querySelector('[data-type-display="name"]')).toBeNull();
 });
 
 test("type display radio buttons are present with Name checked by default", async () => {
