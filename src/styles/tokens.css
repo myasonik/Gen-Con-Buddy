@@ -13,7 +13,18 @@
   --color-accent: oklch(48% 0.14 34deg);
   --color-accent-deep: oklch(42% 0.13 34deg);
   --color-accent-surface: oklch(92% 0.04 42deg);
+  --color-jade: oklch(43% 0.13 148deg);
+  --color-jade-deep: oklch(36% 0.11 148deg);
+  --color-jade-surface: oklch(93% 0.018 148deg);
+  --color-cobalt: oklch(44% 0.12 235deg);
+  --color-cobalt-deep: oklch(37% 0.1 235deg);
+  --color-cobalt-surface: oklch(93% 0.018 235deg);
+  --color-amber: oklch(52% 0.15 62deg);
+  --color-amber-deep: oklch(45% 0.13 62deg);
+  --color-amber-surface: oklch(93% 0.022 68deg);
   --color-error: oklch(52% 0.18 22deg);
+  --color-error-deep: oklch(40% 0.14 22deg);
+  --color-error-surface: oklch(93% 0.03 22deg);
 
   /* ── Typography ───────────────────────────────────────────────────────── */
   --font-display: "Cormorant Garamond", georgia, serif;
