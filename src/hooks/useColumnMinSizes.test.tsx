@@ -24,7 +24,7 @@ function TestTable({
   rows: { colId: string; content: React.ReactNode }[][];
 }): React.ReactElement {
   const tableRef = useRef<HTMLTableElement>(null);
-  const minSizes = useColumnMinSizes(tableRef, events);
+  const minSizes = useColumnMinSizes(tableRef, events, {});
   return (
     <>
       <table ref={tableRef}>
@@ -104,7 +104,7 @@ test("returns {} when tableRef is null (not yet mounted)", () => {
   // useRef inside a component with no DOM element attached keeps current = null
   function NoTable(): React.ReactElement {
     const ref = useRef<HTMLTableElement>(null);
-    const minSizes = useColumnMinSizes(ref, [makeEvent()]);
+    const minSizes = useColumnMinSizes(ref, [makeEvent()], {});
     return <div data-testid="result">{JSON.stringify(minSizes)}</div>;
   }
   render(<NoTable />);
@@ -121,6 +121,46 @@ test("returns {} when canvas context is unavailable", async () => {
   });
 });
 
+test("remeasures when visibility changes", async () => {
+  const events = [makeEvent()];
+
+  function VisibilityRerender(): React.ReactElement {
+    const [showExtra, setShowExtra] = useState(false);
+    const tableRef = useRef<HTMLTableElement>(null);
+    const visibility: Record<string, boolean> = showExtra ? { extra: true } : {};
+    const minSizes = useColumnMinSizes(tableRef, events, visibility);
+    return (
+      <>
+        <table ref={tableRef}>
+          <tbody>
+            <tr>
+              <td data-col-id="day">Wednesday</td>
+              {showExtra && <td data-col-id="extra">Longword</td>}
+            </tr>
+          </tbody>
+        </table>
+        <div data-testid="result">{JSON.stringify(minSizes)}</div>
+        <button type="button" onClick={() => setShowExtra(true)}>
+          show extra
+        </button>
+      </>
+    );
+  }
+
+  const user = (await import("@testing-library/user-event")).default.setup();
+  render(<VisibilityRerender />);
+  await waitFor(() => {
+    const result = JSON.parse(screen.getByTestId("result").textContent ?? "");
+    expect(result.day).toBe(72); // "Wednesday" = 9 × 8
+    expect(result.extra).toBeUndefined();
+  });
+  await user.click(screen.getByRole("button", { name: "show extra" }));
+  await waitFor(() => {
+    const result = JSON.parse(screen.getByTestId("result").textContent ?? "");
+    expect(result.extra).toBe(64); // "Longword" = 8 × 8
+  });
+});
+
 test("remeasures when events change", async () => {
   const events1 = [makeEvent()];
   const events2 = [makeEvent()];
@@ -128,7 +168,7 @@ test("remeasures when events change", async () => {
   function Rerender(): React.ReactElement {
     const [events, setEvents] = useState(events1);
     const tableRef = useRef<HTMLTableElement>(null);
-    const minSizes = useColumnMinSizes(tableRef, events);
+    const minSizes = useColumnMinSizes(tableRef, events, {});
     return (
       <>
         <table ref={tableRef}>

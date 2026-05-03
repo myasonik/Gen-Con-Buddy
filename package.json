@@ -12,7 +12,7 @@
     "preview": "vite preview",
     "lint": "oxlint --ignore-path .oxlintignore -c .oxlintrc.json . && eslint . && npm run lint:css",
     "lint:css": "stylelint '**/*.css' --ignore-path .gitignore",
-    "test": "vitest run",
+    "test": "NODE_OPTIONS='--max-old-space-size=8192 --expose-gc' vitest run",
     "test:watch": "vitest",
     "format": "oxfmt --write .",
     "format:check": "oxfmt --check .",

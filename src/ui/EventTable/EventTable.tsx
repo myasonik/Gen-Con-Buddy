@@ -50,7 +50,7 @@ export function EventTable({
   // Unique prefix so anchor names don't collide when multiple EventTable instances are on the page
   const tableId = useId().replace(/:/g, "");
   const tableRef = useRef<HTMLTableElement>(null);
-  const columnMinSizes = useColumnMinSizes(tableRef, events);
+  const columnMinSizes = useColumnMinSizes(tableRef, events, visibility);
   const [clipWrapper, setClipWrapper] = useState<HTMLDivElement | null>(null);
   const [resizeTarget, setResizeTarget] = useState<{
     columnId: string;
