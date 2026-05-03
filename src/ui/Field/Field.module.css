@@ -6,9 +6,9 @@
 
 .label {
   font-family: var(--font-slab);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   font-weight: 600;
-  letter-spacing: 0.04rem;
+  letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
   color: var(--color-ink-muted);
 }
@@ -25,6 +25,6 @@
 }
 
 .rangeFieldLabel {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: var(--color-ink-faint);
 }

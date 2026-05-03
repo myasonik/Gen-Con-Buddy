@@ -7,7 +7,7 @@
   line-height: 1;
   text-decoration: none;
   font-family: var(--font-slab);
-  font-size: 1rem;
+  font-size: var(--text-base);
   font-weight: 600;
   letter-spacing: 0.03rem;
   border-radius: var(--radius-subtle);
@@ -35,7 +35,7 @@
 
 .secondary {
   background: transparent;
-  border: 0.0625rem solid var(--color-ink-border);
+  border: var(--border-width) solid var(--color-ink-border);
   padding: var(--space-1) var(--space-3);
   color: var(--color-ink);
 }
@@ -60,7 +60,7 @@
 
 .large {
   padding: var(--space-2) var(--space-4);
-  font-size: 1.0625rem;
+  font-size: var(--text-lg);
 }
 
 .icon {

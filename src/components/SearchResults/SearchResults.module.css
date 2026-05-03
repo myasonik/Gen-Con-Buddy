@@ -25,6 +25,6 @@
     display: flex;
     justify-content: flex-end;
     padding: var(--space-2) var(--space-3);
-    border-bottom: 0.0625rem solid var(--color-ink-divider);
+    border-bottom: var(--border-width) solid var(--color-ink-divider);
   }
 }

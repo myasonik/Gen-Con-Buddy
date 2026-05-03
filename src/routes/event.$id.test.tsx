@@ -1,39 +1,18 @@
-import { StrictMode } from "react";
 import { afterEach, expect, test } from "vitest";
-import { act, render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
-import { RouterProvider, createRouter, createMemoryHistory } from "@tanstack/react-router";
-import { QueryClientProvider } from "@tanstack/react-query";
 import { server } from "../test/msw/server";
 import { makeEvent } from "../test/msw/factory";
-import { routeTree } from "../routeTree.gen";
 import { queryClient } from "../lib/queryClient";
+import { renderRoute } from "../test/renderRoute";
 import type { EventSearchResponse } from "../utils/types";
 
 afterEach(() => {
   queryClient.clear();
 });
 
-// oxlint-disable-next-line typescript/explicit-function-return-type
-async function renderEventDetailPage(gameId: string) {
-  const history = createMemoryHistory({ initialEntries: [`/event/${gameId}`] });
-  const router = createRouter({ routeTree, history });
-  // use the singleton so loader and component share the same cache
-  await router.load();
-  await act(async () => {
-    render(
-      <StrictMode>
-        <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
-        </QueryClientProvider>
-      </StrictMode>,
-    );
-  });
-  return router;
-}
-
 test("renders event detail page inside a main landmark", async () => {
-  await renderEventDetailPage("RPG24000042");
+  await renderRoute("/event/RPG24000042", { queryClient });
   expect(screen.getByRole("main")).toBeInTheDocument();
 });
 
@@ -51,7 +30,7 @@ test("passes the route param gameId to the API", async () => {
       return HttpResponse.json(response);
     }),
   );
-  await renderEventDetailPage("BGM24000099");
+  await renderRoute("/event/BGM24000099", { queryClient });
   await screen.findAllByRole("term");
   // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(capturedUrl!.searchParams.get("gameId")).toBe("BGM24000099");
@@ -71,7 +50,7 @@ test("renders the event title from the URL gameId param", async () => {
       return HttpResponse.json(response);
     }),
   );
-  await renderEventDetailPage("RPG24000042");
+  await renderRoute("/event/RPG24000042", { queryClient });
   await expect(screen.findByText("Dungeon Crawl Classic")).resolves.toBeInTheDocument();
 });
 
@@ -89,7 +68,7 @@ test("has exactly one h1 on the event detail page", async () => {
       return HttpResponse.json(response);
     }),
   );
-  await renderEventDetailPage("RPG24000001");
+  await renderRoute("/event/RPG24000001", { queryClient });
   await screen.findByText("Only Heading Here");
   expect(document.querySelectorAll("h1")).toHaveLength(1);
 });
@@ -108,7 +87,7 @@ test("loader pre-fetches event data so the component renders without loading sta
       return HttpResponse.json(response);
     }),
   );
-  await renderEventDetailPage("RPG24000001");
+  await renderRoute("/event/RPG24000001", { queryClient });
   // loader primed the cache; component should render data immediately
   await expect(screen.findByText("Pre-fetched Event")).resolves.toBeInTheDocument();
   expect(screen.queryByText("LOADING QUEST...")).not.toBeInTheDocument();

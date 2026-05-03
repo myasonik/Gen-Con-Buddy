@@ -1,7 +1,12 @@
 import { StrictMode } from "react";
 import { act, render, type RenderResult } from "@testing-library/react";
 import userEvent, { type UserEvent } from "@testing-library/user-event";
-import { RouterProvider, createRouter, createMemoryHistory } from "@tanstack/react-router";
+import {
+  RouterProvider,
+  createRouter,
+  createMemoryHistory,
+  type AnyRouter,
+} from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { routeTree } from "../routeTree.gen";
 import type { SearchParams } from "../utils/types";
@@ -12,7 +17,7 @@ export async function renderRoute(
     searchParams?: Partial<SearchParams>;
     queryClient?: QueryClient;
   },
-): Promise<{ user: UserEvent } & RenderResult> {
+): Promise<{ user: UserEvent; router: AnyRouter } & RenderResult> {
   const client =
     options?.queryClient ?? new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
@@ -41,5 +46,5 @@ export async function renderRoute(
   );
   await act(async () => {});
 
-  return { user, ...result };
+  return { user, router, ...result };
 }
