@@ -10,7 +10,7 @@
   gap: var(--space-3);
   padding: var(--space-2) var(--space-4);
   background: var(--color-surface-panel);
-  border-bottom: 0.0625rem solid var(--color-ink-divider);
+  border-bottom: var(--border-width) solid var(--color-ink-divider);
 }
 
 .shell {
