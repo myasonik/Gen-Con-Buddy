@@ -5,6 +5,7 @@ import { Link } from "@tanstack/react-router";
 import { fetchEvents } from "../../utils/api";
 import { buildGoogleCalendarUrl } from "../../utils/googleCalendar";
 import { Button } from "../../ui/Button/Button";
+import { Chip } from "../../ui/Chip/Chip";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { DescriptionList, DescriptionItem } from "../../ui/DescriptionList/DescriptionList";
 import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
@@ -141,7 +142,9 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
             <DescriptionItem term="Attendee Registration">{a.attendeeRegistration}</DescriptionItem>
             <DescriptionItem term="Tickets Available">
               {a.ticketsAvailable === 0 ? (
-                <span className={styles.soldOut}>Sold out</span>
+                <Chip tone="error" size="sm">
+                  Sold out
+                </Chip>
               ) : (
                 a.ticketsAvailable
               )}

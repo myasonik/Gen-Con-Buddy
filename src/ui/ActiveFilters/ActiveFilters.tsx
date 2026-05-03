@@ -1,7 +1,7 @@
 import React from "react";
 import type { SearchParams } from "../../utils/types";
 import { type ActiveFilter, getActiveFilters } from "./getActiveFilters";
-import { Button } from "../Button/Button";
+import { Chip } from "../Chip/Chip";
 import styles from "./ActiveFilters.module.css";
 
 interface ActiveFiltersProps {
@@ -22,10 +22,13 @@ export function ActiveFilters({
     <ul className={styles.bar} aria-label="Active filters">
       {filters.map((filter) => (
         <li key={filter.id}>
-          <Button variant="ghost" className={styles.chip} onClick={() => onRemove(filter)}>
-            {filter.icon && <filter.icon size={12} />}
-            {filter.label} <span aria-hidden="true">×</span>
-          </Button>
+          <Chip
+            tone="accent"
+            icon={filter.icon ? <filter.icon size={12} /> : undefined}
+            onRemove={() => onRemove(filter)}
+          >
+            {filter.label}
+          </Chip>
         </li>
       ))}
     </ul>

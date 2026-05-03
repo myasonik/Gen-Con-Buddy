@@ -5,6 +5,7 @@ import { EventListMobile } from "../../ui/EventTable/EventListMobile";
 import { EventTable } from "../../ui/EventTable/EventTable";
 import type { SharedColumnState } from "../../ui/EventTable/types";
 import type { ChangelogEntry, Event } from "../../utils/types";
+import { Chip } from "../../ui/Chip/Chip";
 import styles from "./ChangelogEntryPanel.module.css";
 
 type EntryValue = ChangelogEntry | "loading" | "error" | undefined;
@@ -72,7 +73,9 @@ export function ChangelogEntryPanel({
           summary={
             <span>
               <span className={styles.groupVerbCreated}>Created</span>{" "}
-              <span className={styles.groupCount}>({entry.createdEvents.length})</span>
+              <Chip tone="neutral" className={styles.groupCount}>
+                ({entry.createdEvents.length})
+              </Chip>
             </span>
           }
         >
@@ -86,7 +89,9 @@ export function ChangelogEntryPanel({
           summary={
             <span>
               <span className={styles.groupVerbUpdated}>Updated</span>{" "}
-              <span className={styles.groupCount}>({entry.updatedEvents.length})</span>
+              <Chip tone="neutral" className={styles.groupCount}>
+                ({entry.updatedEvents.length})
+              </Chip>
             </span>
           }
         >
@@ -100,7 +105,9 @@ export function ChangelogEntryPanel({
           summary={
             <span>
               <span className={styles.groupVerbDeleted}>Deleted</span>{" "}
-              <span className={styles.groupCount}>({entry.deletedEvents.length})</span>
+              <Chip tone="neutral" className={styles.groupCount}>
+                ({entry.deletedEvents.length})
+              </Chip>
             </span>
           }
         >

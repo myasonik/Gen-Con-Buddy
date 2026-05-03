@@ -6,6 +6,7 @@ import { EXP } from "../../utils/enums";
 import type { Event } from "../../utils/types";
 import { DescriptionItem, DescriptionList } from "../DescriptionList/DescriptionList";
 import { EVENT_TYPE_ICONS } from "../icons/eventTypeIcons";
+import { Chip } from "../Chip/Chip";
 import { COLUMNS, COLUMN_GROUPS } from "./columns";
 import styles from "./EventListMobile.module.css";
 import typeCellStyles from "./typeCell.module.css";
@@ -221,13 +222,16 @@ export function EventListMobile({
                     </span>
                   )}
                   {playersText !== null && <span>{playersText}</span>}
-                  {isVisible("ticketsAvailable") && (
-                    <span className={a.ticketsAvailable === 0 ? styles.soldOut : undefined}>
-                      {a.ticketsAvailable > 0
-                        ? `${a.ticketsAvailable} ticket${a.ticketsAvailable !== 1 ? "s" : ""}`
-                        : "Sold out"}
-                    </span>
-                  )}
+                  {isVisible("ticketsAvailable") &&
+                    (a.ticketsAvailable === 0 ? (
+                      <Chip tone="error" size="sm">
+                        Sold out
+                      </Chip>
+                    ) : (
+                      <span>
+                        {`${a.ticketsAvailable} ticket${a.ticketsAvailable !== 1 ? "s" : ""}`}
+                      </span>
+                    ))}
                 </span>
               )}
               {extraFields.length > 0 && (

@@ -281,8 +281,8 @@ describe("sidebar toggle and active filters", () => {
   it("clicking a filter chip removes it from the URL", async () => {
     const user = userEvent.setup();
     const router = await renderSearchPage("/?filter=dragon&location=Hall+A");
-    expect(screen.getByRole("button", { name: /Search: dragon/ })).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: /Search: dragon/ }));
+    expect(screen.getByRole("button", { name: /Remove Search: dragon/ })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /Remove Search: dragon/ }));
     expect(router.state.location.searchStr).not.toContain("filter=");
     expect(router.state.location.searchStr).toContain("location=");
   });
@@ -290,8 +290,8 @@ describe("sidebar toggle and active filters", () => {
   it("days filter produces one chip per day", async () => {
     await renderSearchPage("/?days=fri%2Csat");
     const bar = screen.getByRole("list", { name: "Active filters" });
-    expect(within(bar).getByRole("button", { name: "Fri" })).toBeInTheDocument();
-    expect(within(bar).getByRole("button", { name: "Sat" })).toBeInTheDocument();
+    expect(within(bar).getByText("Fri")).toBeInTheDocument();
+    expect(within(bar).getByText("Sat")).toBeInTheDocument();
     expect(within(bar).queryByRole("button", { name: /Days:/ })).toBeNull();
   });
 
@@ -299,7 +299,7 @@ describe("sidebar toggle and active filters", () => {
     const user = userEvent.setup();
     const router = await renderSearchPage("/?days=fri%2Csat");
     const bar = screen.getByRole("list", { name: "Active filters" });
-    await user.click(within(bar).getByRole("button", { name: "Fri" }));
+    await user.click(within(bar).getByRole("button", { name: "Remove Fri" }));
     expect(router.state.location.searchStr).toContain("days=sat");
     expect(router.state.location.searchStr).not.toContain("fri");
   });
@@ -307,10 +307,8 @@ describe("sidebar toggle and active filters", () => {
   it("eventType filter produces one chip per code", async () => {
     await renderSearchPage("/?eventType=RPG%2CBGM");
     const bar = screen.getByRole("list", { name: "Active filters" });
-    expect(
-      within(bar).getByRole("button", { name: "RPG - Role Playing Game" }),
-    ).toBeInTheDocument();
-    expect(within(bar).getByRole("button", { name: "BGM - Board Game" })).toBeInTheDocument();
+    expect(within(bar).getByText("RPG - Role Playing Game")).toBeInTheDocument();
+    expect(within(bar).getByText("BGM - Board Game")).toBeInTheDocument();
     expect(within(bar).queryByRole("button", { name: /Type:/ })).toBeNull();
   });
 
@@ -318,7 +316,7 @@ describe("sidebar toggle and active filters", () => {
     const user = userEvent.setup();
     const router = await renderSearchPage("/?eventType=RPG%2CBGM");
     const bar = screen.getByRole("list", { name: "Active filters" });
-    await user.click(within(bar).getByRole("button", { name: "RPG - Role Playing Game" }));
+    await user.click(within(bar).getByRole("button", { name: "Remove RPG - Role Playing Game" }));
     expect(router.state.location.searchStr).toContain("eventType=BGM");
     expect(router.state.location.searchStr).not.toContain("RPG");
   });
