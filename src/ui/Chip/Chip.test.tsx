@@ -19,17 +19,15 @@ describe("Chip", () => {
 describe("Chip tone", () => {
   const tones = ["neutral", "accent", "jade", "cobalt", "amber", "error"] as const;
 
-  for (const tone of tones) {
-    it(`applies data-tone="${tone}" for tone="${tone}"`, () => {
-      const { container } = render(<Chip tone={tone}>Label</Chip>);
-      expect(container.firstChild).toHaveAttribute("data-tone", tone);
-    });
-  }
+  it.each(tones)(`applies data-tone="%s" for tone="%s"`, (tone) => {
+    const { container } = render(<Chip tone={tone}>Label</Chip>);
+    expect(container.firstChild).toHaveAttribute("data-tone", tone);
+  });
 });
 
 describe("Chip onRemove", () => {
   it("renders a remove button when onRemove is provided", () => {
-    const onRemove = vi.fn();
+    const onRemove = vi.fn<() => void>();
     render(
       <Chip tone="accent" onRemove={onRemove}>
         BGM
@@ -44,7 +42,7 @@ describe("Chip onRemove", () => {
   });
 
   it("calls onRemove when the remove button is clicked", async () => {
-    const onRemove = vi.fn();
+    const onRemove = vi.fn<() => void>();
     render(
       <Chip tone="accent" onRemove={onRemove}>
         BGM
@@ -55,7 +53,7 @@ describe("Chip onRemove", () => {
   });
 
   it("remove button is a real <button> element, not a plain × character", () => {
-    const onRemove = vi.fn();
+    const onRemove = vi.fn<() => void>();
     render(
       <Chip tone="accent" onRemove={onRemove}>
         BGM
@@ -79,7 +77,7 @@ describe("Chip icon", () => {
     const testIcon = screen.getByTestId("test-icon");
     expect(testIcon).toBeInTheDocument();
     // Icon should appear before the text in the DOM
-    const children = Array.from(chipRoot!.childNodes);
+    const children = Array.from((chipRoot as Element).childNodes);
     const iconIdx = children.findIndex((n) => (n as Element).contains?.(testIcon));
     const textIdx = children.findIndex(
       (n) => n.textContent?.includes("BGM") && !(n as Element).contains?.(testIcon),

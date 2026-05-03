@@ -15,13 +15,12 @@ export interface ChipProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 function toRemoveLabel(children: React.ReactNode, removeLabel?: string): string {
-  if (removeLabel != null) return removeLabel;
-  if (typeof children === "string") return children;
-  if (typeof children === "number") return String(children);
-  // For complex children, extract the first text-only child
+  if (removeLabel != null) { return removeLabel; }
+  if (typeof children === "string") { return children; }
+  if (typeof children === "number") { return String(children); }
   if (Array.isArray(children)) {
     const first = children.find((c) => typeof c === "string" || typeof c === "number");
-    if (first != null) return String(first);
+    if (first != null) { return String(first); }
   }
   return "";
 }
