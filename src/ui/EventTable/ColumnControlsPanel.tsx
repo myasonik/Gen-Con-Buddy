@@ -1,4 +1,4 @@
-import { useId } from "react";
+import React, { useId } from "react";
 import { ChevronRight, X } from "lucide-react";
 import { Dialog } from "@base-ui/react/dialog";
 import { Button } from "../Button/Button";
@@ -14,7 +14,11 @@ interface ColumnControlsPanelProps {
   variant?: "inline" | "drawer";
 }
 
-function ColumnCheckboxContent({ columnState }: { columnState: SharedColumnState }): JSX.Element {
+function ColumnCheckboxContent({
+  columnState,
+}: {
+  columnState: SharedColumnState;
+}): React.JSX.Element {
   const {
     visibility,
     toggleVisibility,
@@ -123,7 +127,7 @@ function ColumnCheckboxContent({ columnState }: { columnState: SharedColumnState
 export function ColumnControlsPanel({
   columnState,
   variant = "inline",
-}: ColumnControlsPanelProps): JSX.Element {
+}: ColumnControlsPanelProps): React.JSX.Element {
   if (variant === "drawer") {
     return (
       <Dialog.Root>

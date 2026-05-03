@@ -1,3 +1,4 @@
+import React from "react";
 import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { EventListMobile } from "../../ui/EventTable/EventListMobile";
@@ -19,7 +20,7 @@ function EventGroup({
 }: {
   events: Event[];
   sharedColumnState: SharedColumnState;
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <>
       <div className={styles.tableView}>
@@ -43,7 +44,7 @@ function EventGroup({
 export function ChangelogEntryPanel({
   entry,
   sharedColumnState,
-}: ChangelogEntryPanelProps): JSX.Element {
+}: ChangelogEntryPanelProps): React.JSX.Element {
   if (entry === undefined || entry === "loading") {
     return <p aria-busy="true">Loading…</p>;
   }

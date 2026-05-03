@@ -1,3 +1,4 @@
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEvents } from "../../utils/api";
 import { Pagination } from "../Pagination/Pagination";
@@ -22,7 +23,7 @@ export function SearchResults({
   searchParams,
   onNavigate,
   onSort,
-}: SearchResultsProps): JSX.Element {
+}: SearchResultsProps): React.JSX.Element {
   const page = searchParams.page ?? 1;
   const limit = searchParams.limit ?? 100;
   const isMobile = useMediaQuery("(width <= 60rem)");

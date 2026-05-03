@@ -1,6 +1,7 @@
+import React from "react";
 import styles from "./AboutPage.module.css";
 
-export function AboutPage(): JSX.Element {
+export function AboutPage(): React.JSX.Element {
   return (
     <main className={styles.page}>
       <div className={styles.content}>

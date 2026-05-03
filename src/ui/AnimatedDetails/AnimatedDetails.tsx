@@ -1,4 +1,4 @@
-import type { ReactNode, ReactEventHandler } from "react";
+import React, { type ReactNode, type ReactEventHandler } from "react";
 import { useAnimatedDetails } from "../../hooks/useAnimatedDetails";
 import styles from "./AnimatedDetails.module.css";
 
@@ -18,7 +18,7 @@ export function AnimatedDetails({
   className,
   open,
   onToggle,
-}: AnimatedDetailsProps): JSX.Element {
+}: AnimatedDetailsProps): React.JSX.Element {
   const { ref, contentRef, onSummaryClick } = useAnimatedDetails();
 
   return (

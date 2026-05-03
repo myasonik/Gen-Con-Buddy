@@ -1,4 +1,4 @@
-import { useState, useId, useRef } from "react";
+import React, { useState, useId, useRef } from "react";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { createPortal } from "react-dom";
 import {
@@ -41,7 +41,7 @@ export function EventTable({
   onSort,
   sharedColumnState,
   showColumnControls = true,
-}: EventTableProps): JSX.Element {
+}: EventTableProps): React.JSX.Element {
   const internalVis = useColumnVisibility();
   const internalSizing = useColumnSizing();
   const visibility = sharedColumnState?.visibility ?? internalVis.visibility;

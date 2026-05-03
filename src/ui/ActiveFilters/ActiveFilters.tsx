@@ -1,3 +1,4 @@
+import React from "react";
 import type { SearchParams } from "../../utils/types";
 import { type ActiveFilter, getActiveFilters } from "./getActiveFilters";
 import { Button } from "../Button/Button";
@@ -8,7 +9,10 @@ interface ActiveFiltersProps {
   onRemove: (filter: ActiveFilter) => void;
 }
 
-export function ActiveFilters({ searchParams, onRemove }: ActiveFiltersProps): JSX.Element | null {
+export function ActiveFilters({
+  searchParams,
+  onRemove,
+}: ActiveFiltersProps): React.JSX.Element | null {
   const filters = getActiveFilters(searchParams);
   if (filters.length === 0) {
     return null;
