@@ -1,11 +1,11 @@
 import React, { useId } from "react";
 import { ChevronRight, X } from "lucide-react";
 import { Dialog } from "@base-ui/react/dialog";
-import { Button } from "../Button/Button";
+import { Button } from "../../ui/Button/Button";
 import type { SharedColumnState } from "./types";
-import { AnimatedDetails } from "../AnimatedDetails/AnimatedDetails";
-import { D6Face } from "../icons/D6Face";
-import { Targeted } from "../icons/Targeted";
+import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
+import { D6Face } from "../../ui/icons/D6Face";
+import { Targeted } from "../../ui/icons/Targeted";
 import { COLUMNS, COLUMN_GROUPS } from "./columns";
 import styles from "./EventTable.module.css";
 

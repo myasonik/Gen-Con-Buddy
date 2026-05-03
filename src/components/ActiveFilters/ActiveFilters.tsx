@@ -1,7 +1,7 @@
 import React from "react";
 import type { SearchParams } from "../../utils/types";
 import { type ActiveFilter, getActiveFilters } from "./getActiveFilters";
-import { Button } from "../Button/Button";
+import { Button } from "../../ui/Button/Button";
 import styles from "./ActiveFilters.module.css";
 
 interface ActiveFiltersProps {

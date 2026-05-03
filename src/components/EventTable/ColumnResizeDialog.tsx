@@ -1,6 +1,6 @@
 import React, { useState, useId } from "react";
 import { Dialog } from "@base-ui/react/dialog";
-import { Button } from "../Button/Button";
+import { Button } from "../../ui/Button/Button";
 import styles from "./ColumnResizeDialog.module.css";
 
 interface ColumnResizeDialogProps {

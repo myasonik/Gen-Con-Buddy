@@ -1,20 +1,20 @@
 import type React from "react";
 import { AGE_GROUPS, CATEGORY, EVENT_TYPES, EXP, REGISTRATION, YES_NO } from "../../utils/enums";
 import type { SearchParams } from "../../utils/types";
-import { EVENT_TYPE_ICONS } from "../icons/eventTypeIcons";
-import { MagnifyingGlass } from "../icons/MagnifyingGlass";
-import { Calendar } from "../icons/Calendar";
-import { Hourglass } from "../icons/Hourglass";
-import { Meeple } from "../icons/Meeple";
-import { Coins } from "../icons/Coins";
-import { Ticket } from "../icons/Ticket";
-import { Trophy } from "../icons/Trophy";
-import { Ages } from "../icons/Ages";
-import { Skills } from "../icons/Skills";
-import { PositionMarker } from "../icons/PositionMarker";
-import { BeveledStar } from "../icons/BeveledStar";
-import { RuleBook } from "../icons/RuleBook";
-import { Backpack } from "../icons/Backpack";
+import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
+import { MagnifyingGlass } from "../../ui/icons/MagnifyingGlass";
+import { Calendar } from "../../ui/icons/Calendar";
+import { Hourglass } from "../../ui/icons/Hourglass";
+import { Meeple } from "../../ui/icons/Meeple";
+import { Coins } from "../../ui/icons/Coins";
+import { Ticket } from "../../ui/icons/Ticket";
+import { Trophy } from "../../ui/icons/Trophy";
+import { Ages } from "../../ui/icons/Ages";
+import { Skills } from "../../ui/icons/Skills";
+import { PositionMarker } from "../../ui/icons/PositionMarker";
+import { BeveledStar } from "../../ui/icons/BeveledStar";
+import { RuleBook } from "../../ui/icons/RuleBook";
+import { Backpack } from "../../ui/icons/Backpack";
 
 export interface ActiveFilter {
   id: string;

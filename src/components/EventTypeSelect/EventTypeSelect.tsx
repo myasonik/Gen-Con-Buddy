@@ -2,7 +2,7 @@ import React, { useState, useId, useRef } from "react";
 import { ChevronDown, Check } from "lucide-react";
 import { Combobox } from "@base-ui/react/combobox";
 import { EVENT_TYPES } from "../../utils/enums";
-import { EVENT_TYPE_ICONS } from "../icons/eventTypeIcons";
+import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
 import styles from "./EventTypeSelect.module.css";
 
 export interface EventTypeSelectProps {

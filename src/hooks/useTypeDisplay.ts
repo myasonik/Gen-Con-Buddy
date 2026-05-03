@@ -1,5 +1,5 @@
 import { useStoredState } from "./useStoredState";
-import type { TypeDisplay } from "../ui/EventTable/types";
+import type { TypeDisplay } from "../components/EventTable/types";
 
 const STORAGE_KEY = "gen-con-buddy-type-display";
 const VERSION = 2;

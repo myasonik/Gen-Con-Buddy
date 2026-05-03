@@ -1,4 +1,4 @@
-import { getSortField, getColId } from "../ui/EventTable/columns";
+import { getSortField, getColId } from "../components/EventTable/columns";
 
 interface UseSortStateOptions {
   activeSortField: string | undefined;

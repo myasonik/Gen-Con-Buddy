@@ -4,7 +4,7 @@ import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useTypeDisplay } from "../../hooks/useTypeDisplay";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
-import { ColumnControlsPanel } from "../../ui/EventTable/ColumnControlsPanel";
+import { ColumnControlsPanel } from "../EventTable/ColumnControlsPanel";
 import { fetchChangelogEntry, fetchChangelogList } from "../../utils/api";
 import styles from "./ChangelogPage.module.css";
 import { ChangelogRow } from "./ChangelogRow";

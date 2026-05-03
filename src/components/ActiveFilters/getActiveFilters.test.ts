@@ -1,12 +1,12 @@
 import { expect, test } from "vitest";
 import { getActiveFilters } from "./getActiveFilters";
-import { DiceTwentyFacesTwenty } from "../icons/DiceTwentyFacesTwenty";
-import { RollingDices } from "../icons/RollingDices";
-import { Calendar } from "../icons/Calendar";
-import { Hourglass } from "../icons/Hourglass";
-import { Trophy } from "../icons/Trophy";
-import { Coins } from "../icons/Coins";
-import { MagnifyingGlass } from "../icons/MagnifyingGlass";
+import { DiceTwentyFacesTwenty } from "../../ui/icons/DiceTwentyFacesTwenty";
+import { RollingDices } from "../../ui/icons/RollingDices";
+import { Calendar } from "../../ui/icons/Calendar";
+import { Hourglass } from "../../ui/icons/Hourglass";
+import { Trophy } from "../../ui/icons/Trophy";
+import { Coins } from "../../ui/icons/Coins";
+import { MagnifyingGlass } from "../../ui/icons/MagnifyingGlass";
 
 test("returns empty array when no filters are set", () => {
   expect(getActiveFilters({})).toStrictEqual([]);
