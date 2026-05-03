@@ -1,7 +1,7 @@
 import React from "react";
 import { EllipsisVertical } from "lucide-react";
 import { Popover } from "@base-ui/react/popover";
-import { Button } from "../Button/Button";
+import { Button } from "../../ui/Button/Button";
 import styles from "./ColumnActionsPopover.module.css";
 
 interface ColumnActionsPopoverProps {

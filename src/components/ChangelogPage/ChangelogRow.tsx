@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { ChangelogSummary } from "../../utils/types";
 import { fetchChangelogEntry } from "../../utils/api";
 import { ChangelogEntryPanel } from "./ChangelogEntryPanel";
-import type { SharedColumnState } from "../../ui/EventTable/types";
+import type { SharedColumnState } from "../EventTable/types";
 import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
 import { Chip } from "../../ui/Chip/Chip";
 import styles from "./ChangelogRow.module.css";

@@ -2,12 +2,12 @@ import React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { SearchForm } from "../components/SearchForm/SearchForm";
 import { SearchResults } from "../components/SearchResults/SearchResults";
-import { ActiveFilters } from "../ui/ActiveFilters/ActiveFilters";
+import { ActiveFilters } from "../components/ActiveFilters/ActiveFilters";
 import { buildSearchParams, parseSearchParams } from "../utils/searchParams";
 import { coerceSearchParams } from "../utils/coerceSearchParams";
 import { DEFAULT_PAGE_SIZE } from "../utils/constants";
 import type { SearchFormValues, SearchParams } from "../utils/types";
-import type { ActiveFilter } from "../ui/ActiveFilters/getActiveFilters";
+import type { ActiveFilter } from "../components/ActiveFilters/getActiveFilters";
 import styles from "./index.module.css";
 
 export const Route = createFileRoute("/")({

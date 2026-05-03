@@ -6,7 +6,7 @@ import { AGE_GROUPS, CATEGORY, EXP, REGISTRATION, YES_NO } from "../../utils/enu
 import type { SearchFormValues } from "../../utils/types";
 import { Button } from "../../ui/Button/Button";
 import { Drawer } from "../../ui/Drawer/Drawer";
-import { EventTypeSelect } from "../../ui/EventTypeSelect/EventTypeSelect";
+import { EventTypeSelect } from "../EventTypeSelect/EventTypeSelect";
 import { Select } from "../../ui/Select/Select";
 import { Field, RangeField } from "../../ui/Field/Field";
 import { decodeDays, encodeDays } from "../../utils/searchParams";

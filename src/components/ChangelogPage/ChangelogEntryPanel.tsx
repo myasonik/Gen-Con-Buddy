@@ -1,9 +1,9 @@
 import React from "react";
 import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
-import { EventListMobile } from "../../ui/EventTable/EventListMobile";
-import { EventTable } from "../../ui/EventTable/EventTable";
-import type { SharedColumnState } from "../../ui/EventTable/types";
+import { EventListMobile } from "../EventTable/EventListMobile";
+import { EventTable } from "../EventTable/EventTable";
+import type { SharedColumnState } from "../EventTable/types";
 import type { ChangelogEntry, Event } from "../../utils/types";
 import { Chip } from "../../ui/Chip/Chip";
 import styles from "./ChangelogEntryPanel.module.css";

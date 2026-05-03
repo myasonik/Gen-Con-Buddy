@@ -3,8 +3,8 @@ import { format } from "date-fns";
 import type { ColumnDef } from "@tanstack/react-table";
 import { EXP } from "../../utils/enums";
 import type { Event } from "../../utils/types";
-import { EVENT_TYPE_ICONS } from "../icons/eventTypeIcons";
-import { Chip } from "../Chip/Chip";
+import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
+import { Chip } from "../../ui/Chip/Chip";
 import styles from "./columns.module.css";
 import typeCellStyles from "./typeCell.module.css";
 

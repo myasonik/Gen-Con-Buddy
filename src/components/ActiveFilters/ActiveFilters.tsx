@@ -1,7 +1,7 @@
 import React from "react";
 import type { SearchParams } from "../../utils/types";
 import { type ActiveFilter, getActiveFilters } from "./getActiveFilters";
-import { Chip } from "../Chip/Chip";
+import { Chip } from "../../ui/Chip/Chip";
 import styles from "./ActiveFilters.module.css";
 
 interface ActiveFiltersProps {

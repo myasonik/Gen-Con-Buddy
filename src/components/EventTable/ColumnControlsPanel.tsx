@@ -1,14 +1,14 @@
 import React from "react";
 import { ChevronRight } from "lucide-react";
-import { Button } from "../Button/Button";
-import { Drawer } from "../Drawer/Drawer";
+import { Button } from "../../ui/Button/Button";
+import { Drawer } from "../../ui/Drawer/Drawer";
 import type { SharedColumnState } from "./types";
-import { AnimatedDetails } from "../AnimatedDetails/AnimatedDetails";
-import { D6Face } from "../icons/D6Face";
-import { Targeted } from "../icons/Targeted";
+import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
+import { D6Face } from "../../ui/icons/D6Face";
+import { Targeted } from "../../ui/icons/Targeted";
 import { COLUMNS, COLUMN_GROUPS } from "./columns";
-import { Checkbox } from "../Checkbox/Checkbox";
-import { SegmentedControl } from "../SegmentedControl/SegmentedControl";
+import { Checkbox } from "../../ui/Checkbox/Checkbox";
+import { SegmentedControl } from "../../ui/SegmentedControl/SegmentedControl";
 import styles from "./EventTable.module.css";
 
 interface ColumnControlsPanelProps {

@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ChangelogEntryPanel } from "./ChangelogEntryPanel";
-import type { SharedColumnState } from "../../ui/EventTable/types";
+import type { SharedColumnState } from "../EventTable/types";
 import { makeChangelogEntry, makeEvent } from "../../test/msw/factory";
 import type { ChangelogEntry } from "../../utils/types";
 

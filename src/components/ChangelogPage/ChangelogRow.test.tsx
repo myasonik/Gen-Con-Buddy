@@ -15,7 +15,7 @@ import { server } from "../../test/msw/server";
 import { makeChangelogSummary, makeChangelogEntry, makeEvent } from "../../test/msw/factory";
 import type { FetchChangelogResponse } from "../../utils/types";
 import { ChangelogRow } from "./ChangelogRow";
-import type { SharedColumnState } from "../../ui/EventTable/types";
+import type { SharedColumnState } from "../EventTable/types";
 
 const stubColumnState: SharedColumnState = {
   visibility: {},
