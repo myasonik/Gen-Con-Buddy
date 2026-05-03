@@ -1,0 +1,99 @@
+/* ─── Backdrop ───────────────────────────────────────────────────────────── */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-modal) - 1);
+  background: oklch(22% 0.03 48deg / 0.4);
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity var(--motion-expand);
+}
+
+.backdrop[data-starting-style],
+.backdrop[data-ending-style] {
+  opacity: 0;
+}
+
+/* ─── Drawer Panel ───────────────────────────────────────────────────────── */
+.drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: var(--size-drawer);
+  z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface-panel);
+  transform: translateX(0);
+  transition: transform var(--motion-expand);
+}
+
+/* Left side (default) */
+.drawer[data-side="left"] {
+  left: 0;
+  border-right: 0.0625rem solid var(--color-ink-border);
+}
+
+.drawer[data-side="left"][data-starting-style],
+.drawer[data-side="left"][data-ending-style] {
+  transform: translateX(-100%);
+}
+
+/* Right side */
+.drawer[data-side="right"] {
+  right: 0;
+  border-left: 0.0625rem solid var(--color-ink-border);
+}
+
+.drawer[data-side="right"][data-starting-style],
+.drawer[data-side="right"][data-ending-style] {
+  transform: translateX(100%);
+}
+
+/* ─── Header ─────────────────────────────────────────────────────────────── */
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 0.0625rem solid var(--color-ink-divider);
+  flex-shrink: 0;
+}
+
+.drawerTitle {
+  font-family: var(--font-slab);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.05rem;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+/* ─── Scroll Area ────────────────────────────────────────────────────────── */
+.drawerScroll {
+  flex: 1;
+  overflow-y: scroll;
+  padding: var(--space-3) var(--space-4);
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
+.drawerFooter {
+  flex-shrink: 0;
+  padding: var(--space-3) var(--space-4);
+  border-top: 0.0625rem solid var(--color-ink-divider);
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────── */
+@media (width <= 60rem) {
+  .drawer {
+    width: min(80vw, var(--size-drawer));
+  }
+}
+
+/* ─── Reduced motion ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .drawer {
+    transition: none;
+  }
+}
