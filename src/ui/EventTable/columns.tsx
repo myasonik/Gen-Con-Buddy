@@ -50,9 +50,8 @@ export const COLUMNS: ColumnDef<Event>[] = [
       const code = dashIdx !== -1 ? eventType.slice(0, dashIdx) : eventType;
       const name = dashIdx !== -1 ? eventType.slice(dashIdx + 3) : "";
       const Icon = EVENT_TYPE_ICONS[code];
-      const typeColorClass = (typeCellStyles as Record<string, string | undefined>)[`type${code}`];
       return (
-        <span className={[typeCellStyles.typeCell, typeColorClass].filter(Boolean).join(" ")}>
+        <span className={typeCellStyles.typeCell}>
           {Icon && (
             <span className={typeCellStyles.typeIcon}>
               <Icon size={16} />

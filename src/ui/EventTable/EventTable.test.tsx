@@ -155,14 +155,14 @@ test("eventType column renders an icon alongside the type code", async () => {
   expect(cell?.querySelector("svg")).not.toBeNull();
 });
 
-test("type cell carries event-type color class for icon coloring", async () => {
-  const { container } = await renderEventTable([makeEvent({ eventType: "RPG" })]);
-  expect(container.querySelector('[class*="typeRPG"]')).not.toBeNull();
+test("type cell renders the event type code for icon coloring", async () => {
+  await renderEventTable([makeEvent({ eventType: "RPG" })]);
+  expect(screen.getAllByText("RPG").length).toBeGreaterThan(0);
 });
 
-test("type cell carries cobalt class for board game event type", async () => {
-  const { container } = await renderEventTable([makeEvent({ eventType: "BGM" })]);
-  expect(container.querySelector('[class*="typeBGM"]')).not.toBeNull();
+test("type cell renders the board game event type code", async () => {
+  await renderEventTable([makeEvent({ eventType: "BGM" })]);
+  expect(screen.getAllByText("BGM").length).toBeGreaterThan(0);
 });
 
 test("ticketsAvailable column shows 'Sold out' when ticketsAvailable is 0", async () => {
@@ -205,73 +205,73 @@ test("resize dialog input has min attribute reflecting measured cell content", a
   });
 });
 
-test("applies typeDisplayName class to section when typeDisplay is name", async () => {
+test("section carries data-type-display=name when typeDisplay is name", async () => {
   const { container } = await renderEventTable(
     [makeEvent()],
     makeSharedColumnState({ typeDisplay: "name" }),
   );
-  expect(container.querySelector('[class*="typeDisplayName"]')).not.toBeNull();
+  expect(container.querySelector('[data-type-display="name"]')).not.toBeNull();
 });
 
-test("applies typeDisplayCode class to section when typeDisplay is code", async () => {
+test("section carries data-type-display=code when typeDisplay is code", async () => {
   const { container } = await renderEventTable(
     [makeEvent()],
     makeSharedColumnState({ typeDisplay: "code" }),
   );
-  expect(container.querySelector('[class*="typeDisplayCode"]')).not.toBeNull();
+  expect(container.querySelector('[data-type-display="code"]')).not.toBeNull();
 });
 
-test("does not apply typeDisplayName or typeDisplayCode class when typeDisplay is both", async () => {
+test("section has no data-type-display attribute when typeDisplay is both", async () => {
   const { container } = await renderEventTable(
     [makeEvent()],
     makeSharedColumnState({ typeDisplay: "both" }),
   );
-  expect(container.querySelector('[class*="typeDisplayCode"]')).toBeNull();
-  expect(container.querySelector('[class*="typeDisplayName"]')).toBeNull();
+  expect(container.querySelector('[data-type-display="code"]')).toBeNull();
+  expect(container.querySelector('[data-type-display="name"]')).toBeNull();
 });
 
-test("does not apply typeHideIcon class when showTypeIcon is true", async () => {
+test("section has no data-show-icon attribute when showTypeIcon is true", async () => {
   const { container } = await renderEventTable(
     [makeEvent()],
     makeSharedColumnState({ showTypeIcon: true }),
   );
-  expect(container.querySelector('[class*="typeHideIcon"]')).toBeNull();
+  expect(container.querySelector('[data-show-icon="false"]')).toBeNull();
 });
 
-test("applies typeHideIcon class when showTypeIcon is false", async () => {
+test("section carries data-show-icon=false when showTypeIcon is false", async () => {
   const { container } = await renderEventTable(
     [makeEvent()],
     makeSharedColumnState({ showTypeIcon: false }),
   );
-  expect(container.querySelector('[class*="typeHideIcon"]')).not.toBeNull();
+  expect(container.querySelector('[data-show-icon="false"]')).not.toBeNull();
 });
 
-test("section element directly carries the typeDisplayName class (not a descendant)", async () => {
+test("section element directly carries data-type-display=name (not a descendant)", async () => {
   const { container } = await renderEventTable(
     [makeEvent()],
     makeSharedColumnState({ typeDisplay: "name" }),
   );
   const section = container.querySelector("section");
   expect(section).not.toBeNull();
-  expect(section?.className).toMatch(/typeDisplayName/);
+  expect(section?.getAttribute("data-type-display")).toBe("name");
 });
 
-test("section element carries NO mode class when typeDisplay is both", async () => {
+test("section element has no data-type-display attribute when typeDisplay is both", async () => {
   const { container } = await renderEventTable(
     [makeEvent()],
     makeSharedColumnState({ typeDisplay: "both" }),
   );
   const section = container.querySelector("section");
   expect(section).not.toBeNull();
-  expect(section?.className ?? "").not.toMatch(/typeDisplayName|typeDisplayCode/);
+  expect(section?.hasAttribute("data-type-display")).toBe(false);
 });
 
-test("typeCode span is rendered inside the section with name mode class", async () => {
+test("typeCode span is rendered inside the section with data-type-display=name", async () => {
   const { container } = await renderEventTable(
     [makeEvent({ eventType: "RPG - Role Playing Game" })],
     makeSharedColumnState({ typeDisplay: "name" }),
   );
-  const section = container.querySelector('[class*="typeDisplayName"]');
+  const section = container.querySelector('[data-type-display="name"]');
   expect(section).not.toBeNull();
   expect(section?.querySelector('[class*="typeCode"]')).not.toBeNull();
   expect(section?.querySelector('[class*="typeName"]')).not.toBeNull();

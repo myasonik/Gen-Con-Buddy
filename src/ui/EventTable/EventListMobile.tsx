@@ -112,17 +112,16 @@ export function EventListMobile({
     isVisible("maxPlayers") ||
     isVisible("ticketsAvailable");
 
-  let textClass: string | undefined = undefined;
-  if (typeDisplay === "code") {
-    textClass = typeCellStyles.typeDisplayCode;
-  } else if (typeDisplay === "name") {
-    textClass = typeCellStyles.typeDisplayName;
-  }
-  const iconClass = showTypeIcon === false ? typeCellStyles.typeHideIcon : undefined;
-  const modeClass = [textClass, iconClass].filter(Boolean).join(" ") || undefined;
+  const typeDisplayAttr = typeDisplay === "code" || typeDisplay === "name" ? typeDisplay : undefined;
+  const showIconAttr = showTypeIcon === false ? "false" : undefined;
 
   return (
-    <ul role="list" className={[styles.list, modeClass].filter(Boolean).join(" ") || styles.list}>
+    <ul
+      role="list"
+      className={styles.list}
+      data-type-display={typeDisplayAttr}
+      data-show-icon={showIconAttr}
+    >
       {events.map((event) => {
         const a = event.attributes;
         const start = new Date(a.startDateTime);
@@ -144,9 +143,6 @@ export function EventListMobile({
         const code = dashIdx !== -1 ? a.eventType.slice(0, dashIdx) : a.eventType;
         const name = dashIdx !== -1 ? a.eventType.slice(dashIdx + 3) : "";
         const TypeIcon = EVENT_TYPE_ICONS[code];
-        const typeColorClass = (typeCellStyles as Record<string, string | undefined>)[
-          `type${code}`
-        ];
 
         let extraFields = EXTRA_COLUMN_IDS.filter((id) => isVisible(id))
           .map((id) => {
@@ -198,7 +194,7 @@ export function EventListMobile({
               {showMeta && (
                 <span className={styles.meta}>
                   {isVisible("eventType") && (
-                    <span className={[styles.typeTag, typeColorClass].filter(Boolean).join(" ")}>
+                    <span className={styles.typeTag}>
                       {TypeIcon && (
                         <span className={typeCellStyles.typeIcon}>
                           <TypeIcon size={16} />

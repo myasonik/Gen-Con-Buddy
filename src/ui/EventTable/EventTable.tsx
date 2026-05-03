@@ -9,7 +9,6 @@ import {
   type SortingState,
 } from "@tanstack/react-table";
 import { useSortState } from "../../hooks/useSortState";
-import typeCellStyles from "./typeCell.module.css";
 import { useColumnMinSizes } from "../../hooks/useColumnMinSizes";
 import { ColumnControlsPanel } from "./ColumnControlsPanel";
 import { ColumnActionsPopover } from "./ColumnActionsPopover";
@@ -53,14 +52,8 @@ export function EventTable({
     resetTypeDisplay,
   } = sharedColumnState;
 
-  let textClass: string | undefined = undefined;
-  if (typeDisplay === "code") {
-    textClass = typeCellStyles.typeDisplayCode;
-  } else if (typeDisplay === "name") {
-    textClass = typeCellStyles.typeDisplayName;
-  }
-  const iconClass = showTypeIcon === false ? typeCellStyles.typeHideIcon : undefined;
-  const typeDisplayClass = [textClass, iconClass].filter(Boolean).join(" ") || undefined;
+  const typeDisplayAttr = typeDisplay === "code" || typeDisplay === "name" ? typeDisplay : undefined;
+  const showIconAttr = showTypeIcon === false ? "false" : undefined;
 
   // Unique prefix so anchor names don't collide when multiple EventTable instances are on the page
   const tableId = useId().replace(/:/g, "");
@@ -191,7 +184,7 @@ export function EventTable({
   }
 
   return (
-    <section className={typeDisplayClass}>
+    <section data-type-display={typeDisplayAttr} data-show-icon={showIconAttr}>
       {showColumnControls && <ColumnControlsPanel columnState={columnStateForPanel} />}
 
       <div
