@@ -1,0 +1,59 @@
+/* Checkbox primitive — wraps @base-ui/react/checkbox */
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Root renders a <span> with a hidden <input> sibling (Base UI internals) */
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 0.0625rem solid var(--color-ink-border);
+  border-radius: var(--radius-subtle);
+  background: var(--color-surface-page);
+  flex-shrink: 0;
+  transition:
+    background-color var(--motion-hover),
+    border-color var(--motion-hover),
+    color var(--motion-hover);
+  color: transparent;
+  overflow: hidden;
+  outline: none;
+}
+
+.root[data-checked] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-surface-page);
+}
+
+.root:focus-visible {
+  outline: var(--focus-ring) var(--color-accent);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Indicator renders only when checked */
+.indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.indicator svg {
+  display: block;
+}
+
+.labelText {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

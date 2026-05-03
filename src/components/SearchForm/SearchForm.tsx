@@ -9,6 +9,7 @@ import { EventTypeSelect } from "../../ui/EventTypeSelect/EventTypeSelect";
 import { Select } from "../../ui/Select/Select";
 import { Field, RangeField } from "../../ui/Field/Field";
 import { decodeDays, encodeDays } from "../../utils/searchParams";
+import { Checkbox } from "../../ui/Checkbox/Checkbox";
 import styles from "./SearchForm.module.css";
 
 const EMPTY_VALUES: SearchFormValues = {
@@ -118,22 +119,17 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
                   const selected = decodeDays(days).includes(key);
                   return (
                     <div className={styles.dayToggleWrapper} key={key}>
-                      <input
-                        type="checkbox"
-                        id={`day-${key}`}
-                        className="sr-only"
+                      <Checkbox
                         checked={selected}
-                        onChange={(e) => {
+                        onCheckedChange={(checked) => {
                           const current = decodeDays(days);
-                          const next = e.target.checked
+                          const next = checked
                             ? DAY_KEYS.filter((d) => current.includes(d) || d === key)
                             : current.filter((d) => d !== key);
                           setValue("days", encodeDays(next));
                         }}
+                        label={DAY_LABELS[key]}
                       />
-                      <label htmlFor={`day-${key}`} className={styles.dayToggle}>
-                        {DAY_LABELS[key]}
-                      </label>
                     </div>
                   );
                 })}

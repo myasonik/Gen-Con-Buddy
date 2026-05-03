@@ -1,4 +1,4 @@
-import React, { useId } from "react";
+import React from "react";
 import { ChevronRight, X } from "lucide-react";
 import { Dialog } from "@base-ui/react/dialog";
 import { Button } from "../Button/Button";
@@ -7,6 +7,8 @@ import { AnimatedDetails } from "../AnimatedDetails/AnimatedDetails";
 import { D6Face } from "../icons/D6Face";
 import { Targeted } from "../icons/Targeted";
 import { COLUMNS, COLUMN_GROUPS } from "./columns";
+import { Checkbox } from "../Checkbox/Checkbox";
+import { SegmentedControl } from "../SegmentedControl/SegmentedControl";
 import styles from "./EventTable.module.css";
 
 interface ColumnControlsPanelProps {
@@ -31,8 +33,6 @@ function ColumnCheckboxContent({
     resetTypeDisplay,
   } = columnState;
 
-  const panelId = useId();
-  const radioName = `${panelId}-typeDisplay`;
   const colById = new Map(COLUMNS.filter((c) => c.id !== undefined).map((c) => [c.id, c]));
 
   return (
@@ -49,20 +49,12 @@ function ColumnCheckboxContent({
               const isChecked = Boolean(visibility[id]);
               return (
                 <li key={id}>
-                  <label className={styles.columnToggle}>
-                    <input
-                      type="checkbox"
-                      className="sr-only"
-                      checked={isChecked}
-                      onChange={() => toggleVisibility(id)}
-                    />
-                    <span className={styles.columnCheckbox} aria-hidden="true">
-                      <D6Face size={16} />
-                    </span>
-                    <span className={styles.columnLabel}>
-                      {typeof col.header === "string" ? col.header : id}
-                    </span>
-                  </label>
+                  <Checkbox
+                    checked={isChecked}
+                    onCheckedChange={() => toggleVisibility(id)}
+                    label={typeof col.header === "string" ? col.header : id}
+                    indicator={<D6Face size={16} />}
+                  />
                 </li>
               );
             })}
@@ -71,41 +63,18 @@ function ColumnCheckboxContent({
       ))}
       <fieldset className={styles.columnGroup}>
         <legend className={styles.columnGroupLegend}>Event type column</legend>
-        <label className={styles.columnToggle}>
-          <input
-            type="checkbox"
-            className="sr-only"
-            checked={showTypeIcon}
-            onChange={(e) => setShowTypeIcon(e.target.checked)}
-          />
-          <span className={styles.columnCheckbox} aria-hidden="true">
-            <D6Face size={16} />
-          </span>
-          <span className={styles.columnLabel}>Show icon</span>
-        </label>
+        <Checkbox
+          checked={showTypeIcon}
+          onCheckedChange={(checked) => setShowTypeIcon(checked)}
+          label="Show icon"
+          indicator={<D6Face size={16} />}
+        />
         <div className={styles.typeDisplayRadioGroup}>
-          {(
-            [
-              { value: "code", label: "Code" },
-              { value: "name", label: "Name" },
-              { value: "both", label: "Both" },
-            ] as const
-          ).map(({ value, label }) => (
-            <label key={value} className={styles.columnToggle}>
-              <input
-                type="radio"
-                name={radioName}
-                value={value}
-                className="sr-only"
-                checked={typeDisplay === value}
-                onChange={() => setTypeDisplay(value)}
-              />
-              <span className={styles.radioIndicator} aria-hidden="true">
-                <Targeted size={16} />
-              </span>
-              <span className={styles.columnLabel}>{label}</span>
-            </label>
-          ))}
+          <SegmentedControl value={typeDisplay} onValueChange={(v) => setTypeDisplay(v as "code" | "name" | "both")}>
+            <SegmentedControl.Option value="code" indicator={<Targeted size={16} />}>Code</SegmentedControl.Option>
+            <SegmentedControl.Option value="name" indicator={<Targeted size={16} />}>Name</SegmentedControl.Option>
+            <SegmentedControl.Option value="both" indicator={<Targeted size={16} />}>Both</SegmentedControl.Option>
+          </SegmentedControl>
         </div>
       </fieldset>
       <div className={styles.columnActions}>
