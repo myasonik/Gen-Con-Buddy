@@ -51,7 +51,7 @@ export function makeMatrix<TMeta extends Meta<unknown>>(
     } as StoryObj<TMeta>;
   }
 
-  function Grid(): JSX.Element {
+  function Grid(): React.JSX.Element {
     return (
       <div className={styles.grid}>
         {combos.map((combo) => {

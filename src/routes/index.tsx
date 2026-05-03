@@ -1,3 +1,4 @@
+import React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { SearchForm } from "../components/SearchForm/SearchForm";
 import { SearchResults } from "../components/SearchResults/SearchResults";
@@ -14,7 +15,7 @@ export const Route = createFileRoute("/")({
   component: SearchPage,
 });
 
-function SearchPage(): JSX.Element {
+function SearchPage(): React.JSX.Element {
   const navigate = Route.useNavigate();
   const search = Route.useSearch();
 

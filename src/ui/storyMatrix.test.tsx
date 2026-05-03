@@ -3,7 +3,7 @@ import React from "react";
 import { cartesian, makeMatrix } from "./storyMatrix";
 import type { Meta } from "@storybook/react-vite";
 
-const StubComponent = ({ children }: { children?: React.ReactNode }): JSX.Element => (
+const StubComponent = ({ children }: { children?: React.ReactNode }): React.JSX.Element => (
   <button type="button">{children}</button>
 );
 

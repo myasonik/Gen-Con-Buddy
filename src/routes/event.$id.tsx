@@ -1,3 +1,4 @@
+import React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { fetchEvents } from "../utils/api";
 import { queryClient } from "../lib/queryClient";
@@ -13,7 +14,7 @@ export const Route = createFileRoute("/event/$id")({
   component: EventDetailPage,
 });
 
-function EventDetailPage(): JSX.Element {
+function EventDetailPage(): React.JSX.Element {
   const { id } = Route.useParams();
   return (
     <main>

@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { COLUMN_VISIBILITY_DEFAULTS } from "../../hooks/useColumnVisibility";
@@ -99,7 +100,7 @@ export function EventListMobile({
   visibility,
   typeDisplay,
   showTypeIcon,
-}: EventListMobileProps): JSX.Element {
+}: EventListMobileProps): React.JSX.Element {
   const vis = visibility ?? COLUMN_VISIBILITY_DEFAULTS;
   const isVisible = (id: string): boolean => vis[id] !== false;
 

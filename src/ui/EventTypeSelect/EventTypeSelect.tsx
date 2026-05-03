@@ -1,4 +1,4 @@
-import { useState, useId, useRef } from "react";
+import React, { useState, useId, useRef } from "react";
 import { ChevronDown, Check } from "lucide-react";
 import { Combobox } from "@base-ui/react/combobox";
 import { EVENT_TYPES } from "../../utils/enums";
@@ -16,7 +16,7 @@ const OPTIONS = Object.entries(EVENT_TYPES).map(([code, label]) => ({
   name: label.replace(/^[A-Z]+ - /, ""),
 }));
 
-export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps): JSX.Element {
+export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps): React.JSX.Element {
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);

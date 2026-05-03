@@ -1,3 +1,4 @@
+import React from "react";
 import clsx from "clsx";
 import styles from "./Select.module.css";
 
@@ -22,7 +23,7 @@ export function Select({
   placeholder = "Any",
   className,
   "aria-label": ariaLabel,
-}: SelectProps): JSX.Element {
+}: SelectProps): React.JSX.Element {
   return (
     <select
       value={value}

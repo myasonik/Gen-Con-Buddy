@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import clsx from "clsx";
 import { announce } from "../../lib/announce";
 import { Meeple } from "../icons/Meeple";
@@ -10,7 +10,7 @@ interface EmptyStateProps {
   subtext?: string;
 }
 
-export function EmptyState({ variant, text, subtext }: EmptyStateProps): JSX.Element {
+export function EmptyState({ variant, text, subtext }: EmptyStateProps): React.JSX.Element {
   useEffect(() => {
     announce(text, variant === "error" ? "assertive" : "polite");
   }, [variant, text]);

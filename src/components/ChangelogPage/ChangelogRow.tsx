@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import type { ChangelogSummary } from "../../utils/types";
@@ -18,7 +18,7 @@ export function ChangelogRow({
   summary,
   onOpen,
   sharedColumnState,
-}: ChangelogRowProps): JSX.Element {
+}: ChangelogRowProps): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const { data: entry, isError } = useQuery({
     queryKey: ["changelog", "entry", summary.id],
