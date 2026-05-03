@@ -6,6 +6,19 @@ import { server } from "./msw/server";
 
 window.scrollTo = () => {};
 
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  configurable: true,
+  value: (query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  }),
+});
+
 // jsdom doesn't implement canvas — stub getContext to return null so tests that render
 // components using useColumnMinSizes don't emit jsdomError events that vitest treats as failures
 HTMLCanvasElement.prototype.getContext = () => null;

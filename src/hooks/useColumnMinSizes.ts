@@ -1,6 +1,19 @@
 import { useEffect, useState, type RefObject } from "react";
 import type { Event } from "../utils/types";
 
+function shallowEqualNumberRecord(a: Record<string, number>, b: Record<string, number>): boolean {
+  const aKeys = Object.keys(a);
+  if (aKeys.length !== Object.keys(b).length) {
+    return false;
+  }
+  for (const key of aKeys) {
+    if (a[key] !== b[key]) {
+      return false;
+    }
+  }
+  return true;
+}
+
 export function useColumnMinSizes(
   tableRef: RefObject<HTMLTableElement | null>,
   events: Event[],
@@ -77,12 +90,7 @@ export function useColumnMinSizes(
     // if visibility is an inline `{}` literal or the caller re-creates the object
     // on every render, the effect would re-run after setMinSizes triggers a
     // re-render, then re-run again, ad infinitum — until this check breaks the cycle.
-    setMinSizes((prev) => {
-      if (JSON.stringify(prev) === JSON.stringify(result)) {
-        return prev;
-      }
-      return result;
-    });
+    setMinSizes((prev) => (shallowEqualNumberRecord(prev, result) ? prev : result));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [events, visibility]); // tableRef is a stable ref — intentionally omitted from deps
 

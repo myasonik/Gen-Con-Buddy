@@ -555,7 +555,7 @@ test("eventType cell renders code and name spans in the DOM", async () => {
   server.use(
     http.get("/api/events/search", () =>
       HttpResponse.json({
-        data: [makeEvent({ eventType: "RPG" })],
+        data: [makeEvent({ eventType: "RPG - Role Playing Game" })],
         meta: { total: 1 },
         links: { self: "" },
         error: null,
@@ -582,7 +582,7 @@ test("applies typeDisplayName class to EventTable section when mode is name", as
 test("applies typeHideIcon class to EventTable section when showTypeIcon is false", async () => {
   localStorage.setItem(
     "gen-con-buddy-type-display",
-    JSON.stringify({ version: 1, value: { textMode: "name", showIcon: false } }),
+    JSON.stringify({ version: 2, value: { textMode: "name", showIcon: false } }),
   );
   const { container } = renderSearchResults();
   await screen.findAllByRole("row");
@@ -592,7 +592,7 @@ test("applies typeHideIcon class to EventTable section when showTypeIcon is fals
 test("no text mode class on EventTable section when typeDisplay is both", async () => {
   localStorage.setItem(
     "gen-con-buddy-type-display",
-    JSON.stringify({ version: 1, value: { textMode: "both", showIcon: true } }),
+    JSON.stringify({ version: 2, value: { textMode: "both", showIcon: true } }),
   );
   const { container } = renderSearchResults();
   await screen.findAllByRole("row");
@@ -618,7 +618,7 @@ test("reset to defaults resets type display to name and icon shown", async () =>
   const user = userEvent.setup();
   localStorage.setItem(
     "gen-con-buddy-type-display",
-    JSON.stringify({ version: 1, value: { textMode: "code", showIcon: false } }),
+    JSON.stringify({ version: 2, value: { textMode: "code", showIcon: false } }),
   );
   renderSearchResults();
   await screen.findAllByRole("row");
@@ -626,4 +626,28 @@ test("reset to defaults resets type display to name and icon shown", async () =>
   await user.click(screen.getByRole("button", { name: "Reset to defaults" }));
   expect(screen.getByRole("radio", { name: "Name" })).toBeChecked();
   expect(screen.getByRole("checkbox", { name: "Show icon" })).toBeChecked();
+});
+
+test("renders EventListMobile on mobile viewport, not EventTable", async () => {
+  vi.spyOn(window, "matchMedia").mockImplementation(
+    (query) =>
+      ({
+        matches: query === "(width <= 60rem)",
+        media: query,
+        onchange: null,
+        addEventListener: vi.fn<() => void>(),
+        removeEventListener: vi.fn<() => void>(),
+        dispatchEvent: vi.fn<() => boolean>(),
+      }) as unknown as MediaQueryList,
+  );
+
+  renderSearchResults();
+  const items = await screen.findAllByRole("listitem");
+  expect(items.length).toBeGreaterThan(0);
+  expect(screen.queryByRole("table")).not.toBeInTheDocument();
+});
+
+test("renders EventTable on desktop viewport, not EventListMobile", async () => {
+  renderSearchResults();
+  await expect(screen.findByRole("table")).resolves.toBeInTheDocument();
 });

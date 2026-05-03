@@ -9,6 +9,7 @@ import { ColumnControlsPanel } from "../../ui/EventTable/ColumnControlsPanel";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { useTypeDisplay } from "../../hooks/useTypeDisplay";
+import { useMediaQuery } from "../../hooks/useMediaQuery";
 import styles from "./SearchResults.module.css";
 
 interface SearchResultsProps {
@@ -24,6 +25,7 @@ export function SearchResults({
 }: SearchResultsProps): JSX.Element {
   const page = searchParams.page ?? 1;
   const limit = searchParams.limit ?? 100;
+  const isMobile = useMediaQuery("(width <= 60rem)");
   const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility();
   const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
   const {
@@ -86,28 +88,31 @@ export function SearchResults({
               singleLine
             />
           </div>
-          <div className={styles.tableView}>
-            <ColumnControlsPanel variant="inline" columnState={sharedColumnState} />
-            <EventTable
-              events={data.data}
-              activeSortField={activeSortField}
-              activeSortDir={activeSortDir}
-              onSort={onSort}
-              sharedColumnState={sharedColumnState}
-              showColumnControls={false}
-            />
-          </div>
-          <div className={styles.mobileView}>
-            <div className={styles.mobileControls}>
-              <ColumnControlsPanel variant="drawer" columnState={sharedColumnState} />
+          {!isMobile ? (
+            <div className={styles.tableView}>
+              <ColumnControlsPanel variant="inline" columnState={sharedColumnState} />
+              <EventTable
+                events={data.data}
+                activeSortField={activeSortField}
+                activeSortDir={activeSortDir}
+                onSort={onSort}
+                sharedColumnState={sharedColumnState}
+                showColumnControls={false}
+              />
             </div>
-            <EventListMobile
-              events={data.data}
-              visibility={sharedColumnState.visibility}
-              typeDisplay={typeDisplay}
-              showTypeIcon={showTypeIcon}
-            />
-          </div>
+          ) : (
+            <div className={styles.mobileView}>
+              <div className={styles.mobileControls}>
+                <ColumnControlsPanel variant="drawer" columnState={sharedColumnState} />
+              </div>
+              <EventListMobile
+                events={data.data}
+                visibility={sharedColumnState.visibility}
+                typeDisplay={typeDisplay}
+                showTypeIcon={showTypeIcon}
+              />
+            </div>
+          )}
           <Pagination
             page={page}
             limit={limit}
