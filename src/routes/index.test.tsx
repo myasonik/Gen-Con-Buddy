@@ -151,6 +151,19 @@ test("renders day toggles as a group in the filter strip", async () => {
   expect(screen.getByRole("group", { name: "Days" })).toBeInTheDocument();
 });
 
+test("day tiles are checkboxes", async () => {
+  await renderRoute("/");
+  expect(screen.getByRole("checkbox", { name: "Wed" })).not.toBeChecked();
+});
+
+test("day checkboxes are keyboard accessible interactive elements", async () => {
+  await renderRoute("/");
+  const thuCheckbox = screen.getByRole("checkbox", { name: "Thu" });
+  expect(thuCheckbox).toHaveAttribute("role", "checkbox");
+  expect(thuCheckbox).toHaveAttribute("aria-checked");
+});
+
+
 test("eventType column renders the event type", async () => {
   server.use(
     http.get("/api/events/search", () =>
