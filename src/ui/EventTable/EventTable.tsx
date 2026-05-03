@@ -1,4 +1,4 @@
-import { useState, useId } from "react";
+import { useState, useId, useRef } from "react";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { createPortal } from "react-dom";
 import {
@@ -7,13 +7,13 @@ import {
   getSortedRowModel,
   flexRender,
   type SortingState,
-  type ColumnSizingState,
 } from "@tanstack/react-table";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { useTypeDisplay } from "../../hooks/useTypeDisplay";
 import { useSortState } from "../../hooks/useSortState";
 import typeCellStyles from "./typeCell.module.css";
+import { useColumnMinSizes } from "../../hooks/useColumnMinSizes";
 import { ColumnControlsPanel } from "./ColumnControlsPanel";
 import { ColumnActionsPopover } from "./ColumnActionsPopover";
 import { ColumnResizeDialog } from "./ColumnResizeDialog";
@@ -64,11 +64,13 @@ export function EventTable({
   } else if (typeDisplay === "name") {
     textClass = typeCellStyles.typeDisplayName;
   }
-  const iconClass = showTypeIcon ? undefined : typeCellStyles.typeHideIcon;
+  const iconClass = showTypeIcon === false ? typeCellStyles.typeHideIcon : undefined;
   const typeDisplayClass = [textClass, iconClass].filter(Boolean).join(" ") || undefined;
 
   // Unique prefix so anchor names don't collide when multiple EventTable instances are on the page
   const tableId = useId().replace(/:/g, "");
+  const tableRef = useRef<HTMLTableElement>(null);
+  const columnMinSizes = useColumnMinSizes(tableRef, events, visibility);
   const [clipWrapper, setClipWrapper] = useState<HTMLDivElement | null>(null);
   const [resizeTarget, setResizeTarget] = useState<{
     columnId: string;
@@ -161,7 +163,12 @@ export function EventTable({
       sorting: internalSorting,
     },
     onColumnSizingChange: (updater) => {
-      setSizing(updater);
+      setSizing((prev) => {
+        const next = typeof updater === "function" ? updater(prev) : updater;
+        return Object.fromEntries(
+          Object.entries(next).map(([id, size]) => [id, Math.max(size, columnMinSizes[id] ?? 0)]),
+        );
+      });
     },
     onSortingChange: setInternalSorting,
     manualSorting: Boolean(onSort),
@@ -198,7 +205,7 @@ export function EventTable({
         data-testid="table-clip-wrapper"
       >
         <div className={styles.tableWrapper}>
-          <table>
+          <table ref={tableRef}>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
@@ -268,7 +275,7 @@ export function EventTable({
               {table.getRowModel().rows.map((row) => (
                 <tr key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id}>
+                    <td key={cell.id} data-col-id={cell.column.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}
@@ -307,8 +314,9 @@ export function EventTable({
         <ColumnResizeDialog
           columnName={resizeTarget.columnName}
           currentWidth={resizeTarget.currentWidth}
+          minWidth={columnMinSizes[resizeTarget.columnId] ?? 0}
           onApply={(width) => {
-            setSizing((prev: ColumnSizingState) => ({ ...prev, [resizeTarget.columnId]: width }));
+            table.setColumnSizing((prev) => ({ ...prev, [resizeTarget.columnId]: width }));
           }}
           onClose={() => setResizeTarget(null)}
         />

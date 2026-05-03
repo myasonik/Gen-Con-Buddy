@@ -6,6 +6,7 @@ import styles from "./ColumnResizeDialog.module.css";
 interface ColumnResizeDialogProps {
   columnName: string;
   currentWidth: number;
+  minWidth?: number;
   onApply: (width: number) => void;
   onClose: () => void;
 }
@@ -13,6 +14,7 @@ interface ColumnResizeDialogProps {
 export function ColumnResizeDialog({
   columnName,
   currentWidth,
+  minWidth = 0,
   onApply,
   onClose,
 }: ColumnResizeDialogProps): JSX.Element {
@@ -40,6 +42,7 @@ export function ColumnResizeDialog({
               id={inputId}
               type="number"
               className={styles.input}
+              min={minWidth}
               value={value}
               onChange={(e) => setValue(e.target.value)}
             />
@@ -51,7 +54,7 @@ export function ColumnResizeDialog({
             <Button
               variant="primary"
               onClick={() => {
-                onApply(Number(value));
+                onApply(Math.max(Number(value), minWidth));
                 onClose();
               }}
             >

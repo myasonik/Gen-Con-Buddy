@@ -6,6 +6,19 @@ import { server } from "./msw/server";
 
 window.scrollTo = () => {};
 
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+// jsdom doesn't implement canvas — stub getContext to return null so tests that render
+// components using useColumnMinSizes don't emit jsdomError events that vitest treats as failures
+HTMLCanvasElement.prototype.getContext = () => null;
+
+// Force GC at the START of each file, not afterAll. The previous file's module
+// context is released before beforeAll runs, so gc() here actually frees the
+// previous file's jsdom. In afterAll the current file is still live — gc() there
+// is one file too late and doesn't prevent accumulation across a worker's queue.
+beforeAll(() => {
+  global.gc?.();
+  server.listen({ onUnhandledRequest: "error" });
+});
 afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+afterAll(() => {
+  server.close();
+});
