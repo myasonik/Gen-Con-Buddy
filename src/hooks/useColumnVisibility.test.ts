@@ -2,7 +2,7 @@ import { expect, test, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useColumnVisibility } from "./useColumnVisibility";
 
-const STORAGE_KEY = "gen-con-buddy-columns";
+const STORAGE_KEY = "gcb-column-visibility";
 
 beforeEach(() => {
   localStorage.clear();

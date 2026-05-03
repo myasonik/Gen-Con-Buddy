@@ -22,7 +22,7 @@ test("DescriptionItem renders term and value", () => {
   expect(screen.getByRole("definition")).toHaveTextContent("Value");
 });
 
-test('DescriptionItem with span="full" has full class', () => {
+test('DescriptionItem with span="full" applies full CSS class', () => {
   const { container } = render(
     <DescriptionList>
       <DescriptionItem term="Label" span="full">
@@ -32,10 +32,10 @@ test('DescriptionItem with span="full" has full class', () => {
   );
   const dl = container.querySelector("dl");
   const firstDiv = dl?.firstElementChild as HTMLElement;
-  expect(firstDiv?.dataset?.["span"]).toBe("full");
+  expect(firstDiv?.className).toContain("full");
 });
 
-test('DescriptionItem without span="full" does not have full class', () => {
+test('DescriptionItem without span="full" does not apply full CSS class', () => {
   const { container } = render(
     <DescriptionList>
       <DescriptionItem term="Label">Value</DescriptionItem>
@@ -43,7 +43,7 @@ test('DescriptionItem without span="full" does not have full class', () => {
   );
   const dl = container.querySelector("dl");
   const firstDiv = dl?.firstElementChild as HTMLElement;
-  expect(firstDiv?.dataset?.["span"]).toBeUndefined();
+  expect(firstDiv?.className).not.toContain("full");
 });
 
 test("shows empty state when children is null", () => {

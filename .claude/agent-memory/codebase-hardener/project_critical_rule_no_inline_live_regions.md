@@ -14,3 +14,4 @@ type: project
 - The rule has known coverage gaps that are worth re-checking on each audit: dynamic role (`role={var}`), role="log"/"marquee"/"timer" (all ARIA live regions), JSX spread attributes containing aria-live. Decide explicitly each time whether these should be caught or documented as out of scope.
 - If no `*.test.*` file exists for this rule, flag it as a blocking issue. The rule is too important to leave untested.
 - The `announce()` utility lives at `src/lib/announce.ts`.
+- **Rule scopes JSX only.** Test fixtures that hand-create live regions via `document.createElement('div')` + `setAttribute('aria-live', ...)` (e.g. `setupLiveRegions()` helpers) are not caught and effectively re-establish the inline pattern in test land. When auditing `*.test.tsx` files, grep for `aria-live` and `role="alert"` regardless of whether they're in JSX. As of 2026-05-03 there is one such fixture in `src/components/SearchResults/SearchResults.test.tsx` lines 20-35.

@@ -28,7 +28,7 @@ export function DescriptionItem({
   const isEmpty = children === null || children === undefined || children === "";
 
   return (
-    <div data-span={span} className={clsx(span === "full" ? styles.full : undefined, className)}>
+    <div className={clsx(span === "full" ? styles.full : undefined, className)}>
       <dt className={styles.dt}>{term}</dt>
       <dd className={styles.dd}>
         {isEmpty ? (

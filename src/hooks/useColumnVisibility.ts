@@ -1,7 +1,7 @@
 import { useStoredState } from "./useStoredState";
 
-const STORAGE_KEY = "gen-con-buddy-columns";
-const VERSION = 1;
+const STORAGE_KEY = "gcb-column-visibility";
+const VERSION = 2;
 
 export const COLUMN_VISIBILITY_DEFAULTS: Record<string, boolean> = {
   gameId: false,

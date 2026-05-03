@@ -1,2 +1,4 @@
-- [Base UI coverage snapshot](project_base_ui_coverage_status.md) — what's already wrapped in src/ui/ and where the codebase still hand-rolls native controls (selects, inputs, details).
+- [Base UI coverage snapshot](project_base_ui_coverage_status.md) — what's already wrapped in src/ui/ and where the codebase still hand-rolls (Drawer, Chip, SegmentedControl all missing).
+- [Token gaps](project_token_gaps.md) — type scale, border width, scrim, surface-tone borders not yet tokenized despite consistent inline patterns.
+- [src/ui/ scope rule](project_ui_dir_scope.md) — primitives only; EventTable, ActiveFilters, EventTypeSelect should move to src/components/.
 - [Design review style](feedback_strong_opinions.md) — User wants thorough, opinionated design reviews with concrete code examples; not hedged summaries.

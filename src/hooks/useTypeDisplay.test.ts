@@ -2,7 +2,7 @@ import { expect, test, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useTypeDisplay } from "./useTypeDisplay";
 
-const STORAGE_KEY = "gen-con-buddy-type-display";
+const STORAGE_KEY = "gcb-type-display";
 
 beforeEach(() => {
   localStorage.clear();

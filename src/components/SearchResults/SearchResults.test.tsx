@@ -568,8 +568,8 @@ test("eventType cell renders code and name spans in the DOM", async () => {
 
 test("applies typeDisplayName class to EventTable section when mode is name", async () => {
   localStorage.setItem(
-    "gen-con-buddy-type-display",
-    JSON.stringify({ version: 1, value: { textMode: "name", showIcon: true } }),
+    "gcb-type-display",
+    JSON.stringify({ version: 3, value: { textMode: "name", showIcon: true } }),
   );
   const { container } = renderSearchResults();
   await screen.findAllByRole("row");
@@ -578,8 +578,8 @@ test("applies typeDisplayName class to EventTable section when mode is name", as
 
 test("applies typeHideIcon class to EventTable section when showTypeIcon is false", async () => {
   localStorage.setItem(
-    "gen-con-buddy-type-display",
-    JSON.stringify({ version: 2, value: { textMode: "name", showIcon: false } }),
+    "gcb-type-display",
+    JSON.stringify({ version: 3, value: { textMode: "name", showIcon: false } }),
   );
   const { container } = renderSearchResults();
   await screen.findAllByRole("row");
@@ -588,8 +588,8 @@ test("applies typeHideIcon class to EventTable section when showTypeIcon is fals
 
 test("no text mode class on EventTable section when typeDisplay is both", async () => {
   localStorage.setItem(
-    "gen-con-buddy-type-display",
-    JSON.stringify({ version: 2, value: { textMode: "both", showIcon: true } }),
+    "gcb-type-display",
+    JSON.stringify({ version: 3, value: { textMode: "both", showIcon: true } }),
   );
   const { container } = renderSearchResults();
   await screen.findAllByRole("row");
@@ -614,8 +614,8 @@ test("Show icon checkbox is present and checked by default", async () => {
 test("reset to defaults resets type display to name and icon shown", async () => {
   const user = userEvent.setup();
   localStorage.setItem(
-    "gen-con-buddy-type-display",
-    JSON.stringify({ version: 2, value: { textMode: "code", showIcon: false } }),
+    "gcb-type-display",
+    JSON.stringify({ version: 3, value: { textMode: "code", showIcon: false } }),
   );
   renderSearchResults();
   await screen.findAllByRole("row");

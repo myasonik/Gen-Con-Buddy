@@ -1,10 +1,8 @@
-import { expect, describe, it, afterEach } from "vitest";
+import { expect, describe, it } from "vitest";
 import type { EventSearchResponse } from "../../utils/types";
 import { server } from "./server";
 import { makeEventPool } from "./handlers";
 import { makeEvent } from "./factory";
-
-afterEach(() => server.resetHandlers());
 
 async function fetchEvents(params: Record<string, string> = {}): Promise<EventSearchResponse> {
   const url = new URL("/api/events/search", window.location.origin);

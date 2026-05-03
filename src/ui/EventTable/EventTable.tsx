@@ -8,9 +8,6 @@ import {
   flexRender,
   type SortingState,
 } from "@tanstack/react-table";
-import { useColumnVisibility } from "../../hooks/useColumnVisibility";
-import { useColumnSizing } from "../../hooks/useColumnSizing";
-import { useTypeDisplay } from "../../hooks/useTypeDisplay";
 import { useSortState } from "../../hooks/useSortState";
 import typeCellStyles from "./typeCell.module.css";
 import { useColumnMinSizes } from "../../hooks/useColumnMinSizes";
@@ -30,7 +27,7 @@ interface EventTableProps {
   activeSortField?: string;
   activeSortDir?: "asc" | "desc";
   onSort?: (sort: string | undefined) => void;
-  sharedColumnState?: SharedColumnState;
+  sharedColumnState: SharedColumnState;
   showColumnControls?: boolean;
 }
 
@@ -42,21 +39,19 @@ export function EventTable({
   sharedColumnState,
   showColumnControls = true,
 }: EventTableProps): React.JSX.Element {
-  const internalVis = useColumnVisibility();
-  const internalSizing = useColumnSizing();
-  const visibility = sharedColumnState?.visibility ?? internalVis.visibility;
-  const toggleVisibility = sharedColumnState?.toggleVisibility ?? internalVis.toggle;
-  const resetVisibility = sharedColumnState?.resetVisibility ?? internalVis.reset;
-  const sizing = sharedColumnState?.sizing ?? internalSizing.sizing;
-  const setSizing = sharedColumnState?.setSizing ?? internalSizing.setSizing;
-  const resetSizing = sharedColumnState?.resetSizing ?? internalSizing.reset;
-
-  const internalTypeDisplay = useTypeDisplay();
-  const typeDisplay = sharedColumnState?.typeDisplay ?? internalTypeDisplay.typeDisplay;
-  const setTypeDisplay = sharedColumnState?.setTypeDisplay ?? internalTypeDisplay.setTypeDisplay;
-  const showTypeIcon = sharedColumnState?.showTypeIcon ?? internalTypeDisplay.showTypeIcon;
-  const setShowTypeIcon = sharedColumnState?.setShowTypeIcon ?? internalTypeDisplay.setShowTypeIcon;
-  const resetTypeDisplay = sharedColumnState?.resetTypeDisplay ?? internalTypeDisplay.reset;
+  const {
+    visibility,
+    toggleVisibility,
+    resetVisibility,
+    sizing,
+    setSizing,
+    resetSizing,
+    typeDisplay,
+    setTypeDisplay,
+    showTypeIcon,
+    setShowTypeIcon,
+    resetTypeDisplay,
+  } = sharedColumnState;
 
   let textClass: string | undefined = undefined;
   if (typeDisplay === "code") {

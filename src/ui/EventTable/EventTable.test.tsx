@@ -1,3 +1,4 @@
+import React from "react";
 import { expect, test, beforeEach, vi, afterEach } from "vitest";
 import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -12,6 +13,9 @@ import { makeEvent } from "../../test/msw/factory";
 import { EventTable } from "./EventTable";
 import type { SharedColumnState, TypeDisplay } from "./types";
 import type { Event } from "../../utils/types";
+import { useColumnVisibility } from "../../hooks/useColumnVisibility";
+import { useColumnSizing } from "../../hooks/useColumnSizing";
+import { useTypeDisplay } from "../../hooks/useTypeDisplay";
 
 beforeEach(() => {
   localStorage.clear();
@@ -38,18 +42,59 @@ function makeSharedColumnState(overrides: Partial<SharedColumnState> = {}): Shar
   };
 }
 
+function EventTableWithHooks({
+  events,
+  showColumnControls = true,
+}: {
+  events: Event[];
+  showColumnControls?: boolean;
+}): React.JSX.Element {
+  const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility();
+  const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
+  const {
+    typeDisplay,
+    setTypeDisplay,
+    showTypeIcon,
+    setShowTypeIcon,
+    reset: resetTypeDisplay,
+  } = useTypeDisplay();
+  const sharedColumnState: SharedColumnState = {
+    visibility,
+    toggleVisibility,
+    resetVisibility,
+    sizing,
+    setSizing,
+    resetSizing,
+    typeDisplay,
+    setTypeDisplay,
+    showTypeIcon,
+    setShowTypeIcon,
+    resetTypeDisplay,
+  };
+  return (
+    <EventTable
+      events={events}
+      sharedColumnState={sharedColumnState}
+      showColumnControls={showColumnControls}
+    />
+  );
+}
+
 async function renderEventTable(
   events: Event[] = [makeEvent()],
   sharedColumnState?: SharedColumnState,
 ): Promise<ReturnType<typeof render>> {
   const rootRoute = createRootRoute({
-    component: () => (
-      <EventTable
-        events={events}
-        sharedColumnState={sharedColumnState}
-        showColumnControls={sharedColumnState === undefined}
-      />
-    ),
+    component: () =>
+      sharedColumnState !== undefined ? (
+        <EventTable
+          events={events}
+          sharedColumnState={sharedColumnState}
+          showColumnControls={false}
+        />
+      ) : (
+        <EventTableWithHooks events={events} showColumnControls={true} />
+      ),
   });
   const eventRoute = createRoute({
     getParentRoute: () => rootRoute,

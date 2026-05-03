@@ -1,6 +1,11 @@
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { EventTable } from "./EventTable";
 import type { Event } from "../../utils/types";
+import { useColumnVisibility } from "../../hooks/useColumnVisibility";
+import { useColumnSizing } from "../../hooks/useColumnSizing";
+import { useTypeDisplay } from "../../hooks/useTypeDisplay";
+import type { SharedColumnState } from "./types";
 
 const makeEvent = (id: string, overrides: Partial<Event["attributes"]> = {}): Event => ({
   id,
@@ -73,15 +78,64 @@ const SAMPLE_EVENTS: Event[] = [
   }),
 ];
 
+interface EventTableStoryProps {
+  events: Event[];
+  activeSortField?: string;
+  activeSortDir?: "asc" | "desc";
+  onSort?: (sort: string | undefined) => void;
+  showColumnControls?: boolean;
+}
+
+function EventTableStory({
+  events,
+  activeSortField,
+  activeSortDir,
+  onSort,
+  showColumnControls,
+}: EventTableStoryProps): React.JSX.Element {
+  const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility();
+  const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
+  const {
+    typeDisplay,
+    setTypeDisplay,
+    showTypeIcon,
+    setShowTypeIcon,
+    reset: resetTypeDisplay,
+  } = useTypeDisplay();
+  const sharedColumnState: SharedColumnState = {
+    visibility,
+    toggleVisibility,
+    resetVisibility,
+    sizing,
+    setSizing,
+    resetSizing,
+    typeDisplay,
+    setTypeDisplay,
+    showTypeIcon,
+    setShowTypeIcon,
+    resetTypeDisplay,
+  };
+  return (
+    <EventTable
+      events={events}
+      activeSortField={activeSortField}
+      activeSortDir={activeSortDir}
+      onSort={onSort}
+      sharedColumnState={sharedColumnState}
+      showColumnControls={showColumnControls}
+    />
+  );
+}
+
 const meta = {
   title: "UI/EventTable",
-  component: EventTable,
+  component: EventTableStory,
   tags: ["autodocs"],
   args: {
     events: SAMPLE_EVENTS,
     onSort: (): void => {},
   },
-} satisfies Meta<typeof EventTable>;
+} satisfies Meta<typeof EventTableStory>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
