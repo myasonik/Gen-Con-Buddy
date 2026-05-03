@@ -52,8 +52,7 @@ export function EventTable({
     resetTypeDisplay,
   } = sharedColumnState;
 
-  const typeDisplayAttr =
-    typeDisplay === "code" ? "code" : typeDisplay === "name" ? "name" : undefined;
+  const typeDisplayAttr = typeDisplay === "code" || typeDisplay === "name" ? typeDisplay : undefined;
   const showIconAttr = showTypeIcon === false ? "false" : undefined;
 
   // Unique prefix so anchor names don't collide when multiple EventTable instances are on the page
