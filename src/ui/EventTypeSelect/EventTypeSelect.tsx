@@ -3,6 +3,7 @@ import { ChevronDown, Check } from "lucide-react";
 import { Combobox } from "@base-ui/react/combobox";
 import { EVENT_TYPES } from "../../utils/enums";
 import { EVENT_TYPE_ICONS } from "../icons/eventTypeIcons";
+import { Chip } from "../Chip/Chip";
 import styles from "./EventTypeSelect.module.css";
 
 export interface EventTypeSelectProps {
@@ -78,26 +79,21 @@ export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps):
             {selectedCodes.map((code) => {
               const ChipIcon = EVENT_TYPE_ICONS[code];
               return (
-                <div key={code} data-testid="chip" className={styles.chip}>
-                  {ChipIcon && <ChipIcon size={12} />}
-                  <span className={styles.chipText}>
-                    {code}
-                    {open && (
-                      <span>
-                        {" – "}
-                        {EVENT_TYPES[code]?.replace(/^[A-Z]+ - /, "")}
-                      </span>
-                    )}
-                  </span>
-                  <button
-                    type="button"
-                    className={styles.chipRemove}
-                    aria-label={`Remove ${code}`}
-                    onClick={() => removeCode(code)}
-                  >
-                    ×
-                  </button>
-                </div>
+                <Chip
+                  key={code}
+                  data-testid="chip"
+                  tone="accent"
+                  icon={ChipIcon ? <ChipIcon size={12} /> : undefined}
+                  onRemove={() => removeCode(code)}
+                >
+                  {code}
+                  {open && (
+                    <span>
+                      {" – "}
+                      {EVENT_TYPES[code]?.replace(/^[A-Z]+ - /, "")}
+                    </span>
+                  )}
+                </Chip>
               );
             })}
             <Combobox.Input

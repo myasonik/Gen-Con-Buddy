@@ -6,6 +6,7 @@ import { fetchChangelogEntry } from "../../utils/api";
 import { ChangelogEntryPanel } from "./ChangelogEntryPanel";
 import type { SharedColumnState } from "../../ui/EventTable/types";
 import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
+import { Chip } from "../../ui/Chip/Chip";
 import styles from "./ChangelogRow.module.css";
 
 interface ChangelogRowProps {
@@ -43,9 +44,9 @@ export function ChangelogRow({
             {format(new Date(summary.date), "MMM d, yyyy h:mm a")}
           </time>
           <span className={styles.counts}>
-            <span data-change="created">{summary.createdCount} created</span>
-            <span data-change="updated">{summary.updatedCount} updated</span>
-            <span data-change="deleted">{summary.deletedCount} deleted</span>
+            <Chip tone="jade">{summary.createdCount} created</Chip>
+            <Chip tone="cobalt">{summary.updatedCount} updated</Chip>
+            <Chip tone="amber">{summary.deletedCount} deleted</Chip>
           </span>
         </>
       }
