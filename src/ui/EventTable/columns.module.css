@@ -13,18 +13,3 @@
   composes: tableLink;
   font-family: var(--font-mono);
 }
-
-.soldOut {
-  display: inline-block;
-  padding: 0.0625rem 0.375rem;
-  border-radius: var(--radius-pill);
-  background: var(--color-error-surface);
-  border: var(--border-width) solid var(--color-error-border);
-  color: var(--color-error-deep);
-  font-family: var(--font-slab);
-  font-size: var(--text-2xs);
-  font-weight: 700;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-  white-space: nowrap;
-}

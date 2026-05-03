@@ -4,6 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { EXP } from "../../utils/enums";
 import type { Event } from "../../utils/types";
 import { EVENT_TYPE_ICONS } from "../icons/eventTypeIcons";
+import { Chip } from "../Chip/Chip";
 import styles from "./columns.module.css";
 import typeCellStyles from "./typeCell.module.css";
 
@@ -250,7 +251,13 @@ export const COLUMNS: ColumnDef<Event>[] = [
     meta: { sortField: "ticketsAvailable" },
     cell: ({ row }) => {
       const n = row.original.attributes.ticketsAvailable;
-      return n === 0 ? <span className={styles.soldOut}>Sold out</span> : <>{n}</>;
+      return n === 0 ? (
+        <Chip tone="error" size="sm">
+          Sold out
+        </Chip>
+      ) : (
+        <>{n}</>
+      );
     },
   },
   {

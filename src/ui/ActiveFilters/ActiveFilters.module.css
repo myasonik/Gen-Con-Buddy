@@ -6,31 +6,3 @@
   list-style: none;
   margin: 0;
 }
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: 0.1875rem var(--space-2);
-  font-family: var(--font-slab);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  letter-spacing: 0.03rem;
-  border-radius: var(--radius-pill);
-  background: var(--color-accent-surface);
-  color: var(--color-accent-deep);
-  border: var(--border-width) solid oklch(from var(--color-accent-surface) calc(l - 0.08) c h);
-  cursor: pointer;
-  transition:
-    background-color var(--motion-hover),
-    border-color var(--motion-hover),
-    color var(--motion-hover);
-  width: auto;
-  text-align: left;
-}
-
-.chip:hover:not(:disabled) {
-  background: oklch(from var(--color-accent-surface) calc(l - 0.05) c h);
-  border-color: var(--color-accent);
-  color: var(--color-accent-deep);
-}
