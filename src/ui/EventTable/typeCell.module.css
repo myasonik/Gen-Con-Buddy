@@ -9,6 +9,24 @@
   flex-shrink: 0;
 }
 
+.typeCode {
+  font-family: var(--font-slab);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+
+.typeName {
+  font-family: var(--font-body);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.typeSep {
+  text-transform: none;
+}
+
 /* "code" mode — hide separator and name */
 .typeDisplayCode .typeSep,
 .typeDisplayCode .typeName {

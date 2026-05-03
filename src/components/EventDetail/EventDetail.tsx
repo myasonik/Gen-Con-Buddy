@@ -138,7 +138,13 @@ export function EventDetail({ gameId }: EventDetailProps): JSX.Element {
             <DescriptionItem term="Table">{a.tableNumber}</DescriptionItem>
             <DescriptionItem term="Cost">${a.cost.toFixed(2)}</DescriptionItem>
             <DescriptionItem term="Attendee Registration">{a.attendeeRegistration}</DescriptionItem>
-            <DescriptionItem term="Tickets Available">{a.ticketsAvailable}</DescriptionItem>
+            <DescriptionItem term="Tickets Available">
+              {a.ticketsAvailable === 0 ? (
+                <span className={styles.soldOut}>Sold out</span>
+              ) : (
+                a.ticketsAvailable
+              )}
+            </DescriptionItem>
             <DescriptionItem term="Materials Provided">{a.materialsProvided}</DescriptionItem>
             <DescriptionItem term="Materials Required" span="full">
               {a.materialsRequired}

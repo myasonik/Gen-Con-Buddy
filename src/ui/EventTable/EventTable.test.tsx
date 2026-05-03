@@ -223,7 +223,7 @@ test("section element carries NO mode class when typeDisplay is both", async () 
 
 test("typeCode span is rendered inside the section with name mode class", async () => {
   const { container } = await renderEventTable(
-    [makeEvent({ eventType: "RPG" })],
+    [makeEvent({ eventType: "RPG - Role Playing Game" })],
     makeSharedColumnState({ typeDisplay: "name" }),
   );
   const section = container.querySelector('[class*="typeDisplayName"]');

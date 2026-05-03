@@ -324,8 +324,8 @@ test("shows minimumPlayTime alone when duration is hidden", async () => {
   expect(screen.getByText("1h")).toBeInTheDocument();
 });
 
-test("renders event type name in the DOM", async () => {
-  await renderList([makeEvent({ eventType: "RPG" })]);
+test("renders event type name in the DOM from full API string format", async () => {
+  await renderList([makeEvent({ eventType: "RPG - Role Playing Game" })]);
   expect(screen.getByText("Role Playing Game")).toBeInTheDocument();
 });
 
@@ -348,4 +348,40 @@ test("no text mode class applied when typeDisplay is both", async () => {
   const { container } = await renderList([makeEvent()], undefined, { typeDisplay: "both" });
   expect(container.querySelector('[class*="typeDisplayCode"]')).toBeNull();
   expect(container.querySelector('[class*="typeDisplayName"]')).toBeNull();
+});
+
+test("does not apply typeHideIcon class when showTypeIcon is true", async () => {
+  const { container } = await renderList([makeEvent()], undefined, { showTypeIcon: true });
+  expect(container.querySelector('[class*="typeHideIcon"]')).toBeNull();
+});
+
+test("does not apply typeHideIcon class when showTypeIcon is not passed", async () => {
+  const { container } = await renderList([makeEvent()], undefined, {});
+  expect(container.querySelector('[class*="typeHideIcon"]')).toBeNull();
+});
+
+test("renders an icon when eventType is the full API string format", async () => {
+  const { container } = await renderList([makeEvent({ eventType: "RPG - Role Playing Game" })]);
+  expect(container.querySelector("svg")).not.toBeNull();
+});
+
+test("shows just the short code in code mode when eventType is the full API string", async () => {
+  await renderList([makeEvent({ eventType: "RPG - Role Playing Game" })], undefined, {
+    typeDisplay: "code",
+  });
+  expect(screen.getByText("RPG")).toBeInTheDocument();
+  expect(screen.queryByText("RPG - Role Playing Game")).not.toBeInTheDocument();
+});
+
+test("shows just the name portion in name mode when eventType is the full API string", async () => {
+  await renderList([makeEvent({ eventType: "RPG - Role Playing Game" })], undefined, {
+    typeDisplay: "name",
+  });
+  expect(screen.getByText("Role Playing Game")).toBeInTheDocument();
+  expect(screen.queryByText("RPG - Role Playing Game")).not.toBeInTheDocument();
+});
+
+test("applies type color class when eventType is the full API string format", async () => {
+  const { container } = await renderList([makeEvent({ eventType: "RPG - Role Playing Game" })]);
+  expect(container.querySelector('[class*="typeRPG"]')).not.toBeNull();
 });

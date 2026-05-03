@@ -23,13 +23,14 @@
   cursor: pointer;
   transition:
     background-color var(--motion-hover),
+    border-color var(--motion-hover),
     color var(--motion-hover);
   width: auto;
   text-align: left;
 }
 
-.chip:hover {
-  background: var(--color-accent);
-  color: var(--color-surface-page);
+.chip:hover:not(:disabled) {
+  background: oklch(from var(--color-accent-surface) calc(l - 0.05) c h);
   border-color: var(--color-accent);
+  color: var(--color-accent-deep);
 }

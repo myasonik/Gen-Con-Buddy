@@ -1,14 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
-import type { Event } from "../../utils/types";
-import type { TypeDisplay } from "./types";
-import { EXP, EVENT_TYPES } from "../../utils/enums";
-import { EVENT_TYPE_ICONS } from "../icons/eventTypeIcons";
 import { COLUMN_VISIBILITY_DEFAULTS } from "../../hooks/useColumnVisibility";
+import { EXP } from "../../utils/enums";
+import type { Event } from "../../utils/types";
+import { DescriptionItem, DescriptionList } from "../DescriptionList/DescriptionList";
+import { EVENT_TYPE_ICONS } from "../icons/eventTypeIcons";
 import { COLUMNS, COLUMN_GROUPS } from "./columns";
-import { DescriptionList, DescriptionItem } from "../DescriptionList/DescriptionList";
-import typeCellStyles from "./typeCell.module.css";
 import styles from "./EventListMobile.module.css";
+import typeCellStyles from "./typeCell.module.css";
+import type { TypeDisplay } from "./types";
 
 const META_COLUMN_IDS = new Set([
   "eventType",
@@ -139,11 +139,13 @@ export function EventListMobile({
           playersText = String(a.maxPlayers);
         }
 
-        const TypeIcon = EVENT_TYPE_ICONS[a.eventType];
-        const fullLabel = EVENT_TYPES[a.eventType] ?? a.eventType;
-        const name = fullLabel.startsWith(`${a.eventType} - `)
-          ? fullLabel.slice(a.eventType.length + 3)
-          : "";
+        const dashIdx = a.eventType.indexOf(" - ");
+        const code = dashIdx !== -1 ? a.eventType.slice(0, dashIdx) : a.eventType;
+        const name = dashIdx !== -1 ? a.eventType.slice(dashIdx + 3) : "";
+        const TypeIcon = EVENT_TYPE_ICONS[code];
+        const typeColorClass = (typeCellStyles as Record<string, string | undefined>)[
+          `type${code}`
+        ];
 
         let extraFields = EXTRA_COLUMN_IDS.filter((id) => isVisible(id))
           .map((id) => {
@@ -195,13 +197,13 @@ export function EventListMobile({
               {showMeta && (
                 <span className={styles.meta}>
                   {isVisible("eventType") && (
-                    <span className={styles.typeTag}>
+                    <span className={[styles.typeTag, typeColorClass].filter(Boolean).join(" ")}>
                       {TypeIcon && (
                         <span className={typeCellStyles.typeIcon}>
-                          <TypeIcon size={14} />
+                          <TypeIcon size={16} />
                         </span>
                       )}
-                      <span className={typeCellStyles.typeCode}>{a.eventType}</span>
+                      <span className={typeCellStyles.typeCode}>{code}</span>
                       {name && <span className={typeCellStyles.typeSep}> - </span>}
                       {name && <span className={typeCellStyles.typeName}>{name}</span>}
                     </span>

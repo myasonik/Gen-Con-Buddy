@@ -33,8 +33,40 @@ function ColumnCheckboxContent({ columnState }: { columnState: SharedColumnState
 
   return (
     <fieldset className={styles.columnFieldset}>
-      <fieldset>
-        <legend>Event type column</legend>
+      {COLUMN_GROUPS.map((group) => (
+        <fieldset key={group.label} className={styles.columnGroup}>
+          <legend className={styles.columnGroupLegend}>{group.label}</legend>
+          <ul className={styles.columnList}>
+            {group.columnIds.map((id) => {
+              const col = colById.get(id);
+              if (!col) {
+                return null;
+              }
+              const isChecked = Boolean(visibility[id]);
+              return (
+                <li key={id}>
+                  <label className={styles.columnToggle}>
+                    <input
+                      type="checkbox"
+                      className="sr-only"
+                      checked={isChecked}
+                      onChange={() => toggleVisibility(id)}
+                    />
+                    <span className={styles.columnCheckbox} aria-hidden="true">
+                      <D6Face size={16} />
+                    </span>
+                    <span className={styles.columnLabel}>
+                      {typeof col.header === "string" ? col.header : id}
+                    </span>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+        </fieldset>
+      ))}
+      <fieldset className={styles.columnGroup}>
+        <legend className={styles.columnGroupLegend}>Event type column</legend>
         <label className={styles.columnToggle}>
           <input
             type="checkbox"
@@ -72,39 +104,6 @@ function ColumnCheckboxContent({ columnState }: { columnState: SharedColumnState
           ))}
         </div>
       </fieldset>
-      <hr className={styles.typeDisplayDivider} />
-      {COLUMN_GROUPS.map((group) => (
-        <fieldset key={group.label} className={styles.columnGroup}>
-          <legend className={styles.columnGroupLegend}>{group.label}</legend>
-          <ul className={styles.columnList}>
-            {group.columnIds.map((id) => {
-              const col = colById.get(id);
-              if (!col) {
-                return null;
-              }
-              const isChecked = Boolean(visibility[id]);
-              return (
-                <li key={id}>
-                  <label className={styles.columnToggle}>
-                    <input
-                      type="checkbox"
-                      className="sr-only"
-                      checked={isChecked}
-                      onChange={() => toggleVisibility(id)}
-                    />
-                    <span className={styles.columnCheckbox} aria-hidden="true">
-                      <D6Face size={16} />
-                    </span>
-                    <span className={styles.columnLabel}>
-                      {typeof col.header === "string" ? col.header : id}
-                    </span>
-                  </label>
-                </li>
-              );
-            })}
-          </ul>
-        </fieldset>
-      ))}
       <div className={styles.columnActions}>
         <Button
           variant="ghost"

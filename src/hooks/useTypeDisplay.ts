@@ -2,7 +2,7 @@ import { useStoredState } from "./useStoredState";
 import type { TypeDisplay } from "../ui/EventTable/types";
 
 const STORAGE_KEY = "gen-con-buddy-type-display";
-const VERSION = 1;
+const VERSION = 2;
 
 interface TypeDisplayState {
   textMode: TypeDisplay;

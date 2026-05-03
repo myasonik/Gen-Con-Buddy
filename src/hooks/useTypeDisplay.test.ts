@@ -74,3 +74,12 @@ test("resets to defaults when localStorage is malformed", () => {
   expect(result.current.typeDisplay).toBe("name");
   expect(result.current.showTypeIcon).toBe(true);
 });
+
+test("resets to defaults when stored value is v1 plain-string format (pre-icon)", () => {
+  // The hook originally stored a plain TypeDisplay string at version 1.
+  // After adding showIcon the shape changed; bump to v2 rejects the old entry.
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 1, value: "both" }));
+  const { result } = renderHook(() => useTypeDisplay());
+  expect(result.current.typeDisplay).toBe("name");
+  expect(result.current.showTypeIcon).toBe(true);
+});

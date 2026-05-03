@@ -232,6 +232,62 @@ test("action links appear after the event title and before THE EVENT section", a
   );
 });
 
+test("event type icon is aria-hidden so assistive tech relies on the text label", async () => {
+  server.use(
+    http.get("/api/events/search", () => {
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId: "RPG24000001", eventType: "RPG" })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }),
+  );
+  renderEventDetail("RPG24000001");
+  await screen.findByText("THE EVENT");
+  const dd = screen.getByText("RPG").closest("dd");
+  const svg = dd?.querySelector("svg");
+  expect(svg).not.toBeNull();
+  expect(svg).toHaveAttribute("aria-hidden", "true");
+});
+
+test("shows sold-out badge when tickets available is zero", async () => {
+  server.use(
+    http.get("/api/events/search", () => {
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId: "RPG24000001", ticketsAvailable: 0 })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }),
+  );
+  renderEventDetail("RPG24000001");
+  await screen.findByText("THE EVENT");
+  expect(screen.getByText("Sold out")).toBeInTheDocument();
+  expect(screen.queryByText("0")).toBeNull();
+});
+
+test("shows ticket count when tickets are available", async () => {
+  server.use(
+    http.get("/api/events/search", () => {
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId: "RPG24000001", ticketsAvailable: 5 })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }),
+  );
+  renderEventDetail("RPG24000001");
+  await screen.findByText("THE EVENT");
+  expect(screen.getByText("5")).toBeInTheDocument();
+  expect(screen.queryByText("Sold out")).toBeNull();
+});
+
 test("event type field renders an icon alongside the type code", async () => {
   server.use(
     http.get("/api/events/search", () => {
