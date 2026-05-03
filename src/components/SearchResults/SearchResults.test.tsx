@@ -36,9 +36,6 @@ function setupLiveRegions(): () => void {
 
 beforeEach(() => {
   localStorage.clear();
-});
-
-beforeEach(() => {
   __reset();
   vi.restoreAllMocks();
 });
