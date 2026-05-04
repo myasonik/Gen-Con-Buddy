@@ -25,6 +25,9 @@ const stubColumnState: SharedColumnState = {
   showTypeIcon: true,
   setShowTypeIcon: () => {},
   resetTypeDisplay: () => {},
+  dayFormat: "day",
+  setDayFormat: () => {},
+  resetDayFormat: () => {},
 };
 
 // For tests that render EventTable (which uses Link), a router context is required.

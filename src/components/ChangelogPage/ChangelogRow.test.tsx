@@ -29,6 +29,9 @@ const stubColumnState: SharedColumnState = {
   showTypeIcon: true,
   setShowTypeIcon: () => {},
   resetTypeDisplay: () => {},
+  dayFormat: "day",
+  setDayFormat: () => {},
+  resetDayFormat: () => {},
 };
 
 beforeEach(() => {

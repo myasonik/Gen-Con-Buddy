@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { vi, expect, test } from "vitest";
 import { ColumnControlsPanel } from "./ColumnControlsPanel";
 import { COLUMNS } from "./columns";
-import type { DayFormat, SharedColumnState, TypeDisplay } from "./types";
+import type { SharedColumnState } from "./types";
 
 function makeColumnState(overrides: Partial<SharedColumnState> = {}): SharedColumnState {
   return {

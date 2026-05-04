@@ -244,12 +244,12 @@ test("remeasures when dayFormat changes", async () => {
     const [dayFormat, setDayFormat] = useState<"day" | "numeric" | "long">("day");
     const tableRef = useRef<HTMLTableElement>(null);
     const minSizes = useColumnMinSizes(tableRef, events, {}, undefined, undefined, dayFormat);
-    const dayText =
-      dayFormat === "numeric"
-        ? "08/01/24"
-        : dayFormat === "long"
-          ? "Thu, Aug 01, 2024"
-          : "Thursday";
+    const dayTextMap: Record<typeof dayFormat, string> = {
+      numeric: "08/01/24",
+      long: "Thu, Aug 01, 2024",
+      day: "Thursday",
+    };
+    const dayText = dayTextMap[dayFormat];
     return (
       <>
         <table ref={tableRef}>

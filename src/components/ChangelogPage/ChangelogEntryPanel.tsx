@@ -36,6 +36,7 @@ function EventGroup({
           events={events}
           typeDisplay={sharedColumnState.typeDisplay}
           showTypeIcon={sharedColumnState.showTypeIcon}
+          dayFormat={sharedColumnState.dayFormat}
         />
       </div>
     </>

@@ -52,16 +52,20 @@ export function EventTable({
     showTypeIcon,
     setShowTypeIcon,
     resetTypeDisplay,
+    dayFormat,
   } = sharedColumnState;
-
-  const typeDisplayAttr =
-    typeDisplay === "code" || typeDisplay === "name" ? typeDisplay : undefined;
-  const showIconAttr = showTypeIcon === false ? "false" : undefined;
 
   // Unique prefix so anchor names don't collide when multiple EventTable instances are on the page
   const tableId = useId().replace(/:/g, "");
   const tableRef = useRef<HTMLTableElement>(null);
-  const columnMinSizes = useColumnMinSizes(tableRef, events, visibility);
+  const columnMinSizes = useColumnMinSizes(
+    tableRef,
+    events,
+    visibility,
+    typeDisplay,
+    showTypeIcon,
+    dayFormat,
+  );
   const [clipWrapper, setClipWrapper] = useState<HTMLDivElement | null>(null);
   const [resizeTarget, setResizeTarget] = useState<{
     columnId: string;
@@ -195,6 +199,9 @@ export function EventTable({
     showTypeIcon,
     setShowTypeIcon,
     resetTypeDisplay,
+    dayFormat,
+    setDayFormat: sharedColumnState.setDayFormat,
+    resetDayFormat: sharedColumnState.resetDayFormat,
   };
 
   if (events.length === 0) {
@@ -202,7 +209,7 @@ export function EventTable({
   }
 
   return (
-    <section data-type-display={typeDisplayAttr} data-show-icon={showIconAttr}>
+    <section>
       {showColumnControls && <ColumnControlsPanel columnState={columnStateForPanel} />}
 
       <div
@@ -282,7 +289,12 @@ export function EventTable({
                 <tr key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} data-col-id={cell.column.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(cell.column.columnDef.cell, {
+                        ...cell.getContext(),
+                        dayFormat,
+                        typeDisplay,
+                        showTypeIcon,
+                      })}
                     </td>
                   ))}
                 </tr>

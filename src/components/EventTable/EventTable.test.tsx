@@ -11,11 +11,12 @@ import {
 } from "@tanstack/react-router";
 import { makeEvent } from "../../test/msw/factory";
 import { EventTable } from "./EventTable";
-import type { SharedColumnState, TypeDisplay } from "./types";
+import type { DayFormat, SharedColumnState, TypeDisplay } from "./types";
 import type { Event } from "../../utils/types";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { useTypeDisplay } from "../../hooks/useTypeDisplay";
+import { useDayFormat } from "../../hooks/useDayFormat";
 
 beforeEach(() => {
   localStorage.clear();
@@ -38,6 +39,9 @@ function makeSharedColumnState(overrides: Partial<SharedColumnState> = {}): Shar
     showTypeIcon: true,
     setShowTypeIcon: vi.fn<(v: boolean) => void>(),
     resetTypeDisplay: vi.fn<() => void>(),
+    dayFormat: "day",
+    setDayFormat: vi.fn<(v: DayFormat) => void>(),
+    resetDayFormat: vi.fn<() => void>(),
     ...overrides,
   };
 }
@@ -58,6 +62,7 @@ function EventTableWithHooks({
     setShowTypeIcon,
     reset: resetTypeDisplay,
   } = useTypeDisplay();
+  const { dayFormat, setDayFormat, reset: resetDayFormat } = useDayFormat();
   const sharedColumnState: SharedColumnState = {
     visibility,
     toggleVisibility,
@@ -70,6 +75,9 @@ function EventTableWithHooks({
     showTypeIcon,
     setShowTypeIcon,
     resetTypeDisplay,
+    dayFormat,
+    setDayFormat,
+    resetDayFormat,
   };
   return (
     <EventTable
@@ -156,12 +164,18 @@ test("eventType column renders an icon alongside the type code", async () => {
 });
 
 test("type cell renders the event type code for icon coloring", async () => {
-  await renderEventTable([makeEvent({ eventType: "RPG" })]);
+  await renderEventTable(
+    [makeEvent({ eventType: "RPG" })],
+    makeSharedColumnState({ typeDisplay: "code" }),
+  );
   expect(screen.getAllByText("RPG").length).toBeGreaterThan(0);
 });
 
 test("type cell renders the board game event type code", async () => {
-  await renderEventTable([makeEvent({ eventType: "BGM" })]);
+  await renderEventTable(
+    [makeEvent({ eventType: "BGM" })],
+    makeSharedColumnState({ typeDisplay: "code" }),
+  );
   expect(screen.getAllByText("BGM").length).toBeGreaterThan(0);
 });
 
@@ -205,74 +219,54 @@ test("resize dialog input has min attribute reflecting measured cell content", a
   });
 });
 
-test("section carries data-type-display=name when typeDisplay is name", async () => {
+test("type cell shows typeCode span and hides typeName when typeDisplay is code", async () => {
   const { container } = await renderEventTable(
-    [makeEvent()],
-    makeSharedColumnState({ typeDisplay: "name" }),
-  );
-  expect(container.querySelector('[data-type-display="name"]')).not.toBeNull();
-});
-
-test("section carries data-type-display=code when typeDisplay is code", async () => {
-  const { container } = await renderEventTable(
-    [makeEvent()],
+    [makeEvent({ eventType: "RPG - Roleplaying Game" })],
     makeSharedColumnState({ typeDisplay: "code" }),
   );
-  expect(container.querySelector('[data-type-display="code"]')).not.toBeNull();
+  expect(container.querySelector('[class*="typeCode"]')).not.toBeNull();
+  expect(container.querySelector('[class*="typeName"]')).toBeNull();
 });
 
-test("section has no data-type-display attribute when typeDisplay is both", async () => {
-  const { container } = await renderEventTable(
-    [makeEvent()],
-    makeSharedColumnState({ typeDisplay: "both" }),
-  );
-  expect(container.querySelector('[data-type-display="code"]')).toBeNull();
-  expect(container.querySelector('[data-type-display="name"]')).toBeNull();
-});
-
-test("section has no data-show-icon attribute when showTypeIcon is true", async () => {
-  const { container } = await renderEventTable(
-    [makeEvent()],
-    makeSharedColumnState({ showTypeIcon: true }),
-  );
-  expect(container.querySelector('[data-show-icon="false"]')).toBeNull();
-});
-
-test("section carries data-show-icon=false when showTypeIcon is false", async () => {
-  const { container } = await renderEventTable(
-    [makeEvent()],
-    makeSharedColumnState({ showTypeIcon: false }),
-  );
-  expect(container.querySelector('[data-show-icon="false"]')).not.toBeNull();
-});
-
-test("section element directly carries data-type-display=name (not a descendant)", async () => {
-  const { container } = await renderEventTable(
-    [makeEvent()],
-    makeSharedColumnState({ typeDisplay: "name" }),
-  );
-  const section = container.querySelector("section");
-  expect(section).not.toBeNull();
-  expect(section?.getAttribute("data-type-display")).toBe("name");
-});
-
-test("section element has no data-type-display attribute when typeDisplay is both", async () => {
-  const { container } = await renderEventTable(
-    [makeEvent()],
-    makeSharedColumnState({ typeDisplay: "both" }),
-  );
-  const section = container.querySelector("section");
-  expect(section).not.toBeNull();
-  expect(section?.hasAttribute("data-type-display")).toBe(false);
-});
-
-test("typeCode span is rendered inside the section with data-type-display=name", async () => {
+test("type cell shows typeName span and hides typeCode when typeDisplay is name", async () => {
   const { container } = await renderEventTable(
     [makeEvent({ eventType: "RPG - Roleplaying Game" })],
     makeSharedColumnState({ typeDisplay: "name" }),
   );
-  const section = container.querySelector('[data-type-display="name"]');
-  expect(section).not.toBeNull();
-  expect(section?.querySelector('[class*="typeCode"]')).not.toBeNull();
-  expect(section?.querySelector('[class*="typeName"]')).not.toBeNull();
+  expect(container.querySelector('[class*="typeName"]')).not.toBeNull();
+  expect(container.querySelector('[class*="typeCode"]')).toBeNull();
+});
+
+test("type cell shows both typeCode and typeName spans when typeDisplay is both", async () => {
+  const { container } = await renderEventTable(
+    [makeEvent({ eventType: "RPG - Roleplaying Game" })],
+    makeSharedColumnState({ typeDisplay: "both" }),
+  );
+  expect(container.querySelector('[class*="typeCode"]')).not.toBeNull();
+  expect(container.querySelector('[class*="typeName"]')).not.toBeNull();
+});
+
+test("type cell omits SVG icon when showTypeIcon is false", async () => {
+  const { container } = await renderEventTable(
+    [makeEvent({ eventType: "RPG" })],
+    makeSharedColumnState({ showTypeIcon: false }),
+  );
+  const typeCell = container.querySelector('[class*="typeCell"]');
+  expect(typeCell?.querySelector("svg")).toBeNull();
+});
+
+test("day cell shows full weekday name in day mode", async () => {
+  // factory startDateTime 2024-08-01T10:00:00Z = Thursday in Indianapolis
+  await renderEventTable([makeEvent()], makeSharedColumnState({ dayFormat: "day" }));
+  expect(screen.getByText("Thursday")).toBeInTheDocument();
+});
+
+test("day cell shows numeric date in numeric mode", async () => {
+  await renderEventTable([makeEvent()], makeSharedColumnState({ dayFormat: "numeric" }));
+  expect(screen.getByText("08/01/24")).toBeInTheDocument();
+});
+
+test("day cell shows long date in long mode", async () => {
+  await renderEventTable([makeEvent()], makeSharedColumnState({ dayFormat: "long" }));
+  expect(screen.getByText("Thu, Aug 01, 2024")).toBeInTheDocument();
 });

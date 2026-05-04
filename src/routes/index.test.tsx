@@ -177,7 +177,7 @@ test("eventType column renders the event type", async () => {
   server.use(
     http.get("/api/events/search", () =>
       HttpResponse.json({
-        data: [makeEvent({ eventType: "RPG" })],
+        data: [makeEvent({ eventType: "RPG - Roleplaying Game" })],
         meta: { total: 1 },
         links: { self: "" },
         error: null,
@@ -186,7 +186,7 @@ test("eventType column renders the event type", async () => {
   );
   await renderRoute("/");
   const table = await screen.findByRole("table");
-  expect(within(table).getByText("RPG")).toBeInTheDocument();
+  expect(within(table).getByText("Roleplaying Game")).toBeInTheDocument();
 });
 
 describe("sidebar toggle and active filters", () => {

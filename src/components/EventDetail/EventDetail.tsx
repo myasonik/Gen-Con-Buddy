@@ -23,11 +23,11 @@ interface EventDetailProps {
 
 export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
   const posthog = usePostHog();
-  const { dayFormat } = useDayFormat();
   const { data, isLoading, isError } = useQuery({
     queryKey: ["event", gameId],
     queryFn: () => fetchEvents({ gameId, limit: 1 }),
   });
+  const { dayFormat } = useDayFormat();
 
   const event = data?.data[0];
 

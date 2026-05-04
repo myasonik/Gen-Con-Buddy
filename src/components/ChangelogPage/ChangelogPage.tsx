@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useTypeDisplay } from "../../hooks/useTypeDisplay";
+import { useDayFormat } from "../../hooks/useDayFormat";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { ColumnControlsPanel } from "../EventTable/ColumnControlsPanel";
 import { fetchChangelogEntry, fetchChangelogList } from "../../utils/api";
@@ -22,6 +23,7 @@ export function ChangelogPage(): React.JSX.Element {
     setShowTypeIcon,
     reset: resetTypeDisplay,
   } = useTypeDisplay();
+  const { dayFormat, setDayFormat, reset: resetDayFormat } = useDayFormat();
   const sharedColumnState = {
     visibility,
     toggleVisibility,
@@ -34,6 +36,9 @@ export function ChangelogPage(): React.JSX.Element {
     showTypeIcon,
     setShowTypeIcon,
     resetTypeDisplay,
+    dayFormat,
+    setDayFormat,
+    resetDayFormat,
   };
   const {
     data: summaries = [],

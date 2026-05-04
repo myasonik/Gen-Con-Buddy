@@ -548,7 +548,11 @@ test("submitting resize dialog updates column width in localStorage", async () =
   expect(stored).toStrictEqual({ version: 1, value: { title: 400 } });
 });
 
-test("eventType cell renders code and name spans in the DOM", async () => {
+test("eventType cell renders code and name when typeDisplay is both", async () => {
+  localStorage.setItem(
+    "gcb-type-display",
+    JSON.stringify({ version: 3, value: { textMode: "both", showIcon: true } }),
+  );
   server.use(
     http.get("/api/events/search", () =>
       HttpResponse.json({
@@ -561,29 +565,49 @@ test("eventType cell renders code and name spans in the DOM", async () => {
   );
   renderSearchResults();
   await screen.findAllByRole("row");
-  // Both code and name are always in the DOM; CSS controls which is visible
   expect(screen.getAllByText("RPG").length).toBeGreaterThan(0);
   expect(screen.getAllByText("Roleplaying Game").length).toBeGreaterThan(0);
 });
 
-test("EventTable section carries data-type-display=name when mode is name", async () => {
+test("type cell shows only name when typeDisplay is name", async () => {
   localStorage.setItem(
     "gcb-type-display",
     JSON.stringify({ version: 3, value: { textMode: "name", showIcon: true } }),
   );
+  server.use(
+    http.get("/api/events/search", () =>
+      HttpResponse.json({
+        data: [makeEvent({ eventType: "RPG - Roleplaying Game" })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      }),
+    ),
+  );
   const { container } = renderSearchResults();
   await screen.findAllByRole("row");
-  expect(container.querySelector('[data-type-display="name"]')).not.toBeNull();
+  expect(container.querySelector('[class*="typeName"]')).not.toBeNull();
+  expect(container.querySelector('[class*="typeCode"]')).toBeNull();
 });
 
-test("EventTable section carries data-show-icon=false when showTypeIcon is false", async () => {
+test("type cell omits icon when showTypeIcon is false", async () => {
   localStorage.setItem(
     "gcb-type-display",
     JSON.stringify({ version: 3, value: { textMode: "name", showIcon: false } }),
   );
+  server.use(
+    http.get("/api/events/search", () =>
+      HttpResponse.json({
+        data: [makeEvent({ eventType: "RPG - Roleplaying Game" })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      }),
+    ),
+  );
   const { container } = renderSearchResults();
   await screen.findAllByRole("row");
-  expect(container.querySelector('[data-show-icon="false"]')).not.toBeNull();
+  expect(container.querySelector('[class*="typeCell"] svg')).toBeNull();
 });
 
 test("EventTable section has no data-type-display attribute when typeDisplay is both", async () => {

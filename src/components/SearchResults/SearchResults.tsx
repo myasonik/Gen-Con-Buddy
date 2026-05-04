@@ -10,6 +10,7 @@ import { ColumnControlsPanel } from "../EventTable/ColumnControlsPanel";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { useTypeDisplay } from "../../hooks/useTypeDisplay";
+import { useDayFormat } from "../../hooks/useDayFormat";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import styles from "./SearchResults.module.css";
 
@@ -36,6 +37,7 @@ export function SearchResults({
     setShowTypeIcon,
     reset: resetTypeDisplay,
   } = useTypeDisplay();
+  const { dayFormat, setDayFormat, reset: resetDayFormat } = useDayFormat();
   const sharedColumnState = {
     visibility,
     toggleVisibility,
@@ -48,6 +50,9 @@ export function SearchResults({
     showTypeIcon,
     setShowTypeIcon,
     resetTypeDisplay,
+    dayFormat,
+    setDayFormat,
+    resetDayFormat,
   };
   const { data, isLoading, isError } = useQuery({
     queryKey: ["events", searchParams],
@@ -111,6 +116,7 @@ export function SearchResults({
                 visibility={sharedColumnState.visibility}
                 typeDisplay={typeDisplay}
                 showTypeIcon={showTypeIcon}
+                dayFormat={dayFormat}
               />
             </div>
           )}
