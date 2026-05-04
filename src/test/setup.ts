@@ -1,6 +1,11 @@
 // Pin to Gen Con's host city — all date display (day names, times) is relative to Indianapolis time
 process.env.TZ = "America/Indianapolis";
 
+vi.mock("posthog-js/react", () => ({
+  PostHogProvider: ({ children }: { children: unknown }) => children,
+  usePostHog: () => ({ capture: vi.fn() }),
+}));
+
 import "@testing-library/jest-dom";
 import { server } from "./msw/server";
 

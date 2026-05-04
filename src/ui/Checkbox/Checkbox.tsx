@@ -22,9 +22,7 @@ export function Checkbox({
         onCheckedChange={(value) => onCheckedChange(value)}
         className={styles.root}
       >
-        <BaseCheckbox.Indicator className={styles.indicator}>
-          {indicator}
-        </BaseCheckbox.Indicator>
+        <BaseCheckbox.Indicator className={styles.indicator}>{indicator}</BaseCheckbox.Indicator>
       </BaseCheckbox.Root>
       <span className={styles.labelText}>{label}</span>
     </label>

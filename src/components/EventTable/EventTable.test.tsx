@@ -268,7 +268,7 @@ test("section element has no data-type-display attribute when typeDisplay is bot
 
 test("typeCode span is rendered inside the section with data-type-display=name", async () => {
   const { container } = await renderEventTable(
-    [makeEvent({ eventType: "RPG - Role Playing Game" })],
+    [makeEvent({ eventType: "RPG - Roleplaying Game" })],
     makeSharedColumnState({ typeDisplay: "name" }),
   );
   const section = container.querySelector('[data-type-display="name"]');

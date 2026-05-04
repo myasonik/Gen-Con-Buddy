@@ -325,8 +325,8 @@ test("shows minimumPlayTime alone when duration is hidden", async () => {
 });
 
 test("renders event type name in the DOM from full API string format", async () => {
-  await renderList([makeEvent({ eventType: "RPG - Role Playing Game" })]);
-  expect(screen.getByText("Role Playing Game")).toBeInTheDocument();
+  await renderList([makeEvent({ eventType: "RPG - Roleplaying Game" })]);
+  expect(screen.getByText("Roleplaying Game")).toBeInTheDocument();
 });
 
 test("list carries data-type-display=name when typeDisplay is name", async () => {
@@ -361,27 +361,27 @@ test("list has no data-show-icon attribute when showTypeIcon is not passed", asy
 });
 
 test("renders an icon when eventType is the full API string format", async () => {
-  const { container } = await renderList([makeEvent({ eventType: "RPG - Role Playing Game" })]);
+  const { container } = await renderList([makeEvent({ eventType: "RPG - Roleplaying Game" })]);
   expect(container.querySelector("svg")).not.toBeNull();
 });
 
 test("shows just the short code in code mode when eventType is the full API string", async () => {
-  await renderList([makeEvent({ eventType: "RPG - Role Playing Game" })], undefined, {
+  await renderList([makeEvent({ eventType: "RPG - Roleplaying Game" })], undefined, {
     typeDisplay: "code",
   });
   expect(screen.getByText("RPG")).toBeInTheDocument();
-  expect(screen.queryByText("RPG - Role Playing Game")).not.toBeInTheDocument();
+  expect(screen.queryByText("RPG - Roleplaying Game")).not.toBeInTheDocument();
 });
 
 test("shows just the name portion in name mode when eventType is the full API string", async () => {
-  await renderList([makeEvent({ eventType: "RPG - Role Playing Game" })], undefined, {
+  await renderList([makeEvent({ eventType: "RPG - Roleplaying Game" })], undefined, {
     typeDisplay: "name",
   });
-  expect(screen.getByText("Role Playing Game")).toBeInTheDocument();
-  expect(screen.queryByText("RPG - Role Playing Game")).not.toBeInTheDocument();
+  expect(screen.getByText("Roleplaying Game")).toBeInTheDocument();
+  expect(screen.queryByText("RPG - Roleplaying Game")).not.toBeInTheDocument();
 });
 
 test("renders event type code when eventType is the full API string format", async () => {
-  await renderList([makeEvent({ eventType: "RPG - Role Playing Game" })]);
+  await renderList([makeEvent({ eventType: "RPG - Roleplaying Game" })]);
   expect(screen.getByText("RPG")).toBeInTheDocument();
 });

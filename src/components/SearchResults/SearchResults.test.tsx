@@ -552,7 +552,7 @@ test("eventType cell renders code and name spans in the DOM", async () => {
   server.use(
     http.get("/api/events/search", () =>
       HttpResponse.json({
-        data: [makeEvent({ eventType: "RPG - Role Playing Game" })],
+        data: [makeEvent({ eventType: "RPG - Roleplaying Game" })],
         meta: { total: 1 },
         links: { self: "" },
         error: null,
@@ -563,7 +563,7 @@ test("eventType cell renders code and name spans in the DOM", async () => {
   await screen.findAllByRole("row");
   // Both code and name are always in the DOM; CSS controls which is visible
   expect(screen.getAllByText("RPG").length).toBeGreaterThan(0);
-  expect(screen.getAllByText("Role Playing Game").length).toBeGreaterThan(0);
+  expect(screen.getAllByText("Roleplaying Game").length).toBeGreaterThan(0);
 });
 
 test("EventTable section carries data-type-display=name when mode is name", async () => {

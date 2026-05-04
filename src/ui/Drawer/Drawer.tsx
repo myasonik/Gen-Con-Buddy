@@ -24,10 +24,7 @@ export function Drawer({
       <Dialog.Trigger render={trigger as React.ReactElement} />
       <Dialog.Portal>
         <Dialog.Backdrop className={styles.backdrop} />
-        <Dialog.Popup
-          className={styles.drawer}
-          data-side={side}
-        >
+        <Dialog.Popup className={styles.drawer} data-side={side}>
           <div className={styles.drawerHeader}>
             <Dialog.Title className={styles.drawerTitle}>{title}</Dialog.Title>
             <Dialog.Close

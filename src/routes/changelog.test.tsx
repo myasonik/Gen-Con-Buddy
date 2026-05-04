@@ -1,5 +1,11 @@
 import { StrictMode } from "react";
 import { expect, test, beforeEach } from "vitest";
+
+const { captureFn } = vi.hoisted(() => ({ captureFn: vi.fn() }));
+vi.mock("posthog-js/react", () => ({
+  PostHogProvider: ({ children }: { children: unknown }) => children,
+  usePostHog: () => ({ capture: captureFn }),
+}));
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
@@ -167,4 +173,24 @@ test("does not render section headers for empty event groups", async () => {
   expect(createdEl.closest("summary")).toHaveTextContent("(1)");
   expect(screen.queryByText("Updated")).not.toBeInTheDocument();
   expect(screen.queryByText("Deleted")).not.toBeInTheDocument();
+});
+
+test("changelog_entry_opened fires with entry id when an entry is expanded", async () => {
+  const user = userEvent.setup();
+  server.use(
+    http.get("/api/changelog/list", () =>
+      HttpResponse.json<ListChangelogsResponse>({
+        entries: [makeChangelogSummary({ id: "entry-1", createdCount: 1 })],
+      }),
+    ),
+    http.get("/api/changelog/fetch", () =>
+      HttpResponse.json<FetchChangelogResponse>({
+        entry: makeChangelogEntry({ id: "entry-1", createdEvents: [makeEvent()] }),
+      }),
+    ),
+  );
+  await renderChangelogPage();
+  captureFn.mockClear();
+  await user.click(await screen.findByText(/1 created/));
+  expect(captureFn).toHaveBeenCalledWith("changelog_entry_opened", { entry_id: "entry-1" });
 });

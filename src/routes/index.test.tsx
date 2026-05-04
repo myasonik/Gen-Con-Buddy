@@ -7,6 +7,16 @@ import { makeEvent } from "../test/msw/factory";
 import type { EventSearchResponse } from "../utils/types";
 import { renderRoute } from "../test/renderRoute";
 
+const { captureFn } = vi.hoisted(() => ({ captureFn: vi.fn() }));
+vi.mock("posthog-js/react", () => ({
+  PostHogProvider: ({ children }: { children: unknown }) => children,
+  usePostHog: () => ({ capture: captureFn }),
+}));
+
+beforeEach(() => {
+  captureFn.mockClear();
+});
+
 test("populates eventType dropdown from URL search param on load", async () => {
   await renderRoute("/", { searchParams: { eventType: "BGM" } });
   expect(screen.getByRole("button", { name: "Remove BGM" })).toBeInTheDocument();
@@ -163,7 +173,6 @@ test("day checkboxes are keyboard accessible interactive elements", async () => 
   expect(thuCheckbox).toHaveAttribute("aria-checked");
 });
 
-
 test("eventType column renders the event type", async () => {
   server.use(
     http.get("/api/events/search", () =>
@@ -258,7 +267,7 @@ describe("sidebar toggle and active filters", () => {
   it("eventType filter produces one chip per code", async () => {
     await renderRoute("/?eventType=RPG%2CBGM");
     const bar = screen.getByRole("list", { name: "Active filters" });
-    expect(within(bar).getByText("RPG - Role Playing Game")).toBeInTheDocument();
+    expect(within(bar).getByText("RPG - Roleplaying Game")).toBeInTheDocument();
     expect(within(bar).getByText("BGM - Board Game")).toBeInTheDocument();
     expect(within(bar).queryByRole("button", { name: /Type:/ })).toBeNull();
   });
@@ -267,8 +276,89 @@ describe("sidebar toggle and active filters", () => {
     const user = userEvent.setup();
     const { router } = await renderRoute("/?eventType=RPG%2CBGM");
     const bar = screen.getByRole("list", { name: "Active filters" });
-    await user.click(within(bar).getByRole("button", { name: "Remove RPG - Role Playing Game" }));
+    await user.click(within(bar).getByRole("button", { name: "Remove RPG - Roleplaying Game" }));
     expect(router.state.location.searchStr).toContain("eventType=BGM");
     expect(router.state.location.searchStr).not.toContain("RPG");
+  });
+});
+
+describe("analytics events", () => {
+  test("search_submitted fires with form values on Search click", async () => {
+    const user = userEvent.setup();
+    await renderRoute("/");
+    await screen.findByRole("navigation", { name: "Pagination, top" });
+    captureFn.mockClear();
+    await user.click(screen.getByRole("button", { name: "Search" }));
+    expect(captureFn).toHaveBeenCalledWith(
+      "search_submitted",
+      expect.objectContaining({ has_keyword: false }),
+    );
+  });
+
+  test("search_filters_reset fires on Reset click", async () => {
+    const user = userEvent.setup();
+    await renderRoute("/?filter=dragon");
+    await screen.findByRole("navigation", { name: "Pagination, top" });
+    captureFn.mockClear();
+    await user.click(screen.getByRole("button", { name: "Reset" }));
+    expect(captureFn).toHaveBeenCalledWith("search_filters_reset");
+  });
+
+  test("filter_removed fires with filter id and label when chip is dismissed", async () => {
+    const user = userEvent.setup();
+    await renderRoute("/?filter=dragon");
+    await screen.findByRole("button", { name: /Remove Search: dragon/ });
+    captureFn.mockClear();
+    await user.click(screen.getByRole("button", { name: /Remove Search: dragon/ }));
+    expect(captureFn).toHaveBeenCalledWith("filter_removed", {
+      filter_id: "filter",
+      filter_label: "Search: dragon",
+    });
+  });
+
+  test("results_page_changed fires with next page number on Next click", async () => {
+    const user = userEvent.setup();
+    server.use(
+      http.get("/api/events/search", () =>
+        HttpResponse.json<EventSearchResponse>({
+          data: [makeEvent()],
+          meta: { total: 200 },
+          links: { self: "" },
+          error: null,
+        }),
+      ),
+    );
+    await renderRoute("/");
+    const topNav = await screen.findByRole("navigation", { name: "Pagination, top" });
+    captureFn.mockClear();
+    await user.click(within(topNav).getByRole("button", { name: "Next" }));
+    await screen.findByRole("navigation", { name: "Pagination, top" });
+    expect(captureFn).toHaveBeenCalledWith(
+      "results_page_changed",
+      expect.objectContaining({ page: 2 }),
+    );
+  });
+
+  test("results_sorted fires with field and direction on column header click", async () => {
+    const user = userEvent.setup();
+    server.use(
+      http.get("/api/events/search", () =>
+        HttpResponse.json<EventSearchResponse>({
+          data: [makeEvent()],
+          meta: { total: 200 },
+          links: { self: "" },
+          error: null,
+        }),
+      ),
+    );
+    await renderRoute("/");
+    await screen.findByRole("navigation", { name: "Pagination, top" });
+    captureFn.mockClear();
+    await user.click(screen.getByRole("button", { name: "Start" }));
+    await screen.findByRole("navigation", { name: "Pagination, top" });
+    expect(captureFn).toHaveBeenCalledWith(
+      "results_sorted",
+      expect.objectContaining({ sort_field: "startDateTime", sort_direction: "asc" }),
+    );
   });
 });

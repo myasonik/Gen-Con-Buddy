@@ -70,10 +70,19 @@ function ColumnCheckboxContent({
           indicator={<D6Face size={16} />}
         />
         <div className={styles.typeDisplayRadioGroup}>
-          <SegmentedControl value={typeDisplay} onValueChange={(v) => setTypeDisplay(v as "code" | "name" | "both")}>
-            <SegmentedControl.Option value="code" indicator={<Targeted size={16} />}>Code</SegmentedControl.Option>
-            <SegmentedControl.Option value="name" indicator={<Targeted size={16} />}>Name</SegmentedControl.Option>
-            <SegmentedControl.Option value="both" indicator={<Targeted size={16} />}>Both</SegmentedControl.Option>
+          <SegmentedControl
+            value={typeDisplay}
+            onValueChange={(v) => setTypeDisplay(v as "code" | "name" | "both")}
+          >
+            <SegmentedControl.Option value="code" indicator={<Targeted size={16} />}>
+              Code
+            </SegmentedControl.Option>
+            <SegmentedControl.Option value="name" indicator={<Targeted size={16} />}>
+              Name
+            </SegmentedControl.Option>
+            <SegmentedControl.Option value="both" indicator={<Targeted size={16} />}>
+              Both
+            </SegmentedControl.Option>
           </SegmentedControl>
         </div>
       </fieldset>

@@ -113,7 +113,8 @@ export function EventListMobile({
     isVisible("maxPlayers") ||
     isVisible("ticketsAvailable");
 
-  const typeDisplayAttr = typeDisplay === "code" || typeDisplay === "name" ? typeDisplay : undefined;
+  const typeDisplayAttr =
+    typeDisplay === "code" || typeDisplay === "name" ? typeDisplay : undefined;
   const showIconAttr = showTypeIcon === false ? "false" : undefined;
 
   return (

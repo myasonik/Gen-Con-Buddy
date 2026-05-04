@@ -1,11 +1,22 @@
-import { afterEach, expect, test } from "vitest";
+import { afterEach, beforeEach, expect, test } from "vitest";
 import { screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { server } from "../test/msw/server";
 import { makeEvent } from "../test/msw/factory";
 import { queryClient } from "../lib/queryClient";
 import { renderRoute } from "../test/renderRoute";
 import type { EventSearchResponse } from "../utils/types";
+
+const { captureFn } = vi.hoisted(() => ({ captureFn: vi.fn() }));
+vi.mock("posthog-js/react", () => ({
+  PostHogProvider: ({ children }: { children: unknown }) => children,
+  usePostHog: () => ({ capture: captureFn }),
+}));
+
+beforeEach(() => {
+  captureFn.mockClear();
+});
 
 afterEach(() => {
   queryClient.clear();
@@ -91,4 +102,73 @@ test("loader pre-fetches event data so the component renders without loading sta
   // loader primed the cache; component should render data immediately
   await expect(screen.findByText("Pre-fetched Event")).resolves.toBeInTheDocument();
   expect(screen.queryByText("LOADING QUEST...")).not.toBeInTheDocument();
+});
+
+test("event_detail_viewed fires with event attributes after data loads", async () => {
+  server.use(
+    http.get("/api/events/search", ({ request }) => {
+      const url = new URL(request.url);
+      const gameId = url.searchParams.get("gameId") ?? "RPG24000042";
+      return HttpResponse.json<EventSearchResponse>({
+        data: [makeEvent({ gameId, title: "Dragon Hunt", eventType: "RPG", cost: 4 })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      });
+    }),
+  );
+  await renderRoute("/event/RPG24000042", { queryClient });
+  await screen.findAllByRole("term");
+  expect(captureFn).toHaveBeenCalledWith(
+    "event_detail_viewed",
+    expect.objectContaining({ game_id: "RPG24000042", title: "Dragon Hunt", event_type: "RPG" }),
+  );
+});
+
+test("google_calendar_clicked fires when calendar link is clicked", async () => {
+  const user = userEvent.setup();
+  server.use(
+    http.get("/api/events/search", ({ request }) => {
+      const url = new URL(request.url);
+      const gameId = url.searchParams.get("gameId") ?? "RPG24000042";
+      return HttpResponse.json<EventSearchResponse>({
+        data: [makeEvent({ gameId, title: "Dragon Hunt" })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      });
+    }),
+  );
+  await renderRoute("/event/RPG24000042", { queryClient });
+  const link = await screen.findByRole("link", { name: /Add to Google Calendar/ });
+  captureFn.mockClear();
+  await user.click(link);
+  expect(captureFn).toHaveBeenCalledWith(
+    "google_calendar_clicked",
+    expect.objectContaining({ title: "Dragon Hunt" }),
+  );
+});
+
+test("gencon_link_clicked fires when Gen Con link is clicked", async () => {
+  const user = userEvent.setup();
+  server.use(
+    http.get("/api/events/search", ({ request }) => {
+      const url = new URL(request.url);
+      const gameId = url.searchParams.get("gameId") ?? "RPG24000042";
+      return HttpResponse.json<EventSearchResponse>({
+        data: [makeEvent({ gameId, title: "Dragon Hunt" })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      });
+    }),
+  );
+  await renderRoute("/event/RPG24000042", { queryClient });
+  const link = await screen.findByRole("link", { name: /View on Gen Con/ });
+  captureFn.mockClear();
+  await user.click(link);
+  expect(captureFn).toHaveBeenCalledWith(
+    "gencon_link_clicked",
+    expect.objectContaining({ title: "Dragon Hunt" }),
+  );
 });

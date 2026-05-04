@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { usePostHog } from "posthog-js/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
@@ -10,6 +11,7 @@ import styles from "./ChangelogPage.module.css";
 import { ChangelogRow } from "./ChangelogRow";
 
 export function ChangelogPage(): React.JSX.Element {
+  const posthog = usePostHog();
   const queryClient = useQueryClient();
   const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility();
   const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
@@ -52,6 +54,12 @@ export function ChangelogPage(): React.JSX.Element {
   }, [summaries, queryClient]);
 
   const handleOpen = (index: number): void => {
+    const current = summaries[index];
+    if (current) {
+      posthog.capture("changelog_entry_opened", {
+        entry_id: current.id,
+      });
+    }
     const next = summaries[index + 1];
     if (next) {
       void queryClient.prefetchQuery({

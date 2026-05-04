@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { usePostHog } from "posthog-js/react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Link } from "@tanstack/react-router";
@@ -17,10 +18,27 @@ interface EventDetailProps {
 }
 
 export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
+  const posthog = usePostHog();
   const { data, isLoading, isError } = useQuery({
     queryKey: ["event", gameId],
     queryFn: () => fetchEvents({ gameId, limit: 1 }),
   });
+
+  const event = data?.data[0];
+
+  useEffect(() => {
+    if (!event) {
+      return;
+    }
+    const a = event.attributes;
+    posthog.capture("event_detail_viewed", {
+      game_id: a.gameId,
+      title: a.title,
+      event_type: a.eventType,
+      cost: a.cost,
+      tickets_available: a.ticketsAvailable,
+    });
+  }, [event?.attributes?.gameId, posthog]);
 
   if (isLoading) {
     return <EmptyState variant="loading" text="LOADING QUEST..." />;
@@ -55,7 +73,17 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
         <div className={styles.actions}>
           <Button
             render={
-              <a href={buildGoogleCalendarUrl(a)} target="_blank" rel="noopener noreferrer" />
+              <a
+                href={buildGoogleCalendarUrl(a)}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() =>
+                  posthog.capture("google_calendar_clicked", {
+                    game_id: a.gameId,
+                    title: a.title,
+                  })
+                }
+              />
             }
             variant="secondary"
             className={styles.actionButton}
@@ -69,6 +97,12 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
                 href={`https://www.gencon.com/events/${a.gameId}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  posthog.capture("gencon_link_clicked", {
+                    game_id: a.gameId,
+                    title: a.title,
+                  })
+                }
               />
             }
             variant="secondary"

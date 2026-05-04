@@ -18,7 +18,7 @@ test("shows short code chips for selected values when closed", () => {
   const rpgRemove = screen.getByRole("button", { name: "Remove RPG" });
   const bgmRemove = screen.getByRole("button", { name: "Remove BGM" });
   expect(rpgRemove.closest("[data-testid=chip]")).toHaveTextContent("RPG");
-  expect(rpgRemove.closest("[data-testid=chip]")).not.toHaveTextContent("Role Playing Game");
+  expect(rpgRemove.closest("[data-testid=chip]")).not.toHaveTextContent("Roleplaying Game");
   expect(bgmRemove.closest("[data-testid=chip]")).toHaveTextContent("BGM");
   expect(bgmRemove.closest("[data-testid=chip]")).not.toHaveTextContent("Board Game");
 });
@@ -32,7 +32,7 @@ test("chips expand to show full name when dropdown is open", async () => {
   const rpgRemove = screen.getByRole("button", { name: "Remove RPG" });
   const chip = rpgRemove.closest("[data-testid=chip]");
   expect(chip).toHaveTextContent("RPG");
-  expect(chip).toHaveTextContent("Role Playing Game");
+  expect(chip).toHaveTextContent("Roleplaying Game");
 });
 
 test("selecting an option calls onValueChange with that code", async () => {
@@ -75,7 +75,7 @@ test("filter text narrows options by code", async () => {
   await user.click(screen.getByRole("combobox", { name: "Event Type" }));
   await user.type(screen.getByRole("combobox", { name: "Event Type" }), "RPG");
 
-  expect(screen.getByRole("option", { name: /Role Playing Game/ })).toBeInTheDocument();
+  expect(screen.getByRole("option", { name: /Roleplaying Game/ })).toBeInTheDocument();
   expect(screen.queryByRole("option", { name: /Board Game/ })).not.toBeInTheDocument();
 });
 
@@ -145,7 +145,7 @@ test("pills expand to show full name when Tab moves focus into the input", async
   await user.tab(); // → input
 
   const chip = screen.getByTestId("chip");
-  expect(chip).toHaveTextContent("Role Playing Game");
+  expect(chip).toHaveTextContent("Roleplaying Game");
 });
 
 test("pills expand to show full name when Tab moves focus onto a chip button", async () => {
@@ -161,7 +161,7 @@ test("pills expand to show full name when Tab moves focus onto a chip button", a
   await user.tab(); // → Remove RPG chip button (first tab stop in the component)
 
   const chip = screen.getByTestId("chip");
-  expect(chip).toHaveTextContent("Role Playing Game");
+  expect(chip).toHaveTextContent("Roleplaying Game");
 });
 
 test("dropdown closes when Tab moves focus out of the component", async () => {

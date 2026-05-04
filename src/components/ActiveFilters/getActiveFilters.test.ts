@@ -29,7 +29,7 @@ test("eventType param produces one chip per code", () => {
   const result = getActiveFilters({ eventType: "RPG,BGM" });
   expect(result).toHaveLength(2);
   expect(result[0].id).toBe("eventType:RPG");
-  expect(result[0].label).toBe("RPG - Role Playing Game");
+  expect(result[0].label).toBe("RPG - Roleplaying Game");
   expect(result[1].id).toBe("eventType:BGM");
   expect(result[1].label).toBe("BGM - Board Game");
 });

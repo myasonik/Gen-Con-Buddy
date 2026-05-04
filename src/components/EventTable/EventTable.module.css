@@ -286,7 +286,6 @@
   margin: var(--space-2) 0;
 }
 
-
 /* Radio button indicator — circular counterpart to .columnCheckbox */
 .radioIndicator {
   display: flex;

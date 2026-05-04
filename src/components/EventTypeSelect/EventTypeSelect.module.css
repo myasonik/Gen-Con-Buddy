@@ -44,8 +44,6 @@
   outline-offset: var(--focus-ring-offset);
 }
 
-
-
 .input {
   flex: 1;
   min-width: 0;

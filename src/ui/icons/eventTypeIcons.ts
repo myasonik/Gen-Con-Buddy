@@ -1,6 +1,6 @@
 import type React from "react";
 import type { LucideProps } from "lucide-react";
-import { NinjaMask } from "./NinjaMask";
+import { CombinationLock } from "./CombinationLock";
 import { RollingDices } from "./RollingDices";
 import { PokerHand } from "./PokerHand";
 import { Gamepad } from "./Gamepad";
@@ -24,10 +24,10 @@ export const EVENT_TYPE_ICONS: Record<
   string,
   React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>
 > = {
-  ANI: NinjaMask,
   BGM: RollingDices,
   CGM: PokerHand,
   EGM: Gamepad,
+  ESC: CombinationLock,
   ENT: DramaMasks,
   FLM: Clapperboard,
   HMN: Cannon,

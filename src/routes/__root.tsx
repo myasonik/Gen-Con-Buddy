@@ -1,10 +1,19 @@
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { createRootRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { PostHogProvider, usePostHog } from "posthog-js/react";
 import { Meeple3D } from "../ui/icons/Meeple3D";
 import indexStyles from "./index.module.css";
 import rootStyles from "./__root.module.css";
 
-export const Route = createRootRoute({
-  component: () => (
+function RootLayout(): React.JSX.Element {
+  const posthog = usePostHog();
+  const { location } = useRouterState();
+
+  useEffect(() => {
+    posthog.capture("$pageview");
+  }, [location.href, posthog]);
+
+  return (
     <div className={indexStyles.page}>
       <header role="banner" className={indexStyles.header}>
         <Link to="/" className={rootStyles.brandingTitle}>
@@ -26,5 +35,22 @@ export const Route = createRootRoute({
         </Link>
       </footer>
     </div>
+  );
+}
+
+export const Route = createRootRoute({
+  component: () => (
+    <PostHogProvider
+      apiKey={import.meta.env.VITE_PUBLIC_POSTHOG_PROJECT_TOKEN as string}
+      options={{
+        api_host: "/ingest",
+        ui_host: (import.meta.env.VITE_PUBLIC_POSTHOG_HOST as string) || "https://us.posthog.com",
+        defaults: "2026-01-30",
+        capture_exceptions: true,
+        debug: import.meta.env.DEV,
+      }}
+    >
+      <RootLayout />
+    </PostHogProvider>
   ),
 });

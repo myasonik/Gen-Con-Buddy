@@ -1,4 +1,5 @@
 import React, { useState, useId, useRef } from "react";
+import { usePostHog } from "posthog-js/react";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { createPortal } from "react-dom";
 import {
@@ -38,6 +39,7 @@ export function EventTable({
   sharedColumnState,
   showColumnControls = true,
 }: EventTableProps): React.JSX.Element {
+  const posthog = usePostHog();
   const {
     visibility,
     toggleVisibility,
@@ -52,7 +54,8 @@ export function EventTable({
     resetTypeDisplay,
   } = sharedColumnState;
 
-  const typeDisplayAttr = typeDisplay === "code" || typeDisplay === "name" ? typeDisplay : undefined;
+  const typeDisplayAttr =
+    typeDisplay === "code" || typeDisplay === "name" ? typeDisplay : undefined;
   const showIconAttr = showTypeIcon === false ? "false" : undefined;
 
   // Unique prefix so anchor names don't collide when multiple EventTable instances are on the page
@@ -96,24 +99,30 @@ export function EventTable({
       if (effectiveSortField !== sortField) {
         externalSort.handleColumnClick(COL_ID_BY_SORT_FIELD.get(sortField) ?? sortField);
         announce(`Sorted by ${label}, ascending`);
+        posthog.capture("results_sorted", { sort_field: sortField, sort_direction: "asc", label });
       } else if (effectiveSortDir === "asc") {
         externalSort.handleColumnClick(COL_ID_BY_SORT_FIELD.get(sortField) ?? sortField);
         announce(`Sorted by ${label}, descending`);
+        posthog.capture("results_sorted", { sort_field: sortField, sort_direction: "desc", label });
       } else {
         onSort(undefined);
         announce("Sort cleared");
+        posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
       }
     } else {
       const colId = COL_ID_BY_SORT_FIELD.get(sortField) ?? sortField;
       if (effectiveSortField !== sortField) {
         setInternalSorting([{ id: colId, desc: false }]);
         announce(`Sorted by ${label}, ascending`);
+        posthog.capture("results_sorted", { sort_field: sortField, sort_direction: "asc", label });
       } else if (effectiveSortDir === "asc") {
         setInternalSorting([{ id: colId, desc: true }]);
         announce(`Sorted by ${label}, descending`);
+        posthog.capture("results_sorted", { sort_field: sortField, sort_direction: "desc", label });
       } else {
         setInternalSorting([]);
         announce("Sort cleared");
+        posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
       }
     }
   };
@@ -122,20 +131,29 @@ export function EventTable({
     if (onSort) {
       onSort(s);
       if (s) {
-        announce(`Sorted by ${label}, ${s.endsWith(".asc") ? "ascending" : "descending"}`);
+        const dir = s.endsWith(".asc") ? "ascending" : "descending";
+        announce(`Sorted by ${label}, ${dir}`);
+        posthog.capture("results_sorted", {
+          sort_field: s.split(".")[0],
+          sort_direction: s.endsWith(".asc") ? "asc" : "desc",
+          label,
+        });
       } else {
         announce("Sort cleared");
+        posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
       }
     } else {
       if (s === undefined) {
         setInternalSorting([]);
         announce("Sort cleared");
+        posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
       } else {
         const [field, dir] = s.split(".");
         if (field && (dir === "asc" || dir === "desc")) {
           const colId = COL_ID_BY_SORT_FIELD.get(field) ?? field;
           setInternalSorting([{ id: colId, desc: dir === "desc" }]);
           announce(`Sorted by ${label}, ${dir === "asc" ? "ascending" : "descending"}`);
+          posthog.capture("results_sorted", { sort_field: field, sort_direction: dir, label });
         }
       }
     }

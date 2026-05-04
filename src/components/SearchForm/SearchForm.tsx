@@ -1,4 +1,5 @@
 import React from "react";
+import { usePostHog } from "posthog-js/react";
 import { useForm } from "react-hook-form";
 import { Search, RotateCcw, SlidersHorizontal } from "lucide-react";
 import { Dialog } from "@base-ui/react/dialog";
@@ -75,6 +76,7 @@ interface SearchFormProps {
 }
 
 export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Element {
+  const posthog = usePostHog();
   const { register, handleSubmit, reset, watch, setValue } = useForm<SearchFormValues>({
     values,
   });
@@ -82,9 +84,25 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
   const days = watch("days") ?? "";
   const eventType = watch("eventType") ?? "";
 
+  const handleSearchSubmit = (formValues: SearchFormValues): void => {
+    posthog.capture("search_submitted", {
+      has_keyword: Boolean(formValues.filter),
+      event_type: formValues.eventType || null,
+      days: formValues.days || null,
+      time_start: formValues.timeStart || null,
+      time_end: formValues.timeEnd || null,
+    });
+    onSearch(formValues);
+  };
+
+  const handleReset = (): void => {
+    posthog.capture("search_filters_reset");
+    reset(EMPTY_VALUES);
+  };
+
   return (
     <div className={styles.formRoot}>
-      <form id="search-form" onSubmit={handleSubmit(onSearch)}>
+      <form id="search-form" onSubmit={handleSubmit(handleSearchSubmit)}>
         {/* Primary filter strip */}
         <div className={styles.strip}>
           {/* Keyword search */}
@@ -463,7 +481,7 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
               <Button
                 type="button"
                 variant="secondary"
-                onClick={() => reset(EMPTY_VALUES)}
+                onClick={handleReset}
                 className={styles.resetButton}
               >
                 <RotateCcw size={14} aria-hidden="true" /> Reset
