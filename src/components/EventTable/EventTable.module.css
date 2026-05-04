@@ -132,6 +132,7 @@
 }
 
 .columnFieldset {
+  border: none;
   padding: var(--space-3);
   display: flex;
   flex-direction: column;
