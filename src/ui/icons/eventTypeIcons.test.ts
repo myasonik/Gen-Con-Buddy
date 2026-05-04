@@ -14,10 +14,9 @@ test("every EVENT_TYPE_ICONS key exists in EVENT_TYPES (no orphaned entries)", (
 
 test("each value in EVENT_TYPE_ICONS is a React component", () => {
   for (const [key, Icon] of Object.entries(EVENT_TYPE_ICONS)) {
-    expect(
+    const isComponent =
       typeof Icon === "function" ||
-        (Icon !== null && typeof Icon === "object" && "displayName" in Icon),
-      `EVENT_TYPE_ICONS["${key}"] is not a React component`,
-    ).toBe(true);
+      (Icon !== null && typeof Icon === "object" && "displayName" in Icon);
+    expect(isComponent, `EVENT_TYPE_ICONS["${key}"] is not a React component`).toBe(true);
   }
 });

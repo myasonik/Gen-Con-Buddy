@@ -22,6 +22,7 @@ test("prepends https:// for bare domain", () => {
 });
 
 test("returns null for javascript: scheme", () => {
+  // eslint-disable-next-line no-script-url
   expect(normalizeUrl("javascript:alert(1)")).toBeNull();
 });
 

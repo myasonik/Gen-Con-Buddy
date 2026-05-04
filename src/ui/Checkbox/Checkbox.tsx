@@ -9,11 +9,7 @@ interface CheckboxProps {
   label: string;
 }
 
-export function Checkbox({
-  checked,
-  onCheckedChange,
-  label,
-}: CheckboxProps): React.JSX.Element {
+export function Checkbox({ checked, onCheckedChange, label }: CheckboxProps): React.JSX.Element {
   return (
     <label className={styles.label}>
       <BaseCheckbox.Root

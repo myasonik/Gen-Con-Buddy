@@ -10,6 +10,12 @@
   height: 3rem;
   margin: 0 auto var(--space-3);
   color: var(--color-ink-faint);
+  animation: meeple-float 2.4s ease-in-out infinite;
+}
+
+.iconError {
+  color: var(--color-error);
+  animation: meeple-shake 450ms ease-out forwards;
 }
 
 .text {
@@ -28,10 +34,6 @@
   margin: 0;
 }
 
-.iconError {
-  color: var(--color-error);
-}
-
 .progressBar {
   width: 100%;
   max-width: 12.5rem;
@@ -44,21 +46,65 @@
 }
 
 .progressFill {
+  width: 40%;
   height: 100%;
   background-color: var(--color-accent);
-  animation: loading-progress 1.5s ease-in-out infinite;
+  border-radius: var(--radius-pill);
+  will-change: transform;
+  animation: loading-sweep 1.8s linear infinite;
 }
 
-@keyframes loading-progress {
+@keyframes loading-sweep {
   0% {
-    width: 0%;
+    transform: translateX(-250%);
   }
 
-  60% {
-    width: 75%;
+  65% {
+    transform: translateX(350%);
   }
 
   100% {
-    width: 75%;
+    transform: translateX(350%);
+  }
+}
+
+@keyframes meeple-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes meeple-shake {
+  0% {
+    transform: rotate(0deg) translateX(0);
+  }
+
+  15% {
+    transform: rotate(-6deg) translateX(-4px);
+  }
+
+  30% {
+    transform: rotate(6deg) translateX(4px);
+  }
+
+  45% {
+    transform: rotate(-4deg) translateX(-3px);
+  }
+
+  60% {
+    transform: rotate(4deg) translateX(3px);
+  }
+
+  75% {
+    transform: rotate(-2deg) translateX(-1px);
+  }
+
+  100% {
+    transform: rotate(0deg) translateX(0);
   }
 }

@@ -1,14 +1,15 @@
 const SAFE_SCHEMES = new Set(["https:", "http:"]);
 
 export function normalizeUrl(raw: string): string | null {
-  if (!raw) return null;
-  let candidate = raw;
-  if (!raw.startsWith("http://") && !raw.startsWith("https://")) {
-    candidate = "https://" + raw;
+  if (!raw) {
+    return null;
   }
+  const candidate = raw.startsWith("http://") || raw.startsWith("https://") ? raw : `https://${raw}`;
   try {
     const url = new URL(candidate);
-    if (!SAFE_SCHEMES.has(url.protocol)) return null;
+    if (!SAFE_SCHEMES.has(url.protocol)) {
+      return null;
+    }
     return url.href;
   } catch {
     return null;

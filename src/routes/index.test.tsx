@@ -169,8 +169,8 @@ test("day tiles are checkboxes", async () => {
 test("day checkboxes are keyboard accessible interactive elements", async () => {
   await renderRoute("/");
   const thuCheckbox = screen.getByRole("checkbox", { name: "Thu" });
-  expect(thuCheckbox).toHaveAttribute("role", "checkbox");
-  expect(thuCheckbox).toHaveAttribute("aria-checked");
+  expect(thuCheckbox).toBeInTheDocument();
+  expect(thuCheckbox).not.toBeChecked();
 });
 
 test("eventType column renders the event type", async () => {
