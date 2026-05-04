@@ -1,5 +1,6 @@
 import { useEffect, useState, type RefObject } from "react";
 import type { Event } from "../utils/types";
+import type { DayFormat, TypeDisplay } from "../components/EventTable/types";
 
 function shallowEqualNumberRecord(a: Record<string, number>, b: Record<string, number>): boolean {
   const aKeys = Object.keys(a);
@@ -18,6 +19,9 @@ export function useColumnMinSizes(
   tableRef: RefObject<HTMLTableElement | null>,
   events: Event[],
   visibility: Record<string, boolean>,
+  typeDisplay?: TypeDisplay,
+  showTypeIcon?: boolean,
+  dayFormat?: DayFormat,
 ): Record<string, number> {
   const [minSizes, setMinSizes] = useState<Record<string, number>>({});
 
@@ -92,7 +96,7 @@ export function useColumnMinSizes(
     // re-render, then re-run again, ad infinitum — until this check breaks the cycle.
     setMinSizes((prev) => (shallowEqualNumberRecord(prev, result) ? prev : result));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [events, visibility]); // tableRef is a stable ref — intentionally omitted from deps
+  }, [events, visibility, typeDisplay, showTypeIcon, dayFormat]); // tableRef is a stable ref — intentionally omitted from deps
 
   return minSizes;
 }

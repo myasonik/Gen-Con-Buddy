@@ -196,3 +196,86 @@ test("remeasures when events change", async () => {
     expect(JSON.parse(screen.getByTestId("result").textContent ?? "").day).toBe(74); // "Wednesday" = 9 × 8 + 2px jsdom padding
   });
 });
+
+test("remeasures when typeDisplay changes", async () => {
+  const events = [makeEvent()];
+
+  function TypeDisplayRerender(): React.ReactElement {
+    const [typeDisplay, setTypeDisplay] = useState<"code" | "name" | "both">("both");
+    const tableRef = useRef<HTMLTableElement>(null);
+    const minSizes = useColumnMinSizes(tableRef, events, {}, typeDisplay);
+    return (
+      <>
+        <table ref={tableRef}>
+          <tbody>
+            <tr>
+              <td data-col-id="eventType">
+                {typeDisplay !== "name" && <span>RPG</span>}
+                {typeDisplay !== "code" && <span> Roleplaying</span>}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div data-testid="result">{JSON.stringify(minSizes)}</div>
+        <button type="button" onClick={() => setTypeDisplay("code")}>
+          code only
+        </button>
+      </>
+    );
+  }
+
+  const user = (await import("@testing-library/user-event")).default.setup();
+  render(<TypeDisplayRerender />);
+  // "both" mode — "Roleplaying" = 11 chars × 8 + 2 = 90
+  await waitFor(() => {
+    expect(JSON.parse(screen.getByTestId("result").textContent ?? "").eventType).toBe(90);
+  });
+  await user.click(screen.getByRole("button", { name: "code only" }));
+  // "code" mode — "RPG" = 3 chars × 8 + 2 = 26
+  await waitFor(() => {
+    expect(JSON.parse(screen.getByTestId("result").textContent ?? "").eventType).toBe(26);
+  });
+});
+
+test("remeasures when dayFormat changes", async () => {
+  const events = [makeEvent()];
+
+  function DayFormatRerender(): React.ReactElement {
+    const [dayFormat, setDayFormat] = useState<"day" | "numeric" | "long">("day");
+    const tableRef = useRef<HTMLTableElement>(null);
+    const minSizes = useColumnMinSizes(tableRef, events, {}, undefined, undefined, dayFormat);
+    const dayText =
+      dayFormat === "numeric"
+        ? "08/01/24"
+        : dayFormat === "long"
+          ? "Thu, Aug 01, 2024"
+          : "Thursday";
+    return (
+      <>
+        <table ref={tableRef}>
+          <tbody>
+            <tr>
+              <td data-col-id="day">{dayText}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div data-testid="result">{JSON.stringify(minSizes)}</div>
+        <button type="button" onClick={() => setDayFormat("numeric")}>
+          numeric
+        </button>
+      </>
+    );
+  }
+
+  const user = (await import("@testing-library/user-event")).default.setup();
+  render(<DayFormatRerender />);
+  // "day" mode — "Thursday" = 8 chars × 8 + 2 = 66
+  await waitFor(() => {
+    expect(JSON.parse(screen.getByTestId("result").textContent ?? "").day).toBe(66);
+  });
+  await user.click(screen.getByRole("button", { name: "numeric" }));
+  // After switching to "numeric", a remeasure should occur
+  await waitFor(() => {
+    expect(JSON.parse(screen.getByTestId("result").textContent ?? "").day).toBeDefined();
+  });
+});
