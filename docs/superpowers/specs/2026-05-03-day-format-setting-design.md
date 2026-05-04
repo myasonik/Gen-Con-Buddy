@@ -9,11 +9,11 @@ Add a user-controlled setting that determines how the event day is rendered acro
 
 ## Format Options
 
-| Setting value | Desktop output     | Mobile output |
-|---------------|--------------------|---------------|
-| `"day"`       | Wednesday          | Wed           |
-| `"numeric"`   | 08/01/26           | 8/1           |
-| `"long"`      | Sat, Aug 01, 2026  | Sat 8/1       |
+| Setting value | Desktop output    | Mobile output |
+| ------------- | ----------------- | ------------- |
+| `"day"`       | Wednesday         | Wed           |
+| `"numeric"`   | 08/01/26          | 8/1           |
+| `"long"`      | Sat, Aug 01, 2026 | Sat 8/1       |
 
 `"day"` is the default and matches current behavior.
 
@@ -52,7 +52,7 @@ flexRender(cell.column.columnDef.cell, {
   dayFormat,
   typeDisplay,
   showTypeIcon,
-})
+});
 ```
 
 `columns.tsx` augments the TanStack `CellContext` interface (same module already used for `ColumnMeta`):
@@ -73,10 +73,10 @@ Cell renderers destructure the values they need directly from context.
 
 ### Setting surfaces
 
-| Surface | How it receives the setting |
-|---|---|
-| Desktop table | CellContext spread in `EventTable.tsx` |
-| Mobile list | `dayFormat` prop on `EventListMobile` |
+| Surface           | How it receives the setting                                   |
+| ----------------- | ------------------------------------------------------------- |
+| Desktop table     | CellContext spread in `EventTable.tsx`                        |
+| Mobile list       | `dayFormat` prop on `EventListMobile`                         |
 | Event detail page | Calls `useDayFormat()` directly (reads same localStorage key) |
 
 `SearchResults.tsx` and `ChangelogPage.tsx` both call `useDayFormat()` and include it in the `sharedColumnState` object they construct.
@@ -110,7 +110,11 @@ cell: ({ row, typeDisplay, showTypeIcon }) => {
   // ... parse code/name ...
   return (
     <span className={typeCellStyles.typeCell}>
-      {showTypeIcon && Icon && <span className={typeCellStyles.typeIcon}><Icon size={16} /></span>}
+      {showTypeIcon && Icon && (
+        <span className={typeCellStyles.typeIcon}>
+          <Icon size={16} />
+        </span>
+      )}
       {(typeDisplay === "code" || typeDisplay === "both") && (
         <span className={typeCellStyles.typeCode}>{code}</span>
       )}
@@ -120,7 +124,7 @@ cell: ({ row, typeDisplay, showTypeIcon }) => {
       )}
     </span>
   );
-}
+};
 ```
 
 ### `columns.tsx` — day cell
@@ -128,7 +132,7 @@ cell: ({ row, typeDisplay, showTypeIcon }) => {
 ```tsx
 cell: ({ row, dayFormat }) => (
   <>{formatDay(new Date(row.original.attributes.startDateTime), dayFormat)}</>
-)
+);
 ```
 
 ### `EventTable.tsx`
@@ -154,27 +158,29 @@ cell: ({ row, dayFormat }) => (
 
 ## Testing
 
-| File | What's tested |
-|---|---|
-| `src/hooks/useDayFormat.test.ts` | Default value, localStorage persistence, reset, version invalidation |
-| `src/utils/formatDay.test.ts` | All three formats × both functions |
-| `src/components/EventTable/columns.test.ts` | Day cell output for each `dayFormat`; type cell conditional rendering for each `typeDisplay` × `showTypeIcon` |
-| `src/hooks/useColumnMinSizes.test.tsx` | Effect re-runs on `typeDisplay` and `dayFormat` changes |
-| `src/components/EventTable/ColumnControlsPanel.test.tsx` | Day segmented control renders; interaction updates `dayFormat`; reset clears to default |
-| `src/components/EventTable/EventListMobile.test.tsx` | Compact day format for each `dayFormat` value |
-| `src/routes/event.$id.test.tsx` | Day field reflects `dayFormat` from `useDayFormat` |
+| File                                                     | What's tested                                                                                                 |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `src/hooks/useDayFormat.test.ts`                         | Default value, localStorage persistence, reset, version invalidation                                          |
+| `src/utils/formatDay.test.ts`                            | All three formats × both functions                                                                            |
+| `src/components/EventTable/columns.test.ts`              | Day cell output for each `dayFormat`; type cell conditional rendering for each `typeDisplay` × `showTypeIcon` |
+| `src/hooks/useColumnMinSizes.test.tsx`                   | Effect re-runs on `typeDisplay` and `dayFormat` changes                                                       |
+| `src/components/EventTable/ColumnControlsPanel.test.tsx` | Day segmented control renders; interaction updates `dayFormat`; reset clears to default                       |
+| `src/components/EventTable/EventListMobile.test.tsx`     | Compact day format for each `dayFormat` value                                                                 |
+| `src/routes/event.$id.test.tsx`                          | Day field reflects `dayFormat` from `useDayFormat`                                                            |
 
 All tests use MSW for network interception. No new handlers needed; format changes are presentational only.
 
 ## Files Changed
 
 ### New
+
 - `src/hooks/useDayFormat.ts`
 - `src/utils/formatDay.ts`
 - `src/utils/formatDay.test.ts`
 - `src/hooks/useDayFormat.test.ts`
 
 ### Modified
+
 - `src/components/EventTable/types.ts`
 - `src/components/EventTable/columns.tsx`
 - `src/components/EventTable/ColumnControlsPanel.tsx`

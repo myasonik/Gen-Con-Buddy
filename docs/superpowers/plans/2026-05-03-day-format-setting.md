@@ -13,38 +13,41 @@
 ## File Map
 
 ### New files
-| File | Purpose |
-|---|---|
-| `src/components/EventTable/types.ts` | Add `DayFormat` type; extend `SharedColumnState` |
-| `src/utils/formatDay.ts` | `formatDay` and `formatDayCompact` pure functions |
-| `src/utils/formatDay.test.ts` | Tests for all 3 formats × both functions |
-| `src/hooks/useDayFormat.ts` | localStorage-backed hook for the day format setting |
-| `src/hooks/useDayFormat.test.ts` | Hook tests: default, persist, reset, version invalidation |
+
+| File                                 | Purpose                                                   |
+| ------------------------------------ | --------------------------------------------------------- |
+| `src/components/EventTable/types.ts` | Add `DayFormat` type; extend `SharedColumnState`          |
+| `src/utils/formatDay.ts`             | `formatDay` and `formatDayCompact` pure functions         |
+| `src/utils/formatDay.test.ts`        | Tests for all 3 formats × both functions                  |
+| `src/hooks/useDayFormat.ts`          | localStorage-backed hook for the day format setting       |
+| `src/hooks/useDayFormat.test.ts`     | Hook tests: default, persist, reset, version invalidation |
 
 ### Modified files
-| File | What changes |
-|---|---|
-| `src/hooks/useColumnMinSizes.ts` | Add optional `typeDisplay`, `showTypeIcon`, `dayFormat` deps |
-| `src/hooks/useColumnMinSizes.test.tsx` | Add remeasure tests for display setting changes |
-| `src/components/EventTable/columns.tsx` | CellContext augmentation; conditional type cell; dayFormat day cell |
-| `src/components/EventTable/EventTable.tsx` | Spread CellContext; remove data attrs; pass display settings to useColumnMinSizes |
-| `src/components/EventTable/EventTable.test.tsx` | Remove data-attr tests; add conditional render + day format tests; add dayFormat to makeSharedColumnState |
-| `src/components/EventTable/ColumnControlsPanel.tsx` | Add "Day column" fieldset with SegmentedControl |
-| `src/components/EventTable/ColumnControlsPanel.test.tsx` | Add dayFormat to makeColumnState; add Day column fieldset tests |
-| `src/components/EventTable/EventListMobile.tsx` | Add `dayFormat` prop; use `formatDayCompact` |
-| `src/components/EventTable/EventListMobile.test.tsx` | Add compact day format tests |
-| `src/components/EventDetail/EventDetail.tsx` | Call `useDayFormat()`; use `formatDay` for Day field |
-| `src/routes/event.$id.test.tsx` | Add `localStorage.clear()` in beforeEach; add day format tests |
-| `src/components/SearchResults/SearchResults.tsx` | Call `useDayFormat()`; add to sharedColumnState; pass to EventListMobile |
-| `src/components/ChangelogPage/ChangelogPage.tsx` | Call `useDayFormat()`; add to sharedColumnState |
-| `src/components/ChangelogPage/ChangelogEntryPanel.tsx` | Pass `dayFormat` to EventListMobile |
-| `src/components/ChangelogPage/ChangelogEntryPanel.test.tsx` | Add dayFormat fields to `stubColumnState` |
+
+| File                                                        | What changes                                                                                              |
+| ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `src/hooks/useColumnMinSizes.ts`                            | Add optional `typeDisplay`, `showTypeIcon`, `dayFormat` deps                                              |
+| `src/hooks/useColumnMinSizes.test.tsx`                      | Add remeasure tests for display setting changes                                                           |
+| `src/components/EventTable/columns.tsx`                     | CellContext augmentation; conditional type cell; dayFormat day cell                                       |
+| `src/components/EventTable/EventTable.tsx`                  | Spread CellContext; remove data attrs; pass display settings to useColumnMinSizes                         |
+| `src/components/EventTable/EventTable.test.tsx`             | Remove data-attr tests; add conditional render + day format tests; add dayFormat to makeSharedColumnState |
+| `src/components/EventTable/ColumnControlsPanel.tsx`         | Add "Day column" fieldset with SegmentedControl                                                           |
+| `src/components/EventTable/ColumnControlsPanel.test.tsx`    | Add dayFormat to makeColumnState; add Day column fieldset tests                                           |
+| `src/components/EventTable/EventListMobile.tsx`             | Add `dayFormat` prop; use `formatDayCompact`                                                              |
+| `src/components/EventTable/EventListMobile.test.tsx`        | Add compact day format tests                                                                              |
+| `src/components/EventDetail/EventDetail.tsx`                | Call `useDayFormat()`; use `formatDay` for Day field                                                      |
+| `src/routes/event.$id.test.tsx`                             | Add `localStorage.clear()` in beforeEach; add day format tests                                            |
+| `src/components/SearchResults/SearchResults.tsx`            | Call `useDayFormat()`; add to sharedColumnState; pass to EventListMobile                                  |
+| `src/components/ChangelogPage/ChangelogPage.tsx`            | Call `useDayFormat()`; add to sharedColumnState                                                           |
+| `src/components/ChangelogPage/ChangelogEntryPanel.tsx`      | Pass `dayFormat` to EventListMobile                                                                       |
+| `src/components/ChangelogPage/ChangelogEntryPanel.test.tsx` | Add dayFormat fields to `stubColumnState`                                                                 |
 
 ---
 
 ## Task 1: Add `DayFormat` to types and extend `SharedColumnState`
 
 **Files:**
+
 - Modify: `src/components/EventTable/types.ts`
 
 This is a pure type change. No tests — TypeScript will catch misuse in subsequent tasks.
@@ -117,6 +120,7 @@ git commit -m "feat(day-format): add DayFormat type and extend SharedColumnState
 ## Task 2: `formatDay` utility
 
 **Files:**
+
 - Create: `src/utils/formatDay.ts`
 - Create: `src/utils/formatDay.test.ts`
 
@@ -214,6 +218,7 @@ git commit -m "feat(day-format): add formatDay and formatDayCompact utilities"
 ## Task 3: `useDayFormat` hook
 
 **Files:**
+
 - Create: `src/hooks/useDayFormat.ts`
 - Create: `src/hooks/useDayFormat.test.ts`
 
@@ -331,6 +336,7 @@ git commit -m "feat(day-format): add useDayFormat hook"
 ## Task 4: Extend `useColumnMinSizes` with display setting deps
 
 **Files:**
+
 - Modify: `src/hooks/useColumnMinSizes.ts`
 - Modify: `src/hooks/useColumnMinSizes.test.tsx`
 
@@ -557,6 +563,7 @@ git commit -m "fix(min-width): add display setting deps to useColumnMinSizes"
 ## Task 5: `columns.tsx` — CellContext augmentation, conditional type cell, dayFormat day cell
 
 **Files:**
+
 - Modify: `src/components/EventTable/columns.tsx`
 
 The type cell currently renders all three spans and uses CSS `[data-type-display]` rules to show/hide them. This change switches to conditional JSX so only the visible content is in the DOM (fixing the `textContent`-based min-width calculation). The day cell is updated to use `formatDay` from context.
@@ -653,6 +660,7 @@ git commit -m "feat(day-format): CellContext augmentation, conditional type cell
 ## Task 6: `EventTable.tsx` — spread CellContext, remove data attrs, update tests
 
 **Files:**
+
 - Modify: `src/components/EventTable/EventTable.tsx`
 - Modify: `src/components/EventTable/EventTable.test.tsx`
 
@@ -789,7 +797,6 @@ npx vitest run src/components/EventTable/EventTable.test.tsx 2>&1 | tail -15
 Expected: new tests fail (EventTable hasn't been updated yet).
 
 - [ ] **Update `src/components/EventTable/EventTable.tsx`:**
-
   1. **In the destructuring of `sharedColumnState`**, add `dayFormat`:
 
   ```ts
@@ -818,18 +825,27 @@ Expected: new tests fail (EventTable hasn't been updated yet).
   3. **Update the `flexRender` call for body cells** (inside `row.getVisibleCells().map`):
 
   ```tsx
-  {flexRender(cell.column.columnDef.cell, {
-    ...cell.getContext(),
-    dayFormat,
-    typeDisplay,
-    showTypeIcon,
-  })}
+  {
+    flexRender(cell.column.columnDef.cell, {
+      ...cell.getContext(),
+      dayFormat,
+      typeDisplay,
+      showTypeIcon,
+    });
+  }
   ```
 
   4. **Update the `useColumnMinSizes` call** to pass the display settings:
 
   ```ts
-  const columnMinSizes = useColumnMinSizes(tableRef, events, visibility, typeDisplay, showTypeIcon, dayFormat);
+  const columnMinSizes = useColumnMinSizes(
+    tableRef,
+    events,
+    visibility,
+    typeDisplay,
+    showTypeIcon,
+    dayFormat,
+  );
   ```
 
   5. **Update `columnStateForPanel`** to include `dayFormat`:
@@ -873,6 +889,7 @@ git commit -m "feat(day-format): spread CellContext in EventTable, remove data a
 ## Task 7: `ColumnControlsPanel` — Day column fieldset
 
 **Files:**
+
 - Modify: `src/components/EventTable/ColumnControlsPanel.tsx`
 - Modify: `src/components/EventTable/ColumnControlsPanel.test.tsx`
 
@@ -958,7 +975,6 @@ npx vitest run src/components/EventTable/ColumnControlsPanel.test.tsx 2>&1 | tai
 Expected: new tests fail; existing tests may also fail because `makeColumnState` now has new required fields.
 
 - [ ] **Update `ColumnControlsPanel.tsx`:**
-
   1. **Destructure `dayFormat`, `setDayFormat`, `resetDayFormat`** from `columnState` inside `ColumnCheckboxContent`.
 
   2. **Add the "Day column" fieldset** immediately after the closing `</fieldset>` of "Event type column":
@@ -967,10 +983,7 @@ Expected: new tests fail; existing tests may also fail because `makeColumnState`
   <fieldset className={styles.columnGroup}>
     <legend className={styles.columnGroupLegend}>Day column</legend>
     <div className={styles.typeDisplayRadioGroup}>
-      <SegmentedControl
-        value={dayFormat}
-        onValueChange={(v) => setDayFormat(v as DayFormat)}
-      >
+      <SegmentedControl value={dayFormat} onValueChange={(v) => setDayFormat(v as DayFormat)}>
         <SegmentedControl.Option value="day" indicator={<Targeted size={16} />}>
           Day
         </SegmentedControl.Option>
@@ -1022,6 +1035,7 @@ git commit -m "feat(day-format): add Day column fieldset to ColumnControlsPanel"
 ## Task 8: `EventListMobile` — dayFormat prop and compact format
 
 **Files:**
+
 - Modify: `src/components/EventTable/EventListMobile.tsx`
 - Modify: `src/components/EventTable/EventListMobile.test.tsx`
 
@@ -1076,7 +1090,6 @@ npx vitest run src/components/EventTable/EventListMobile.test.tsx 2>&1 | tail -1
 Expected: new tests fail.
 
 - [ ] **Update `src/components/EventTable/EventListMobile.tsx`:**
-
   1. **Add `formatDayCompact` and `DayFormat` imports:**
 
   ```ts
@@ -1101,7 +1114,9 @@ Expected: new tests fail.
   4. **Replace the day rendering line** (currently `format(start, "EEE")`) with:
 
   ```tsx
-  {isVisible("day") && formatDayCompact(start, dayFormat ?? "day")}
+  {
+    isVisible("day") && formatDayCompact(start, dayFormat ?? "day");
+  }
   ```
 
   5. **Remove the `format` import** from `date-fns` if it is no longer used for the day (it may still be used for time formatting — check before removing).
@@ -1126,6 +1141,7 @@ git commit -m "feat(day-format): add dayFormat prop to EventListMobile with comp
 ## Task 9: `EventDetail` — call `useDayFormat`, apply `formatDay`
 
 **Files:**
+
 - Modify: `src/components/EventDetail/EventDetail.tsx`
 - Modify: `src/routes/event.$id.test.tsx`
 
@@ -1176,7 +1192,6 @@ npx vitest run src/routes/event.\$id.test.tsx 2>&1 | tail -10
 Expected: new tests fail (EventDetail still hardcodes `"EEEE"`).
 
 - [ ] **Update `src/components/EventDetail/EventDetail.tsx`:**
-
   1. **Add imports:**
 
   ```ts
@@ -1193,9 +1208,7 @@ Expected: new tests fail (EventDetail still hardcodes `"EEEE"`).
   3. **Update the Day `<DescriptionItem>`** (currently uses `format(new Date(a.startDateTime), "EEEE")`):
 
   ```tsx
-  <DescriptionItem term="Day">
-    {formatDay(new Date(a.startDateTime), dayFormat)}
-  </DescriptionItem>
+  <DescriptionItem term="Day">{formatDay(new Date(a.startDateTime), dayFormat)}</DescriptionItem>
   ```
 
   4. **Remove the `format` import** from `date-fns` if no other lines use it in EventDetail.tsx. (Check — `lastModified` also uses `format`. Keep the import.)
@@ -1220,6 +1233,7 @@ git commit -m "feat(day-format): apply dayFormat setting in EventDetail"
 ## Task 10: Wire up SearchResults, ChangelogPage, and ChangelogEntryPanel
 
 **Files:**
+
 - Modify: `src/components/SearchResults/SearchResults.tsx`
 - Modify: `src/components/ChangelogPage/ChangelogPage.tsx`
 - Modify: `src/components/ChangelogPage/ChangelogEntryPanel.tsx`
@@ -1257,7 +1271,6 @@ npx vitest run src/components/ChangelogPage/ChangelogEntryPanel.test.tsx 2>&1 | 
 Expected: all tests pass (the stub change is purely additive).
 
 - [ ] **Update `src/components/SearchResults/SearchResults.tsx`:**
-
   1. **Import `useDayFormat`:**
 
   ```ts
@@ -1294,7 +1307,6 @@ Expected: all tests pass (the stub change is purely additive).
   ```
 
 - [ ] **Update `src/components/ChangelogPage/ChangelogPage.tsx`** — same pattern as SearchResults:
-
   1. Import `useDayFormat`.
   2. Call `useDayFormat()` and destructure `dayFormat`, `setDayFormat`, `reset: resetDayFormat`.
   3. Add all three to the `sharedColumnState` object.
