@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Link } from "@tanstack/react-router";
 import { fetchEvents } from "../../utils/api";
-import { buildGoogleCalendarUrl } from "../../utils/googleCalendar";
+import { buildGoogleCalendarUrl, genConEventId } from "../../utils/googleCalendar";
 import { Button } from "../../ui/Button/Button";
 import { Chip } from "../../ui/Chip/Chip";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
@@ -12,6 +12,7 @@ import { DescriptionList, DescriptionItem } from "../../ui/DescriptionList/Descr
 import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
 import { CalendarPlus, ExternalLink } from "lucide-react";
 import { normalizeUrl } from "./normalizeUrl";
+import { normalizeEmail } from "./normalizeEmail";
 import styles from "./EventDetail.module.css";
 
 interface EventDetailProps {
@@ -95,7 +96,7 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
           <Button
             render={
               <a
-                href={`https://www.gencon.com/events/${a.gameId}`}
+                href={`https://www.gencon.com/events/${genConEventId(a.gameId)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() =>
@@ -211,7 +212,12 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
                 );
               })()}
             </DescriptionItem>
-            <DescriptionItem term="Email">{a.email}</DescriptionItem>
+            <DescriptionItem term="Email">
+              {(() => {
+                const href = normalizeEmail(a.email);
+                return href ? <a href={href}>{a.email}</a> : a.email;
+              })()}
+            </DescriptionItem>
             <DescriptionItem term="Last Modified">
               {format(new Date(a.lastModified), "yyyy-MM-dd")}
             </DescriptionItem>

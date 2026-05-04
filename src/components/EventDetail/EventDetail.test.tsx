@@ -187,11 +187,11 @@ test("renders Add to Google Calendar link", async () => {
   expect(link.getAttribute("href")).toContain("text=Test+Event");
 });
 
-test("renders View on Gen Con link", async () => {
+test("renders View on Gen Con link using numeric event id", async () => {
   server.use(
     http.get("/api/events/search", () => {
       const response: EventSearchResponse = {
-        data: [makeEvent({ gameId: "RPG24000001" })],
+        data: [makeEvent({ gameId: "BGM26ND310286" })],
         meta: { total: 1 },
         links: { self: "" },
         error: null,
@@ -199,10 +199,10 @@ test("renders View on Gen Con link", async () => {
       return HttpResponse.json(response);
     }),
   );
-  renderEventDetail("RPG24000001");
+  renderEventDetail("BGM26ND310286");
   await screen.findByText("THE EVENT");
   const link = screen.getByRole("link", { name: /view on gen con/i });
-  expect(link).toHaveAttribute("href", "https://www.gencon.com/events/RPG24000001");
+  expect(link).toHaveAttribute("href", "https://www.gencon.com/events/310286");
   expect(link).toHaveAttribute("target", "_blank");
   expect(link).toHaveAttribute("rel", "noopener noreferrer");
 });
@@ -360,4 +360,42 @@ test("renders website as plain text when it contains a dangerous javascript: sch
   await screen.findByText("CONTACT");
   expect(screen.queryByRole("link", { name: "javascript:alert(1)" })).toBeNull();
   expect(screen.getByText("javascript:alert(1)")).toBeInTheDocument();
+});
+
+test("renders email as a mailto: link when it is a valid email address", async () => {
+  server.use(
+    http.get("/api/events/search", () => {
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId: "RPG24000001", email: "gm@example.com" })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }),
+  );
+  renderEventDetail("RPG24000001");
+  await screen.findByText("CONTACT");
+  const link = screen.getByRole("link", { name: "gm@example.com" });
+  expect(link).toHaveAttribute("href", "mailto:gm@example.com");
+  expect(link).not.toHaveAttribute("target");
+  expect(link).not.toHaveAttribute("rel");
+});
+
+test("renders email as plain text when it is not a valid email", async () => {
+  server.use(
+    http.get("/api/events/search", () => {
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId: "RPG24000001", email: "not-an-email" })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }),
+  );
+  renderEventDetail("RPG24000001");
+  await screen.findByText("CONTACT");
+  expect(screen.queryByRole("link", { name: "not-an-email" })).toBeNull();
+  expect(screen.getByText("not-an-email")).toBeInTheDocument();
 });
