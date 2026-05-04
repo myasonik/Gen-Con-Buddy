@@ -8,10 +8,10 @@ import { queryClient } from "../lib/queryClient";
 import { renderRoute } from "../test/renderRoute";
 import type { EventSearchResponse } from "../utils/types";
 
-const { captureFn } = vi.hoisted(() => ({ captureFn: vi.fn() }));
+const { captureFn } = vi.hoisted(() => ({ captureFn: vi.fn<() => void>() }));
 vi.mock("posthog-js/react", () => ({
-  PostHogProvider: ({ children }: { children: unknown }) => children,
-  usePostHog: () => ({ capture: captureFn }),
+  PostHogProvider: ({ children }: { children: unknown }): unknown => children,
+  usePostHog: (): { capture: typeof captureFn } => ({ capture: captureFn }),
 }));
 
 beforeEach(() => {

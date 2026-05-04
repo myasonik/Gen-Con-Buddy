@@ -348,6 +348,7 @@ test("renders website as plain text when it contains a dangerous javascript: sch
   server.use(
     http.get("/api/events/search", () => {
       const response: EventSearchResponse = {
+        // oxlint-disable-next-line no-script-url
         data: [makeEvent({ gameId: "RPG24000001", website: "javascript:alert(1)" })],
         meta: { total: 1 },
         links: { self: "" },
@@ -358,7 +359,9 @@ test("renders website as plain text when it contains a dangerous javascript: sch
   );
   renderEventDetail("RPG24000001");
   await screen.findByText("CONTACT");
+  // oxlint-disable-next-line no-script-url
   expect(screen.queryByRole("link", { name: "javascript:alert(1)" })).toBeNull();
+  // oxlint-disable-next-line no-script-url
   expect(screen.getByText("javascript:alert(1)")).toBeInTheDocument();
 });
 

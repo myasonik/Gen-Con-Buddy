@@ -1,10 +1,10 @@
 import { StrictMode } from "react";
 import { expect, test, beforeEach } from "vitest";
 
-const { captureFn } = vi.hoisted(() => ({ captureFn: vi.fn() }));
+const { captureFn } = vi.hoisted(() => ({ captureFn: vi.fn<() => void>() }));
 vi.mock("posthog-js/react", () => ({
-  PostHogProvider: ({ children }: { children: unknown }) => children,
-  usePostHog: () => ({ capture: captureFn }),
+  PostHogProvider: ({ children }: { children: unknown }): unknown => children,
+  usePostHog: (): { capture: typeof captureFn } => ({ capture: captureFn }),
 }));
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";

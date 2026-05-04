@@ -7,10 +7,10 @@ import { makeEvent } from "../test/msw/factory";
 import type { EventSearchResponse } from "../utils/types";
 import { renderRoute } from "../test/renderRoute";
 
-const { captureFn } = vi.hoisted(() => ({ captureFn: vi.fn() }));
+const { captureFn } = vi.hoisted(() => ({ captureFn: vi.fn<() => void>() }));
 vi.mock("posthog-js/react", () => ({
-  PostHogProvider: ({ children }: { children: unknown }) => children,
-  usePostHog: () => ({ capture: captureFn }),
+  PostHogProvider: ({ children }: { children: unknown }): unknown => children,
+  usePostHog: (): { capture: typeof captureFn } => ({ capture: captureFn }),
 }));
 
 beforeEach(() => {
@@ -283,7 +283,7 @@ describe("sidebar toggle and active filters", () => {
 });
 
 describe("analytics events", () => {
-  test("search_submitted fires with form values on Search click", async () => {
+  it("search_submitted fires with form values on Search click", async () => {
     const user = userEvent.setup();
     await renderRoute("/");
     await screen.findByRole("navigation", { name: "Pagination, top" });
@@ -295,7 +295,7 @@ describe("analytics events", () => {
     );
   });
 
-  test("search_filters_reset fires on Reset click", async () => {
+  it("search_filters_reset fires on Reset click", async () => {
     const user = userEvent.setup();
     await renderRoute("/?filter=dragon");
     await screen.findByRole("navigation", { name: "Pagination, top" });
@@ -304,7 +304,7 @@ describe("analytics events", () => {
     expect(captureFn).toHaveBeenCalledWith("search_filters_reset");
   });
 
-  test("filter_removed fires with filter id and label when chip is dismissed", async () => {
+  it("filter_removed fires with filter id and label when chip is dismissed", async () => {
     const user = userEvent.setup();
     await renderRoute("/?filter=dragon");
     await screen.findByRole("button", { name: /Remove Search: dragon/ });
@@ -316,7 +316,7 @@ describe("analytics events", () => {
     });
   });
 
-  test("results_page_changed fires with next page number on Next click", async () => {
+  it("results_page_changed fires with next page number on Next click", async () => {
     const user = userEvent.setup();
     server.use(
       http.get("/api/events/search", () =>
@@ -339,7 +339,7 @@ describe("analytics events", () => {
     );
   });
 
-  test("results_sorted fires with field and direction on column header click", async () => {
+  it("results_sorted fires with field and direction on column header click", async () => {
     const user = userEvent.setup();
     server.use(
       http.get("/api/events/search", () =>
