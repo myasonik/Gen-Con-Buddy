@@ -1,6 +1,7 @@
 import type { OnChangeFn, ColumnSizingState } from "@tanstack/react-table";
 
 export type TypeDisplay = "code" | "name" | "both";
+export type DayFormat = "day" | "numeric" | "long";
 
 export interface SharedColumnState {
   visibility: Record<string, boolean>;
@@ -14,4 +15,7 @@ export interface SharedColumnState {
   showTypeIcon: boolean;
   setShowTypeIcon: (v: boolean) => void;
   resetTypeDisplay: () => void;
+  dayFormat: DayFormat;
+  setDayFormat: (v: DayFormat) => void;
+  resetDayFormat: () => void;
 }
