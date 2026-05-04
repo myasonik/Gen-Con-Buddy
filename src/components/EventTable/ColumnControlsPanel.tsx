@@ -90,9 +90,9 @@ function ColumnCheckboxContent({
         <legend className={styles.columnGroupLegend}>Day column</legend>
         <div className={styles.typeDisplayRadioGroup}>
           <SegmentedControl value={dayFormat} onValueChange={(v) => setDayFormat(v as DayFormat)}>
-            <SegmentedControl.Option value="day">Day</SegmentedControl.Option>
-            <SegmentedControl.Option value="numeric">MM/DD/YY</SegmentedControl.Option>
-            <SegmentedControl.Option value="long">Full date</SegmentedControl.Option>
+            <SegmentedControl.Option value="day" indicator={<Targeted size={16} />}>Day</SegmentedControl.Option>
+            <SegmentedControl.Option value="numeric" indicator={<Targeted size={16} />}>MM/DD/YY</SegmentedControl.Option>
+            <SegmentedControl.Option value="long" indicator={<Targeted size={16} />}>Full date</SegmentedControl.Option>
           </SegmentedControl>
         </div>
       </fieldset>
