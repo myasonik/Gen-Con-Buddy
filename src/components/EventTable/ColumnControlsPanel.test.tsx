@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { vi, expect, test } from "vitest";
 import { ColumnControlsPanel } from "./ColumnControlsPanel";
 import { COLUMNS } from "./columns";
-import type { SharedColumnState } from "./types";
+import type { DayFormat, SharedColumnState, TypeDisplay } from "./types";
 
 function makeColumnState(overrides: Partial<SharedColumnState> = {}): SharedColumnState {
   return {
@@ -18,6 +18,9 @@ function makeColumnState(overrides: Partial<SharedColumnState> = {}): SharedColu
     showTypeIcon: true,
     setShowTypeIcon: vi.fn<SharedColumnState["setShowTypeIcon"]>(),
     resetTypeDisplay: vi.fn<SharedColumnState["resetTypeDisplay"]>(),
+    dayFormat: "day",
+    setDayFormat: vi.fn<SharedColumnState["setDayFormat"]>(),
+    resetDayFormat: vi.fn<SharedColumnState["resetDayFormat"]>(),
     ...overrides,
   };
 }
@@ -155,4 +158,47 @@ test("Reset to defaults calls resetTypeDisplay", async () => {
   render(<ColumnControlsPanel columnState={makeColumnState({ resetTypeDisplay })} />);
   await user.click(screen.getByRole("button", { name: "Reset to defaults" }));
   expect(resetTypeDisplay).toHaveBeenCalledTimes(1);
+});
+
+test("renders Day column fieldset", () => {
+  render(<ColumnControlsPanel columnState={makeColumnState()} />);
+  expect(screen.getByRole("group", { name: "Day column" })).toBeInTheDocument();
+});
+
+test("renders Day, MM/DD/YY, and Full date radio buttons", () => {
+  render(<ColumnControlsPanel columnState={makeColumnState()} />);
+  expect(screen.getByRole("radio", { name: "Day" })).toBeInTheDocument();
+  expect(screen.getByRole("radio", { name: "MM/DD/YY" })).toBeInTheDocument();
+  expect(screen.getByRole("radio", { name: "Full date" })).toBeInTheDocument();
+});
+
+test("Day radio is checked when dayFormat is day", () => {
+  render(<ColumnControlsPanel columnState={makeColumnState({ dayFormat: "day" })} />);
+  expect(screen.getByRole("radio", { name: "Day" })).toBeChecked();
+  expect(screen.getByRole("radio", { name: "MM/DD/YY" })).not.toBeChecked();
+  expect(screen.getByRole("radio", { name: "Full date" })).not.toBeChecked();
+});
+
+test("clicking MM/DD/YY radio calls setDayFormat with numeric", async () => {
+  const user = userEvent.setup();
+  const setDayFormat = vi.fn<SharedColumnState["setDayFormat"]>();
+  render(<ColumnControlsPanel columnState={makeColumnState({ dayFormat: "day", setDayFormat })} />);
+  await user.click(screen.getByRole("radio", { name: "MM/DD/YY" }));
+  expect(setDayFormat).toHaveBeenCalledWith("numeric");
+});
+
+test("clicking Full date radio calls setDayFormat with long", async () => {
+  const user = userEvent.setup();
+  const setDayFormat = vi.fn<SharedColumnState["setDayFormat"]>();
+  render(<ColumnControlsPanel columnState={makeColumnState({ dayFormat: "day", setDayFormat })} />);
+  await user.click(screen.getByRole("radio", { name: "Full date" }));
+  expect(setDayFormat).toHaveBeenCalledWith("long");
+});
+
+test("Reset to defaults calls resetDayFormat", async () => {
+  const user = userEvent.setup();
+  const resetDayFormat = vi.fn<SharedColumnState["resetDayFormat"]>();
+  render(<ColumnControlsPanel columnState={makeColumnState({ resetDayFormat })} />);
+  await user.click(screen.getByRole("button", { name: "Reset to defaults" }));
+  expect(resetDayFormat).toHaveBeenCalledTimes(1);
 });

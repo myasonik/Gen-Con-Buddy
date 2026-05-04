@@ -7,10 +7,17 @@ import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
 import { Chip } from "../../ui/Chip/Chip";
 import styles from "./columns.module.css";
 import typeCellStyles from "./typeCell.module.css";
+import { formatDay } from "../../utils/formatDay";
+import type { DayFormat, TypeDisplay } from "./types";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData, TValue> {
     sortField?: string;
+  }
+  interface CellContext<TData, TValue> {
+    dayFormat: DayFormat;
+    typeDisplay: TypeDisplay;
+    showTypeIcon: boolean;
   }
 }
 
@@ -45,7 +52,7 @@ export const COLUMNS: ColumnDef<Event>[] = [
     id: "eventType",
     header: "Type",
     meta: { sortField: "eventType" },
-    cell: ({ row }) => {
+    cell: ({ row, typeDisplay, showTypeIcon }) => {
       const { eventType } = row.original.attributes;
       const dashIdx = eventType.indexOf(" - ");
       const code = dashIdx !== -1 ? eventType.slice(0, dashIdx) : eventType;
@@ -53,14 +60,20 @@ export const COLUMNS: ColumnDef<Event>[] = [
       const Icon = EVENT_TYPE_ICONS[code];
       return (
         <span className={typeCellStyles.typeCell}>
-          {Icon && (
+          {showTypeIcon && Icon && (
             <span className={typeCellStyles.typeIcon}>
               <Icon size={16} />
             </span>
           )}
-          <span className={typeCellStyles.typeCode}>{code}</span>
-          {name && <span className={typeCellStyles.typeSep}> - </span>}
-          {name && <span className={typeCellStyles.typeName}>{name}</span>}
+          {(typeDisplay === "code" || typeDisplay === "both") && (
+            <span className={typeCellStyles.typeCode}>{code}</span>
+          )}
+          {typeDisplay === "both" && name && (
+            <span className={typeCellStyles.typeSep}> - </span>
+          )}
+          {(typeDisplay === "name" || typeDisplay === "both") && name && (
+            <span className={typeCellStyles.typeName}>{name}</span>
+          )}
         </span>
       );
     },
@@ -144,10 +157,9 @@ export const COLUMNS: ColumnDef<Event>[] = [
     id: "day",
     header: "Day",
     meta: { sortField: "startDateTime" },
-    cell: ({ row }) => {
-      const dayName = format(new Date(row.original.attributes.startDateTime), "EEEE");
-      return <>{dayName}</>;
-    },
+    cell: ({ row, dayFormat }) => (
+      <>{formatDay(new Date(row.original.attributes.startDateTime), dayFormat)}</>
+    ),
   },
   {
     id: "startDateTime",

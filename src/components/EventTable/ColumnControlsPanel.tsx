@@ -2,7 +2,7 @@ import React from "react";
 import { ChevronRight } from "lucide-react";
 import { Button } from "../../ui/Button/Button";
 import { Drawer } from "../../ui/Drawer/Drawer";
-import type { SharedColumnState } from "./types";
+import type { DayFormat, SharedColumnState } from "./types";
 import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
 import { Targeted } from "../../ui/icons/Targeted";
 import { COLUMNS, COLUMN_GROUPS } from "./columns";
@@ -30,6 +30,9 @@ function ColumnCheckboxContent({
     showTypeIcon,
     setShowTypeIcon,
     resetTypeDisplay,
+    dayFormat,
+    setDayFormat,
+    resetDayFormat,
   } = columnState;
 
   const colById = new Map(COLUMNS.filter((c) => c.id !== undefined).map((c) => [c.id, c]));
@@ -83,6 +86,16 @@ function ColumnCheckboxContent({
           </SegmentedControl>
         </div>
       </fieldset>
+      <fieldset className={styles.columnGroup}>
+        <legend className={styles.columnGroupLegend}>Day column</legend>
+        <div className={styles.typeDisplayRadioGroup}>
+          <SegmentedControl value={dayFormat} onValueChange={(v) => setDayFormat(v as DayFormat)}>
+            <SegmentedControl.Option value="day">Day</SegmentedControl.Option>
+            <SegmentedControl.Option value="numeric">MM/DD/YY</SegmentedControl.Option>
+            <SegmentedControl.Option value="long">Full date</SegmentedControl.Option>
+          </SegmentedControl>
+        </div>
+      </fieldset>
       <div className={styles.columnActions}>
         <Button
           variant="ghost"
@@ -90,6 +103,7 @@ function ColumnCheckboxContent({
             resetVisibility();
             resetSizing();
             resetTypeDisplay();
+            resetDayFormat();
           }}
         >
           Reset to defaults
