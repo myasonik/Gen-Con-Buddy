@@ -88,10 +88,10 @@ describe("buildGoogleCalendarUrl", () => {
     expect(url.searchParams.get("details")).not.toContain("Materials Details:");
   });
 
-  it("details block always ends with Gen Con event page URL", () => {
-    const url = parseUrl(makeEvent({ gameId: "RPG24000099" }).attributes);
+  it("details block always ends with Gen Con event page URL using numeric event id", () => {
+    const url = parseUrl(makeEvent({ gameId: "BGM26ND310286" }).attributes);
     expect(url.searchParams.get("details")).toContain(
-      "Gen Con event page: https://www.gencon.com/events/RPG24000099",
+      "Gen Con event page: https://www.gencon.com/events/310286",
     );
   });
 });

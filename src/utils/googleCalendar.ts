@@ -1,6 +1,10 @@
 import { format } from "date-fns";
 import type { EventAttributes } from "./types";
 
+export function genConEventId(gameId: string): string {
+  return /(\d+)$/.exec(gameId)?.[1] ?? gameId;
+}
+
 export function buildGoogleCalendarUrl(attrs: EventAttributes): string {
   const formatDate = (iso: string): string => format(new Date(iso), "yyyyMMdd'T'HHmmss");
 
@@ -30,7 +34,7 @@ export function buildGoogleCalendarUrl(attrs: EventAttributes): string {
     lines.push(`Materials Details: ${attrs.materialsRequiredDetails}`);
   }
   lines.push("");
-  lines.push(`Gen Con event page: https://www.gencon.com/events/${attrs.gameId}`);
+  lines.push(`Gen Con event page: https://www.gencon.com/events/${genConEventId(attrs.gameId)}`);
 
   const url = new URL("https://calendar.google.com/calendar/render");
   url.searchParams.set("action", "TEMPLATE");
