@@ -49,14 +49,7 @@ test("keyboard accessible — space key toggles unchecked to checked", async () 
   expect(onCheckedChange).toHaveBeenCalledWith(true);
 });
 
-test("renders custom indicator node when indicator prop is provided", () => {
-  render(
-    <Checkbox
-      checked
-      onCheckedChange={() => {}}
-      label="Show title column"
-      indicator={<span data-testid="custom-indicator" />}
-    />,
-  );
-  expect(screen.getByTestId("custom-indicator")).toBeInTheDocument();
+test("renders D6 indicator when checked", () => {
+  render(<Checkbox checked onCheckedChange={() => {}} label="Show title column" />);
+  expect(document.querySelector("svg")).toBeInTheDocument();
 });
