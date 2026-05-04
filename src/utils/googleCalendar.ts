@@ -8,7 +8,8 @@ export function genConEventId(gameId: string): string {
 export function buildGoogleCalendarUrl(attrs: EventAttributes): string {
   const formatDate = (iso: string): string => format(new Date(iso), "yyyyMMdd'T'HHmmss");
 
-  let location = `${attrs.location} — ${attrs.roomName}`;
+  const parts = [attrs.location, attrs.roomName].filter(Boolean);
+  let location = parts.join(" — ");
   if (attrs.tableNumber) {
     location += `, Table ${attrs.tableNumber}`;
   }
