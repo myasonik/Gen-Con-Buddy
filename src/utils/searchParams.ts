@@ -1,7 +1,7 @@
 import type { SearchFormValues, SearchParams } from "./types";
 
 // Update this each year once new event data is loaded. Gen Con always runs Wed–Sun in late July/early August.
-export const GEN_CON_YEAR = 2024;
+export const GEN_CON_YEAR = 2026;
 
 function genConWednesday(year: number): Date {
   const aug1 = new Date(year, 7, 1);
@@ -32,7 +32,7 @@ const DAY_DATES: Record<string, { start: string; end: string }> = {
  * bracket-range syntax the API expects for startDateTime.
  *
  * When timeStart/timeEnd are provided, each selected day gets a time-windowed
- * range: [2024-08-01T09:00:00-04:00,2024-08-01T17:00:00-04:00]
+ * range: [2026-07-30T09:00:00-04:00,2026-07-30T17:00:00-04:00]
  * When omitted, each day gets its full midnight-to-midnight range.
  */
 export function daysAndTimeToStartDateTime(

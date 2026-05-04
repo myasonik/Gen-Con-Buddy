@@ -9,11 +9,11 @@ import {
 } from "./searchParams";
 
 describe("GEN_CON_YEAR", () => {
-  it("is 2024 — update this test intentionally when the API year changes", () => {
+  it("is 2026 — update this test intentionally when the API year changes", () => {
     // This test exists to make a year bump require a deliberate two-file edit:
     // the constant in searchParams.ts AND this assertion. Do not update it
     // automatically — confirm the API is actually serving the new year's data first.
-    expect(GEN_CON_YEAR).toBe(2024);
+    expect(GEN_CON_YEAR).toBe(2026);
   });
 });
 
