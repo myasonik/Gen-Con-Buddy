@@ -51,6 +51,18 @@ summary {
   scrollbar-color: var(--color-ink-border) var(--color-surface-panel);
 }
 
+/* ─── Links ──────────────────────────────────────────────────────────────── */
+a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+  transition: color var(--motion-hover);
+}
+
+a:hover {
+  color: var(--color-accent-deep);
+}
+
 /* ─── Focus Ring ─────────────────────────────────────────────────────────── */
 *:focus-visible {
   outline: var(--focus-ring);

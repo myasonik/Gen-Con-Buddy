@@ -35,7 +35,7 @@ export const COLUMNS: ColumnDef<Event>[] = [
     cell: ({ row }) => {
       const { gameId, title } = row.original.attributes;
       return (
-        <Link to="/event/$id" params={{ id: gameId }} className={styles.tableLink}>
+        <Link to="/event/$id" params={{ id: gameId }}>
           {title}
         </Link>
       );
