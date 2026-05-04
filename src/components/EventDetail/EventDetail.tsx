@@ -10,6 +10,7 @@ import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { DescriptionList, DescriptionItem } from "../../ui/DescriptionList/DescriptionList";
 import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
 import { CalendarPlus, ExternalLink } from "lucide-react";
+import { normalizeUrl } from "./normalizeUrl";
 import styles from "./EventDetail.module.css";
 
 interface EventDetailProps {
@@ -164,7 +165,18 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
           <h2 className={styles.sectionHeading}>CONTACT</h2>
           <DescriptionList>
             <DescriptionItem term="GMs">{a.gmNames}</DescriptionItem>
-            <DescriptionItem term="Website">{a.website}</DescriptionItem>
+            <DescriptionItem term="Website">
+              {(() => {
+                const href = normalizeUrl(a.website);
+                return href ? (
+                  <a href={href} target="_blank" rel="noreferrer noopener">
+                    {a.website}
+                  </a>
+                ) : (
+                  a.website
+                );
+              })()}
+            </DescriptionItem>
             <DescriptionItem term="Email">{a.email}</DescriptionItem>
             <DescriptionItem term="Last Modified">
               {format(new Date(a.lastModified), "yyyy-MM-dd")}
