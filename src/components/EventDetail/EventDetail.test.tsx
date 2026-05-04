@@ -305,3 +305,59 @@ test("event type field renders an icon alongside the type code", async () => {
   const dd = screen.getByText("RPG").closest("dd");
   expect(dd?.querySelector("svg")).not.toBeNull();
 });
+
+test("renders website as a hyperlink when it is a valid https URL", async () => {
+  server.use(
+    http.get("/api/events/search", () => {
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId: "RPG24000001", website: "https://example.com" })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }),
+  );
+  renderEventDetail("RPG24000001");
+  await screen.findByText("CONTACT");
+  const link = screen.getByRole("link", { name: "https://example.com" });
+  expect(link).toHaveAttribute("href", "https://example.com/");
+  expect(link).toHaveAttribute("target", "_blank");
+  expect(link).toHaveAttribute("rel", "noreferrer noopener");
+});
+
+test("renders website as a hyperlink when it has a www. prefix", async () => {
+  server.use(
+    http.get("/api/events/search", () => {
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId: "RPG24000001", website: "www.example.com" })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }),
+  );
+  renderEventDetail("RPG24000001");
+  await screen.findByText("CONTACT");
+  const link = screen.getByRole("link", { name: "www.example.com" });
+  expect(link).toHaveAttribute("href", "https://www.example.com/");
+});
+
+test("renders website as plain text when it contains a dangerous javascript: scheme", async () => {
+  server.use(
+    http.get("/api/events/search", () => {
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId: "RPG24000001", website: "javascript:alert(1)" })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }),
+  );
+  renderEventDetail("RPG24000001");
+  await screen.findByText("CONTACT");
+  expect(screen.queryByRole("link", { name: "javascript:alert(1)" })).toBeNull();
+  expect(screen.getByText("javascript:alert(1)")).toBeInTheDocument();
+});
