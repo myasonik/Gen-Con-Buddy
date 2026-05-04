@@ -1,6 +1,5 @@
 import { expect, test } from "vitest";
 import { formatDay, formatDayCompact } from "./formatDay";
-import type { DayFormat } from "../components/EventTable/types";
 
 // 2024-08-01T10:00:00Z = Thu Aug 1 2024 06:00 Indianapolis (UTC-4)
 const DATE = new Date("2024-08-01T10:00:00Z");
