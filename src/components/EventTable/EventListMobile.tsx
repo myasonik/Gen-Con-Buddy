@@ -10,7 +10,8 @@ import { Chip } from "../../ui/Chip/Chip";
 import { COLUMNS, COLUMN_GROUPS } from "./columns";
 import styles from "./EventListMobile.module.css";
 import typeCellStyles from "./typeCell.module.css";
-import type { TypeDisplay } from "./types";
+import { formatDayCompact } from "../../utils/formatDay";
+import type { DayFormat, TypeDisplay } from "./types";
 
 const META_COLUMN_IDS = new Set([
   "eventType",
@@ -94,6 +95,7 @@ interface EventListMobileProps {
   visibility?: Partial<Record<string, boolean>>;
   typeDisplay?: TypeDisplay;
   showTypeIcon?: boolean;
+  dayFormat?: DayFormat;
 }
 
 export function EventListMobile({
@@ -101,6 +103,7 @@ export function EventListMobile({
   visibility,
   typeDisplay,
   showTypeIcon,
+  dayFormat,
 }: EventListMobileProps): React.JSX.Element {
   const vis = visibility ?? COLUMN_VISIBILITY_DEFAULTS;
   const isVisible = (id: string): boolean => vis[id] !== false;
@@ -209,7 +212,7 @@ export function EventListMobile({
                   )}
                   {showTime && (
                     <span className={styles.when}>
-                      {isVisible("day") && format(start, "EEE")}
+                      {isVisible("day") && formatDayCompact(start, dayFormat ?? "day")}
                       {isVisible("day") &&
                         (isVisible("startDateTime") || isVisible("endDateTime")) &&
                         " "}

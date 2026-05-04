@@ -11,16 +11,17 @@ import { makeEvent } from "../../test/msw/factory";
 import { EventListMobile } from "./EventListMobile";
 import { COLUMN_VISIBILITY_DEFAULTS } from "../../hooks/useColumnVisibility";
 import type { Event } from "../../utils/types";
-import type { TypeDisplay } from "./types";
+import type { DayFormat, TypeDisplay } from "./types";
 
 async function renderList(
   events: Event[] = [makeEvent()],
   visibility?: Partial<Record<string, boolean>>,
   typeDisplayProps: { typeDisplay?: TypeDisplay; showTypeIcon?: boolean } = {},
+  dayFormat?: DayFormat,
 ): Promise<ReturnType<typeof render>> {
   const rootRoute = createRootRoute({
     component: () => (
-      <EventListMobile events={events} visibility={visibility} {...typeDisplayProps} />
+      <EventListMobile events={events} visibility={visibility} dayFormat={dayFormat} {...typeDisplayProps} />
     ),
   });
   const eventRoute = createRoute({
@@ -384,4 +385,20 @@ test("shows just the name portion in name mode when eventType is the full API st
 test("renders event type code when eventType is the full API string format", async () => {
   await renderList([makeEvent({ eventType: "RPG - Roleplaying Game" })]);
   expect(screen.getByText("RPG")).toBeInTheDocument();
+});
+
+test("shows day abbreviation in default day mode", async () => {
+  // factory startDateTime 2024-08-01T10:00:00Z = Thu in Indianapolis
+  await renderList([makeEvent()], undefined, {}, "day");
+  expect(screen.getByText(/Thu/)).toBeInTheDocument();
+});
+
+test("shows compact numeric date M/d in numeric mode", async () => {
+  await renderList([makeEvent()], undefined, {}, "numeric");
+  expect(screen.getByText(/8\/1/)).toBeInTheDocument();
+});
+
+test("shows compact long format EEE M/d in long mode", async () => {
+  await renderList([makeEvent()], undefined, {}, "long");
+  expect(screen.getByText(/Thu 8\/1/)).toBeInTheDocument();
 });

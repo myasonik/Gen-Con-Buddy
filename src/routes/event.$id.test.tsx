@@ -16,6 +16,7 @@ vi.mock("posthog-js/react", () => ({
 
 beforeEach(() => {
   captureFn.mockClear();
+  localStorage.clear();
 });
 
 afterEach(() => {
@@ -171,4 +172,25 @@ test("gencon_link_clicked fires when Gen Con link is clicked", async () => {
     "gencon_link_clicked",
     expect.objectContaining({ title: "Dragon Hunt" }),
   );
+});
+
+test("Day field shows full weekday name with default dayFormat", async () => {
+  // factory startDateTime 2024-08-01T10:00:00Z = Thursday in Indianapolis
+  await renderRoute("/event/RPG24000042", { queryClient });
+  await screen.findAllByRole("term");
+  expect(screen.getByText("Thursday")).toBeInTheDocument();
+});
+
+test("Day field shows numeric date when dayFormat is numeric", async () => {
+  localStorage.setItem("gcb-day-format", JSON.stringify({ version: 1, value: "numeric" }));
+  await renderRoute("/event/RPG24000042", { queryClient });
+  await screen.findAllByRole("term");
+  expect(screen.getByText("08/01/24")).toBeInTheDocument();
+});
+
+test("Day field shows long date when dayFormat is long", async () => {
+  localStorage.setItem("gcb-day-format", JSON.stringify({ version: 1, value: "long" }));
+  await renderRoute("/event/RPG24000042", { queryClient });
+  await screen.findAllByRole("term");
+  expect(screen.getByText("Thu, Aug 01, 2024")).toBeInTheDocument();
 });

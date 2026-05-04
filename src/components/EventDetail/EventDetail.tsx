@@ -11,6 +11,8 @@ import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { DescriptionList, DescriptionItem } from "../../ui/DescriptionList/DescriptionList";
 import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
 import { CalendarPlus, ExternalLink } from "lucide-react";
+import { useDayFormat } from "../../hooks/useDayFormat";
+import { formatDay } from "../../utils/formatDay";
 import { normalizeUrl } from "./normalizeUrl";
 import { normalizeEmail } from "./normalizeEmail";
 import styles from "./EventDetail.module.css";
@@ -21,6 +23,7 @@ interface EventDetailProps {
 
 export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
   const posthog = usePostHog();
+  const { dayFormat } = useDayFormat();
   const { data, isLoading, isError } = useQuery({
     queryKey: ["event", gameId],
     queryFn: () => fetchEvents({ gameId, limit: 1 }),
@@ -162,9 +165,7 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
         <section className={styles.section}>
           <h2 className={styles.sectionHeading}>LOGISTICS</h2>
           <DescriptionList>
-            <DescriptionItem term="Day">
-              {format(new Date(a.startDateTime), "EEEE")}
-            </DescriptionItem>
+            <DescriptionItem term="Day">{formatDay(new Date(a.startDateTime), dayFormat)}</DescriptionItem>
             <DescriptionItem term="Start">
               {format(new Date(a.startDateTime), "HH:mm")}
             </DescriptionItem>
