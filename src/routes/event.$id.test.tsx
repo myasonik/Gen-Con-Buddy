@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test } from "vitest";
-import { screen } from "@testing-library/react";
+import { act, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { server } from "../test/msw/server";
@@ -193,4 +193,22 @@ test("Day field shows long date when dayFormat is long", async () => {
   await renderRoute("/event/RPG24000042", { queryClient });
   await screen.findAllByRole("term");
   expect(screen.getByText("Thu, Aug 01, 2024")).toBeInTheDocument();
+});
+
+test("'Back to results' link points to home when no navigation state", async () => {
+  await renderRoute("/event/RPG24000042", { queryClient });
+  await screen.findByRole("heading", { name: "THE EVENT" });
+  const link = screen.getByRole("link", { name: /back to results/i });
+  expect(link).toHaveAttribute("href", "/");
+});
+
+test("shows 'Back to changelog' when navigated from changelog", async () => {
+  const { router } = await renderRoute("/event/RPG24000042", { queryClient });
+  await screen.findByRole("heading", { name: "THE EVENT" });
+  await act(async () => {
+    await router.navigate({ to: "/event/$id", params: { id: "RPG24000042" }, state: { from: "changelog" } });
+  });
+  await screen.findByRole("heading", { name: "THE EVENT" });
+  expect(screen.getByRole("button", { name: /back to changelog/i })).toBeInTheDocument();
+  expect(screen.queryByRole("link", { name: /back to results/i })).not.toBeInTheDocument();
 });

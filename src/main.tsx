@@ -4,9 +4,10 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { routeTree } from "./routeTree.gen";
+import { parseSearch, stringifySearch } from "./lib/searchSerializer";
 import "./index.css";
 
-const router = createRouter({ routeTree });
+const router = createRouter({ routeTree, parseSearch, stringifySearch });
 
 declare module "@tanstack/react-router" {
   interface Register {

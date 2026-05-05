@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { usePostHog } from "posthog-js/react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation, useRouter } from "@tanstack/react-router";
 import { fetchEvents } from "../../utils/api";
 import { buildGoogleCalendarUrl, genConEventId } from "../../utils/googleCalendar";
 import { Button } from "../../ui/Button/Button";
@@ -23,6 +23,9 @@ interface EventDetailProps {
 
 export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
   const posthog = usePostHog();
+  const router = useRouter();
+  const location = useLocation();
+  const fromChangelog = location.state.from === "changelog";
   const { data, isLoading, isError } = useQuery({
     queryKey: ["event", gameId],
     queryFn: () => fetchEvents({ gameId, limit: 1 }),
@@ -67,9 +70,19 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
 
   return (
     <article className={styles.article}>
-      <Button render={<Link to="/" />} variant="secondary" className={styles.backLink}>
-        ← Back to results
-      </Button>
+      {fromChangelog ? (
+        <Button
+          onClick={() => router.history.back()}
+          variant="secondary"
+          className={styles.backLink}
+        >
+          ← Back to changelog
+        </Button>
+      ) : (
+        <Button render={<Link to="/" />} variant="secondary" className={styles.backLink}>
+          ← Back to results
+        </Button>
+      )}
 
       <div className={styles.card}>
         <p className={styles.gameIdBadge}>{a.gameId}</p>

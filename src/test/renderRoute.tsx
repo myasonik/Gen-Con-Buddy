@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { routeTree } from "../routeTree.gen";
+import { parseSearch, stringifySearch } from "../lib/searchSerializer";
 import type { SearchParams } from "../utils/types";
 
 export async function renderRoute(
@@ -33,7 +34,7 @@ export async function renderRoute(
   }
 
   const history = createMemoryHistory({ initialEntries: [url] });
-  const router = createRouter({ routeTree, history });
+  const router = createRouter({ routeTree, history, parseSearch, stringifySearch });
   await router.load();
 
   const user = userEvent.setup();

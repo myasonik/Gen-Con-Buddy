@@ -18,6 +18,7 @@ declare module "@tanstack/react-table" {
     dayFormat: DayFormat;
     typeDisplay: TypeDisplay;
     showTypeIcon: boolean;
+    linkState?: { from: string };
   }
 }
 
@@ -26,10 +27,10 @@ export const COLUMNS: ColumnDef<Event>[] = [
     id: "gameId",
     header: "Game ID",
     meta: { sortField: "gameId" },
-    cell: ({ row }) => {
+    cell: ({ row, linkState }) => {
       const { gameId } = row.original.attributes;
       return (
-        <Link to="/event/$id" params={{ id: gameId }} className={styles.gameIdLink}>
+        <Link to="/event/$id" params={{ id: gameId }} state={linkState} className={styles.gameIdLink}>
           {gameId}
         </Link>
       );
@@ -39,10 +40,10 @@ export const COLUMNS: ColumnDef<Event>[] = [
     id: "title",
     header: "Title",
     meta: { sortField: "title" },
-    cell: ({ row }) => {
+    cell: ({ row, linkState }) => {
       const { gameId, title } = row.original.attributes;
       return (
-        <Link to="/event/$id" params={{ id: gameId }}>
+        <Link to="/event/$id" params={{ id: gameId }} state={linkState}>
           {title}
         </Link>
       );

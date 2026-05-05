@@ -31,7 +31,7 @@ export function AnimatedDetails({
       <summary className={summaryClassName} onClick={onSummaryClick}>
         {summary}
       </summary>
-      <div ref={contentRef} className={styles.content}>
+      <div ref={contentRef} className={styles.content} data-animated-content="">
         {children}
       </div>
     </details>

@@ -29,6 +29,7 @@ interface EventTableProps {
   onSort?: (sort: string | undefined) => void;
   sharedColumnState: SharedColumnState;
   showColumnControls?: boolean;
+  linkState?: { from: string };
 }
 
 export function EventTable({
@@ -38,6 +39,7 @@ export function EventTable({
   onSort,
   sharedColumnState,
   showColumnControls = true,
+  linkState,
 }: EventTableProps): React.JSX.Element {
   const posthog = usePostHog();
   const {
@@ -294,6 +296,7 @@ export function EventTable({
                         dayFormat,
                         typeDisplay,
                         showTypeIcon,
+                        linkState,
                       })}
                     </td>
                   ))}

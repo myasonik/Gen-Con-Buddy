@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { usePostHog } from "posthog-js/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import type { NavigateFn } from "@tanstack/react-router";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useTypeDisplay } from "../../hooks/useTypeDisplay";
@@ -11,7 +12,12 @@ import { fetchChangelogEntry, fetchChangelogList } from "../../utils/api";
 import styles from "./ChangelogPage.module.css";
 import { ChangelogRow } from "./ChangelogRow";
 
-export function ChangelogPage(): React.JSX.Element {
+interface ChangelogPageProps {
+  openParam?: string[];
+  navigate?: NavigateFn;
+}
+
+export function ChangelogPage({ openParam = [], navigate }: ChangelogPageProps): React.JSX.Element {
   const posthog = usePostHog();
   const queryClient = useQueryClient();
   const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility();
@@ -87,6 +93,9 @@ export function ChangelogPage(): React.JSX.Element {
             {summaries.map((summary, i) => (
               <ChangelogRow
                 key={summary.id}
+                position={i + 1}
+                openParam={openParam}
+                navigate={navigate}
                 summary={summary}
                 onOpen={() => handleOpen(i)}
                 sharedColumnState={sharedColumnState}

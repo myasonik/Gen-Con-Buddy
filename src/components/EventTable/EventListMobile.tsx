@@ -96,6 +96,7 @@ interface EventListMobileProps {
   typeDisplay?: TypeDisplay;
   showTypeIcon?: boolean;
   dayFormat?: DayFormat;
+  linkState?: { from: string };
 }
 
 export function EventListMobile({
@@ -104,6 +105,7 @@ export function EventListMobile({
   typeDisplay,
   showTypeIcon,
   dayFormat,
+  linkState,
 }: EventListMobileProps): React.JSX.Element {
   const vis = visibility ?? COLUMN_VISIBILITY_DEFAULTS;
   const isVisible = (id: string): boolean => vis[id] !== false;
@@ -194,7 +196,7 @@ export function EventListMobile({
 
         return (
           <li key={event.id} className={styles.item}>
-            <Link to="/event/$id" params={{ id: a.gameId }} className={styles.row}>
+            <Link to="/event/$id" params={{ id: a.gameId }} state={linkState} className={styles.row}>
               {isVisible("title") && <span className={styles.title}>{a.title}</span>}
               {showMeta && (
                 <span className={styles.meta}>
