@@ -487,6 +487,137 @@ test("closing an entry removes all sub-group state from the URL", async () => {
   expect(openValues).toHaveLength(0);
 });
 
+test("validateSearch round-trips sort param", async () => {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const history = createMemoryHistory({ initialEntries: ["/changelog?sort=1.created.title.asc"] });
+  const router = createRouter({
+    routeTree,
+    history,
+    parseSearch,
+    stringifySearch,
+    context: { queryClient: client },
+  });
+  await router.load();
+  const search = router.state.location.search as { sort?: string[] };
+  expect(search.sort).toContain("1.created.title.asc");
+});
+
+test("clicking a column header in a changelog group writes sort to URL", async () => {
+  server.use(
+    http.get("/api/changelog/list", () =>
+      HttpResponse.json<ListChangelogsResponse>({
+        entries: [
+          makeChangelogSummary({
+            id: "entry-1",
+            createdCount: 2,
+            updatedCount: 0,
+            deletedCount: 0,
+          }),
+        ],
+      }),
+    ),
+    http.get("/api/changelog/fetch", () =>
+      HttpResponse.json<FetchChangelogResponse>({
+        entry: makeChangelogEntry({
+          id: "entry-1",
+          createdEvents: [makeEvent({ title: "Zebra" }), makeEvent({ title: "Apple" })],
+          updatedEvents: [],
+          deletedEvents: [],
+        }),
+      }),
+    ),
+  );
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const { router } = await renderRoute("/changelog?open=1.created", { queryClient: client });
+  const user = userEvent.setup();
+  const titleHeader = await screen.findByRole("columnheader", { name: /title/i });
+  const sortButton = titleHeader.querySelector("button");
+  if (!sortButton) {
+    throw new Error("sort button not found in title header");
+  }
+  await user.click(sortButton);
+  const sortValues = new URLSearchParams(router.state.location.search).getAll("sort");
+  expect(sortValues.some((v) => v.startsWith("1.created.title."))).toBe(true);
+});
+
+test("sort param pre-sorts created events on mount", async () => {
+  server.use(
+    http.get("/api/changelog/list", () =>
+      HttpResponse.json<ListChangelogsResponse>({
+        entries: [
+          makeChangelogSummary({
+            id: "entry-1",
+            createdCount: 2,
+            updatedCount: 0,
+            deletedCount: 0,
+          }),
+        ],
+      }),
+    ),
+    http.get("/api/changelog/fetch", () =>
+      HttpResponse.json<FetchChangelogResponse>({
+        entry: makeChangelogEntry({
+          id: "entry-1",
+          createdEvents: [makeEvent({ title: "Zebra" }), makeEvent({ title: "Apple" })],
+          updatedEvents: [],
+          deletedEvents: [],
+        }),
+      }),
+    ),
+  );
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  await renderRoute("/changelog?open=1.created&sort=1.created.title.asc", { queryClient: client });
+  const rows = await screen.findAllByRole("row");
+  const titles = rows
+    .slice(1)
+    .map((r) => r.querySelector("a")?.textContent)
+    .filter(Boolean);
+  expect(titles[0]).toBe("Apple");
+  expect(titles[1]).toBe("Zebra");
+});
+
+test("closing a sub-group clears its sort from the URL", async () => {
+  server.use(
+    http.get("/api/changelog/list", () =>
+      HttpResponse.json<ListChangelogsResponse>({
+        entries: [
+          makeChangelogSummary({
+            id: "entry-1",
+            createdCount: 1,
+            updatedCount: 0,
+            deletedCount: 0,
+          }),
+        ],
+      }),
+    ),
+    http.get("/api/changelog/fetch", () =>
+      HttpResponse.json<FetchChangelogResponse>({
+        entry: makeChangelogEntry({
+          id: "entry-1",
+          createdEvents: [makeEvent({ title: "Dragon Hunt" })],
+          updatedEvents: [],
+          deletedEvents: [],
+        }),
+      }),
+    ),
+  );
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const { router } = await renderRoute("/changelog?open=1.created&sort=1.created.title.asc", {
+    queryClient: client,
+  });
+  const user = userEvent.setup();
+  await user.click(await screen.findByText("Created"));
+  await act(async () => {
+    const [, openDetails] = document.querySelectorAll("details[open]");
+    openDetails
+      ?.querySelector("[data-animated-content]")
+      ?.dispatchEvent(new Event("transitionend"));
+    openDetails?.dispatchEvent(new Event("toggle"));
+  });
+  const sortValues = new URLSearchParams(router.state.location.search).getAll("sort");
+  expect(sortValues).not.toContain("1.created.title.asc");
+});
+
 test("event links in changelog carry from:changelog navigation state", async () => {
   const eventGameId = "RPG24000099";
   const event = makeEvent({ gameId: eventGameId, title: "Dragon Hunt" });
