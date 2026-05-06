@@ -31,7 +31,13 @@ export function useAnimatedDetails(): {
         finish();
       }
     } else {
-      details.classList.add("is-animating");
+      e.preventDefault();
+      // is-opening overrides [open]'s 1fr rule so the before-change style
+      // stays at 0fr. Removed after the forced reflow to let the transition fire.
+      details.classList.add("is-animating", "is-opening");
+      details.open = true;
+      void details.offsetHeight; // commit 0fr before transition
+      details.classList.remove("is-opening"); // grid-template-rows: 0fr → 1fr, transition fires
 
       if (div) {
         div.addEventListener(

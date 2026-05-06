@@ -28,7 +28,7 @@ function makeEvent(): {
   return { event: event as unknown as React.MouseEvent<HTMLElement>, preventDefaultSpy };
 }
 
-test("does not intercept click on closed details", () => {
+test("intercepts click on closed details and initiates open animation", () => {
   const { result } = renderHook(() => useAnimatedDetails());
   const { details, div } = makeDetails(false);
   (result.current.ref as React.MutableRefObject<HTMLDetailsElement>).current = details;
@@ -37,8 +37,11 @@ test("does not intercept click on closed details", () => {
   const { event, preventDefaultSpy } = makeEvent();
   result.current.onSummaryClick(event);
 
-  expect(preventDefaultSpy).not.toHaveBeenCalled();
+  expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+  expect(details.open).toBe(true);
+  expect(details.classList.contains("is-animating")).toBe(true);
   expect(details.classList.contains("is-closing")).toBe(false);
+  expect(details.classList.contains("is-opening")).toBe(false); // added and removed synchronously
   details.remove();
 });
 

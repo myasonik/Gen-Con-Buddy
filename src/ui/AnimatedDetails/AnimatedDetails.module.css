@@ -10,7 +10,10 @@
   overflow: clip;
 }
 
-.content > * {
+/* overflow:hidden on the grid item allows 0fr to fully collapse to 0px regardless
+   of child padding. Without it, padding on children creates a minimum track floor. */
+.contentInner {
+  overflow: hidden;
   min-height: 0;
 }
 
@@ -21,6 +24,12 @@
 /* JS adds .is-closing before removing [open] so the grid can transition to 0fr
    before the browser hides the content. */
 :where(.details:global(.is-closing)) .content {
+  grid-template-rows: 0fr;
+}
+
+/* Added before [open] is set, so the before-change style stays at 0fr.
+   Removed after a forced reflow to trigger the 0fr → 1fr transition. */
+:where(.details:global(.is-opening)) .content {
   grid-template-rows: 0fr;
 }
 

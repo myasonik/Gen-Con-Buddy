@@ -7,7 +7,7 @@ import { routeTree } from "./routeTree.gen";
 import { parseSearch, stringifySearch } from "./lib/searchSerializer";
 import "./index.css";
 
-const router = createRouter({ routeTree, parseSearch, stringifySearch });
+const router = createRouter({ routeTree, parseSearch, stringifySearch, context: { queryClient } });
 
 declare module "@tanstack/react-router" {
   interface Register {

@@ -32,7 +32,7 @@ export function AnimatedDetails({
         {summary}
       </summary>
       <div ref={contentRef} className={styles.content} data-animated-content="">
-        {children}
+        <div className={styles.contentInner}>{children}</div>
       </div>
     </details>
   );

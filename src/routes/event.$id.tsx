@@ -1,12 +1,11 @@
 import React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { fetchEvents } from "../utils/api";
-import { queryClient } from "../lib/queryClient";
 import { EventDetail } from "../components/EventDetail/EventDetail";
 
 export const Route = createFileRoute("/event/$id")({
-  loader: async ({ params }) => {
-    await queryClient.ensureQueryData({
+  loader: async ({ params, context }) => {
+    await context.queryClient.ensureQueryData({
       queryKey: ["event", params.id],
       queryFn: () => fetchEvents({ gameId: params.id, limit: 1 }),
     });

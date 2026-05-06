@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { createRootRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { createRootRouteWithContext, Link, Outlet, useRouterState } from "@tanstack/react-router";
+import type { QueryClient } from "@tanstack/react-query";
 import { PostHogProvider, usePostHog } from "posthog-js/react";
 import { Meeple3D } from "../ui/icons/Meeple3D";
 import indexStyles from "./index.module.css";
@@ -45,7 +46,11 @@ function AppShell(): React.JSX.Element {
   );
 }
 
-export const Route = createRootRoute({
+export interface RouterContext {
+  queryClient: QueryClient;
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
   component: (): React.JSX.Element =>
     POSTHOG_TOKEN ? (
       <PostHogProvider

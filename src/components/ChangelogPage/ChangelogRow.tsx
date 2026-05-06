@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { startTransition, useState } from "react";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import type { ChangelogSummary } from "../../utils/types";
@@ -44,7 +44,9 @@ export function ChangelogRow({
     } else {
       newMap.delete(position);
     }
-    void navigate({ search: { open: serializeOpenParam(newMap) }, replace: true });
+    startTransition(() => {
+      void navigate({ search: { open: serializeOpenParam(newMap) }, replace: true });
+    });
   }
 
   return (

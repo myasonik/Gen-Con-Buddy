@@ -17,6 +17,8 @@ import {
   createMemoryHistory,
   Outlet,
 } from "@tanstack/react-router";
+import { routeTree } from "../routeTree.gen";
+import { parseSearch, stringifySearch } from "../lib/searchSerializer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { server } from "../test/msw/server";
 import { makeChangelogSummary, makeChangelogEntry, makeEvent } from "../test/msw/factory";
@@ -194,6 +196,39 @@ test("changelog_entry_opened fires with entry id when an entry is expanded", asy
   captureFn.mockClear();
   await user.click(await screen.findByText(/1 created/));
   expect(captureFn).toHaveBeenCalledWith("changelog_entry_opened", { entry_id: "entry-1" });
+});
+
+test("URL-opened entry is pre-fetched by the route loader before component renders", async () => {
+  server.use(
+    http.get("/api/changelog/list", () =>
+      HttpResponse.json<ListChangelogsResponse>({
+        entries: [
+          makeChangelogSummary({ id: "entry-1", createdCount: 1, updatedCount: 0, deletedCount: 0 }),
+        ],
+      }),
+    ),
+    http.get("/api/changelog/fetch", () =>
+      HttpResponse.json<FetchChangelogResponse>({
+        entry: makeChangelogEntry({
+          id: "entry-1",
+          createdEvents: [makeEvent({ title: "Dragon Hunt" })],
+        }),
+      }),
+    ),
+  );
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const history = createMemoryHistory({ initialEntries: ["/changelog?open=1"] });
+  const router = createRouter({
+    routeTree,
+    history,
+    parseSearch,
+    stringifySearch,
+    context: { queryClient: client },
+  });
+  // router.load() runs the route loader; if the loader pre-fetches, the cache is populated
+  // before any component renders — check that directly rather than relying on rendered output.
+  await router.load();
+  expect(client.getQueryData(["changelog", "entry", "entry-1"])).toBeDefined();
 });
 
 test("changelog row is expanded on load when its 1-based position is in the open param", async () => {

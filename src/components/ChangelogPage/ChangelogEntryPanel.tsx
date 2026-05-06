@@ -1,4 +1,4 @@
-import React from "react";
+import React, { startTransition } from "react";
 import type { NavigateFn } from "@tanstack/react-router";
 import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
@@ -77,7 +77,9 @@ export function ChangelogEntryPanel({
       groups.delete(group);
     }
     newMap.set(position, groups);
-    void navigate({ search: { open: serializeOpenParam(newMap) }, replace: true });
+    startTransition(() => {
+      void navigate({ search: { open: serializeOpenParam(newMap) }, replace: true });
+    });
   }
   if (entry === undefined || entry === "loading") {
     return <p aria-busy="true">Loading…</p>;
