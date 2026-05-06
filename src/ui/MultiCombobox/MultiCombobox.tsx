@@ -112,6 +112,7 @@ export function MultiCombobox({
               return (
                 <Chip
                   key={val}
+                  className={styles.chip}
                   tone="accent"
                   icon={renderChipIcon?.(option)}
                   onRemove={() => removeValue(val)}
