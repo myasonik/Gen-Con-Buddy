@@ -74,7 +74,7 @@ Type `GameSystemFacetsResponse` added to `src/utils/types.ts`.
 
 Fetches facets via `useQuery({ queryKey: ['gameSystemFacets'], queryFn: fetchGameSystemFacets, staleTime: Infinity })`.
 
-Maps the response to `MultiComboboxOption[]` (`value` → `value`, `value` → `label`). Passes a custom `renderOptionContent` that appends event count as secondary text.
+Maps the response to `MultiComboboxOption[]` — the API's `facet.value` string (e.g. `"Dungeons & Dragons 5E"`) becomes both `option.value` and `option.label`, since the game system name is the canonical identifier. Passes a custom `renderOptionContent` that appends event count as secondary text.
 
 No custom chip renderer — default label display is sufficient.
 
@@ -89,7 +89,7 @@ No custom chip renderer — default label display is sufficient.
 | Fetching | Input disabled, placeholder "Loading…" |
 | Fetch error | `GameSystemSelect` renders `null` — field silently absent from drawer |
 | Empty API result | Empty option list; user sees no suggestions |
-| Pre-filled URL param (bookmarked/shared) | Chips render from the comma-separated value immediately, before facets load |
+| Pre-filled URL param (bookmarked/shared) | Chips render immediately from the comma-separated value. `MultiCombobox` must handle selected values not yet present in `options` — chip label falls back to the raw value string until options load |
 
 ## Testing
 
