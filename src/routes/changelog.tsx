@@ -7,13 +7,11 @@ import { parseOpenParam } from "../components/ChangelogPage/openParam";
 export const Route = createFileRoute("/changelog")({
   validateSearch: (search: Record<string, unknown>) => {
     const raw = search.open;
-    let open: string[];
+    let open: string[] = [];
     if (Array.isArray(raw)) {
       open = raw.map(String);
     } else if (raw !== undefined && raw !== null) {
       open = [String(raw)];
-    } else {
-      open = [];
     }
     return { open };
   },

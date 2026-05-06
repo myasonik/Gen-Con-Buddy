@@ -30,7 +30,12 @@ export const COLUMNS: ColumnDef<Event>[] = [
     cell: ({ row, linkState }) => {
       const { gameId } = row.original.attributes;
       return (
-        <Link to="/event/$id" params={{ id: gameId }} state={linkState} className={styles.gameIdLink}>
+        <Link
+          to="/event/$id"
+          params={{ id: gameId }}
+          state={linkState}
+          className={styles.gameIdLink}
+        >
           {gameId}
         </Link>
       );
@@ -69,9 +74,7 @@ export const COLUMNS: ColumnDef<Event>[] = [
           {(typeDisplay === "code" || typeDisplay === "both") && (
             <span className={typeCellStyles.typeCode}>{code}</span>
           )}
-          {typeDisplay === "both" && name && (
-            <span className={typeCellStyles.typeSep}> - </span>
-          )}
+          {typeDisplay === "both" && name && <span className={typeCellStyles.typeSep}> - </span>}
           {(typeDisplay === "name" || typeDisplay === "both") && name && (
             <span className={typeCellStyles.typeName}>{name}</span>
           )}

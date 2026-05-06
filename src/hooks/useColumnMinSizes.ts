@@ -18,11 +18,14 @@ function shallowEqualNumberRecord(a: Record<string, number>, b: Record<string, n
 export function useColumnMinSizes(
   tableRef: RefObject<HTMLTableElement | null>,
   events: Event[],
-  visibility: Record<string, boolean>,
-  typeDisplay?: TypeDisplay,
-  showTypeIcon?: boolean,
-  dayFormat?: DayFormat,
+  opts: {
+    visibility: Record<string, boolean>;
+    typeDisplay?: TypeDisplay;
+    showTypeIcon?: boolean;
+    dayFormat?: DayFormat;
+  },
 ): Record<string, number> {
+  const { visibility, typeDisplay, showTypeIcon, dayFormat } = opts;
   const [minSizes, setMinSizes] = useState<Record<string, number>>({});
 
   useEffect(() => {

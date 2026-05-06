@@ -75,10 +75,14 @@ test("open animation completes and is-animating is removed after transitionend o
   fireEvent.click(screen.getByText("Toggle"));
   const details = document.querySelector("details");
   expect(details).not.toBeNull();
-  if (!details) return;
+  if (!details) {
+    return;
+  }
   const contentDiv = details.querySelector(":scope > div");
   expect(contentDiv).not.toBeNull();
-  if (!contentDiv) return;
+  if (!contentDiv) {
+    return;
+  }
   fireEvent(contentDiv, new Event("transitionend", { bubbles: true }));
   expect(details).not.toHaveClass("is-animating");
   expect(details).toHaveAttribute("open");

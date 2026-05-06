@@ -34,7 +34,13 @@ export async function renderRoute(
   }
 
   const history = createMemoryHistory({ initialEntries: [url] });
-  const router = createRouter({ routeTree, history, parseSearch, stringifySearch, context: { queryClient: client } });
+  const router = createRouter({
+    routeTree,
+    history,
+    parseSearch,
+    stringifySearch,
+    context: { queryClient: client },
+  });
   await router.load();
 
   const user = userEvent.setup();
