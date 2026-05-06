@@ -4,17 +4,21 @@ import { ChangelogPage } from "../components/ChangelogPage/ChangelogPage";
 import { fetchChangelogEntry, fetchChangelogList } from "../utils/api";
 import { parseOpenParam } from "../components/ChangelogPage/openParam";
 
+function coerceStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.map(String);
+  }
+  if (value !== undefined && value !== null) {
+    return [String(value)];
+  }
+  return [];
+}
+
 export const Route = createFileRoute("/changelog")({
-  validateSearch: (search: Record<string, unknown>) => {
-    const raw = search.open;
-    let open: string[] = [];
-    if (Array.isArray(raw)) {
-      open = raw.map(String);
-    } else if (raw !== undefined && raw !== null) {
-      open = [String(raw)];
-    }
-    return { open };
-  },
+  validateSearch: (search: Record<string, unknown>) => ({
+    open: coerceStringArray(search.open),
+    sort: coerceStringArray(search.sort),
+  }),
   loaderDeps: ({ search }) => ({ open: search.open }),
   loader: async ({ deps, context }) => {
     const { queryClient } = context;
@@ -39,7 +43,7 @@ export const Route = createFileRoute("/changelog")({
 });
 
 function ChangelogPageRoute(): React.JSX.Element {
-  const { open } = Route.useSearch();
+  const { open, sort } = Route.useSearch();
   const navigate = Route.useNavigate();
-  return <ChangelogPage openParam={open} navigate={navigate} />;
+  return <ChangelogPage openParam={open} sortParam={sort} navigate={navigate} />;
 }

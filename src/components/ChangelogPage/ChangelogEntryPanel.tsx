@@ -8,6 +8,8 @@ import type { SharedColumnState } from "../EventTable/types";
 import type { ChangelogEntry, Event } from "../../utils/types";
 import { Chip } from "../../ui/Chip/Chip";
 import { parseOpenParam, serializeOpenParam } from "./openParam";
+import { parseSortParam, serializeSortParam, type SortState } from "./sortParam";
+import { sortEvents } from "../../utils/sortEvents";
 import styles from "./ChangelogEntryPanel.module.css";
 
 type EntryValue = ChangelogEntry | "loading" | "error" | undefined;
@@ -16,6 +18,7 @@ interface ChangelogEntryPanelProps {
   entry: EntryValue;
   sharedColumnState: SharedColumnState;
   openParam?: string[];
+  sortParam?: string[];
   position?: number;
   navigate?: NavigateFn;
 }
@@ -25,9 +28,15 @@ const CHANGELOG_LINK_STATE = { from: "changelog" } as const;
 function EventGroup({
   events,
   sharedColumnState,
+  onSort,
+  activeSortField,
+  activeSortDir,
 }: {
   events: Event[];
   sharedColumnState: SharedColumnState;
+  onSort?: (sort: string | undefined) => void;
+  activeSortField?: string;
+  activeSortDir?: "asc" | "desc";
 }): React.JSX.Element {
   return (
     <>
@@ -37,6 +46,9 @@ function EventGroup({
           sharedColumnState={sharedColumnState}
           showColumnControls={false}
           linkState={CHANGELOG_LINK_STATE}
+          onSort={onSort}
+          activeSortField={activeSortField}
+          activeSortDir={activeSortDir}
         />
       </div>
       <div className={styles.mobileView}>
@@ -56,37 +68,99 @@ export function ChangelogEntryPanel({
   entry,
   sharedColumnState,
   openParam = [],
+  sortParam = [],
   position,
   navigate,
 }: ChangelogEntryPanelProps): React.JSX.Element {
   const openGroups: Set<string> =
     position !== undefined ? (parseOpenParam(openParam).get(position) ?? new Set()) : new Set();
 
+  const sortForPosition: Map<string, SortState> =
+    position !== undefined ? (parseSortParam(sortParam).get(position) ?? new Map()) : new Map();
+
+  function syncGroupSortToUrl(group: string, sort: SortState | undefined): void {
+    if (!navigate || position === undefined) {
+      return;
+    }
+    startTransition(() => {
+      void navigate({
+        to: ".",
+        search: (prev) => {
+          const sortMap = new Map(parseSortParam(sortParam));
+          const groupMap = new Map(sortMap.get(position) ?? []);
+          if (sort) {
+            groupMap.set(group, sort);
+          } else {
+            groupMap.delete(group);
+          }
+          if (groupMap.size === 0) {
+            sortMap.delete(position);
+          } else {
+            sortMap.set(position, groupMap);
+          }
+          return { ...prev, sort: serializeSortParam(sortMap) };
+        },
+        replace: true,
+      });
+    });
+  }
+
   function syncGroupToUrl(group: string, nowOpen: boolean): void {
     if (!navigate || position === undefined) {
       return;
     }
-    const newMap = new Map(parseOpenParam(openParam));
-    // If the entry's position is absent from the map, the outer row was just closed
-    // and this toggle is a React cleanup artifact — don't write back to the URL.
-    if (!newMap.has(position)) {
+    const newOpenMap = new Map(parseOpenParam(openParam));
+    if (!newOpenMap.has(position)) {
       return;
     }
-    const groups = new Set(newMap.get(position) ?? []);
+    const groups = new Set(newOpenMap.get(position) ?? []);
     if (nowOpen) {
       groups.add(group);
     } else {
       groups.delete(group);
     }
-    newMap.set(position, groups);
+    newOpenMap.set(position, groups);
     startTransition(() => {
       void navigate({
         to: ".",
-        search: (prev) => ({ ...prev, open: serializeOpenParam(newMap) }),
+        search: (prev) => {
+          if (!nowOpen) {
+            const sortMap = new Map(parseSortParam(sortParam));
+            const groupMap = new Map(sortMap.get(position) ?? []);
+            groupMap.delete(group);
+            if (groupMap.size === 0) {
+              sortMap.delete(position);
+            } else {
+              sortMap.set(position, groupMap);
+            }
+            return {
+              ...prev,
+              open: serializeOpenParam(newOpenMap),
+              sort: serializeSortParam(sortMap),
+            };
+          }
+          return { ...prev, open: serializeOpenParam(newOpenMap) };
+        },
         replace: true,
       });
     });
   }
+
+  function makeOnSort(group: string): (s: string | undefined) => void {
+    return (s) => {
+      if (s === undefined) {
+        syncGroupSortToUrl(group, undefined);
+      } else {
+        const dotIdx = s.lastIndexOf(".");
+        const field = s.slice(0, dotIdx);
+        const dir = s.slice(dotIdx + 1);
+        if (field && (dir === "asc" || dir === "desc")) {
+          syncGroupSortToUrl(group, { field, dir });
+        }
+      }
+    };
+  }
+
   if (entry === undefined || entry === "loading") {
     return <p aria-busy="true">Loading…</p>;
   }
@@ -105,6 +179,10 @@ export function ChangelogEntryPanel({
     );
   }
 
+  const createdSort = sortForPosition.get("created");
+  const updatedSort = sortForPosition.get("updated");
+  const deletedSort = sortForPosition.get("deleted");
+
   return (
     <div className={styles.panel}>
       {entry.createdEvents.length > 0 && (
@@ -122,7 +200,17 @@ export function ChangelogEntryPanel({
             </span>
           }
         >
-          <EventGroup events={entry.createdEvents} sharedColumnState={sharedColumnState} />
+          <EventGroup
+            events={
+              createdSort
+                ? sortEvents(entry.createdEvents, createdSort.field, createdSort.dir)
+                : entry.createdEvents
+            }
+            sharedColumnState={sharedColumnState}
+            onSort={makeOnSort("created")}
+            activeSortField={createdSort?.field}
+            activeSortDir={createdSort?.dir}
+          />
         </AnimatedDetails>
       )}
       {entry.updatedEvents.length > 0 && (
@@ -140,7 +228,17 @@ export function ChangelogEntryPanel({
             </span>
           }
         >
-          <EventGroup events={entry.updatedEvents} sharedColumnState={sharedColumnState} />
+          <EventGroup
+            events={
+              updatedSort
+                ? sortEvents(entry.updatedEvents, updatedSort.field, updatedSort.dir)
+                : entry.updatedEvents
+            }
+            sharedColumnState={sharedColumnState}
+            onSort={makeOnSort("updated")}
+            activeSortField={updatedSort?.field}
+            activeSortDir={updatedSort?.dir}
+          />
         </AnimatedDetails>
       )}
       {entry.deletedEvents.length > 0 && (
@@ -158,7 +256,17 @@ export function ChangelogEntryPanel({
             </span>
           }
         >
-          <EventGroup events={entry.deletedEvents} sharedColumnState={sharedColumnState} />
+          <EventGroup
+            events={
+              deletedSort
+                ? sortEvents(entry.deletedEvents, deletedSort.field, deletedSort.dir)
+                : entry.deletedEvents
+            }
+            sharedColumnState={sharedColumnState}
+            onSort={makeOnSort("deleted")}
+            activeSortField={deletedSort?.field}
+            activeSortDir={deletedSort?.dir}
+          />
         </AnimatedDetails>
       )}
     </div>

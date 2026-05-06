@@ -14,6 +14,7 @@ import styles from "./ChangelogRow.module.css";
 interface ChangelogRowProps {
   position?: number;
   openParam?: string[];
+  sortParam?: string[];
   navigate?: NavigateFn;
   summary: ChangelogSummary;
   onOpen: () => void;
@@ -23,6 +24,7 @@ interface ChangelogRowProps {
 export function ChangelogRow({
   position,
   openParam = [],
+  sortParam = [],
   navigate,
   summary,
   onOpen,
@@ -90,6 +92,7 @@ export function ChangelogRow({
         entry={isError ? "error" : entry}
         sharedColumnState={sharedColumnState}
         openParam={openParam}
+        sortParam={sortParam}
         position={position}
         navigate={navigate}
       />
