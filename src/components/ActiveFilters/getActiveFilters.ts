@@ -148,7 +148,7 @@ const FILTER_DEFS: FilterDef[] = [
   { type: "plain", key: "group", label: "Group" },
   { type: "plain", key: "shortDescription", label: "Short desc" },
   { type: "plain", key: "longDescription", label: "Long desc" },
-  { type: "plain", key: "gameSystem", label: "System", icon: RuleBook },
+  { type: "multi", key: "gameSystem", map: {}, prefix: "gameSystem", icon: RuleBook },
   { type: "plain", key: "rulesEdition", label: "Rules", icon: RuleBook },
   { type: "enum", key: "ageRequired", label: "Age", map: AGE_GROUPS, icon: Ages },
   { type: "enum", key: "experienceRequired", label: "Exp", map: EXP, icon: Skills },
