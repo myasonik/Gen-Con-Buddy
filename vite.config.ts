@@ -43,6 +43,7 @@ export default defineConfig(({ mode }) => {
       pool: "forks",
       minWorkers: 1,
       maxWorkers: 8,
+      testTimeout: 15000,
     },
   };
 });

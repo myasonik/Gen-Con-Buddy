@@ -1,5 +1,4 @@
 import React, { startTransition } from "react";
-import type { NavigateFn } from "@tanstack/react-router";
 import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { EventListMobile } from "../EventTable/EventListMobile";
@@ -17,7 +16,7 @@ interface ChangelogEntryPanelProps {
   sharedColumnState: SharedColumnState;
   openParam?: string[];
   position?: number;
-  navigate?: NavigateFn;
+  onSyncOpen?: (open: string[]) => void;
 }
 
 const CHANGELOG_LINK_STATE = { from: "changelog" } as const;
@@ -57,19 +56,21 @@ export function ChangelogEntryPanel({
   sharedColumnState,
   openParam = [],
   position,
-  navigate,
+  onSyncOpen,
 }: ChangelogEntryPanelProps): React.JSX.Element {
   const openGroups: Set<string> =
-    position !== undefined
-      ? (parseOpenParam(openParam).get(position) ?? new Set())
-      : new Set();
+    position !== undefined ? (parseOpenParam(openParam).get(position) ?? new Set()) : new Set();
 
   function syncGroupToUrl(group: string, nowOpen: boolean): void {
-    if (!navigate || position === undefined) return;
+    if (!onSyncOpen || position === undefined) {
+      return;
+    }
     const newMap = new Map(parseOpenParam(openParam));
     // If the entry's position is absent from the map, the outer row was just closed
     // and this toggle is a React cleanup artifact — don't write back to the URL.
-    if (!newMap.has(position)) return;
+    if (!newMap.has(position)) {
+      return;
+    }
     const groups = new Set(newMap.get(position) ?? []);
     if (nowOpen) {
       groups.add(group);
@@ -78,7 +79,7 @@ export function ChangelogEntryPanel({
     }
     newMap.set(position, groups);
     startTransition(() => {
-      void navigate({ search: { open: serializeOpenParam(newMap) }, replace: true });
+      onSyncOpen(serializeOpenParam(newMap));
     });
   }
   if (entry === undefined || entry === "loading") {

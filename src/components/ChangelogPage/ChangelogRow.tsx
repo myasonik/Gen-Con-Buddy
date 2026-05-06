@@ -8,13 +8,12 @@ import type { SharedColumnState } from "../EventTable/types";
 import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
 import { Chip } from "../../ui/Chip/Chip";
 import { parseOpenParam, serializeOpenParam } from "./openParam";
-import type { NavigateFn } from "@tanstack/react-router";
 import styles from "./ChangelogRow.module.css";
 
 interface ChangelogRowProps {
   position?: number;
   openParam?: string[];
-  navigate?: NavigateFn;
+  onSyncOpen?: (open: string[]) => void;
   summary: ChangelogSummary;
   onOpen: () => void;
   sharedColumnState: SharedColumnState;
@@ -23,13 +22,13 @@ interface ChangelogRowProps {
 export function ChangelogRow({
   position,
   openParam = [],
-  navigate,
+  onSyncOpen,
   summary,
   onOpen,
   sharedColumnState,
 }: ChangelogRowProps): React.JSX.Element {
   const openMap = parseOpenParam(openParam);
-  const [isOpen, setIsOpen] = useState(() => openMap.has(position));
+  const [isOpen, setIsOpen] = useState(() => position !== undefined && openMap.has(position));
   const { data: entry, isError } = useQuery({
     queryKey: ["changelog", "entry", summary.id],
     queryFn: () => fetchChangelogEntry(summary.id),
@@ -37,7 +36,9 @@ export function ChangelogRow({
   });
 
   function syncOpenToUrl(nowOpen: boolean): void {
-    if (!navigate) return;
+    if (!onSyncOpen || position === undefined) {
+      return;
+    }
     const newMap = new Map(openMap);
     if (nowOpen) {
       newMap.set(position, newMap.get(position) ?? new Set());
@@ -45,7 +46,7 @@ export function ChangelogRow({
       newMap.delete(position);
     }
     startTransition(() => {
-      void navigate({ search: { open: serializeOpenParam(newMap) }, replace: true });
+      onSyncOpen(serializeOpenParam(newMap));
     });
   }
 
@@ -58,7 +59,9 @@ export function ChangelogRow({
         const { open } = e.currentTarget as HTMLDetailsElement;
         // jsdom spuriously fires toggle on an outer <details> when a nested <details> toggles;
         // the state hasn't actually changed in that case, so guard against it.
-        if (open === isOpen) return;
+        if (open === isOpen) {
+          return;
+        }
         setIsOpen(open);
         syncOpenToUrl(open);
         if (open) {
@@ -83,7 +86,7 @@ export function ChangelogRow({
         sharedColumnState={sharedColumnState}
         openParam={openParam}
         position={position}
-        navigate={navigate}
+        onSyncOpen={onSyncOpen}
       />
     </AnimatedDetails>
   );

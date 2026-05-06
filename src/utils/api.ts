@@ -7,6 +7,8 @@ import type {
   FetchChangelogResponse,
   ChangelogEntry,
   ChangelogSummary,
+  GameSystemFacet,
+  GameSystemFacetsResponse,
 } from "./types";
 
 export async function fetchEvents(params: SearchParams): Promise<EventSearchResponse> {
@@ -83,4 +85,14 @@ export async function fetchChangelogEntry(id: string): Promise<ChangelogEntry> {
     throw new Error("Missing entry in response");
   }
   return data.entry;
+}
+
+export async function fetchGameSystemFacets(): Promise<GameSystemFacet[]> {
+  const url = new URL("/api/events/facets/gameSystem", window.location.origin);
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  const data = (await res.json()) as GameSystemFacetsResponse;
+  return data.values;
 }

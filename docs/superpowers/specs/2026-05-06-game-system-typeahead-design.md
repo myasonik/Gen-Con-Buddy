@@ -30,7 +30,7 @@ interface MultiComboboxOption {
 
 interface MultiComboboxProps {
   label: string;
-  value: string;                  // comma-separated selected values
+  value: string; // comma-separated selected values
   onValueChange: (value: string) => void;
   options: MultiComboboxOption[];
   filterOption?: (option: MultiComboboxOption, filterText: string) => boolean;
@@ -41,6 +41,7 @@ interface MultiComboboxProps {
 ```
 
 **Defaults:**
+
 - `filterOption`: contains-match on `option.value` and `option.label` via `Combobox.useFilter()`
 - `renderChipContent`: `option.label`
 - `renderOptionContent`: `option.label`
@@ -63,7 +64,7 @@ Behavior is unchanged; existing tests pass without modification.
 ### 3. `fetchGameSystemFacets()` in `src/utils/api.ts`
 
 ```ts
-async function fetchGameSystemFacets(): Promise<{ value: string; count: number }[]>
+async function fetchGameSystemFacets(): Promise<{ value: string; count: number }[]>;
 ```
 
 Fetches `GET /api/events/facets/gameSystem`. Returns the `values` array sorted as the API provides (by count descending). Throws on non-OK response.
@@ -84,16 +85,17 @@ No custom chip renderer — default label display is sufficient.
 
 ## Error handling & edge cases
 
-| Scenario | Behaviour |
-|---|---|
-| Fetching | Input disabled, placeholder "Loading…" |
-| Fetch error | `GameSystemSelect` renders `null` — field silently absent from drawer |
-| Empty API result | Empty option list; user sees no suggestions |
+| Scenario                                 | Behaviour                                                                                                                                                                                            |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fetching                                 | Input disabled, placeholder "Loading…"                                                                                                                                                               |
+| Fetch error                              | `GameSystemSelect` renders `null` — field silently absent from drawer                                                                                                                                |
+| Empty API result                         | Empty option list; user sees no suggestions                                                                                                                                                          |
 | Pre-filled URL param (bookmarked/shared) | Chips render immediately from the comma-separated value. `MultiCombobox` must handle selected values not yet present in `options` — chip label falls back to the raw value string until options load |
 
 ## Testing
 
 ### `MultiCombobox` unit tests
+
 - Renders selected values as chips
 - Type-to-filter narrows the options list
 - Selecting an option adds it; deselecting removes it
@@ -102,17 +104,21 @@ No custom chip renderer — default label display is sufficient.
 - `isLoading={true}` disables the input
 
 ### `EventTypeSelect` tests
+
 - Existing test suite passes without changes (refactor only)
 
 ### `GameSystemSelect` tests (MSW)
+
 - Shows loading state while `GET /api/events/facets/gameSystem` is pending
 - Renders options from the API response
 - Selecting a game system updates the form value as a comma-separated string
 - Error response causes the component to render nothing
 
 ### `SearchForm` tests
+
 - Existing tests pass
 - One new assertion: the Game System field renders chips (not a plain `<input>`) when options are available
 
 ### MSW default handlers
+
 - Add `GET /api/events/facets/gameSystem` to `src/test/msw/handlers.ts` returning a small fixture list (3–5 systems with counts)

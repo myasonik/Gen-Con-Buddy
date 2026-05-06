@@ -175,3 +175,12 @@ export interface FetchChangelogResponse {
   error?: string;
   entry?: ChangelogEntry;
 }
+
+export interface GameSystemFacet {
+  value: string;
+  count: number;
+}
+
+export interface GameSystemFacetsResponse {
+  values: GameSystemFacet[];
+}

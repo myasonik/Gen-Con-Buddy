@@ -21,7 +21,12 @@ async function renderList(
 ): Promise<ReturnType<typeof render>> {
   const rootRoute = createRootRoute({
     component: () => (
-      <EventListMobile events={events} visibility={visibility} dayFormat={dayFormat} {...typeDisplayProps} />
+      <EventListMobile
+        events={events}
+        visibility={visibility}
+        dayFormat={dayFormat}
+        {...typeDisplayProps}
+      />
     ),
   });
   const eventRoute = createRoute({

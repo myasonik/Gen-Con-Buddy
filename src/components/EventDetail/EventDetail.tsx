@@ -33,20 +33,24 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
   const { dayFormat } = useDayFormat();
 
   const event = data?.data[0];
+  const eventGameId = event?.attributes?.gameId;
+  const eventTitle = event?.attributes?.title;
+  const eventType = event?.attributes?.eventType;
+  const eventCost = event?.attributes?.cost;
+  const eventTicketsAvailable = event?.attributes?.ticketsAvailable;
 
   useEffect(() => {
-    if (!event) {
+    if (!eventGameId) {
       return;
     }
-    const a = event.attributes;
     posthog.capture("event_detail_viewed", {
-      game_id: a.gameId,
-      title: a.title,
-      event_type: a.eventType,
-      cost: a.cost,
-      tickets_available: a.ticketsAvailable,
+      game_id: eventGameId,
+      title: eventTitle,
+      event_type: eventType,
+      cost: eventCost,
+      tickets_available: eventTicketsAvailable,
     });
-  }, [event?.attributes?.gameId, posthog]);
+  }, [eventGameId, eventTitle, eventType, eventCost, eventTicketsAvailable, posthog]);
 
   if (isLoading) {
     return <EmptyState variant="loading" text="LOADING QUEST..." />;
@@ -178,7 +182,9 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
         <section className={styles.section}>
           <h2 className={styles.sectionHeading}>LOGISTICS</h2>
           <DescriptionList>
-            <DescriptionItem term="Day">{formatDay(new Date(a.startDateTime), dayFormat)}</DescriptionItem>
+            <DescriptionItem term="Day">
+              {formatDay(new Date(a.startDateTime), dayFormat)}
+            </DescriptionItem>
             <DescriptionItem term="Start">
               {format(new Date(a.startDateTime), "HH:mm")}
             </DescriptionItem>

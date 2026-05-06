@@ -50,16 +50,12 @@ describe("buildGoogleCalendarUrl", () => {
   });
 
   it("omits em-dash when roomName is empty", () => {
-    const url = parseUrl(
-      makeEvent({ location: "ICC", roomName: "", tableNumber: "" }).attributes,
-    );
+    const url = parseUrl(makeEvent({ location: "ICC", roomName: "", tableNumber: "" }).attributes);
     expect(url.searchParams.get("location")).toBe("ICC");
   });
 
   it("leaves location blank when both location and roomName are empty", () => {
-    const url = parseUrl(
-      makeEvent({ location: "", roomName: "", tableNumber: "" }).attributes,
-    );
+    const url = parseUrl(makeEvent({ location: "", roomName: "", tableNumber: "" }).attributes);
     expect(url.searchParams.get("location")).toBe("");
   });
 

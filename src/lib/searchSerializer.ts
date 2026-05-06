@@ -1,8 +1,14 @@
 function coerce(v: string): string | number | boolean {
-  if (v === "true") return true;
-  if (v === "false") return false;
+  if (v === "true") {
+    return true;
+  }
+  if (v === "false") {
+    return false;
+  }
   const n = Number(v);
-  if (v !== "" && !isNaN(n)) return n;
+  if (v !== "" && !isNaN(n)) {
+    return n;
+  }
   return v;
 }
 
@@ -20,13 +26,14 @@ export function parseSearch(searchStr: string): Record<string, unknown> {
 export function stringifySearch(search: Record<string, unknown>): string {
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(search)) {
-    if (value === undefined || value === null) continue;
-    if (Array.isArray(value)) {
-      value
-        .filter((v) => v !== undefined && v !== null)
-        .forEach((v) => params.append(key, String(v)));
-    } else {
-      params.set(key, String(value));
+    if (value !== undefined && value !== null) {
+      if (Array.isArray(value)) {
+        value
+          .filter((v) => v !== undefined && v !== null)
+          .forEach((v) => params.append(key, String(v)));
+      } else {
+        params.set(key, String(value));
+      }
     }
   }
   const str = params.toString();

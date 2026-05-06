@@ -7,13 +7,11 @@ import { parseOpenParam } from "../components/ChangelogPage/openParam";
 export const Route = createFileRoute("/changelog")({
   validateSearch: (search: Record<string, unknown>) => {
     const raw = search.open;
-    let open: string[];
+    let open: string[] = [];
     if (Array.isArray(raw)) {
       open = raw.map(String);
     } else if (raw !== undefined && raw !== null) {
       open = [String(raw)];
-    } else {
-      open = [];
     }
     return { open };
   },
@@ -43,5 +41,8 @@ export const Route = createFileRoute("/changelog")({
 function ChangelogPageRoute(): React.JSX.Element {
   const { open } = Route.useSearch();
   const navigate = Route.useNavigate();
-  return <ChangelogPage openParam={open} navigate={navigate} />;
+  const syncOpen = (newOpen: string[]): void => {
+    void navigate({ search: (prev) => ({ ...prev, open: newOpen }), replace: true });
+  };
+  return <ChangelogPage openParam={open} onSyncOpen={syncOpen} />;
 }

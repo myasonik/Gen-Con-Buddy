@@ -18,28 +18,29 @@
 
 ## File Map
 
-| File | Action | Purpose |
-|---|---|---|
-| `src/utils/types.ts` | Modify | Add `GameSystemFacet`, `GameSystemFacetsResponse` |
-| `src/utils/api.ts` | Modify | Add `fetchGameSystemFacets()` |
-| `src/test/msw/handlers.ts` | Modify | Add default handler for `/api/events/facets/gameSystem` |
-| `src/ui/MultiCombobox/MultiCombobox.tsx` | Create | Shared multi-select combobox primitive |
-| `src/ui/MultiCombobox/MultiCombobox.module.css` | Create | Shared styles (moved from EventTypeSelect) |
-| `src/ui/MultiCombobox/MultiCombobox.test.tsx` | Create | Unit tests for the primitive |
-| `src/components/EventTypeSelect/EventTypeSelect.tsx` | Modify | Thin wrapper over `MultiCombobox` |
-| `src/components/EventTypeSelect/EventTypeSelect.module.css` | Modify | Keep only `.itemBadge` and `.itemName` (EventTypeSelect-specific) |
-| `src/components/EventTypeSelect/EventTypeSelect.test.tsx` | Modify | Replace `data-testid` chip queries with `data-tone` queries |
-| `src/components/GameSystemSelect/GameSystemSelect.tsx` | Create | Fetches facets, renders `MultiCombobox` |
-| `src/components/GameSystemSelect/GameSystemSelect.module.css` | Create | `.optionName`, `.optionCount` styles |
-| `src/components/GameSystemSelect/GameSystemSelect.test.tsx` | Create | MSW-backed tests |
-| `src/components/SearchForm/SearchForm.tsx` | Modify | Replace `<Field label="Game System"><input /></Field>` with `<GameSystemSelect />` |
-| `src/components/SearchForm/SearchForm.test.tsx` | Modify | Add `QueryClientProvider` wrapper + new Game System assertion |
+| File                                                          | Action | Purpose                                                                            |
+| ------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------- |
+| `src/utils/types.ts`                                          | Modify | Add `GameSystemFacet`, `GameSystemFacetsResponse`                                  |
+| `src/utils/api.ts`                                            | Modify | Add `fetchGameSystemFacets()`                                                      |
+| `src/test/msw/handlers.ts`                                    | Modify | Add default handler for `/api/events/facets/gameSystem`                            |
+| `src/ui/MultiCombobox/MultiCombobox.tsx`                      | Create | Shared multi-select combobox primitive                                             |
+| `src/ui/MultiCombobox/MultiCombobox.module.css`               | Create | Shared styles (moved from EventTypeSelect)                                         |
+| `src/ui/MultiCombobox/MultiCombobox.test.tsx`                 | Create | Unit tests for the primitive                                                       |
+| `src/components/EventTypeSelect/EventTypeSelect.tsx`          | Modify | Thin wrapper over `MultiCombobox`                                                  |
+| `src/components/EventTypeSelect/EventTypeSelect.module.css`   | Modify | Keep only `.itemBadge` and `.itemName` (EventTypeSelect-specific)                  |
+| `src/components/EventTypeSelect/EventTypeSelect.test.tsx`     | Modify | Replace `data-testid` chip queries with `data-tone` queries                        |
+| `src/components/GameSystemSelect/GameSystemSelect.tsx`        | Create | Fetches facets, renders `MultiCombobox`                                            |
+| `src/components/GameSystemSelect/GameSystemSelect.module.css` | Create | `.optionName`, `.optionCount` styles                                               |
+| `src/components/GameSystemSelect/GameSystemSelect.test.tsx`   | Create | MSW-backed tests                                                                   |
+| `src/components/SearchForm/SearchForm.tsx`                    | Modify | Replace `<Field label="Game System"><input /></Field>` with `<GameSystemSelect />` |
+| `src/components/SearchForm/SearchForm.test.tsx`               | Modify | Add `QueryClientProvider` wrapper + new Game System assertion                      |
 
 ---
 
 ## Task 1: Add types, API function, and MSW default handler
 
 **Files:**
+
 - Modify: `src/utils/types.ts`
 - Modify: `src/utils/api.ts`
 - Modify: `src/test/msw/handlers.ts`
@@ -62,6 +63,7 @@ export interface GameSystemFacetsResponse {
 - [ ] **Step 2: Add `fetchGameSystemFacets` to `src/utils/api.ts`**
 
 Add this import to the existing import from `./types`:
+
 ```ts
 import type {
   EventSearchResponse,
@@ -76,6 +78,7 @@ import type {
 ```
 
 Append the function at the end of the file:
+
 ```ts
 export async function fetchGameSystemFacets(): Promise<GameSystemFacet[]> {
   const url = new URL("/api/events/facets/gameSystem", window.location.origin);
@@ -91,6 +94,7 @@ export async function fetchGameSystemFacets(): Promise<GameSystemFacet[]> {
 - [ ] **Step 3: Add default MSW handler in `src/test/msw/handlers.ts`**
 
 Add to the existing import from `../../utils/types`:
+
 ```ts
 import type {
   Event,
@@ -102,11 +106,16 @@ import type {
 ```
 
 Add to the `handlers` array:
+
 ```ts
 export const handlers = [
   buildEventsHandler(DEFAULT_POOL),
-  http.get("/api/changelog/list", () => { /* existing */ }),
-  http.get("/api/changelog/fetch", () => { /* existing */ }),
+  http.get("/api/changelog/list", () => {
+    /* existing */
+  }),
+  http.get("/api/changelog/fetch", () => {
+    /* existing */
+  }),
   http.get("/api/events/facets/gameSystem", () => {
     const response: GameSystemFacetsResponse = {
       values: [
@@ -140,6 +149,7 @@ git commit -m "feat(game-system): add facet type, API function, and MSW default 
 ## Task 2: Write failing `MultiCombobox` tests
 
 **Files:**
+
 - Create: `src/ui/MultiCombobox/MultiCombobox.test.tsx`
 
 - [ ] **Step 1: Create the test file**
@@ -170,7 +180,12 @@ test("shows no chips when value is empty", () => {
 
 test("shows chips for selected values using option labels", () => {
   render(
-    <MultiCombobox label="Test Field" value="alpha,beta" onValueChange={() => {}} options={OPTIONS} />,
+    <MultiCombobox
+      label="Test Field"
+      value="alpha,beta"
+      onValueChange={() => {}}
+      options={OPTIONS}
+    />,
   );
   expect(screen.getByRole("button", { name: "Remove Alpha Option" })).toBeInTheDocument();
   expect(screen.getByRole("button", { name: "Remove Beta Option" })).toBeInTheDocument();
@@ -327,13 +342,7 @@ test("custom renderOptionContent is rendered inside list items", async () => {
 
 test("isLoading disables the combobox input", () => {
   render(
-    <MultiCombobox
-      label="Test Field"
-      value=""
-      onValueChange={() => {}}
-      options={[]}
-      isLoading
-    />,
+    <MultiCombobox label="Test Field" value="" onValueChange={() => {}} options={[]} isLoading />,
   );
 
   expect(screen.getByRole("combobox", { name: "Test Field" })).toBeDisabled();
@@ -365,9 +374,7 @@ test("custom renderChipIcon is rendered via the chip icon slot", () => {
   );
 
   expect(screen.getByTestId("chip-icon")).toBeInTheDocument();
-  expect(renderChipIcon).toHaveBeenCalledWith(
-    expect.objectContaining({ value: "alpha" }),
-  );
+  expect(renderChipIcon).toHaveBeenCalledWith(expect.objectContaining({ value: "alpha" }));
 });
 
 test("two mounted MultiCombobox instances have distinct input ids", () => {
@@ -404,6 +411,7 @@ git commit -m "test(multi-combobox): write failing tests for MultiCombobox primi
 ## Task 3: Implement `MultiCombobox`
 
 **Files:**
+
 - Create: `src/ui/MultiCombobox/MultiCombobox.module.css`
 - Create: `src/ui/MultiCombobox/MultiCombobox.tsx`
 
@@ -722,6 +730,7 @@ git commit -m "feat(ui): add MultiCombobox shared primitive"
 ## Task 4: Refactor `EventTypeSelect` to use `MultiCombobox`
 
 **Files:**
+
 - Modify: `src/components/EventTypeSelect/EventTypeSelect.tsx`
 - Modify: `src/components/EventTypeSelect/EventTypeSelect.module.css`
 - Modify: `src/components/EventTypeSelect/EventTypeSelect.test.tsx`
@@ -967,6 +976,7 @@ git commit -m "refactor(event-type-select): use MultiCombobox primitive"
 ## Task 5: Write failing `GameSystemSelect` tests
 
 **Files:**
+
 - Create: `src/components/GameSystemSelect/GameSystemSelect.test.tsx`
 
 - [ ] **Step 1: Create the test file**
@@ -1072,9 +1082,7 @@ test("renders null when the API returns an error", async () => {
 test("pre-filled value renders a chip before options load", () => {
   renderGameSystemSelect("Dungeons & Dragons 5E");
 
-  expect(
-    screen.getByRole("button", { name: "Remove Dungeons & Dragons 5E" }),
-  ).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Remove Dungeons & Dragons 5E" })).toBeInTheDocument();
 });
 
 test("type-to-filter narrows the options list", async () => {
@@ -1112,6 +1120,7 @@ git commit -m "test(game-system-select): write failing tests"
 ## Task 6: Implement `GameSystemSelect`
 
 **Files:**
+
 - Create: `src/components/GameSystemSelect/GameSystemSelect.module.css`
 - Create: `src/components/GameSystemSelect/GameSystemSelect.tsx`
 
@@ -1151,7 +1160,11 @@ export function GameSystemSelect({
   value,
   onValueChange,
 }: GameSystemSelectProps): React.JSX.Element | null {
-  const { data: facets, isLoading, isError } = useQuery({
+  const {
+    data: facets,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["gameSystemFacets"],
     queryFn: fetchGameSystemFacets,
     staleTime: Infinity,
@@ -1173,9 +1186,7 @@ export function GameSystemSelect({
         return (
           <>
             <span className={styles.optionName}>{option.label}</span>
-            {facet !== undefined && (
-              <span className={styles.optionCount}>{facet.count}</span>
-            )}
+            {facet !== undefined && <span className={styles.optionCount}>{facet.count}</span>}
           </>
         );
       }}
@@ -1213,6 +1224,7 @@ git commit -m "feat(game-system-select): implement GameSystemSelect with lazy fa
 ## Task 7: Wire `GameSystemSelect` into `SearchForm`
 
 **Files:**
+
 - Modify: `src/components/SearchForm/SearchForm.tsx`
 - Modify: `src/components/SearchForm/SearchForm.test.tsx`
 
