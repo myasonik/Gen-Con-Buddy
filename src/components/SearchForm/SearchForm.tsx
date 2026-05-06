@@ -8,6 +8,7 @@ import type { SearchFormValues } from "../../utils/types";
 import { Button } from "../../ui/Button/Button";
 import { Drawer } from "../../ui/Drawer/Drawer";
 import { EventTypeSelect } from "../EventTypeSelect/EventTypeSelect";
+import { GameSystemSelect } from "../GameSystemSelect/GameSystemSelect";
 import { Select } from "../../ui/Select/Select";
 import { Field, RangeField } from "../../ui/Field/Field";
 import { decodeDays, encodeDays } from "../../utils/searchParams";
@@ -369,9 +370,10 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
                         {...register("longDescription")}
                       />
                     </Field>
-                    <Field label="Game System">
-                      <input type="text" className={styles.input} {...register("gameSystem")} />
-                    </Field>
+                    <GameSystemSelect
+                      value={watch("gameSystem") ?? ""}
+                      onValueChange={(v) => setValue("gameSystem", v)}
+                    />
                     <Field label="Rules Edition">
                       <input type="text" className={styles.input} {...register("rulesEdition")} />
                     </Field>
