@@ -17,6 +17,7 @@ export interface MultiComboboxProps {
   filterOption?: (option: MultiComboboxOption, filterText: string) => boolean;
   renderChipContent?: (option: MultiComboboxOption, isOpen: boolean) => React.ReactNode;
   renderChipIcon?: (option: MultiComboboxOption) => React.ReactNode;
+  renderRemoveLabel?: (option: MultiComboboxOption) => string;
   renderOptionContent?: (option: MultiComboboxOption) => React.ReactNode;
   isLoading?: boolean;
 }
@@ -39,6 +40,7 @@ export function MultiCombobox({
   filterOption,
   renderChipContent,
   renderChipIcon,
+  renderRemoveLabel,
   renderOptionContent,
   isLoading = false,
 }: MultiComboboxProps): React.JSX.Element {
@@ -113,7 +115,7 @@ export function MultiCombobox({
                   tone="accent"
                   icon={renderChipIcon?.(option)}
                   onRemove={() => removeValue(val)}
-                  removeLabel={option.label}
+                  removeLabel={renderRemoveLabel ? renderRemoveLabel(option) : option.label}
                 >
                   {renderChipContent ? renderChipContent(option, open) : option.label}
                 </Chip>

@@ -17,10 +17,10 @@ test("shows short code chips for selected values when closed", () => {
   render(<EventTypeSelect value="RPG,BGM" onValueChange={() => {}} />);
   const rpgRemove = screen.getByRole("button", { name: "Remove RPG" });
   const bgmRemove = screen.getByRole("button", { name: "Remove BGM" });
-  expect(rpgRemove.closest("[data-testid=chip]")).toHaveTextContent("RPG");
-  expect(rpgRemove.closest("[data-testid=chip]")).not.toHaveTextContent("Roleplaying Game");
-  expect(bgmRemove.closest("[data-testid=chip]")).toHaveTextContent("BGM");
-  expect(bgmRemove.closest("[data-testid=chip]")).not.toHaveTextContent("Board Game");
+  expect(rpgRemove.closest("[data-tone]")).toHaveTextContent("RPG");
+  expect(rpgRemove.closest("[data-tone]")).not.toHaveTextContent("Roleplaying Game");
+  expect(bgmRemove.closest("[data-tone]")).toHaveTextContent("BGM");
+  expect(bgmRemove.closest("[data-tone]")).not.toHaveTextContent("Board Game");
 });
 
 test("chips expand to show full name when dropdown is open", async () => {
@@ -30,7 +30,7 @@ test("chips expand to show full name when dropdown is open", async () => {
   await user.click(screen.getByRole("combobox", { name: "Event Type" }));
 
   const rpgRemove = screen.getByRole("button", { name: "Remove RPG" });
-  const chip = rpgRemove.closest("[data-testid=chip]");
+  const chip = rpgRemove.closest("[data-tone]");
   expect(chip).toHaveTextContent("RPG");
   expect(chip).toHaveTextContent("Roleplaying Game");
 });
@@ -144,7 +144,8 @@ test("pills expand to show full name when Tab moves focus into the input", async
   await user.tab(); // → Remove RPG chip button
   await user.tab(); // → input
 
-  const chip = screen.getByTestId("chip");
+  const removeButton = screen.getByRole("button", { name: "Remove RPG" });
+  const chip = removeButton.closest("[data-tone]");
   expect(chip).toHaveTextContent("Roleplaying Game");
 });
 
@@ -160,7 +161,8 @@ test("pills expand to show full name when Tab moves focus onto a chip button", a
   await user.click(screen.getByRole("button", { name: "Previous element" }));
   await user.tab(); // → Remove RPG chip button (first tab stop in the component)
 
-  const chip = screen.getByTestId("chip");
+  const removeButton = screen.getByRole("button", { name: "Remove RPG" });
+  const chip = removeButton.closest("[data-tone]");
   expect(chip).toHaveTextContent("Roleplaying Game");
 });
 
@@ -183,8 +185,9 @@ test("dropdown closes when Tab moves focus out of the component", async () => {
 
 test("selected chip renders an icon alongside the code", () => {
   render(<EventTypeSelect value="RPG" onValueChange={() => {}} />);
-  const chip = screen.getByTestId("chip");
-  expect(chip.querySelector("svg")).not.toBeNull();
+  const removeButton = screen.getByRole("button", { name: "Remove RPG" });
+  const chip = removeButton.closest("[data-tone]");
+  expect(chip?.querySelector("svg")).not.toBeNull();
 });
 
 test("dropdown list items render an icon for each option", async () => {
