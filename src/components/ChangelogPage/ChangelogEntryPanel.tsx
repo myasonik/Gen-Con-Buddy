@@ -97,6 +97,7 @@ export function ChangelogEntryPanel({
           return { ...prev, open: serializeOpenParam(openMap) };
         },
         replace: true,
+        resetScroll: false,
       });
     });
   }
@@ -125,6 +126,7 @@ export function ChangelogEntryPanel({
           return { ...prev, open: serializeOpenParam(newOpenMap) };
         },
         replace: true,
+        resetScroll: false,
       });
     });
   }

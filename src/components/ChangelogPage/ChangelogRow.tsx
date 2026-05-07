@@ -51,6 +51,7 @@ export function ChangelogRow({
         to: ".",
         search: (prev) => ({ ...prev, open: serializeOpenParam(newMap) }),
         replace: true,
+        resetScroll: false,
       });
     });
   }
