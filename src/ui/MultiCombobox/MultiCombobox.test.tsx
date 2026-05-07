@@ -287,6 +287,21 @@ test("clicking the input group container focuses the combobox input", async () =
   expect(screen.getByRole("combobox", { name: "Test Field" })).toHaveFocus();
 });
 
+test("chip-input row wrapper is present whether or not chips are selected", () => {
+  const { rerender } = render(
+    <MultiCombobox label="Test Field" value="" onValueChange={() => {}} options={OPTIONS} />,
+  );
+  expect(screen.getByTestId("chip-input-row")).toBeInTheDocument();
+
+  rerender(
+    <MultiCombobox label="Test Field" value="alpha" onValueChange={() => {}} options={OPTIONS} />,
+  );
+  expect(screen.getByTestId("chip-input-row")).toBeInTheDocument();
+  expect(screen.getByTestId("chip-input-row")).toContainElement(
+    screen.getByRole("combobox", { name: "Test Field" }),
+  );
+});
+
 test("two mounted MultiCombobox instances have distinct input ids", () => {
   render(
     <>

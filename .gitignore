@@ -40,3 +40,4 @@ public/mockServiceWorker.js
 src/routeTree.gen.ts
 .superpowers/
 .env
+.impeccable-live.json
