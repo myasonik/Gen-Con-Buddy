@@ -75,7 +75,7 @@
   }
 
   50% {
-    transform: translateY(-6px);
+    transform: translateY(-0.375rem);
   }
 }
 
@@ -85,23 +85,23 @@
   }
 
   15% {
-    transform: rotate(-6deg) translateX(-4px);
+    transform: rotate(-6deg) translateX(-0.25rem);
   }
 
   30% {
-    transform: rotate(6deg) translateX(4px);
+    transform: rotate(6deg) translateX(0.25rem);
   }
 
   45% {
-    transform: rotate(-4deg) translateX(-3px);
+    transform: rotate(-4deg) translateX(-0.1875rem);
   }
 
   60% {
-    transform: rotate(4deg) translateX(3px);
+    transform: rotate(4deg) translateX(0.1875rem);
   }
 
   75% {
-    transform: rotate(-2deg) translateX(-1px);
+    transform: rotate(-2deg) translateX(-0.0625rem);
   }
 
   100% {

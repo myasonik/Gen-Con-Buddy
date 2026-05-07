@@ -4,19 +4,20 @@ import { ChangelogPage } from "../components/ChangelogPage/ChangelogPage";
 import { fetchChangelogEntry, fetchChangelogList } from "../utils/api";
 import { parseOpenParam } from "../components/ChangelogPage/openParam";
 
+function coerceStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.map(String);
+  }
+  if (value !== undefined && value !== null) {
+    return [String(value)];
+  }
+  return [];
+}
+
 export const Route = createFileRoute("/changelog")({
-  validateSearch: (search: Record<string, unknown>) => {
-    const raw = search.open;
-    let open: string[];
-    if (Array.isArray(raw)) {
-      open = raw.map(String);
-    } else if (raw !== undefined && raw !== null) {
-      open = [String(raw)];
-    } else {
-      open = [];
-    }
-    return { open };
-  },
+  validateSearch: (search: Record<string, unknown>) => ({
+    open: coerceStringArray(search.open),
+  }),
   loaderDeps: ({ search }) => ({ open: search.open }),
   loader: async ({ deps, context }) => {
     const { queryClient } = context;

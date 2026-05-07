@@ -206,7 +206,11 @@ test("shows 'Back to changelog' when navigated from changelog", async () => {
   const { router } = await renderRoute("/event/RPG24000042", { queryClient });
   await screen.findByRole("heading", { name: "THE EVENT" });
   await act(async () => {
-    await router.navigate({ to: "/event/$id", params: { id: "RPG24000042" }, state: { from: "changelog" } });
+    await router.navigate({
+      to: "/event/$id",
+      params: { id: "RPG24000042" },
+      state: { from: "changelog" },
+    });
   });
   await screen.findByRole("heading", { name: "THE EVENT" });
   expect(screen.getByRole("button", { name: /back to changelog/i })).toBeInTheDocument();

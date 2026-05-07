@@ -2,31 +2,31 @@
 process.env.TZ = "America/Indianapolis";
 
 vi.mock("posthog-js/react", () => ({
-  PostHogProvider: ({ children }: { children: unknown }) => children,
-  usePostHog: () => ({ capture: vi.fn() }),
+  PostHogProvider: ({ children }: { children: unknown }): unknown => children,
+  usePostHog: (): unknown => ({ capture: vi.fn() }),
 }));
 
 import "@testing-library/jest-dom";
 import { server } from "./msw/server";
 
-window.scrollTo = () => {};
+window.scrollTo = (): void => {};
 
 Object.defineProperty(window, "matchMedia", {
   writable: true,
   configurable: true,
-  value: (query: string) => ({
+  value: (query: string): unknown => ({
     matches: false,
     media: query,
     onchange: null,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    dispatchEvent: () => false,
+    addEventListener: (): void => {},
+    removeEventListener: (): void => {},
+    dispatchEvent: (): boolean => false,
   }),
 });
 
 // jsdom doesn't implement canvas — stub getContext to return null so tests that render
 // components using useColumnMinSizes don't emit jsdomError events that vitest treats as failures
-HTMLCanvasElement.prototype.getContext = () => null;
+HTMLCanvasElement.prototype.getContext = (): null => null;
 
 // Force GC at the START of each file, not afterAll. The previous file's module
 // context is released before beforeAll runs, so gc() here actually frees the

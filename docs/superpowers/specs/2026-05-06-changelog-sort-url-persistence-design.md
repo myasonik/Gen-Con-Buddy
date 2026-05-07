@@ -24,6 +24,7 @@ A new `sort` param, an array of strings. Each string encodes one group's sort st
 ```
 
 Examples:
+
 - `?sort=2.created.gameId.asc`
 - `?sort=2.created.startDateTime.desc&sort=3.deleted.title.asc`
 
@@ -40,8 +41,8 @@ Mirrors `openParam.ts`.
 ```typescript
 export type SortMap = Map<number, Map<string, { field: string; dir: "asc" | "desc" }>>;
 
-export function parseSortParam(values: string[]): SortMap
-export function serializeSortParam(map: SortMap): string[]
+export function parseSortParam(values: string[]): SortMap;
+export function serializeSortParam(map: SortMap): string[];
 ```
 
 `parseSortParam` splits each value on `.`, validates position (positive integer), group (non-empty string), field (non-empty string), and dir (`asc` | `desc`). Silently drops invalid entries. Stable output from `serializeSortParam` (sorted by position, then group).
@@ -49,11 +50,7 @@ export function serializeSortParam(map: SortMap): string[]
 ### `src/utils/sortEvents.ts`
 
 ```typescript
-export function sortEvents(
-  events: Event[],
-  field: string,
-  dir: "asc" | "desc",
-): Event[]
+export function sortEvents(events: Event[], field: string, dir: "asc" | "desc"): Event[];
 ```
 
 - Treats `typeof value === "number"` fields as numeric; everything else via `String(val).localeCompare(...)`.
@@ -80,7 +77,7 @@ validateSearch: (search: Record<string, unknown>) => {
     sort = [];
   }
   return { open, sort };
-}
+};
 ```
 
 Pass `sortParam={sort}` to `ChangelogPage` in the route component.
@@ -96,17 +93,20 @@ Accept `sortParam?: string[]` (default `[]`).
 **Reading:** `parseSortParam(sortParam).get(position)?.get(group)` → `{ field, dir } | undefined` per group.
 
 **Writing:** New `syncGroupSortToUrl(group, sort)` function parallel to `syncGroupToUrl`:
+
 - Parses current `sortParam` into a `SortMap`.
 - Sets or deletes the entry for `(position, group)`.
 - Calls `navigate({ search: (prev) => ({ ...prev, sort: serializeSortParam(newMap) }), replace: true })` inside `startTransition`.
 
 The `onSort` callback passed to `EventGroup`/`EventTable` wraps this:
+
 - When `onSort(s: string)` is called (e.g. `"gameId.asc"`), parse `field` and `dir` from the string and call `syncGroupSortToUrl(group, { field, dir })`.
 - When `onSort(undefined)` is called (user cleared sort), call `syncGroupSortToUrl(group, undefined)`.
 
 **Clearing on close:** When `syncGroupToUrl` is called with `nowOpen: false`, also call `syncGroupSortToUrl(group, undefined)`.
 
 **Sorting data:** Before rendering each `EventGroup`, sort the events array if sort state exists for that group:
+
 ```typescript
 const sort = sortGroups.get("created");
 const events = sort ? sortEvents(entry.createdEvents, sort.field, sort.dir) : entry.createdEvents;

@@ -29,7 +29,7 @@ export function ChangelogRow({
   sharedColumnState,
 }: ChangelogRowProps): React.JSX.Element {
   const openMap = parseOpenParam(openParam);
-  const [isOpen, setIsOpen] = useState(() => openMap.has(position));
+  const [isOpen, setIsOpen] = useState(() => position !== undefined && openMap.has(position));
   const { data: entry, isError } = useQuery({
     queryKey: ["changelog", "entry", summary.id],
     queryFn: () => fetchChangelogEntry(summary.id),
@@ -37,15 +37,22 @@ export function ChangelogRow({
   });
 
   function syncOpenToUrl(nowOpen: boolean): void {
-    if (!navigate) return;
+    if (!navigate || position === undefined) {
+      return;
+    }
     const newMap = new Map(openMap);
     if (nowOpen) {
-      newMap.set(position, newMap.get(position) ?? new Set());
+      newMap.set(position, newMap.get(position) ?? new Map());
     } else {
       newMap.delete(position);
     }
     startTransition(() => {
-      void navigate({ search: { open: serializeOpenParam(newMap) }, replace: true });
+      void navigate({
+        to: ".",
+        search: (prev) => ({ ...prev, open: serializeOpenParam(newMap) }),
+        replace: true,
+        resetScroll: false,
+      });
     });
   }
 
@@ -58,7 +65,9 @@ export function ChangelogRow({
         const { open } = e.currentTarget as HTMLDetailsElement;
         // jsdom spuriously fires toggle on an outer <details> when a nested <details> toggles;
         // the state hasn't actually changed in that case, so guard against it.
-        if (open === isOpen) return;
+        if (open === isOpen) {
+          return;
+        }
         setIsOpen(open);
         syncOpenToUrl(open);
         if (open) {

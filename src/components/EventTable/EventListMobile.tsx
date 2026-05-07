@@ -196,7 +196,12 @@ export function EventListMobile({
 
         return (
           <li key={event.id} className={styles.item}>
-            <Link to="/event/$id" params={{ id: a.gameId }} state={linkState} className={styles.row}>
+            <Link
+              to="/event/$id"
+              params={{ id: a.gameId }}
+              state={linkState}
+              className={styles.row}
+            >
               {isVisible("title") && <span className={styles.title}>{a.title}</span>}
               {showMeta && (
                 <span className={styles.meta}>

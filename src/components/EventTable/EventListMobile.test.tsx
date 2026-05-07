@@ -16,12 +16,17 @@ import type { DayFormat, TypeDisplay } from "./types";
 async function renderList(
   events: Event[] = [makeEvent()],
   visibility?: Partial<Record<string, boolean>>,
-  typeDisplayProps: { typeDisplay?: TypeDisplay; showTypeIcon?: boolean } = {},
-  dayFormat?: DayFormat,
+  opts: { typeDisplay?: TypeDisplay; showTypeIcon?: boolean; dayFormat?: DayFormat } = {},
 ): Promise<ReturnType<typeof render>> {
+  const { dayFormat, ...typeDisplayProps } = opts;
   const rootRoute = createRootRoute({
     component: () => (
-      <EventListMobile events={events} visibility={visibility} dayFormat={dayFormat} {...typeDisplayProps} />
+      <EventListMobile
+        events={events}
+        visibility={visibility}
+        dayFormat={dayFormat}
+        {...typeDisplayProps}
+      />
     ),
   });
   const eventRoute = createRoute({
@@ -389,16 +394,16 @@ test("renders event type code when eventType is the full API string format", asy
 
 test("shows day abbreviation in default day mode", async () => {
   // factory startDateTime 2024-08-01T10:00:00Z = Thu in Indianapolis
-  await renderList([makeEvent()], undefined, {}, "day");
+  await renderList([makeEvent()], undefined, { dayFormat: "day" });
   expect(screen.getByText(/Thu/)).toBeInTheDocument();
 });
 
 test("shows compact numeric date M/d in numeric mode", async () => {
-  await renderList([makeEvent()], undefined, {}, "numeric");
+  await renderList([makeEvent()], undefined, { dayFormat: "numeric" });
   expect(screen.getByText(/8\/1/)).toBeInTheDocument();
 });
 
 test("shows compact long format EEE M/d in long mode", async () => {
-  await renderList([makeEvent()], undefined, {}, "long");
+  await renderList([makeEvent()], undefined, { dayFormat: "long" });
   expect(screen.getByText(/Thu 8\/1/)).toBeInTheDocument();
 });

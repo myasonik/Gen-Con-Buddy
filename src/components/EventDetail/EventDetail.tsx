@@ -46,7 +46,7 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
       cost: a.cost,
       tickets_available: a.ticketsAvailable,
     });
-  }, [event?.attributes?.gameId, posthog]);
+  }, [event, event?.attributes, posthog]);
 
   if (isLoading) {
     return <EmptyState variant="loading" text="LOADING QUEST..." />;
@@ -178,7 +178,9 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
         <section className={styles.section}>
           <h2 className={styles.sectionHeading}>LOGISTICS</h2>
           <DescriptionList>
-            <DescriptionItem term="Day">{formatDay(new Date(a.startDateTime), dayFormat)}</DescriptionItem>
+            <DescriptionItem term="Day">
+              {formatDay(new Date(a.startDateTime), dayFormat)}
+            </DescriptionItem>
             <DescriptionItem term="Start">
               {format(new Date(a.startDateTime), "HH:mm")}
             </DescriptionItem>

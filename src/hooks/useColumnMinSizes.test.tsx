@@ -24,7 +24,7 @@ function TestTable({
   rows: { colId: string; content: React.ReactNode }[][];
 }): React.ReactElement {
   const tableRef = useRef<HTMLTableElement>(null);
-  const minSizes = useColumnMinSizes(tableRef, events, {});
+  const minSizes = useColumnMinSizes(tableRef, events, { visibility: {} });
   return (
     <>
       <table ref={tableRef}>
@@ -104,7 +104,7 @@ test("returns {} when tableRef is null (not yet mounted)", () => {
   // useRef inside a component with no DOM element attached keeps current = null
   function NoTable(): React.ReactElement {
     const ref = useRef<HTMLTableElement>(null);
-    const minSizes = useColumnMinSizes(ref, [makeEvent()], {});
+    const minSizes = useColumnMinSizes(ref, [makeEvent()], { visibility: {} });
     return <div data-testid="result">{JSON.stringify(minSizes)}</div>;
   }
   render(<NoTable />);
@@ -128,7 +128,7 @@ test("remeasures when visibility changes", async () => {
     const [showExtra, setShowExtra] = useState(false);
     const tableRef = useRef<HTMLTableElement>(null);
     const visibility: Record<string, boolean> = showExtra ? { extra: true } : {};
-    const minSizes = useColumnMinSizes(tableRef, events, visibility);
+    const minSizes = useColumnMinSizes(tableRef, events, { visibility });
     return (
       <>
         <table ref={tableRef}>
@@ -168,7 +168,7 @@ test("remeasures when events change", async () => {
   function Rerender(): React.ReactElement {
     const [events, setEvents] = useState(events1);
     const tableRef = useRef<HTMLTableElement>(null);
-    const minSizes = useColumnMinSizes(tableRef, events, {});
+    const minSizes = useColumnMinSizes(tableRef, events, { visibility: {} });
     return (
       <>
         <table ref={tableRef}>
@@ -203,7 +203,7 @@ test("remeasures when typeDisplay changes", async () => {
   function TypeDisplayRerender(): React.ReactElement {
     const [typeDisplay, setTypeDisplay] = useState<"code" | "name" | "both">("both");
     const tableRef = useRef<HTMLTableElement>(null);
-    const minSizes = useColumnMinSizes(tableRef, events, {}, typeDisplay);
+    const minSizes = useColumnMinSizes(tableRef, events, { visibility: {}, typeDisplay });
     return (
       <>
         <table ref={tableRef}>
@@ -243,7 +243,7 @@ test("remeasures when dayFormat changes", async () => {
   function DayFormatRerender(): React.ReactElement {
     const [dayFormat, setDayFormat] = useState<"day" | "numeric" | "long">("day");
     const tableRef = useRef<HTMLTableElement>(null);
-    const minSizes = useColumnMinSizes(tableRef, events, {}, undefined, undefined, dayFormat);
+    const minSizes = useColumnMinSizes(tableRef, events, { visibility: {}, dayFormat });
     const dayTextMap: Record<typeof dayFormat, string> = {
       numeric: "08/01/24",
       long: "Thu, Aug 01, 2024",
