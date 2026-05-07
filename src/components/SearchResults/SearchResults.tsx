@@ -1,16 +1,14 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEvents } from "../../utils/api";
+import { parseSortString } from "../../utils/parseSortString";
 import { Pagination } from "../Pagination/Pagination";
 import type { SearchParams } from "../../utils/types";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { EventTable } from "../EventTable/EventTable";
 import { EventListMobile } from "../EventTable/EventListMobile";
 import { ColumnControlsPanel } from "../EventTable/ColumnControlsPanel";
-import { useColumnVisibility } from "../../hooks/useColumnVisibility";
-import { useColumnSizing } from "../../hooks/useColumnSizing";
-import { useTypeDisplay } from "../../hooks/useTypeDisplay";
-import { useDayFormat } from "../../hooks/useDayFormat";
+import { useSharedColumnState } from "../../hooks/useSharedColumnState";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import styles from "./SearchResults.module.css";
 
@@ -28,46 +26,15 @@ export function SearchResults({
   const page = searchParams.page ?? 1;
   const limit = searchParams.limit ?? 100;
   const isMobile = useMediaQuery("(width <= 60rem)");
-  const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility();
-  const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
-  const {
-    typeDisplay,
-    setTypeDisplay,
-    showTypeIcon,
-    setShowTypeIcon,
-    reset: resetTypeDisplay,
-  } = useTypeDisplay();
-  const { dayFormat, setDayFormat, reset: resetDayFormat } = useDayFormat();
-  const sharedColumnState = {
-    visibility,
-    toggleVisibility,
-    resetVisibility,
-    sizing,
-    setSizing,
-    resetSizing,
-    typeDisplay,
-    setTypeDisplay,
-    showTypeIcon,
-    setShowTypeIcon,
-    resetTypeDisplay,
-    dayFormat,
-    setDayFormat,
-    resetDayFormat,
-  };
+  const sharedColumnState = useSharedColumnState();
   const { data, isLoading, isError } = useQuery({
     queryKey: ["events", searchParams],
     queryFn: () => fetchEvents(searchParams),
   });
 
-  let activeSortField: string | undefined = undefined;
-  let activeSortDir: "asc" | "desc" | undefined = undefined;
-  if (searchParams.sort) {
-    const [field, dir] = searchParams.sort.split(".");
-    if (field && (dir === "asc" || dir === "desc")) {
-      activeSortField = field;
-      activeSortDir = dir;
-    }
-  }
+  const activeSortState = searchParams.sort ? parseSortString(searchParams.sort) : null;
+  const activeSortField = activeSortState?.field;
+  const activeSortDir = activeSortState?.dir;
 
   return (
     <section>
@@ -114,9 +81,9 @@ export function SearchResults({
               <EventListMobile
                 events={data.data}
                 visibility={sharedColumnState.visibility}
-                typeDisplay={typeDisplay}
-                showTypeIcon={showTypeIcon}
-                dayFormat={dayFormat}
+                typeDisplay={sharedColumnState.typeDisplay}
+                showTypeIcon={sharedColumnState.showTypeIcon}
+                dayFormat={sharedColumnState.dayFormat}
               />
             </div>
           )}

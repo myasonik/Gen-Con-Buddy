@@ -1,7 +1,4 @@
-export interface SortState {
-  field: string;
-  dir: "asc" | "desc";
-}
+import type { SortState } from "../../utils/types";
 
 export type OpenMap = Map<number, Map<string, SortState | undefined>>;
 

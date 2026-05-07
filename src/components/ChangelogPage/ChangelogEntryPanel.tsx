@@ -5,9 +5,10 @@ import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { EventListMobile } from "../EventTable/EventListMobile";
 import { EventTable } from "../EventTable/EventTable";
 import type { SharedColumnState } from "../EventTable/types";
-import type { ChangelogEntry, Event } from "../../utils/types";
+import type { ChangelogEntry, Event, SortState } from "../../utils/types";
+import { parseSortString } from "../../utils/parseSortString";
 import { Chip } from "../../ui/Chip/Chip";
-import { parseOpenParam, serializeOpenParam, type SortState } from "./openParam";
+import { parseOpenParam, serializeOpenParam } from "./openParam";
 import { sortEvents } from "../../utils/sortEvents";
 import styles from "./ChangelogEntryPanel.module.css";
 
@@ -138,9 +139,9 @@ export function ChangelogEntryPanel({
       if (s === undefined) {
         syncGroupSortToUrl(group, undefined);
       } else {
-        const [field, dir] = s.split(".");
-        if (field && (dir === "asc" || dir === "desc")) {
-          syncGroupSortToUrl(group, { field, dir });
+        const parsed = parseSortString(s);
+        if (parsed) {
+          syncGroupSortToUrl(group, parsed);
         }
       }
     };

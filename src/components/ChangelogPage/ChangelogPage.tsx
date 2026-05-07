@@ -2,10 +2,7 @@ import React, { useEffect } from "react";
 import { usePostHog } from "posthog-js/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { NavigateFn } from "@tanstack/react-router";
-import { useColumnSizing } from "../../hooks/useColumnSizing";
-import { useColumnVisibility } from "../../hooks/useColumnVisibility";
-import { useTypeDisplay } from "../../hooks/useTypeDisplay";
-import { useDayFormat } from "../../hooks/useDayFormat";
+import { useSharedColumnState } from "../../hooks/useSharedColumnState";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { ColumnControlsPanel } from "../EventTable/ColumnControlsPanel";
 import { fetchChangelogEntry, fetchChangelogList } from "../../utils/api";
@@ -20,32 +17,7 @@ interface ChangelogPageProps {
 export function ChangelogPage({ openParam = [], navigate }: ChangelogPageProps): React.JSX.Element {
   const posthog = usePostHog();
   const queryClient = useQueryClient();
-  const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility();
-  const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
-  const {
-    typeDisplay,
-    setTypeDisplay,
-    showTypeIcon,
-    setShowTypeIcon,
-    reset: resetTypeDisplay,
-  } = useTypeDisplay();
-  const { dayFormat, setDayFormat, reset: resetDayFormat } = useDayFormat();
-  const sharedColumnState = {
-    visibility,
-    toggleVisibility,
-    resetVisibility,
-    sizing,
-    setSizing,
-    resetSizing,
-    typeDisplay,
-    setTypeDisplay,
-    showTypeIcon,
-    setShowTypeIcon,
-    resetTypeDisplay,
-    dayFormat,
-    setDayFormat,
-    resetDayFormat,
-  };
+  const sharedColumnState = useSharedColumnState();
   const {
     data: summaries = [],
     isLoading,

@@ -14,5 +14,5 @@
 
 - `EventTable` cannot be used in isolation without a caller providing `sharedColumnState`. There is no standalone or self-contained mode.
 - Cross-panel state sharing (between `EventTable` and `ColumnControlsPanel`) is straightforward: both receive the same object.
-- Both current use sites (`SearchResults` and `ChangelogPage`) compose the state inline using the same three hooks rather than a single dedicated `useSharedColumnState` hook.
+- Both current use sites (`SearchResults` and `ChangelogPage`) compose the state via `useSharedColumnState` (`src/hooks/useSharedColumnState.ts`), which encapsulates the four-hook composition pattern.
 - Any future use site of `EventTable` must supply a `SharedColumnState` object.
