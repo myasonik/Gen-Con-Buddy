@@ -109,7 +109,7 @@ export function MultiCombobox({
             inputRef.current?.focus();
           }}
         >
-          <div className={styles.inputGroupInner}>
+          <div className={styles.inputGroupInner} data-testid="chip-input-row">
             {selectedValues.map((val) => {
               const option = getOption(val);
               return (
@@ -117,6 +117,7 @@ export function MultiCombobox({
                   key={val}
                   className={styles.chip}
                   tone="accent"
+                  size="sm"
                   icon={renderChipIcon?.(option)}
                   onRemove={() => removeValue(val)}
                   removeLabel={renderRemoveLabel ? renderRemoveLabel(option) : option.label}
