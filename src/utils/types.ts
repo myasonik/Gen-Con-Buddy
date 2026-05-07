@@ -185,3 +185,8 @@ export interface GameSystemFacetsResponse {
   error?: string;
   values?: GameSystemFacet[];
 }
+
+export interface SortState {
+  field: string;
+  dir: "asc" | "desc";
+}
