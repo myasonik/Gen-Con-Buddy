@@ -11,29 +11,32 @@ export function parseOpenParam(values: string[]): OpenMap {
     const parts = value.split(".");
     if (parts.length === 1 || parts.length === 2 || parts.length === 4) {
       const position = parseInt(parts[0], 10);
-      if (parts.length === 1 && !isNaN(position) && position > 0) {
-        if (!result.has(position)) {
-          result.set(position, new Map());
-        }
-      }
-      const [, group, field, dir] = parts;
-      if (parts.length >= 2 && !isNaN(position) && position > 0 && group) {
-        let sortState: SortState | undefined = undefined;
-        let valid = true;
-        if (parts.length === 4) {
-          if (field && (dir === "asc" || dir === "desc")) {
-            sortState = { field, dir };
-          } else {
-            valid = false;
+      if (!isNaN(position) && position > 0) {
+        if (parts.length === 1) {
+          if (!result.has(position)) {
+            result.set(position, new Map());
           }
-        }
-        if (valid) {
-          let groupMap = result.get(position);
-          if (!groupMap) {
-            groupMap = new Map();
-            result.set(position, groupMap);
+        } else {
+          const [, group, field, dir] = parts;
+          if (group) {
+            let sortState: SortState | undefined = undefined;
+            let valid = true;
+            if (parts.length === 4) {
+              if (field && (dir === "asc" || dir === "desc")) {
+                sortState = { field, dir };
+              } else {
+                valid = false;
+              }
+            }
+            if (valid) {
+              let groupMap = result.get(position);
+              if (!groupMap) {
+                groupMap = new Map();
+                result.set(position, groupMap);
+              }
+              groupMap.set(group, sortState);
+            }
           }
-          groupMap.set(group, sortState);
         }
       }
     }

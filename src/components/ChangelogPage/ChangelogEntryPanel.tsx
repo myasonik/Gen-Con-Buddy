@@ -80,7 +80,12 @@ export function ChangelogEntryPanel({
       void navigate({
         to: ".",
         search: (prev) => {
-          const openMap = new Map(parseOpenParam(openParam));
+          const openMap = new Map(parseOpenParam(prev.open ?? []));
+          // If the entry's position is absent from the map, the outer row was just closed;
+          // don't write back to the URL.
+          if (!openMap.has(position)) {
+            return prev;
+          }
           const groupMap = new Map(openMap.get(position) ?? []);
           groupMap.set(group, sort);
           openMap.set(position, groupMap);
@@ -122,9 +127,7 @@ export function ChangelogEntryPanel({
       if (s === undefined) {
         syncGroupSortToUrl(group, undefined);
       } else {
-        const dotIdx = s.lastIndexOf(".");
-        const field = s.slice(0, dotIdx);
-        const dir = s.slice(dotIdx + 1);
+        const [field, dir] = s.split(".");
         if (field && (dir === "asc" || dir === "desc")) {
           syncGroupSortToUrl(group, { field, dir });
         }
