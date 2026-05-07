@@ -1,4 +1,4 @@
-import React, { startTransition } from "react";
+import React, { startTransition, useMemo } from "react";
 import type { NavigateFn } from "@tanstack/react-router";
 import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
@@ -69,8 +69,13 @@ export function ChangelogEntryPanel({
   position,
   navigate,
 }: ChangelogEntryPanelProps): React.JSX.Element {
-  const openForPosition: Map<string, SortState | undefined> =
-    position !== undefined ? (parseOpenParam(openParam).get(position) ?? new Map()) : new Map();
+  const openForPosition = useMemo(
+    () =>
+      position !== undefined
+        ? (parseOpenParam(openParam).get(position) ?? new Map<string, SortState | undefined>())
+        : new Map<string, SortState | undefined>(),
+    [openParam, position],
+  );
 
   function syncGroupSortToUrl(group: string, sort: SortState | undefined): void {
     if (!navigate || position === undefined) {
@@ -100,29 +105,33 @@ export function ChangelogEntryPanel({
     if (!navigate || position === undefined) {
       return;
     }
-    const newOpenMap = new Map(parseOpenParam(openParam));
-    if (!newOpenMap.has(position)) {
-      return;
-    }
-    const groups = new Map(newOpenMap.get(position) ?? []);
-    if (nowOpen) {
-      if (!groups.has(group)) {
-        groups.set(group, undefined);
-      }
-    } else {
-      groups.delete(group);
-    }
-    newOpenMap.set(position, groups);
     startTransition(() => {
       void navigate({
         to: ".",
-        search: (prev) => ({ ...prev, open: serializeOpenParam(newOpenMap) }),
+        search: (prev) => {
+          const newOpenMap = new Map(parseOpenParam(prev.open ?? []));
+          if (!newOpenMap.has(position)) {
+            return prev;
+          }
+          const groups = new Map(newOpenMap.get(position) ?? []);
+          if (nowOpen) {
+            if (!groups.has(group)) {
+              groups.set(group, undefined);
+            }
+          } else {
+            groups.delete(group);
+          }
+          newOpenMap.set(position, groups);
+          return { ...prev, open: serializeOpenParam(newOpenMap) };
+        },
         replace: true,
       });
     });
   }
 
   function makeOnSort(group: string): (s: string | undefined) => void {
+    // EventTable only calls onSort with strings it constructs as `${field}.${dir}`;
+    // malformed values are silently ignored.
     return (s) => {
       if (s === undefined) {
         syncGroupSortToUrl(group, undefined);
