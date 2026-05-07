@@ -11,6 +11,7 @@ import {
 } from "@tanstack/react-table";
 import { useSortState } from "../../hooks/useSortState";
 import { useColumnMinSizes } from "../../hooks/useColumnMinSizes";
+import { parseSortString } from "../../utils/parseSortString";
 import { ColumnControlsPanel } from "./ColumnControlsPanel";
 import { ColumnActionsPopover } from "./ColumnActionsPopover";
 import { ColumnResizeDialog } from "./ColumnResizeDialog";
@@ -152,12 +153,16 @@ export function EventTable({
         announce("Sort cleared");
         posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
       } else {
-        const [field, dir] = s.split(".");
-        if (field && (dir === "asc" || dir === "desc")) {
-          const colId = COL_ID_BY_SORT_FIELD.get(field) ?? field;
-          setInternalSorting([{ id: colId, desc: dir === "desc" }]);
-          announce(`Sorted by ${label}, ${dir === "asc" ? "ascending" : "descending"}`);
-          posthog.capture("results_sorted", { sort_field: field, sort_direction: dir, label });
+        const parsed = parseSortString(s);
+        if (parsed) {
+          const colId = COL_ID_BY_SORT_FIELD.get(parsed.field) ?? parsed.field;
+          setInternalSorting([{ id: colId, desc: parsed.dir === "desc" }]);
+          announce(`Sorted by ${label}, ${parsed.dir === "asc" ? "ascending" : "descending"}`);
+          posthog.capture("results_sorted", {
+            sort_field: parsed.field,
+            sort_direction: parsed.dir,
+            label,
+          });
         }
       }
     }

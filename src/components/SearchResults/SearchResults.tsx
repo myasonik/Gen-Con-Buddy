@@ -1,6 +1,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEvents } from "../../utils/api";
+import { parseSortString } from "../../utils/parseSortString";
 import { Pagination } from "../Pagination/Pagination";
 import type { SearchParams } from "../../utils/types";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
@@ -59,15 +60,9 @@ export function SearchResults({
     queryFn: () => fetchEvents(searchParams),
   });
 
-  let activeSortField: string | undefined = undefined;
-  let activeSortDir: "asc" | "desc" | undefined = undefined;
-  if (searchParams.sort) {
-    const [field, dir] = searchParams.sort.split(".");
-    if (field && (dir === "asc" || dir === "desc")) {
-      activeSortField = field;
-      activeSortDir = dir;
-    }
-  }
+  const activeSortState = searchParams.sort ? parseSortString(searchParams.sort) : null;
+  const activeSortField = activeSortState?.field;
+  const activeSortDir = activeSortState?.dir;
 
   return (
     <section>
