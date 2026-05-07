@@ -14,15 +14,10 @@ import { ChangelogRow } from "./ChangelogRow";
 
 interface ChangelogPageProps {
   openParam?: string[];
-  sortParam?: string[];
   navigate?: NavigateFn;
 }
 
-export function ChangelogPage({
-  openParam = [],
-  sortParam = [],
-  navigate,
-}: ChangelogPageProps): React.JSX.Element {
+export function ChangelogPage({ openParam = [], navigate }: ChangelogPageProps): React.JSX.Element {
   const posthog = usePostHog();
   const queryClient = useQueryClient();
   const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility();
@@ -100,7 +95,6 @@ export function ChangelogPage({
                 key={summary.id}
                 position={i + 1}
                 openParam={openParam}
-                sortParam={sortParam}
                 navigate={navigate}
                 summary={summary}
                 onOpen={() => handleOpen(i)}

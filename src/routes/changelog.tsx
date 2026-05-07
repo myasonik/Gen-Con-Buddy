@@ -17,7 +17,6 @@ function coerceStringArray(value: unknown): string[] {
 export const Route = createFileRoute("/changelog")({
   validateSearch: (search: Record<string, unknown>) => ({
     open: coerceStringArray(search.open),
-    sort: coerceStringArray(search.sort),
   }),
   loaderDeps: ({ search }) => ({ open: search.open }),
   loader: async ({ deps, context }) => {
@@ -43,7 +42,7 @@ export const Route = createFileRoute("/changelog")({
 });
 
 function ChangelogPageRoute(): React.JSX.Element {
-  const { open, sort } = Route.useSearch();
+  const { open } = Route.useSearch();
   const navigate = Route.useNavigate();
-  return <ChangelogPage openParam={open} sortParam={sort} navigate={navigate} />;
+  return <ChangelogPage openParam={open} navigate={navigate} />;
 }

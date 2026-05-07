@@ -487,9 +487,11 @@ test("closing an entry removes all sub-group state from the URL", async () => {
   expect(openValues).toHaveLength(0);
 });
 
-test("validateSearch round-trips sort param", async () => {
+test("validateSearch round-trips sort embedded in open param", async () => {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  const history = createMemoryHistory({ initialEntries: ["/changelog?sort=1.created.title.asc"] });
+  const history = createMemoryHistory({
+    initialEntries: ["/changelog?open=1.created.title.asc"],
+  });
   const router = createRouter({
     routeTree,
     history,
@@ -498,8 +500,8 @@ test("validateSearch round-trips sort param", async () => {
     context: { queryClient: client },
   });
   await router.load();
-  const search = router.state.location.search as { sort?: string[] };
-  expect(search.sort).toContain("1.created.title.asc");
+  const search = router.state.location.search as { open?: string[] };
+  expect(search.open).toContain("1.created.title.asc");
 });
 
 test("clicking a column header in a changelog group writes sort to URL", async () => {
@@ -536,8 +538,8 @@ test("clicking a column header in a changelog group writes sort to URL", async (
     throw new Error("sort button not found in title header");
   }
   await user.click(sortButton);
-  const sortValues = new URLSearchParams(router.state.location.search).getAll("sort");
-  expect(sortValues.some((v) => v.startsWith("1.created.title."))).toBe(true);
+  const openValues = new URLSearchParams(router.state.location.search).getAll("open");
+  expect(openValues.some((v) => v.startsWith("1.created.title."))).toBe(true);
 });
 
 test("sort param pre-sorts created events on mount", async () => {
@@ -566,7 +568,7 @@ test("sort param pre-sorts created events on mount", async () => {
     ),
   );
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  await renderRoute("/changelog?open=1.created&sort=1.created.title.asc", { queryClient: client });
+  await renderRoute("/changelog?open=1.created.title.asc", { queryClient: client });
   const rows = await screen.findAllByRole("row");
   const titles = rows
     .slice(1)
@@ -602,7 +604,7 @@ test("closing a sub-group clears its sort from the URL", async () => {
     ),
   );
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  const { router } = await renderRoute("/changelog?open=1.created&sort=1.created.title.asc", {
+  const { router } = await renderRoute("/changelog?open=1.created.title.asc", {
     queryClient: client,
   });
   const user = userEvent.setup();
@@ -614,8 +616,8 @@ test("closing a sub-group clears its sort from the URL", async () => {
       ?.dispatchEvent(new Event("transitionend"));
     openDetails?.dispatchEvent(new Event("toggle"));
   });
-  const sortValues = new URLSearchParams(router.state.location.search).getAll("sort");
-  expect(sortValues).not.toContain("1.created.title.asc");
+  const openValues = new URLSearchParams(router.state.location.search).getAll("open");
+  expect(openValues).not.toContain("1.created.title.asc");
 });
 
 test("event links in changelog carry from:changelog navigation state", async () => {

@@ -33,7 +33,7 @@ function AppShell(): React.JSX.Element {
           <Link to="/" activeOptions={{ exact: true }}>
             Search
           </Link>
-          <Link to="/changelog" search={{ open: [], sort: [] }}>
+          <Link to="/changelog" search={{ open: [] }}>
             Changelog
           </Link>
         </nav>

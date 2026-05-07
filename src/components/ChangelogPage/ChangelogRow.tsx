@@ -14,7 +14,6 @@ import styles from "./ChangelogRow.module.css";
 interface ChangelogRowProps {
   position?: number;
   openParam?: string[];
-  sortParam?: string[];
   navigate?: NavigateFn;
   summary: ChangelogSummary;
   onOpen: () => void;
@@ -24,7 +23,6 @@ interface ChangelogRowProps {
 export function ChangelogRow({
   position,
   openParam = [],
-  sortParam = [],
   navigate,
   summary,
   onOpen,
@@ -44,7 +42,7 @@ export function ChangelogRow({
     }
     const newMap = new Map(openMap);
     if (nowOpen) {
-      newMap.set(position, newMap.get(position) ?? new Set());
+      newMap.set(position, newMap.get(position) ?? new Map());
     } else {
       newMap.delete(position);
     }
@@ -92,7 +90,6 @@ export function ChangelogRow({
         entry={isError ? "error" : entry}
         sharedColumnState={sharedColumnState}
         openParam={openParam}
-        sortParam={sortParam}
         position={position}
         navigate={navigate}
       />

@@ -7,8 +7,7 @@ import { EventTable } from "../EventTable/EventTable";
 import type { SharedColumnState } from "../EventTable/types";
 import type { ChangelogEntry, Event } from "../../utils/types";
 import { Chip } from "../../ui/Chip/Chip";
-import { parseOpenParam, serializeOpenParam } from "./openParam";
-import { parseSortParam, serializeSortParam, type SortState } from "./sortParam";
+import { parseOpenParam, serializeOpenParam, type SortState } from "./openParam";
 import { sortEvents } from "../../utils/sortEvents";
 import styles from "./ChangelogEntryPanel.module.css";
 
@@ -18,7 +17,6 @@ interface ChangelogEntryPanelProps {
   entry: EntryValue;
   sharedColumnState: SharedColumnState;
   openParam?: string[];
-  sortParam?: string[];
   position?: number;
   navigate?: NavigateFn;
 }
@@ -68,15 +66,11 @@ export function ChangelogEntryPanel({
   entry,
   sharedColumnState,
   openParam = [],
-  sortParam = [],
   position,
   navigate,
 }: ChangelogEntryPanelProps): React.JSX.Element {
-  const openGroups: Set<string> =
-    position !== undefined ? (parseOpenParam(openParam).get(position) ?? new Set()) : new Set();
-
-  const sortForPosition: Map<string, SortState> =
-    position !== undefined ? (parseSortParam(sortParam).get(position) ?? new Map()) : new Map();
+  const openForPosition: Map<string, SortState | undefined> =
+    position !== undefined ? (parseOpenParam(openParam).get(position) ?? new Map()) : new Map();
 
   function syncGroupSortToUrl(group: string, sort: SortState | undefined): void {
     if (!navigate || position === undefined) {
@@ -86,19 +80,11 @@ export function ChangelogEntryPanel({
       void navigate({
         to: ".",
         search: (prev) => {
-          const sortMap = new Map(parseSortParam(sortParam));
-          const groupMap = new Map(sortMap.get(position) ?? []);
-          if (sort) {
-            groupMap.set(group, sort);
-          } else {
-            groupMap.delete(group);
-          }
-          if (groupMap.size === 0) {
-            sortMap.delete(position);
-          } else {
-            sortMap.set(position, groupMap);
-          }
-          return { ...prev, sort: serializeSortParam(sortMap) };
+          const openMap = new Map(parseOpenParam(openParam));
+          const groupMap = new Map(openMap.get(position) ?? []);
+          groupMap.set(group, sort);
+          openMap.set(position, groupMap);
+          return { ...prev, open: serializeOpenParam(openMap) };
         },
         replace: true,
       });
@@ -113,9 +99,11 @@ export function ChangelogEntryPanel({
     if (!newOpenMap.has(position)) {
       return;
     }
-    const groups = new Set(newOpenMap.get(position) ?? []);
+    const groups = new Map(newOpenMap.get(position) ?? []);
     if (nowOpen) {
-      groups.add(group);
+      if (!groups.has(group)) {
+        groups.set(group, undefined);
+      }
     } else {
       groups.delete(group);
     }
@@ -123,24 +111,7 @@ export function ChangelogEntryPanel({
     startTransition(() => {
       void navigate({
         to: ".",
-        search: (prev) => {
-          if (!nowOpen) {
-            const sortMap = new Map(parseSortParam(sortParam));
-            const groupMap = new Map(sortMap.get(position) ?? []);
-            groupMap.delete(group);
-            if (groupMap.size === 0) {
-              sortMap.delete(position);
-            } else {
-              sortMap.set(position, groupMap);
-            }
-            return {
-              ...prev,
-              open: serializeOpenParam(newOpenMap),
-              sort: serializeSortParam(sortMap),
-            };
-          }
-          return { ...prev, open: serializeOpenParam(newOpenMap) };
-        },
+        search: (prev) => ({ ...prev, open: serializeOpenParam(newOpenMap) }),
         replace: true,
       });
     });
@@ -179,9 +150,9 @@ export function ChangelogEntryPanel({
     );
   }
 
-  const createdSort = sortForPosition.get("created");
-  const updatedSort = sortForPosition.get("updated");
-  const deletedSort = sortForPosition.get("deleted");
+  const createdSort = openForPosition.get("created");
+  const updatedSort = openForPosition.get("updated");
+  const deletedSort = openForPosition.get("deleted");
 
   return (
     <div className={styles.panel}>
@@ -189,7 +160,7 @@ export function ChangelogEntryPanel({
         <AnimatedDetails
           className={styles.group}
           summaryClassName={styles.groupSummary}
-          open={openGroups.has("created")}
+          open={openForPosition.has("created")}
           onToggle={(e) => syncGroupToUrl("created", (e.currentTarget as HTMLDetailsElement).open)}
           summary={
             <span>
@@ -217,7 +188,7 @@ export function ChangelogEntryPanel({
         <AnimatedDetails
           className={styles.group}
           summaryClassName={styles.groupSummary}
-          open={openGroups.has("updated")}
+          open={openForPosition.has("updated")}
           onToggle={(e) => syncGroupToUrl("updated", (e.currentTarget as HTMLDetailsElement).open)}
           summary={
             <span>
@@ -245,7 +216,7 @@ export function ChangelogEntryPanel({
         <AnimatedDetails
           className={styles.group}
           summaryClassName={styles.groupSummary}
-          open={openGroups.has("deleted")}
+          open={openForPosition.has("deleted")}
           onToggle={(e) => syncGroupToUrl("deleted", (e.currentTarget as HTMLDetailsElement).open)}
           summary={
             <span>
