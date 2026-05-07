@@ -4,6 +4,7 @@ import type {
   EventSearchResponse,
   ListChangelogsResponse,
   FetchChangelogResponse,
+  GameSystemFacetsResponse,
 } from "../../utils/types";
 import { makeEvent, makeChangelogSummary, makeChangelogEntry } from "./factory";
 
@@ -57,6 +58,16 @@ export const handlers = [
   http.get("/api/changelog/fetch", () => {
     const response: FetchChangelogResponse = {
       entry: makeChangelogEntry({ id: "entry-1" }),
+    };
+    return HttpResponse.json(response);
+  }),
+  http.get("/api/events/facets/gameSystem", () => {
+    const response: GameSystemFacetsResponse = {
+      values: [
+        { value: "Dungeons & Dragons 5E", count: 142 },
+        { value: "Pathfinder 2E", count: 87 },
+        { value: "Call of Cthulhu", count: 45 },
+      ],
     };
     return HttpResponse.json(response);
   }),

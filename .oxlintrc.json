@@ -57,6 +57,7 @@
     "vitest/prefer-to-be-falsy": "off",
     "no-underscore-dangle": "off",
     "max-statements": "off",
+    "max-params": ["error", { "max": 6 }],
     "sort-imports": "off",
     "typescript/consistent-type-imports": "error"
   },

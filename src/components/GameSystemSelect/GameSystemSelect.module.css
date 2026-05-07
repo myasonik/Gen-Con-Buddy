@@ -1,0 +1,9 @@
+.optionName {
+  composes: itemName from "../../ui/MultiCombobox/MultiCombobox.module.css";
+}
+
+.optionCount {
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+  flex-shrink: 0;
+}

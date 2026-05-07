@@ -91,6 +91,19 @@ describe("Chip icon", () => {
   });
 });
 
+describe("Chip className", () => {
+  it("merges passed className with internal chip class", () => {
+    const { container } = render(
+      <Chip tone="accent" className="extra-class">
+        BGM
+      </Chip>,
+    );
+    const chip = container.firstChild as HTMLElement;
+    expect(chip.className).toContain("extra-class");
+    expect(chip.className.split(" ").length).toBeGreaterThan(1);
+  });
+});
+
 describe("Chip size", () => {
   it("defaults to size md", () => {
     const { container } = render(<Chip tone="neutral">BGM</Chip>);

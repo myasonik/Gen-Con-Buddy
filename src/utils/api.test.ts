@@ -1,8 +1,13 @@
 import { expect, test } from "vitest";
 import { http, HttpResponse } from "msw";
 import { server } from "../test/msw/server";
-import { fetchEvents, fetchChangelogList, fetchChangelogEntry } from "./api";
-import type { EventSearchResponse, ListChangelogsResponse, FetchChangelogResponse } from "./types";
+import { fetchEvents, fetchChangelogList, fetchChangelogEntry, fetchGameSystemFacets } from "./api";
+import type {
+  EventSearchResponse,
+  ListChangelogsResponse,
+  FetchChangelogResponse,
+  GameSystemFacetsResponse,
+} from "./types";
 import { makeChangelogSummary, makeChangelogEntry } from "../test/msw/factory";
 
 const EMPTY_RESPONSE: EventSearchResponse = {
@@ -138,4 +143,31 @@ test("fetchChangelogEntry throws when response contains error field", async () =
 test("fetchChangelogEntry throws when entry is missing from response", async () => {
   server.use(http.get("/api/changelog/fetch", () => HttpResponse.json<FetchChangelogResponse>({})));
   await expect(fetchChangelogEntry("entry-1")).rejects.toThrow("Missing entry");
+});
+
+// fetchGameSystemFacets
+
+test("fetchGameSystemFacets returns facets on success", async () => {
+  const result = await fetchGameSystemFacets();
+  expect(result).toStrictEqual([
+    { value: "Dungeons & Dragons 5E", count: 142 },
+    { value: "Pathfinder 2E", count: 87 },
+    { value: "Call of Cthulhu", count: 45 },
+  ]);
+});
+
+test("fetchGameSystemFacets throws on HTTP error", async () => {
+  server.use(
+    http.get("/api/events/facets/gameSystem", () => new HttpResponse(null, { status: 500 })),
+  );
+  await expect(fetchGameSystemFacets()).rejects.toThrow("HTTP 500");
+});
+
+test("fetchGameSystemFacets throws when response contains error field", async () => {
+  server.use(
+    http.get("/api/events/facets/gameSystem", () =>
+      HttpResponse.json<GameSystemFacetsResponse>({ error: "unavailable" }),
+    ),
+  );
+  await expect(fetchGameSystemFacets()).rejects.toThrow("unavailable");
 });

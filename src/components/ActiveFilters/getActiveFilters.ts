@@ -127,7 +127,7 @@ interface CostDef {
 interface MultiDef {
   type: "multi";
   key: keyof SearchParams;
-  map: Record<string, string>;
+  map?: Record<string, string>;
   prefix: string;
   icon?: React.ComponentType<{ size?: number | string }>;
   iconMap?: Record<string, React.ComponentType<{ size?: number | string }>>;
@@ -148,7 +148,7 @@ const FILTER_DEFS: FilterDef[] = [
   { type: "plain", key: "group", label: "Group" },
   { type: "plain", key: "shortDescription", label: "Short desc" },
   { type: "plain", key: "longDescription", label: "Long desc" },
-  { type: "plain", key: "gameSystem", label: "System", icon: RuleBook },
+  { type: "multi", key: "gameSystem", prefix: "gameSystem", icon: RuleBook },
   { type: "plain", key: "rulesEdition", label: "Rules", icon: RuleBook },
   { type: "enum", key: "ageRequired", label: "Age", map: AGE_GROUPS, icon: Ages },
   { type: "enum", key: "experienceRequired", label: "Exp", map: EXP, icon: Skills },
@@ -252,7 +252,7 @@ export function getActiveFilters(params: SearchParams): ActiveFilter[] {
         });
       } else if (def.type === "multi") {
         for (const code of (val as string).split(",").filter(Boolean)) {
-          const label = def.map[code] ?? code;
+          const label = def.map?.[code] ?? code;
           const k = def.key;
           const chipIcon = def.iconMap ? def.iconMap[code] : def.icon;
           filters.push({

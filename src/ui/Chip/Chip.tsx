@@ -40,10 +40,16 @@ export function Chip({
   removeLabel,
   size = "md",
   children,
+  className,
   ...rest
 }: ChipProps): React.JSX.Element {
   return (
-    <span className={styles.chip} data-tone={tone} data-size={size} {...rest}>
+    <span
+      className={[styles.chip, className].filter(Boolean).join(" ")}
+      data-tone={tone}
+      data-size={size}
+      {...rest}
+    >
       {icon != null && (
         <span className={styles.icon} aria-hidden="true">
           {icon}
