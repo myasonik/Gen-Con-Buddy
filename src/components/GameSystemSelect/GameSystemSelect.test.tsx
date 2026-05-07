@@ -111,3 +111,21 @@ test("type-to-filter narrows the options list", async () => {
   expect(screen.getByRole("option", { name: "Pathfinder 2E" })).toBeInTheDocument();
   expect(screen.queryByRole("option", { name: "Dungeons & Dragons 5E" })).not.toBeInTheDocument();
 });
+
+test("renders null when API returns 200 with error field", async () => {
+  server.use(
+    http.get("/api/events/facets/gameSystem", () =>
+      HttpResponse.json({ error: "Service unavailable" }),
+    ),
+  );
+  const { container } = renderGameSystemSelect();
+  await waitFor(() => expect(container).toBeEmptyDOMElement());
+});
+
+test("pre-filled value not in facets renders chip using raw value as label", async () => {
+  renderGameSystemSelect("Obscure System");
+  await waitFor(() =>
+    expect(screen.getByRole("combobox", { name: "Game System" })).not.toBeDisabled(),
+  );
+  expect(screen.getByRole("button", { name: "Remove Obscure System" })).toBeInTheDocument();
+});

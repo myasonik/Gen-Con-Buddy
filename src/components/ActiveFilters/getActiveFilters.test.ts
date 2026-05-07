@@ -7,6 +7,7 @@ import { Hourglass } from "../../ui/icons/Hourglass";
 import { Trophy } from "../../ui/icons/Trophy";
 import { Coins } from "../../ui/icons/Coins";
 import { MagnifyingGlass } from "../../ui/icons/MagnifyingGlass";
+import { RuleBook } from "../../ui/icons/RuleBook";
 
 test("returns empty array when no filters are set", () => {
   expect(getActiveFilters({})).toStrictEqual([]);
@@ -261,4 +262,43 @@ test("title chip has no icon", () => {
 test("gmNames chip has no icon", () => {
   const [chip] = getActiveFilters({ gmNames: "Alice" });
   expect(chip.icon).toBeUndefined();
+});
+
+// ── gameSystem ─────────────────────────────────────────────────────────────
+
+test("gameSystem param produces one chip per value", () => {
+  const result = getActiveFilters({ gameSystem: "Pathfinder 2E,Call of Cthulhu" });
+  expect(result).toHaveLength(2);
+  expect(result[0].id).toBe("gameSystem:Pathfinder 2E");
+  expect(result[0].label).toBe("Pathfinder 2E");
+  expect(result[1].id).toBe("gameSystem:Call of Cthulhu");
+  expect(result[1].label).toBe("Call of Cthulhu");
+});
+
+test("gameSystem chip remove leaves other values intact", () => {
+  const [first] = getActiveFilters({ gameSystem: "Pathfinder 2E,Call of Cthulhu" });
+  expect(first.remove({ gameSystem: "Pathfinder 2E,Call of Cthulhu", title: "foo" })).toStrictEqual(
+    { gameSystem: "Call of Cthulhu", title: "foo" },
+  );
+});
+
+test("gameSystem chip remove clears param when it was the last value", () => {
+  const [chip] = getActiveFilters({ gameSystem: "Pathfinder 2E" });
+  expect(chip.remove({ gameSystem: "Pathfinder 2E" })).toStrictEqual({});
+});
+
+test("gameSystem chip skips empty segment from trailing comma", () => {
+  const result = getActiveFilters({ gameSystem: "Pathfinder 2E," });
+  expect(result).toHaveLength(1);
+  expect(result[0].id).toBe("gameSystem:Pathfinder 2E");
+});
+
+test("gameSystem chip uses raw value as label (no enum mapping)", () => {
+  const [chip] = getActiveFilters({ gameSystem: "My Custom System" });
+  expect(chip.label).toBe("My Custom System");
+});
+
+test("gameSystem chip has RuleBook icon", () => {
+  const [chip] = getActiveFilters({ gameSystem: "Pathfinder 2E" });
+  expect(chip.icon).toBe(RuleBook);
 });

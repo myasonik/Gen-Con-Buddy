@@ -26,16 +26,12 @@ export function EventTypeSelect({ value, onValueChange }: EventTypeSelectProps):
         const Icon = EVENT_TYPE_ICONS[option.value];
         return Icon ? <Icon size={12} aria-hidden="true" /> : undefined;
       }}
-      renderChipContent={(option, isOpen) => (
-        <>
-          {option.value}
-          {isOpen && (
-            <span>
-              {" – "}
-              {option.label}
-            </span>
-          )}
-        </>
+      renderChipContent={(option) => option.value}
+      expandedChipContent={(option) => (
+        <span>
+          {" – "}
+          {option.label}
+        </span>
       )}
       renderOptionContent={(option) => {
         const Icon = EVENT_TYPE_ICONS[option.value];

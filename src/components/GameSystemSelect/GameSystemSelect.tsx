@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { MultiCombobox } from "../../ui/MultiCombobox/MultiCombobox";
 import { fetchGameSystemFacets } from "../../utils/api";
@@ -23,11 +23,15 @@ export function GameSystemSelect({
     staleTime: Infinity,
   });
 
+  const countMap = useMemo(() => new Map((facets ?? []).map((f) => [f.value, f.count])), [facets]);
+  const options = useMemo(
+    () => (facets ?? []).map((f) => ({ value: f.value, label: f.value })),
+    [facets],
+  );
+
   if (isError) {
     return null;
   }
-
-  const options = (facets ?? []).map((f) => ({ value: f.value, label: f.value }));
 
   return (
     <MultiCombobox
@@ -37,11 +41,15 @@ export function GameSystemSelect({
       options={options}
       isLoading={isLoading}
       renderOptionContent={(option) => {
-        const facet = facets?.find((f) => f.value === option.value);
+        const count = countMap.get(option.value);
         return (
           <>
             <span className={styles.optionName}>{option.label}</span>
-            {facet !== undefined && <span className={styles.optionCount}>{facet.count}</span>}
+            {count !== undefined && (
+              <span className={styles.optionCount} aria-hidden="true">
+                {count}
+              </span>
+            )}
           </>
         );
       }}

@@ -68,15 +68,21 @@
   color: var(--color-ink-faint);
 }
 
-.list {
-  composes: surface from "../../styles/popup.module.css";
-  position: absolute;
+.positioner {
   z-index: var(--z-popover);
+  width: var(--anchor-width);
+}
+
+.popup {
+  composes: surface from "../../styles/popup.module.css";
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.list {
   padding: var(--space-1) 0;
   max-height: 15rem;
   overflow-y: scroll;
-  width: 100%;
-  border-radius: var(--radius-card);
 }
 
 .item {
@@ -115,6 +121,12 @@
 
 .item[data-selected] .itemIndicator {
   display: inline;
+}
+
+.empty {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-base);
+  color: var(--color-ink-muted);
 }
 
 @media (width <= 60rem) {

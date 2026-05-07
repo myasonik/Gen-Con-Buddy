@@ -142,10 +142,10 @@ test("filter text is cleared when dropdown closes", async () => {
   expect(screen.getByRole("option", { name: "Beta Option" })).toBeInTheDocument();
 });
 
-test("custom renderChipContent is called with option and isOpen", () => {
-  const renderChipContent = vi.fn<
-    (option: MultiComboboxOption, isOpen: boolean) => React.ReactNode
-  >(() => <span data-testid="custom-chip">custom</span>);
+test("custom renderChipContent is called with option", () => {
+  const renderChipContent = vi.fn<(option: MultiComboboxOption) => React.ReactNode>(() => (
+    <span data-testid="custom-chip">custom</span>
+  ));
   render(
     <MultiCombobox
       label="Test Field"
@@ -159,8 +159,29 @@ test("custom renderChipContent is called with option and isOpen", () => {
   expect(screen.getByTestId("custom-chip")).toBeInTheDocument();
   expect(renderChipContent).toHaveBeenCalledWith(
     expect.objectContaining({ value: "alpha", label: "Alpha Option" }),
-    expect.any(Boolean),
   );
+});
+
+test("expandedChipContent renders only when dropdown is open", async () => {
+  const user = userEvent.setup();
+  const expandedChipContent = vi.fn<(option: MultiComboboxOption) => React.ReactNode>(() => (
+    <span data-testid="expanded">expanded</span>
+  ));
+  render(
+    <MultiCombobox
+      label="Test Field"
+      value="alpha"
+      onValueChange={() => {}}
+      options={OPTIONS}
+      expandedChipContent={expandedChipContent}
+    />,
+  );
+
+  expect(screen.queryByTestId("expanded")).not.toBeInTheDocument();
+
+  await user.click(screen.getByRole("combobox", { name: "Test Field" }));
+
+  expect(screen.getByTestId("expanded")).toBeInTheDocument();
 });
 
 test("custom renderOptionContent is rendered inside list items", async () => {
@@ -223,6 +244,47 @@ test("custom renderChipIcon is rendered via the chip icon slot", () => {
 
   expect(screen.getByTestId("chip-icon")).toBeInTheDocument();
   expect(renderChipIcon).toHaveBeenCalledWith(expect.objectContaining({ value: "alpha" }));
+});
+
+test("backspace with non-empty input does not remove the last chip", async () => {
+  const user = userEvent.setup();
+  const handleChange = vi.fn<(value: string) => void>();
+  render(
+    <MultiCombobox
+      label="Test Field"
+      value="alpha,beta"
+      onValueChange={handleChange}
+      options={OPTIONS}
+    />,
+  );
+
+  await user.click(screen.getByRole("combobox", { name: "Test Field" }));
+  await user.type(screen.getByRole("combobox", { name: "Test Field" }), "abc");
+  await user.keyboard("{Backspace}");
+
+  expect(handleChange).not.toHaveBeenCalled();
+});
+
+test("empty options list shows no-results message", async () => {
+  const user = userEvent.setup();
+  render(<MultiCombobox label="Test Field" value="" onValueChange={() => {}} options={[]} />);
+
+  await user.click(screen.getByRole("combobox", { name: "Test Field" }));
+
+  expect(screen.getByText(/No results/)).toBeInTheDocument();
+  expect(screen.queryByRole("option")).not.toBeInTheDocument();
+});
+
+test("clicking the input group container focuses the combobox input", async () => {
+  const user = userEvent.setup();
+  render(
+    <MultiCombobox label="Test Field" value="alpha" onValueChange={() => {}} options={OPTIONS} />,
+  );
+
+  const chipLabel = screen.getByText("Alpha Option");
+  await user.click(chipLabel);
+
+  expect(screen.getByRole("combobox", { name: "Test Field" })).toHaveFocus();
 });
 
 test("two mounted MultiCombobox instances have distinct input ids", () => {

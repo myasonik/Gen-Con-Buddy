@@ -15,7 +15,9 @@ export interface MultiComboboxProps {
   onValueChange: (value: string) => void;
   options: MultiComboboxOption[];
   filterOption?: (option: MultiComboboxOption, filterText: string) => boolean;
-  renderChipContent?: (option: MultiComboboxOption, isOpen: boolean) => React.ReactNode;
+  renderChipContent?: (option: MultiComboboxOption) => React.ReactNode;
+  /** Extra content appended to chips only while the dropdown is open. */
+  expandedChipContent?: (option: MultiComboboxOption) => React.ReactNode;
   renderChipIcon?: (option: MultiComboboxOption) => React.ReactNode;
   renderRemoveLabel?: (option: MultiComboboxOption) => string;
   renderOptionContent?: (option: MultiComboboxOption) => React.ReactNode;
@@ -39,6 +41,7 @@ export function MultiCombobox({
   options,
   filterOption,
   renderChipContent,
+  expandedChipContent,
   renderChipIcon,
   renderRemoveLabel,
   renderOptionContent,
@@ -118,7 +121,8 @@ export function MultiCombobox({
                   onRemove={() => removeValue(val)}
                   removeLabel={renderRemoveLabel ? renderRemoveLabel(option) : option.label}
                 >
-                  {renderChipContent ? renderChipContent(option, open) : option.label}
+                  {renderChipContent ? renderChipContent(option) : option.label}
+                  {open && expandedChipContent ? expandedChipContent(option) : null}
                 </Chip>
               );
             })}
@@ -129,6 +133,11 @@ export function MultiCombobox({
               disabled={isLoading}
               placeholder={getPlaceholder(isLoading, selectedValues.length > 0, label)}
               onKeyDown={(e) => {
+                if (e.key === "Tab") {
+                  setOpen(false);
+                  setFilterText("");
+                  return;
+                }
                 if (
                   e.key === "Backspace" &&
                   e.currentTarget.value === "" &&
@@ -139,30 +148,37 @@ export function MultiCombobox({
               }}
             />
           </div>
-          <Combobox.Trigger className={styles.trigger} aria-label={`Toggle ${label} list`}>
+          <Combobox.Trigger
+            tabIndex={-1}
+            className={styles.trigger}
+            aria-label={`Toggle ${label} list`}
+          >
             <ChevronDown size={14} aria-hidden="true" />
           </Combobox.Trigger>
         </Combobox.InputGroup>
+        <Combobox.Status className="sr-only" />
         {open && (
-          <Combobox.List className={styles.list}>
-            {filteredOptions.map((option) => (
-              <Combobox.Item
-                key={option.value}
-                value={option.value}
-                aria-label={option.label}
-                className={styles.item}
-              >
-                {renderOptionContent ? (
-                  renderOptionContent(option)
-                ) : (
-                  <span className={styles.itemName}>{option.label}</span>
-                )}
-                <Combobox.ItemIndicator className={styles.itemIndicator}>
-                  <Check size={12} aria-hidden="true" />
-                </Combobox.ItemIndicator>
-              </Combobox.Item>
-            ))}
-          </Combobox.List>
+          <Combobox.Portal>
+            <Combobox.Positioner sideOffset={4} className={styles.positioner}>
+              <div className={styles.popup}>
+                <Combobox.List className={styles.list}>
+                  {filteredOptions.map((option) => (
+                    <Combobox.Item key={option.value} value={option.value} className={styles.item}>
+                      {renderOptionContent ? (
+                        renderOptionContent(option)
+                      ) : (
+                        <span className={styles.itemName}>{option.label}</span>
+                      )}
+                      <Combobox.ItemIndicator className={styles.itemIndicator}>
+                        <Check size={12} aria-hidden="true" />
+                      </Combobox.ItemIndicator>
+                    </Combobox.Item>
+                  ))}
+                  <Combobox.Empty className={styles.empty}>No results</Combobox.Empty>
+                </Combobox.List>
+              </div>
+            </Combobox.Positioner>
+          </Combobox.Portal>
         )}
       </Combobox.Root>
     </div>

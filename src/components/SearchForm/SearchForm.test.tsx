@@ -323,3 +323,37 @@ test("Game System field renders as a combobox (not a plain text input) when draw
   );
   expect(screen.queryByRole("textbox", { name: "Game System" })).not.toBeInTheDocument();
 });
+
+test("submits with gameSystem value from combobox selection", async () => {
+  const user = userEvent.setup();
+  const handleSearch = vi.fn<(values: SearchFormValues) => void>();
+  renderSearchForm({}, handleSearch);
+
+  await user.click(screen.getByRole("button", { name: "Filters" }));
+  await waitFor(() =>
+    expect(screen.getByRole("combobox", { name: "Game System" })).not.toBeDisabled(),
+  );
+  await user.click(screen.getByRole("combobox", { name: "Game System" }));
+  await user.click(screen.getByRole("option", { name: "Pathfinder 2E" }));
+  await user.click(
+    within(screen.getByRole("dialog", { name: "Advanced Filters" })).getByRole("button", {
+      name: "Apply Filters",
+    }),
+  );
+
+  expect(handleSearch.mock.calls[0][0].gameSystem).toBe("Pathfinder 2E");
+});
+
+test("reset button clears gameSystem selection", async () => {
+  const user = userEvent.setup();
+  renderSearchForm({ gameSystem: "Pathfinder 2E" });
+
+  await user.click(screen.getByRole("button", { name: "Reset" }));
+
+  await user.click(screen.getByRole("button", { name: "Filters" }));
+  await waitFor(() =>
+    expect(screen.getByRole("combobox", { name: "Game System" })).toBeInTheDocument(),
+  );
+
+  expect(screen.queryByRole("button", { name: "Remove Pathfinder 2E" })).not.toBeInTheDocument();
+});

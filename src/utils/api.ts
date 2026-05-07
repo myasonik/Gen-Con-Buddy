@@ -94,5 +94,8 @@ export async function fetchGameSystemFacets(): Promise<GameSystemFacet[]> {
     throw new Error(`HTTP ${res.status}`);
   }
   const data = (await res.json()) as GameSystemFacetsResponse;
-  return data.values;
+  if (data.error) {
+    throw new Error(data.error);
+  }
+  return data.values ?? [];
 }

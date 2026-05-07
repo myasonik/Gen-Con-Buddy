@@ -182,5 +182,6 @@ export interface GameSystemFacet {
 }
 
 export interface GameSystemFacetsResponse {
-  values: GameSystemFacet[];
+  error?: string;
+  values?: GameSystemFacet[];
 }
