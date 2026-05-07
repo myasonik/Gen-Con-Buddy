@@ -23,7 +23,7 @@ function SearchPage(): React.JSX.Element {
 
   const handleSearch = (values: SearchFormValues): void => {
     void navigate({
-      search: (prev) => ({ ...buildSearchParams(values), limit: prev.limit }),
+      search: (prev) => ({ ...buildSearchParams(values), limit: prev.limit, sort: prev.sort }),
     });
   };
 

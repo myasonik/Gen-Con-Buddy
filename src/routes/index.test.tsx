@@ -59,6 +59,50 @@ test("submitting a new search resets page to 1", async () => {
   expect(latestUrl!.searchParams.has("page")).toBe(false);
 });
 
+test("submitting a new search preserves the active sort", async () => {
+  const user = userEvent.setup();
+  let latestUrl: URL | null = null;
+  server.use(
+    http.get("/api/events/search", ({ request }) => {
+      latestUrl = new URL(request.url);
+      const response: EventSearchResponse = {
+        data: [makeEvent()],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }),
+  );
+  await renderRoute("/?sort=startDateTime.asc");
+  await screen.findByRole("navigation", { name: "Pagination, top" });
+  latestUrl = null;
+  // Change a form field to trigger a search
+  await user.type(screen.getByPlaceholderText("Search events…"), "dragon");
+  await user.click(screen.getByRole("button", { name: "Search" }));
+  await screen.findByRole("navigation", { name: "Pagination, top" });
+  // oxlint-disable-next-line typescript/no-non-null-assertion
+  expect(latestUrl!.searchParams.get("sort")).toBe("startDateTime.asc");
+  // oxlint-disable-next-line typescript/no-non-null-assertion
+  expect(latestUrl!.searchParams.get("filter")).toBe("dragon");
+});
+
+test("loading with sort param in URL shows sort indicator on column header", async () => {
+  server.use(
+    http.get("/api/events/search", () =>
+      HttpResponse.json<EventSearchResponse>({
+        data: [makeEvent()],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      }),
+    ),
+  );
+  await renderRoute("/?sort=startDateTime.asc");
+  const startButton = await screen.findByRole("button", { name: "Start" });
+  expect(startButton.closest("th")).toHaveAttribute("aria-sort", "ascending");
+});
+
 test("navigating to page 2 sends page=1 to API (0-indexed)", async () => {
   const user = userEvent.setup();
   let latestUrl: URL | null = null;
