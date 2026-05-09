@@ -383,3 +383,70 @@ test("reset button clears gameSystem selection", async () => {
 
   expect(screen.queryByRole("button", { name: "Remove Pathfinder 2E" })).not.toBeInTheDocument();
 });
+
+// ── changelogMode ──────────────────────────────────────────────────────────
+
+function renderChangelogMode(
+  values: SearchFormValues = {},
+  onSearch: (v: SearchFormValues) => void = noop,
+): ReturnType<typeof render> {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  return render(
+    <QueryClientProvider client={client}>
+      <SearchForm values={values} onSearch={onSearch} changelogMode />
+    </QueryClientProvider>,
+  );
+}
+
+test("changelogMode hides the keyword search field", () => {
+  renderChangelogMode();
+  expect(screen.queryByRole("textbox", { name: "Search" })).not.toBeInTheDocument();
+});
+
+test("changelogMode hides the Filters drawer button", () => {
+  renderChangelogMode();
+  expect(screen.queryByRole("button", { name: "Filters" })).not.toBeInTheDocument();
+});
+
+test("changelogMode still renders event type combobox", () => {
+  renderChangelogMode();
+  expect(screen.getByRole("combobox", { name: "Event Type" })).toBeInTheDocument();
+});
+
+test("changelogMode still renders day checkboxes", () => {
+  renderChangelogMode();
+  expect(screen.getByRole("checkbox", { name: "Thu" })).toBeInTheDocument();
+});
+
+test("changelogMode still renders time inputs", () => {
+  const { container } = renderChangelogMode();
+  expect(container.querySelector('input[name="timeStart"]')).toBeInTheDocument();
+  expect(container.querySelector('input[name="timeEnd"]')).toBeInTheDocument();
+});
+
+test("changelogMode still renders Search and Reset buttons", () => {
+  renderChangelogMode();
+  expect(screen.getByRole("button", { name: "Search" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Reset" })).toBeInTheDocument();
+});
+
+test("changelogMode submits onSearch with selected values", async () => {
+  const user = userEvent.setup();
+  const handleSearch = vi.fn<(values: SearchFormValues) => void>();
+  renderChangelogMode({}, handleSearch);
+
+  await user.click(screen.getByRole("checkbox", { name: "Thu" }));
+  await user.click(screen.getByRole("button", { name: "Search" }));
+
+  expect(handleSearch).toHaveBeenCalledTimes(1);
+  expect(handleSearch.mock.calls[0][0].days).toBe("thu");
+});
+
+test("changelogMode reset button clears fields", async () => {
+  const user = userEvent.setup();
+  renderChangelogMode({ days: "fri" });
+
+  await user.click(screen.getByRole("button", { name: "Reset" }));
+
+  expect(screen.getByRole("checkbox", { name: "Fri" })).not.toBeChecked();
+});
