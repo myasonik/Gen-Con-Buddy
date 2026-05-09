@@ -46,13 +46,7 @@ function makeSharedColumnState(overrides: Partial<SharedColumnState> = {}): Shar
   };
 }
 
-function EventTableWithHooks({
-  events,
-  showColumnControls = true,
-}: {
-  events: Event[];
-  showColumnControls?: boolean;
-}): React.JSX.Element {
+function EventTableWithHooks({ events }: { events: Event[] }): React.JSX.Element {
   const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility();
   const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
   const {
@@ -79,13 +73,7 @@ function EventTableWithHooks({
     setDayFormat,
     resetDayFormat,
   };
-  return (
-    <EventTable
-      events={events}
-      sharedColumnState={sharedColumnState}
-      showColumnControls={showColumnControls}
-    />
-  );
+  return <EventTable events={events} sharedColumnState={sharedColumnState} />;
 }
 
 async function renderEventTable(
@@ -95,13 +83,9 @@ async function renderEventTable(
   const rootRoute = createRootRoute({
     component: () =>
       sharedColumnState !== undefined ? (
-        <EventTable
-          events={events}
-          sharedColumnState={sharedColumnState}
-          showColumnControls={false}
-        />
+        <EventTable events={events} sharedColumnState={sharedColumnState} />
       ) : (
-        <EventTableWithHooks events={events} showColumnControls />
+        <EventTableWithHooks events={events} />
       ),
   });
   const eventRoute = createRoute({
@@ -143,18 +127,6 @@ test("title link points to the event detail route", async () => {
     "href",
     "/event/RPG24000042",
   );
-});
-
-test("renders the column visibility panel", async () => {
-  await renderEventTable();
-  expect(screen.getByText("Customize columns")).toBeInTheDocument();
-});
-
-test("toggling a column off hides its header", async () => {
-  const user = userEvent.setup();
-  await renderEventTable();
-  await user.click(screen.getByRole("checkbox", { name: "Title" }));
-  expect(screen.queryByRole("columnheader", { name: "Title" })).not.toBeInTheDocument();
 });
 
 test("eventType column renders an icon alongside the type code", async () => {
@@ -269,4 +241,27 @@ test("day cell shows numeric date in numeric mode", async () => {
 test("day cell shows long date in long mode", async () => {
   await renderEventTable([makeEvent()], makeSharedColumnState({ dayFormat: "long" }));
   expect(screen.getByText("Thu, Aug 01, 2024")).toBeInTheDocument();
+});
+
+test("eventType column popover renders Show icon checkbox", async () => {
+  const user = userEvent.setup();
+  const sharedColumnState = makeSharedColumnState();
+  await renderEventTable([makeEvent()], sharedColumnState);
+  const columnActionsButtons = screen.getAllByRole("button", { name: "Column actions" });
+  // eventType is the 3rd column (index 2: gameId=0, title=1, eventType=2)
+  const [, , eventTypePopoverBtn] = columnActionsButtons;
+  await user.click(eventTypePopoverBtn);
+  expect(screen.getByRole("checkbox", { name: "Show icon" })).toBeInTheDocument();
+});
+
+test("day column popover renders Day radio button", async () => {
+  const user = userEvent.setup();
+  const sharedColumnState = makeSharedColumnState();
+  await renderEventTable([makeEvent()], sharedColumnState);
+  const columnActionsButtons = screen.getAllByRole("button", { name: "Column actions" });
+  // day is the 16th column (index 15: gameId=0, title=1, eventType=2, group=3, shortDesc=4, longDesc=5, gameSystem=6, rulesEdition=7, minPlayers=8, maxPlayers=9, ageRequired=10, experienceRequired=11, materialsProvided=12, materialsRequired=13, materialsRequiredDetails=14, day=15)
+  const dayColumnIndex = 15;
+  const [dayPopoverBtn] = columnActionsButtons.slice(dayColumnIndex);
+  await user.click(dayPopoverBtn);
+  expect(screen.getByRole("radio", { name: "Day" })).toBeInTheDocument();
 });

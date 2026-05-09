@@ -12,8 +12,8 @@ import {
 import { useSortState } from "../../hooks/useSortState";
 import { useColumnMinSizes } from "../../hooks/useColumnMinSizes";
 import { parseSortString } from "../../utils/parseSortString";
-import { ColumnControlsPanel } from "./ColumnControlsPanel";
 import { ColumnActionsPopover } from "./ColumnActionsPopover";
+import { TypeFormatControls, DayFormatControls } from "./FormatDrawer";
 import { ColumnResizeDialog } from "./ColumnResizeDialog";
 import { announce } from "../../lib/announce";
 import type { Event } from "../../utils/types";
@@ -29,7 +29,6 @@ interface EventTableProps {
   activeSortDir?: "asc" | "desc";
   onSort?: (sort: string | undefined) => void;
   sharedColumnState: SharedColumnState;
-  showColumnControls?: boolean;
   linkState?: { from: string };
 }
 
@@ -39,23 +38,19 @@ export function EventTable({
   activeSortDir,
   onSort,
   sharedColumnState,
-  showColumnControls = true,
   linkState,
 }: EventTableProps): React.JSX.Element {
   const posthog = usePostHog();
   const {
     visibility,
-    toggleVisibility,
-    resetVisibility,
     sizing,
     setSizing,
-    resetSizing,
     typeDisplay,
     setTypeDisplay,
     showTypeIcon,
     setShowTypeIcon,
-    resetTypeDisplay,
     dayFormat,
+    setDayFormat,
   } = sharedColumnState;
 
   // Unique prefix so anchor names don't collide when multiple EventTable instances are on the page
@@ -192,21 +187,21 @@ export function EventTable({
     getSortedRowModel: getSortedRowModel(),
   });
 
-  const columnStateForPanel: SharedColumnState = {
-    visibility,
-    toggleVisibility,
-    resetVisibility,
-    sizing,
-    setSizing,
-    resetSizing,
-    typeDisplay,
-    setTypeDisplay,
-    showTypeIcon,
-    setShowTypeIcon,
-    resetTypeDisplay,
-    dayFormat,
-    setDayFormat: sharedColumnState.setDayFormat,
-    resetDayFormat: sharedColumnState.resetDayFormat,
+  const getFormatControls = (columnId: string): React.ReactNode => {
+    if (columnId === "eventType") {
+      return (
+        <TypeFormatControls
+          typeDisplay={typeDisplay}
+          setTypeDisplay={setTypeDisplay}
+          showTypeIcon={showTypeIcon}
+          setShowTypeIcon={setShowTypeIcon}
+        />
+      );
+    }
+    if (columnId === "day") {
+      return <DayFormatControls dayFormat={dayFormat} setDayFormat={setDayFormat} />;
+    }
+    return undefined;
   };
 
   if (events.length === 0) {
@@ -215,8 +210,6 @@ export function EventTable({
 
   return (
     <section>
-      {showColumnControls && <ColumnControlsPanel columnState={columnStateForPanel} />}
-
       <div
         ref={setClipWrapper}
         className={styles.tableClipWrapper}
@@ -280,6 +273,7 @@ export function EventTable({
                                   currentWidth: header.getSize(),
                                 })
                               }
+                              formatControls={getFormatControls(header.column.id)}
                             />
                           )}
                         </div>

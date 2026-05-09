@@ -70,7 +70,6 @@ export function SearchResults({
                 activeSortDir={activeSortDir}
                 onSort={onSort}
                 sharedColumnState={sharedColumnState}
-                showColumnControls={false}
               />
             </div>
           ) : (
