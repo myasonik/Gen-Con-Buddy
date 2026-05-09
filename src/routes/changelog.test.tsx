@@ -324,16 +324,6 @@ test("closing a row removes its position from the open URL param", async () => {
   const user = userEvent.setup();
   // Click to close (animation plays, details stays open until transitionend)
   await user.click(await screen.findByText(/7 created/));
-  // jsdom doesn't fire transitionend; dispatch it to complete the close animation.
-  // jsdom also doesn't fire toggle when details.open is set programmatically (after finish()),
-  // so dispatch toggle manually to trigger onToggle → syncOpenToUrl.
-  await act(async () => {
-    const openDetails = document.querySelector("details[open]");
-    openDetails
-      ?.querySelector("[data-animated-content]")
-      ?.dispatchEvent(new Event("transitionend"));
-    openDetails?.dispatchEvent(new Event("toggle"));
-  });
   const search = new URLSearchParams(router.state.location.search);
   expect(search.getAll("open")).not.toContain("1");
 });
@@ -435,16 +425,6 @@ test("closing a sub-group removes its name from the entry's open param segment",
   const { router } = await renderRoute("/changelog?open=1.created", { queryClient: client });
   const user = userEvent.setup();
   await user.click(await screen.findByText("Created"));
-  await act(async () => {
-    // Find all open details elements (excludes ChangelogRow which is now Collapsible)
-    const allOpenDetails = document.querySelectorAll("details[open]");
-    // Get the last one, which is the inner "created" sub-group details
-    const openDetails = allOpenDetails[allOpenDetails.length - 1];
-    openDetails
-      ?.querySelector("[data-animated-content]")
-      ?.dispatchEvent(new Event("transitionend"));
-    openDetails?.dispatchEvent(new Event("toggle"));
-  });
   const openValues = new URLSearchParams(router.state.location.search).getAll("open");
   // The entry is still open (position 1), but created sub-group is gone
   expect(openValues.some((v) => v === "1" || v.startsWith("1."))).toBe(true);
@@ -482,11 +462,6 @@ test("closing an entry removes all sub-group state from the URL", async () => {
   await screen.findAllByText("Dragon Hunt");
   // Click the row summary to close the entry (the row details is the first open details in DOM)
   await user.click(screen.getByText(/1 created/));
-  await act(async () => {
-    const rowDetails = document.querySelector("details[open]");
-    rowDetails?.querySelector("[data-animated-content]")?.dispatchEvent(new Event("transitionend"));
-    rowDetails?.dispatchEvent(new Event("toggle"));
-  });
   const openValues = new URLSearchParams(router.state.location.search).getAll("open");
   expect(openValues).toHaveLength(0);
 });
@@ -613,16 +588,6 @@ test("closing a sub-group clears its sort from the URL", async () => {
   });
   const user = userEvent.setup();
   await user.click(await screen.findByText("Created"));
-  await act(async () => {
-    // Find all open details elements (excludes ChangelogRow which is now Collapsible)
-    const allOpenDetails = document.querySelectorAll("details[open]");
-    // Get the last one, which is the inner "created" sub-group details
-    const openDetails = allOpenDetails[allOpenDetails.length - 1];
-    openDetails
-      ?.querySelector("[data-animated-content]")
-      ?.dispatchEvent(new Event("transitionend"));
-    openDetails?.dispatchEvent(new Event("toggle"));
-  });
   const openValues = new URLSearchParams(router.state.location.search).getAll("open");
   expect(openValues).not.toContain("1.created.title.asc");
 });
