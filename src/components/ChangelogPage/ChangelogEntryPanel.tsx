@@ -177,20 +177,13 @@ export function ChangelogEntryPanel({
   const updatedSort = openForPosition.get("updated");
   const deletedSort = openForPosition.get("deleted");
 
-  // When a filter has active values, auto-open groups so filtered results are immediately visible.
-  const isFilterActive =
-    activeFilter !== undefined &&
-    Boolean(
-      activeFilter.eventType || activeFilter.days || activeFilter.timeStart || activeFilter.timeEnd,
-    );
-
   return (
     <div className={styles.panel}>
       {createdEvents.length > 0 && (
         <Collapsible
           className={styles.group}
           triggerClassName={styles.groupSummary}
-          open={isFilterActive ? true : openForPosition.has("created")}
+          open={openForPosition.has("created")}
           onOpenChange={(open) => syncGroupToUrl("created", open)}
           trigger={
             <span>
@@ -218,7 +211,7 @@ export function ChangelogEntryPanel({
         <Collapsible
           className={styles.group}
           triggerClassName={styles.groupSummary}
-          open={isFilterActive ? true : openForPosition.has("updated")}
+          open={openForPosition.has("updated")}
           onOpenChange={(open) => syncGroupToUrl("updated", open)}
           trigger={
             <span>
@@ -246,7 +239,7 @@ export function ChangelogEntryPanel({
         <Collapsible
           className={styles.group}
           triggerClassName={styles.groupSummary}
-          open={isFilterActive ? true : openForPosition.has("deleted")}
+          open={openForPosition.has("deleted")}
           onOpenChange={(open) => syncGroupToUrl("deleted", open)}
           trigger={
             <span>

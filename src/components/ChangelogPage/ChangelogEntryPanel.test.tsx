@@ -11,7 +11,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ChangelogEntryPanel } from "./ChangelogEntryPanel";
 import type { SharedColumnState } from "../EventTable/types";
 import { makeChangelogEntry, makeEvent } from "../../test/msw/factory";
-import type { ChangelogEntry } from "../../utils/types";
+import type { ChangelogEntry, SearchFormValues } from "../../utils/types";
 
 const stubColumnState: SharedColumnState = {
   visibility: {},
@@ -35,6 +35,7 @@ function renderPanelWithRouter(
   entry: ChangelogEntry,
   columnState: SharedColumnState = stubColumnState,
   openParam: string[] = ["1.created", "1.updated", "1.deleted"],
+  activeFilter?: SearchFormValues,
 ): ReturnType<typeof render> {
   const rootRoute = createRootRoute({
     component: () => (
@@ -43,6 +44,7 @@ function renderPanelWithRouter(
         sharedColumnState={columnState}
         openParam={openParam}
         position={1}
+        activeFilter={activeFilter}
       />
     ),
   });
@@ -168,4 +170,21 @@ test("shows empty state when all event arrays are empty", () => {
   });
   render(<ChangelogEntryPanel entry={entry} sharedColumnState={stubColumnState} />);
   expect(screen.getByText("NO CHANGES")).toBeInTheDocument();
+});
+
+test("filters events by activeFilter when group is open", async () => {
+  const entry = makeChangelogEntry({
+    createdEvents: [
+      makeEvent({ title: "Dragon Hunt", eventType: "RPG" }),
+      makeEvent({ title: "Catan Open", eventType: "BGM" }),
+    ],
+    updatedEvents: [],
+    deletedEvents: [],
+  });
+  // Pre-open the created group via openParam so filtering is immediately visible
+  renderPanelWithRouter(entry, stubColumnState, ["1.created"], {
+    eventType: "RPG",
+  });
+  await expect(screen.findAllByText("Dragon Hunt")).resolves.not.toHaveLength(0);
+  expect(screen.queryByText("Catan Open")).not.toBeInTheDocument();
 });

@@ -210,46 +210,6 @@ test("renders SearchForm in changelogMode (no keyword, no Filters button)", asyn
   expect(screen.getByRole("combobox", { name: "Event Type" })).toBeInTheDocument();
 });
 
-test("filters events within an expanded entry when eventType filter is active", async () => {
-  const user = userEvent.setup();
-  server.use(
-    http.get("/api/changelog/list", () =>
-      HttpResponse.json<ListChangelogsResponse>({
-        entries: [
-          makeChangelogSummary({
-            id: "entry-1",
-            createdCount: 2,
-            updatedCount: 0,
-            deletedCount: 0,
-          }),
-        ],
-      }),
-    ),
-    http.get("/api/changelog/fetch", () =>
-      HttpResponse.json<FetchChangelogResponse>({
-        entry: makeChangelogEntry({
-          id: "entry-1",
-          createdEvents: [
-            makeEvent({ title: "Dragon Hunt", eventType: "RPG" }),
-            makeEvent({ title: "Catan Open", eventType: "BGM" }),
-          ],
-          updatedEvents: [],
-          deletedEvents: [],
-        }),
-      }),
-    ),
-  );
-
-  await renderChangelogPage({ eventType: "RPG" });
-
-  // Open the entry row
-  await user.click(await screen.findByText(/created/));
-  await screen.findByText("Created");
-
-  expect(screen.getAllByText("Dragon Hunt").length).toBeGreaterThan(0);
-  expect(screen.queryByText("Catan Open")).not.toBeInTheDocument();
-});
-
 test.skip("passes activeFilter to ChangelogRow so it can show unknown indicator", async () => {
   server.use(
     http.get("/api/changelog/list", () =>
