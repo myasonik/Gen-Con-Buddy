@@ -19,7 +19,7 @@ function offsetDateTime(base: Date, days: number): string {
 }
 
 const wed = genConWednesday(GEN_CON_YEAR);
-const DAY_DATES: Record<string, { start: string; end: string }> = {
+export const DAY_DATES: Record<string, { start: string; end: string }> = {
   wed: { start: offsetDateTime(wed, 0), end: offsetDateTime(wed, 1) },
   thu: { start: offsetDateTime(wed, 1), end: offsetDateTime(wed, 2) },
   fri: { start: offsetDateTime(wed, 2), end: offsetDateTime(wed, 3) },
