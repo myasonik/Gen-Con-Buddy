@@ -196,6 +196,7 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
                   </Button>
                 }
                 title="Advanced Filters"
+                side="right"
                 footer={
                   <Dialog.Close
                     render={
