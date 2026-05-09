@@ -322,7 +322,6 @@ test("closing a row removes its position from the open URL param", async () => {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const { router } = await renderRoute("/changelog?open=1", { queryClient: client });
   const user = userEvent.setup();
-  // Click to close (animation plays, details stays open until transitionend)
   await user.click(await screen.findByText(/7 created/));
   const search = new URLSearchParams(router.state.location.search);
   expect(search.getAll("open")).not.toContain("1");
