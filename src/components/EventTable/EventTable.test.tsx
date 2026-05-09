@@ -153,6 +153,7 @@ test("renders the column visibility panel", async () => {
 test("toggling a column off hides its header", async () => {
   const user = userEvent.setup();
   await renderEventTable();
+  await user.click(screen.getByRole("button", { name: /Customize columns/ }));
   await user.click(screen.getByRole("checkbox", { name: "Title" }));
   expect(screen.queryByRole("columnheader", { name: "Title" })).not.toBeInTheDocument();
 });

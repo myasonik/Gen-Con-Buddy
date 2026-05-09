@@ -3,7 +3,7 @@ import { ChevronRight } from "lucide-react";
 import { Button } from "../../ui/Button/Button";
 import { Drawer } from "../../ui/Drawer/Drawer";
 import type { DayFormat, SharedColumnState } from "./types";
-import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
+import { Collapsible } from "../../ui/Collapsible/Collapsible";
 import { Targeted } from "../../ui/icons/Targeted";
 import { COLUMNS, COLUMN_GROUPS } from "./columns";
 import { Checkbox } from "../../ui/Checkbox/Checkbox";
@@ -139,9 +139,9 @@ export function ColumnControlsPanel({
   }
 
   return (
-    <AnimatedDetails
+    <Collapsible
       className={styles.visibilityPanel}
-      summary={
+      trigger={
         <>
           Customize columns
           <span className={styles.summaryChevron} aria-hidden="true">
@@ -151,6 +151,6 @@ export function ColumnControlsPanel({
       }
     >
       <ColumnCheckboxContent columnState={columnState} />
-    </AnimatedDetails>
+    </Collapsible>
   );
 }

@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, within, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi, expect, test } from "vitest";
 import { ColumnControlsPanel } from "./ColumnControlsPanel";
@@ -25,8 +25,14 @@ function makeColumnState(overrides: Partial<SharedColumnState> = {}): SharedColu
   };
 }
 
+function renderOpen(overrides: Partial<SharedColumnState> = {}): ReturnType<typeof render> {
+  const result = render(<ColumnControlsPanel columnState={makeColumnState(overrides)} />);
+  fireEvent.click(screen.getByRole("button", { name: /Customize columns/ }));
+  return result;
+}
+
 test("renders four column groups matching EventDetail sections", () => {
-  render(<ColumnControlsPanel columnState={makeColumnState()} />);
+  renderOpen();
   expect(screen.getByRole("group", { name: "The Event" })).toBeInTheDocument();
   expect(screen.getByRole("group", { name: "Players" })).toBeInTheDocument();
   expect(screen.getByRole("group", { name: "Logistics" })).toBeInTheDocument();
@@ -34,25 +40,25 @@ test("renders four column groups matching EventDetail sections", () => {
 });
 
 test("Title toggle is inside the The Event group", () => {
-  render(<ColumnControlsPanel columnState={makeColumnState()} />);
+  renderOpen();
   const group = screen.getByRole("group", { name: "The Event" });
   expect(within(group).getByRole("checkbox", { name: "Title" })).toBeInTheDocument();
 });
 
 test("Min Players toggle is inside the Players group", () => {
-  render(<ColumnControlsPanel columnState={makeColumnState()} />);
+  renderOpen();
   const group = screen.getByRole("group", { name: "Players" });
   expect(within(group).getByRole("checkbox", { name: "Min Players" })).toBeInTheDocument();
 });
 
 test("Duration toggle is inside the Logistics group", () => {
-  render(<ColumnControlsPanel columnState={makeColumnState()} />);
+  renderOpen();
   const group = screen.getByRole("group", { name: "Logistics" });
   expect(within(group).getByRole("checkbox", { name: "Duration" })).toBeInTheDocument();
 });
 
 test("GMs toggle is inside the Contact group", () => {
-  render(<ColumnControlsPanel columnState={makeColumnState()} />);
+  renderOpen();
   const group = screen.getByRole("group", { name: "Contact" });
   expect(within(group).getByRole("checkbox", { name: "GMs" })).toBeInTheDocument();
 });
@@ -94,39 +100,37 @@ test("variant=drawer Close button dismisses the dialog", async () => {
 });
 
 test("renders Event type column fieldset", () => {
-  render(<ColumnControlsPanel columnState={makeColumnState()} />);
+  renderOpen();
   expect(screen.getByRole("group", { name: "Event type column" })).toBeInTheDocument();
 });
 
 test("renders Show icon checkbox checked when showTypeIcon is true", () => {
-  render(<ColumnControlsPanel columnState={makeColumnState({ showTypeIcon: true })} />);
+  renderOpen({ showTypeIcon: true });
   expect(screen.getByRole("checkbox", { name: "Show icon" })).toBeChecked();
 });
 
 test("renders Show icon checkbox unchecked when showTypeIcon is false", () => {
-  render(<ColumnControlsPanel columnState={makeColumnState({ showTypeIcon: false })} />);
+  renderOpen({ showTypeIcon: false });
   expect(screen.getByRole("checkbox", { name: "Show icon" })).not.toBeChecked();
 });
 
 test("clicking Show icon checkbox calls setShowTypeIcon with toggled value", async () => {
   const user = userEvent.setup();
   const setShowTypeIcon = vi.fn<SharedColumnState["setShowTypeIcon"]>();
-  render(
-    <ColumnControlsPanel columnState={makeColumnState({ showTypeIcon: true, setShowTypeIcon })} />,
-  );
+  renderOpen({ showTypeIcon: true, setShowTypeIcon });
   await user.click(screen.getByRole("checkbox", { name: "Show icon" }));
   expect(setShowTypeIcon).toHaveBeenCalledWith(false);
 });
 
 test("renders Code, Name, and Both radio buttons", () => {
-  render(<ColumnControlsPanel columnState={makeColumnState()} />);
+  renderOpen();
   expect(screen.getByRole("radio", { name: "Code" })).toBeInTheDocument();
   expect(screen.getByRole("radio", { name: "Name" })).toBeInTheDocument();
   expect(screen.getByRole("radio", { name: "Both" })).toBeInTheDocument();
 });
 
 test("Name radio is checked when typeDisplay is name", () => {
-  render(<ColumnControlsPanel columnState={makeColumnState({ typeDisplay: "name" })} />);
+  renderOpen({ typeDisplay: "name" });
   expect(screen.getByRole("radio", { name: "Name" })).toBeChecked();
   expect(screen.getByRole("radio", { name: "Code" })).not.toBeChecked();
   expect(screen.getByRole("radio", { name: "Both" })).not.toBeChecked();
@@ -135,9 +139,7 @@ test("Name radio is checked when typeDisplay is name", () => {
 test("clicking Code radio calls setTypeDisplay with code", async () => {
   const user = userEvent.setup();
   const setTypeDisplay = vi.fn<SharedColumnState["setTypeDisplay"]>();
-  render(
-    <ColumnControlsPanel columnState={makeColumnState({ typeDisplay: "name", setTypeDisplay })} />,
-  );
+  renderOpen({ typeDisplay: "name", setTypeDisplay });
   await user.click(screen.getByRole("radio", { name: "Code" }));
   expect(setTypeDisplay).toHaveBeenCalledWith("code");
 });
@@ -145,9 +147,7 @@ test("clicking Code radio calls setTypeDisplay with code", async () => {
 test("clicking Both radio calls setTypeDisplay with both", async () => {
   const user = userEvent.setup();
   const setTypeDisplay = vi.fn<SharedColumnState["setTypeDisplay"]>();
-  render(
-    <ColumnControlsPanel columnState={makeColumnState({ typeDisplay: "name", setTypeDisplay })} />,
-  );
+  renderOpen({ typeDisplay: "name", setTypeDisplay });
   await user.click(screen.getByRole("radio", { name: "Both" }));
   expect(setTypeDisplay).toHaveBeenCalledWith("both");
 });
@@ -155,25 +155,25 @@ test("clicking Both radio calls setTypeDisplay with both", async () => {
 test("Reset to defaults calls resetTypeDisplay", async () => {
   const user = userEvent.setup();
   const resetTypeDisplay = vi.fn<SharedColumnState["resetTypeDisplay"]>();
-  render(<ColumnControlsPanel columnState={makeColumnState({ resetTypeDisplay })} />);
+  renderOpen({ resetTypeDisplay });
   await user.click(screen.getByRole("button", { name: "Reset to defaults" }));
   expect(resetTypeDisplay).toHaveBeenCalledTimes(1);
 });
 
 test("renders Day column fieldset", () => {
-  render(<ColumnControlsPanel columnState={makeColumnState()} />);
+  renderOpen();
   expect(screen.getByRole("group", { name: "Day column" })).toBeInTheDocument();
 });
 
 test("renders Day, MM/DD/YY, and Full date radio buttons", () => {
-  render(<ColumnControlsPanel columnState={makeColumnState()} />);
+  renderOpen();
   expect(screen.getByRole("radio", { name: "Day" })).toBeInTheDocument();
   expect(screen.getByRole("radio", { name: "MM/DD/YY" })).toBeInTheDocument();
   expect(screen.getByRole("radio", { name: "Full date" })).toBeInTheDocument();
 });
 
 test("Day radio is checked when dayFormat is day", () => {
-  render(<ColumnControlsPanel columnState={makeColumnState({ dayFormat: "day" })} />);
+  renderOpen({ dayFormat: "day" });
   expect(screen.getByRole("radio", { name: "Day" })).toBeChecked();
   expect(screen.getByRole("radio", { name: "MM/DD/YY" })).not.toBeChecked();
   expect(screen.getByRole("radio", { name: "Full date" })).not.toBeChecked();
@@ -182,7 +182,7 @@ test("Day radio is checked when dayFormat is day", () => {
 test("clicking MM/DD/YY radio calls setDayFormat with numeric", async () => {
   const user = userEvent.setup();
   const setDayFormat = vi.fn<SharedColumnState["setDayFormat"]>();
-  render(<ColumnControlsPanel columnState={makeColumnState({ dayFormat: "day", setDayFormat })} />);
+  renderOpen({ dayFormat: "day", setDayFormat });
   await user.click(screen.getByRole("radio", { name: "MM/DD/YY" }));
   expect(setDayFormat).toHaveBeenCalledWith("numeric");
 });
@@ -190,7 +190,7 @@ test("clicking MM/DD/YY radio calls setDayFormat with numeric", async () => {
 test("clicking Full date radio calls setDayFormat with long", async () => {
   const user = userEvent.setup();
   const setDayFormat = vi.fn<SharedColumnState["setDayFormat"]>();
-  render(<ColumnControlsPanel columnState={makeColumnState({ dayFormat: "day", setDayFormat })} />);
+  renderOpen({ dayFormat: "day", setDayFormat });
   await user.click(screen.getByRole("radio", { name: "Full date" }));
   expect(setDayFormat).toHaveBeenCalledWith("long");
 });
@@ -198,7 +198,7 @@ test("clicking Full date radio calls setDayFormat with long", async () => {
 test("Reset to defaults calls resetDayFormat", async () => {
   const user = userEvent.setup();
   const resetDayFormat = vi.fn<SharedColumnState["resetDayFormat"]>();
-  render(<ColumnControlsPanel columnState={makeColumnState({ resetDayFormat })} />);
+  renderOpen({ resetDayFormat });
   await user.click(screen.getByRole("button", { name: "Reset to defaults" }));
   expect(resetDayFormat).toHaveBeenCalledTimes(1);
 });
