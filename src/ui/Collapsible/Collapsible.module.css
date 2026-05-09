@@ -1,0 +1,21 @@
+.panel {
+  overflow: clip;
+  height: var(--collapsible-panel-height);
+  transition: height var(--motion-expand);
+}
+
+.panel[data-starting-style],
+.panel[data-ending-style] {
+  height: 0;
+}
+
+/* Prevent child padding from creating a minimum height floor */
+.panelInner {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+  }
+}
