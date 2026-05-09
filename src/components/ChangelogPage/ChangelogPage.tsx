@@ -4,7 +4,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { NavigateFn } from "@tanstack/react-router";
 import { useSharedColumnState } from "../../hooks/useSharedColumnState";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
-import { ColumnControlsPanel } from "../EventTable/ColumnControlsPanel";
+import { VisibilityDrawer } from "../EventTable/VisibilityDrawer";
+import { FormatDrawer } from "../EventTable/FormatDrawer";
 import { fetchChangelogEntry, fetchChangelogList } from "../../utils/api";
 import styles from "./ChangelogPage.module.css";
 import { ChangelogRow } from "./ChangelogRow";
@@ -60,7 +61,10 @@ export function ChangelogPage({ openParam = [], navigate }: ChangelogPageProps):
       {summaries.length > 0 && (
         <>
           <h1 className={styles.heading}>Changelog</h1>
-          <ColumnControlsPanel columnState={sharedColumnState} />
+          <div className={styles.controls}>
+            <VisibilityDrawer columnState={sharedColumnState} />
+            <FormatDrawer columnState={sharedColumnState} />
+          </div>
           <section className={styles.changelogSection}>
             {summaries.map((summary, i) => (
               <ChangelogRow
