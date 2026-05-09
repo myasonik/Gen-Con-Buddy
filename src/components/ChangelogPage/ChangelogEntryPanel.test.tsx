@@ -188,3 +188,45 @@ test("filters events by activeFilter when group is open", async () => {
   await expect(screen.findAllByText("Dragon Hunt")).resolves.not.toHaveLength(0);
   expect(screen.queryByText("Catan Open")).not.toBeInTheDocument();
 });
+
+test("hides a group entirely when all its events are filtered out", async () => {
+  const entry = makeChangelogEntry({
+    id: "entry-1",
+    createdEvents: [makeEvent({ eventType: "BGM" })],
+    updatedEvents: [makeEvent({ eventType: "RPG" })],
+    deletedEvents: [],
+  });
+  // Filter for RPG — created group should have 0 results and not render
+  renderPanelWithRouter(entry, stubColumnState, ["1.created", "1.updated"], { eventType: "RPG" });
+
+  await screen.findByText("Updated");
+  expect(screen.queryByText("Created")).not.toBeInTheDocument();
+});
+
+test("shows all events when activeFilter is empty", async () => {
+  const entry = makeChangelogEntry({
+    id: "entry-1",
+    createdEvents: [
+      makeEvent({ title: "Dragon Hunt", eventType: "RPG" }),
+      makeEvent({ title: "Catan Open", eventType: "BGM" }),
+    ],
+    updatedEvents: [],
+    deletedEvents: [],
+  });
+  renderPanelWithRouter(entry, stubColumnState, ["1.created"], {});
+
+  await expect(screen.findAllByText("Dragon Hunt")).resolves.not.toHaveLength(0);
+  await expect(screen.findAllByText("Catan Open")).resolves.not.toHaveLength(0);
+});
+
+test("shows NO MATCHES empty state when all events filtered out", async () => {
+  const entry = makeChangelogEntry({
+    id: "entry-1",
+    createdEvents: [makeEvent({ eventType: "BGM" })],
+    updatedEvents: [],
+    deletedEvents: [],
+  });
+  renderPanelWithRouter(entry, stubColumnState, [], { eventType: "RPG" });
+
+  await expect(screen.findByText("NO MATCHES")).resolves.toBeInTheDocument();
+});

@@ -157,6 +157,11 @@ export function ChangelogEntryPanel({
     return <p>Could not load this entry. Collapse and re-expand to retry.</p>;
   }
 
+  const hasAnyEvents =
+    entry.createdEvents.length > 0 ||
+    entry.updatedEvents.length > 0 ||
+    entry.deletedEvents.length > 0;
+
   const createdEvents = activeFilter
     ? filterChangelogEvents(entry.createdEvents, activeFilter)
     : entry.createdEvents;
@@ -168,6 +173,15 @@ export function ChangelogEntryPanel({
     : entry.deletedEvents;
 
   if (createdEvents.length === 0 && updatedEvents.length === 0 && deletedEvents.length === 0) {
+    if (hasAnyEvents && activeFilter) {
+      return (
+        <EmptyState
+          variant="empty"
+          text="NO MATCHES"
+          subtext="No events match the current filters."
+        />
+      );
+    }
     return (
       <EmptyState variant="empty" text="NO CHANGES" subtext="This entry has no event changes." />
     );
