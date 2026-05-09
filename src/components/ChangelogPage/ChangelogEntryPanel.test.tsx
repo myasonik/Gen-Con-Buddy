@@ -34,9 +34,17 @@ const stubColumnState: SharedColumnState = {
 function renderPanelWithRouter(
   entry: ChangelogEntry,
   columnState: SharedColumnState = stubColumnState,
+  openParam: string[] = ["1.created", "1.updated", "1.deleted"],
 ): ReturnType<typeof render> {
   const rootRoute = createRootRoute({
-    component: () => <ChangelogEntryPanel entry={entry} sharedColumnState={columnState} />,
+    component: () => (
+      <ChangelogEntryPanel
+        entry={entry}
+        sharedColumnState={columnState}
+        openParam={openParam}
+        position={1}
+      />
+    ),
   });
   const eventRoute = createRoute({
     getParentRoute: () => rootRoute,
@@ -101,7 +109,7 @@ test("renders Created section heading with count", async () => {
   });
   renderPanelWithRouter(entry);
   const verbEl = await screen.findByText("Created");
-  expect(verbEl.closest("summary")).toHaveTextContent("2");
+  expect(verbEl.closest("button")).toHaveTextContent("2");
 });
 
 test("does not render Updated section when updatedEvents is empty", async () => {

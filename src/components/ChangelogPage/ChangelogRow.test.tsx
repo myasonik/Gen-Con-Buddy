@@ -103,7 +103,9 @@ test("fetches entry and shows content when opened", async () => {
   );
   renderRow();
   await user.click(await screen.findByText(/created/));
-  await expect(screen.findAllByText("Dragon Hunt")).resolves.not.toHaveLength(0);
+  // After opening the row, the entry fetches and ChangelogEntryPanel renders the sub-group trigger.
+  // The trigger button contains the group label and count, confirming content was loaded.
+  await expect(screen.findByText("Created")).resolves.toBeInTheDocument();
 });
 
 test("calls onOpen when row is expanded", async () => {

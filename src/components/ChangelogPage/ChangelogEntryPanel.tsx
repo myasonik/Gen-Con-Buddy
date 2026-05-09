@@ -1,6 +1,6 @@
 import type { NavigateFn } from "@tanstack/react-router";
 import React, { startTransition, useMemo } from "react";
-import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
+import { Collapsible } from "../../ui/Collapsible/Collapsible";
 import { Chip } from "../../ui/Chip/Chip";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { parseSortString } from "../../utils/parseSortString";
@@ -172,12 +172,12 @@ export function ChangelogEntryPanel({
   return (
     <div className={styles.panel}>
       {entry.createdEvents.length > 0 && (
-        <AnimatedDetails
+        <Collapsible
           className={styles.group}
-          summaryClassName={styles.groupSummary}
+          triggerClassName={styles.groupSummary}
           open={openForPosition.has("created")}
-          onToggle={(e) => syncGroupToUrl("created", (e.currentTarget as HTMLDetailsElement).open)}
-          summary={
+          onOpenChange={(open) => syncGroupToUrl("created", open)}
+          trigger={
             <span>
               <span className={styles.groupVerbCreated}>Created</span>{" "}
               <Chip tone="neutral" className={styles.groupCount}>
@@ -197,15 +197,15 @@ export function ChangelogEntryPanel({
             activeSortField={createdSort?.field}
             activeSortDir={createdSort?.dir}
           />
-        </AnimatedDetails>
+        </Collapsible>
       )}
       {entry.updatedEvents.length > 0 && (
-        <AnimatedDetails
+        <Collapsible
           className={styles.group}
-          summaryClassName={styles.groupSummary}
+          triggerClassName={styles.groupSummary}
           open={openForPosition.has("updated")}
-          onToggle={(e) => syncGroupToUrl("updated", (e.currentTarget as HTMLDetailsElement).open)}
-          summary={
+          onOpenChange={(open) => syncGroupToUrl("updated", open)}
+          trigger={
             <span>
               <span className={styles.groupVerbUpdated}>Updated</span>{" "}
               <Chip tone="neutral" className={styles.groupCount}>
@@ -225,15 +225,15 @@ export function ChangelogEntryPanel({
             activeSortField={updatedSort?.field}
             activeSortDir={updatedSort?.dir}
           />
-        </AnimatedDetails>
+        </Collapsible>
       )}
       {entry.deletedEvents.length > 0 && (
-        <AnimatedDetails
+        <Collapsible
           className={styles.group}
-          summaryClassName={styles.groupSummary}
+          triggerClassName={styles.groupSummary}
           open={openForPosition.has("deleted")}
-          onToggle={(e) => syncGroupToUrl("deleted", (e.currentTarget as HTMLDetailsElement).open)}
-          summary={
+          onOpenChange={(open) => syncGroupToUrl("deleted", open)}
+          trigger={
             <span>
               <span className={styles.groupVerbDeleted}>Deleted</span>{" "}
               <Chip tone="neutral" className={styles.groupCount}>
@@ -253,7 +253,7 @@ export function ChangelogEntryPanel({
             activeSortField={deletedSort?.field}
             activeSortDir={deletedSort?.dir}
           />
-        </AnimatedDetails>
+        </Collapsible>
       )}
     </div>
   );

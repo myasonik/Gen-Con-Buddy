@@ -127,8 +127,10 @@ test("expanding a row fetches and displays the event table", async () => {
       }),
     ),
   );
-  await renderChangelogPage();
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  await renderRoute("/changelog", { queryClient: client });
   await user.click(await screen.findByText(/1 created/));
+  await user.click(await screen.findByText("Created"));
   await expect(screen.findAllByText("Dragon Hunt")).resolves.not.toHaveLength(0);
 });
 
@@ -175,9 +177,8 @@ test("does not render section headers for empty event groups", async () => {
   );
   await renderChangelogPage();
   await user.click(await screen.findByText(/1 created/));
-  await screen.findAllByText("Dragon Hunt");
-  const createdEl = screen.getByText("Created");
-  expect(createdEl.closest("summary")).toHaveTextContent("1");
+  const createdEl = await screen.findByText("Created");
+  expect(createdEl.closest("button")).toHaveTextContent("1");
   expect(screen.queryByText("Updated")).not.toBeInTheDocument();
   expect(screen.queryByText("Deleted")).not.toBeInTheDocument();
 });
@@ -269,7 +270,7 @@ test("changelog row is expanded on load when its 1-based position is in the open
     }),
   );
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  await renderRoute("/changelog?open=2", { queryClient: client });
+  await renderRoute("/changelog?open=2.created", { queryClient: client });
   // entry-2's query only fires when isOpen=true; Dragon Hunt only appears if it does
   await expect(screen.findAllByText("Dragon Hunt")).resolves.not.toHaveLength(0);
 });
@@ -366,8 +367,8 @@ test("sub-group is expanded on load when its name is in the open param", async (
   await renderRoute("/changelog?open=1.created", { queryClient: client });
   const createdHeader = await screen.findByText("Created");
   const updatedHeader = screen.getByText("Updated");
-  expect(createdHeader.closest("details")).toHaveAttribute("open");
-  expect(updatedHeader.closest("details")).not.toHaveAttribute("open");
+  expect(createdHeader.closest("button")).toHaveAttribute("aria-expanded", "true");
+  expect(updatedHeader.closest("button")).toHaveAttribute("aria-expanded", "false");
 });
 
 test("opening a sub-group adds its name to the entry's open param segment", async () => {
@@ -662,7 +663,7 @@ test("event links in changelog carry from:changelog navigation state", async () 
     ),
   );
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  await renderRoute("/changelog?open=1", { queryClient: client });
+  await renderRoute("/changelog?open=1.created", { queryClient: client });
   const user = userEvent.setup();
   await user.click(await screen.findByRole("link", { name: "Dragon Hunt" }));
   await expect(
