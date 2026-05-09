@@ -435,7 +435,10 @@ test("closing a sub-group removes its name from the entry's open param segment",
   const user = userEvent.setup();
   await user.click(await screen.findByText("Created"));
   await act(async () => {
-    const [, openDetails] = document.querySelectorAll("details[open]"); // inner group details (index 0 is the row)
+    // Find all open details elements (excludes ChangelogRow which is now Collapsible)
+    const allOpenDetails = document.querySelectorAll("details[open]");
+    // Get the last one, which is the inner "created" sub-group details
+    const openDetails = allOpenDetails[allOpenDetails.length - 1];
     openDetails
       ?.querySelector("[data-animated-content]")
       ?.dispatchEvent(new Event("transitionend"));
@@ -610,7 +613,10 @@ test("closing a sub-group clears its sort from the URL", async () => {
   const user = userEvent.setup();
   await user.click(await screen.findByText("Created"));
   await act(async () => {
-    const [, openDetails] = document.querySelectorAll("details[open]");
+    // Find all open details elements (excludes ChangelogRow which is now Collapsible)
+    const allOpenDetails = document.querySelectorAll("details[open]");
+    // Get the last one, which is the inner "created" sub-group details
+    const openDetails = allOpenDetails[allOpenDetails.length - 1];
     openDetails
       ?.querySelector("[data-animated-content]")
       ?.dispatchEvent(new Event("transitionend"));

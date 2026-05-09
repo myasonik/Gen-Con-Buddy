@@ -5,7 +5,7 @@ import type { ChangelogSummary } from "../../utils/types";
 import { fetchChangelogEntry } from "../../utils/api";
 import { ChangelogEntryPanel } from "./ChangelogEntryPanel";
 import type { SharedColumnState } from "../EventTable/types";
-import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
+import { Collapsible } from "../../ui/Collapsible/Collapsible";
 import { Chip } from "../../ui/Chip/Chip";
 import { parseOpenParam, serializeOpenParam } from "./openParam";
 import type { NavigateFn } from "@tanstack/react-router";
@@ -57,24 +57,18 @@ export function ChangelogRow({
   }
 
   return (
-    <AnimatedDetails
+    <Collapsible
       className={styles.row}
-      summaryClassName={styles.summary}
+      triggerClassName={styles.summary}
       open={isOpen}
-      onToggle={(e) => {
-        const { open } = e.currentTarget as HTMLDetailsElement;
-        // jsdom spuriously fires toggle on an outer <details> when a nested <details> toggles;
-        // the state hasn't actually changed in that case, so guard against it.
-        if (open === isOpen) {
-          return;
-        }
+      onOpenChange={(open) => {
         setIsOpen(open);
         syncOpenToUrl(open);
         if (open) {
           onOpen();
         }
       }}
-      summary={
+      trigger={
         <>
           <time dateTime={summary.date} className={styles.date}>
             {format(new Date(summary.date), "MMM d, yyyy h:mm a")}
@@ -94,6 +88,6 @@ export function ChangelogRow({
         position={position}
         navigate={navigate}
       />
-    </AnimatedDetails>
+    </Collapsible>
   );
 }
