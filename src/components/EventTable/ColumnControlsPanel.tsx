@@ -141,6 +141,7 @@ export function ColumnControlsPanel({
   return (
     <Collapsible
       className={styles.visibilityPanel}
+      triggerClassName={styles.visibilityTrigger}
       trigger={
         <>
           Customize columns

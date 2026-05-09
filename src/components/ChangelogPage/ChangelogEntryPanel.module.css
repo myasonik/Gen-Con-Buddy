@@ -13,17 +13,18 @@
   gap: var(--space-2);
   padding: var(--space-2) var(--space-4);
   cursor: pointer;
-  list-style: none;
   user-select: none;
   transition: background var(--motion-hover);
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
 }
 
 .groupSummary:hover {
   background: var(--color-surface-hover);
-}
-
-.groupSummary::-webkit-details-marker {
-  display: none;
 }
 
 .groupSummary:focus-visible {
@@ -51,7 +52,7 @@
   border-color: var(--color-ink);
 }
 
-.group[open] .groupSummary::after {
+.group[data-open] .groupSummary::after {
   transform: rotate(-135deg) translate(-0.0625rem, -0.0625rem);
   border-color: var(--color-accent);
 }
@@ -88,10 +89,10 @@
 .groupSummary:hover .groupVerbCreated,
 .groupSummary:hover .groupVerbUpdated,
 .groupSummary:hover .groupVerbDeleted,
-.group[open] .groupSummary .groupVerb,
-.group[open] .groupSummary .groupVerbCreated,
-.group[open] .groupSummary .groupVerbUpdated,
-.group[open] .groupSummary .groupVerbDeleted {
+.group[data-open] .groupSummary .groupVerb,
+.group[data-open] .groupSummary .groupVerbCreated,
+.group[data-open] .groupSummary .groupVerbUpdated,
+.group[data-open] .groupSummary .groupVerbDeleted {
   color: var(--color-ink);
 }
 

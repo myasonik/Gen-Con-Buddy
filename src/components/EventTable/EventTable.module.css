@@ -82,11 +82,11 @@
   border-radius: var(--radius-card);
 }
 
-.visibilityPanel[open] {
+.visibilityPanel[data-open] {
   border-radius: var(--radius-card) var(--radius-card) 0 0;
 }
 
-.visibilityPanel summary {
+.visibilityTrigger {
   cursor: pointer;
   padding: var(--space-2) var(--space-3);
   display: flex;
@@ -101,9 +101,13 @@
   color: var(--color-ink-muted);
   transition: background-color var(--motion-hover);
   border-radius: var(--radius-card);
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
 }
 
-.visibilityPanel summary:hover {
+.visibilityTrigger:hover {
   background-color: var(--color-surface-hover);
 }
 
@@ -115,12 +119,12 @@
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
-:where(.visibilityPanel[open]:not(:global(.is-closing))) .summaryChevron {
+:where(.visibilityPanel[data-open]) .summaryChevron {
   transform: rotate(90deg);
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
-:where(.visibilityPanel[open]) summary {
+:where(.visibilityPanel[data-open]) .visibilityTrigger {
   border-bottom: var(--border-width) solid var(--color-ink-divider);
   border-radius: var(--radius-card) var(--radius-card) 0 0;
 }

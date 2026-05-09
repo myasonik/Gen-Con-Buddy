@@ -15,16 +15,21 @@
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
   cursor: pointer;
-  list-style: none;
   user-select: none;
   transition: background var(--motion-hover);
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
 }
 
 .summary:hover {
   background: var(--color-surface-hover);
 }
 
-.row[open] .summary {
+.row[data-open] .summary {
   border-bottom: var(--border-width) solid var(--color-ink-divider);
 }
 
@@ -42,13 +47,9 @@
     border-color var(--motion-hover);
 }
 
-.row[open] .summary::after {
+.row[data-open] .summary::after {
   transform: rotate(-135deg) translate(-0.0625rem, -0.0625rem);
   border-color: var(--color-accent);
-}
-
-.summary::-webkit-details-marker {
-  display: none;
 }
 
 .date {
