@@ -1,4 +1,4 @@
-import React, { startTransition, useState } from "react";
+import React, { startTransition, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ChangelogEntry, ChangelogSummary, SearchFormValues } from "../../utils/types";
@@ -83,10 +83,13 @@ export function ChangelogRow({
   const filterActive = isFilterActive(activeFilter);
   const cachedEntry = queryClient.getQueryData<ChangelogEntry>(["changelog", "entry", summary.id]);
 
-  const filteredCounts =
-    filterActive && cachedEntry !== undefined && activeFilter !== undefined
-      ? deriveFilteredCounts(cachedEntry, activeFilter)
-      : null;
+  const filteredCounts = useMemo(
+    () =>
+      filterActive && cachedEntry !== undefined && activeFilter !== undefined
+        ? deriveFilteredCounts(cachedEntry, activeFilter)
+        : null,
+    [filterActive, cachedEntry, activeFilter],
+  );
 
   const filterState = computeFilterState(filterActive, cachedEntry, filteredCounts);
 

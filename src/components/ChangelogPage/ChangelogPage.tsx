@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { usePostHog } from "posthog-js/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { NavigateFn } from "@tanstack/react-router";
@@ -49,7 +49,10 @@ export function ChangelogPage({
     }
   }, [summaries, queryClient]);
 
-  const activeFilter: SearchFormValues = { eventType, days, timeStart, timeEnd };
+  const activeFilter: SearchFormValues = useMemo(
+    () => ({ eventType, days, timeStart, timeEnd }),
+    [eventType, days, timeStart, timeEnd],
+  );
 
   const handleSearch = (values: SearchFormValues): void => {
     if (!navigate) {

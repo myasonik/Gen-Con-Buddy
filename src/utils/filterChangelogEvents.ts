@@ -1,13 +1,22 @@
 import type { Event, SearchFormValues } from "./types";
 import { DAY_DATES } from "./searchParams";
 
+const timeFormatter = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/Indiana/Indianapolis",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+});
+
+const DAY_DATE_OBJECTS: Record<string, { start: Date; end: Date }> = Object.fromEntries(
+  Object.entries(DAY_DATES).map(([key, { start, end }]) => [
+    key,
+    { start: new Date(start), end: new Date(end) },
+  ]),
+);
+
 function extractTimeET(dateStr: string): string {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/Indiana/Indianapolis",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).formatToParts(new Date(dateStr));
+  const parts = timeFormatter.formatToParts(new Date(dateStr));
   const hour = parts.find((p) => p.type === "hour")?.value ?? "00";
   const minute = parts.find((p) => p.type === "minute")?.value ?? "00";
   return `${hour === "24" ? "00" : hour}:${minute}`;
@@ -30,8 +39,7 @@ export function filterChangelogEvents(events: Event[], filter: SearchFormValues)
     if (dayList.length > 0) {
       const startDate = new Date(event.attributes.startDateTime);
       const matchesDay = dayList.some((day) => {
-        const dayStart = new Date(DAY_DATES[day].start);
-        const dayEnd = new Date(DAY_DATES[day].end);
+        const { start: dayStart, end: dayEnd } = DAY_DATE_OBJECTS[day];
         return startDate >= dayStart && startDate < dayEnd;
       });
       if (!matchesDay) {
