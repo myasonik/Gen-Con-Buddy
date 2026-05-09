@@ -279,10 +279,6 @@
   .resizeHandle {
     display: none;
   }
-
-  .visibilityPanel {
-    border-bottom: none;
-  }
 }
 
 .panelDivider {

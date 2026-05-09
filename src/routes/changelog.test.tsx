@@ -177,7 +177,7 @@ test("does not render section headers for empty event groups", async () => {
   await user.click(await screen.findByText(/1 created/));
   await screen.findAllByText("Dragon Hunt");
   const createdEl = screen.getByText("Created");
-  expect(createdEl.closest("summary")).toHaveTextContent("(1)");
+  expect(createdEl.closest("summary")).toHaveTextContent("1");
   expect(screen.queryByText("Updated")).not.toBeInTheDocument();
   expect(screen.queryByText("Deleted")).not.toBeInTheDocument();
 });

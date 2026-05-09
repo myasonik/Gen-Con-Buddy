@@ -1,16 +1,16 @@
-import React, { startTransition, useMemo } from "react";
 import type { NavigateFn } from "@tanstack/react-router";
+import React, { startTransition, useMemo } from "react";
 import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
+import { Chip } from "../../ui/Chip/Chip";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
+import { parseSortString } from "../../utils/parseSortString";
+import { sortEvents } from "../../utils/sortEvents";
+import type { ChangelogEntry, Event, SortState } from "../../utils/types";
 import { EventListMobile } from "../EventTable/EventListMobile";
 import { EventTable } from "../EventTable/EventTable";
 import type { SharedColumnState } from "../EventTable/types";
-import type { ChangelogEntry, Event, SortState } from "../../utils/types";
-import { parseSortString } from "../../utils/parseSortString";
-import { Chip } from "../../ui/Chip/Chip";
-import { parseOpenParam, serializeOpenParam } from "./openParam";
-import { sortEvents } from "../../utils/sortEvents";
 import styles from "./ChangelogEntryPanel.module.css";
+import { parseOpenParam, serializeOpenParam } from "./openParam";
 
 type EntryValue = ChangelogEntry | "loading" | "error" | undefined;
 
@@ -181,7 +181,7 @@ export function ChangelogEntryPanel({
             <span>
               <span className={styles.groupVerbCreated}>Created</span>{" "}
               <Chip tone="neutral" className={styles.groupCount}>
-                ({entry.createdEvents.length})
+                {entry.createdEvents.length}
               </Chip>
             </span>
           }
@@ -209,7 +209,7 @@ export function ChangelogEntryPanel({
             <span>
               <span className={styles.groupVerbUpdated}>Updated</span>{" "}
               <Chip tone="neutral" className={styles.groupCount}>
-                ({entry.updatedEvents.length})
+                {entry.updatedEvents.length}
               </Chip>
             </span>
           }
@@ -237,7 +237,7 @@ export function ChangelogEntryPanel({
             <span>
               <span className={styles.groupVerbDeleted}>Deleted</span>{" "}
               <Chip tone="neutral" className={styles.groupCount}>
-                ({entry.deletedEvents.length})
+                {entry.deletedEvents.length}
               </Chip>
             </span>
           }

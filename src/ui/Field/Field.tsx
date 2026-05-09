@@ -49,12 +49,12 @@ export function RangeField({
 }: RangeFieldProps): React.JSX.Element {
   const [fromInput, toInput] = children;
   return (
-    <div className={clsx(styles.root, className)}>
-      <span className={styles.label}>{label}</span>
+    <fieldset className={clsx(styles.root, styles.rangeFieldset, className)}>
+      <legend className={styles.label}>{label}</legend>
       <div className={clsx(styles.rangeFields, stack && styles.rangeFieldsStacked)}>
         <SubField label="from">{fromInput}</SubField>
         <SubField label="to">{toInput}</SubField>
       </div>
-    </div>
+    </fieldset>
   );
 }

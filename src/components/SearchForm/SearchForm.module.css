@@ -9,21 +9,19 @@
   height: 2rem;
 }
 
-/* ─── Drawer Fieldsets ───────────────────────────────────────────────────── */
-.fieldset {
+/* ─── Drawer Sections ────────────────────────────────────────────────────── */
+.section {
   margin: 0;
   padding: 0;
-  min-width: 0;
-  border: none;
 }
 
-.fieldset + .fieldset {
+.section + .section {
   margin-top: var(--space-5);
   padding-top: var(--space-4);
   border-top: calc(var(--border-width) * 2) solid var(--color-ink-border);
 }
 
-.legend {
+.sectionHeading {
   display: block;
   font-family: var(--font-slab);
   font-size: var(--text-base);
@@ -34,7 +32,7 @@
   padding: 0 0 var(--space-2) 0;
   border-bottom: calc(var(--border-width) * 2) solid var(--color-ink-border);
   width: 100%;
-  margin-bottom: var(--space-3);
+  margin: 0 0 var(--space-3) 0;
 }
 
 .fieldsetBody {
@@ -47,14 +45,19 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  font-family: var(--font-slab);
+  font-size: var(--text-sm);
+  font-weight: 600;
   line-height: 1;
-  font-size: var(--text-md);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
   color: var(--color-ink-muted);
 }
 
 .input {
   display: block;
   width: 100%;
+  height: 2rem;
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-subtle);
   font-size: var(--text-base);
@@ -254,6 +257,7 @@
     min-width: 2.75rem;
   }
 
+  .input,
   .searchInput,
   .timeInput {
     height: 2.75rem;

@@ -249,6 +249,25 @@ test("Filters button has aria-haspopup=dialog", () => {
   );
 });
 
+test("range filters render as fieldsets with the field name as legend", async () => {
+  const user = userEvent.setup();
+  renderSearchForm();
+  await user.click(screen.getByRole("button", { name: "Filters" }));
+  expect(screen.getByRole("group", { name: "Duration (hours)" })).toBeInTheDocument();
+  expect(screen.getByRole("group", { name: "Cost" })).toBeInTheDocument();
+  expect(screen.getByRole("group", { name: "Min Players" })).toBeInTheDocument();
+});
+
+test("advanced filters drawer renders section names as h3 headings", async () => {
+  const user = userEvent.setup();
+  renderSearchForm();
+  await user.click(screen.getByRole("button", { name: "Filters" }));
+  expect(screen.getByRole("heading", { level: 3, name: "Session" })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { level: 3, name: "Logistics" })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { level: 3, name: "Game" })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { level: 3, name: "Details" })).toBeInTheDocument();
+});
+
 test("filters drawer has role=dialog with accessible name when open", async () => {
   const user = userEvent.setup();
   renderSearchForm();

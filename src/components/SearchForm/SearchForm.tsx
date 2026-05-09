@@ -212,8 +212,8 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
                 }
               >
                 {/* SESSION */}
-                <fieldset className={styles.fieldset}>
-                  <legend className={styles.legend}>Session</legend>
+                <div className={styles.section}>
+                  <h3 className={styles.sectionHeading}>Session</h3>
                   <div className={styles.fieldsetBody}>
                     <RangeField label="Duration (hours)">
                       <input
@@ -293,11 +293,11 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
                       />
                     </label>
                   </div>
-                </fieldset>
+                </div>
 
                 {/* LOGISTICS */}
-                <fieldset className={styles.fieldset}>
-                  <legend className={styles.legend}>Logistics</legend>
+                <div className={styles.section}>
+                  <h3 className={styles.sectionHeading}>Logistics</h3>
                   <div className={styles.fieldsetBody}>
                     <Field label="Location">
                       <input type="text" className={styles.input} {...register("location")} />
@@ -348,11 +348,11 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
                       />
                     </label>
                   </div>
-                </fieldset>
+                </div>
 
                 {/* GAME */}
-                <fieldset className={styles.fieldset}>
-                  <legend className={styles.legend}>Game</legend>
+                <div className={styles.section}>
+                  <h3 className={styles.sectionHeading}>Game</h3>
                   <div className={styles.fieldsetBody}>
                     <GameSystemSelect
                       value={watch("gameSystem") ?? ""}
@@ -430,11 +430,11 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
                       />
                     </RangeField>
                   </div>
-                </fieldset>
+                </div>
 
                 {/* DETAILS */}
-                <fieldset className={styles.fieldset}>
-                  <legend className={styles.legend}>Details</legend>
+                <div className={styles.section}>
+                  <h3 className={styles.sectionHeading}>Details</h3>
                   <div className={styles.fieldsetBody}>
                     <Field label="Game ID">
                       <input type="text" className={styles.input} {...register("gameId")} />
@@ -481,7 +481,7 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
                       />
                     </RangeField>
                   </div>
-                </fieldset>
+                </div>
               </Drawer>
 
               <Button

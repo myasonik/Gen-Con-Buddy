@@ -1,15 +1,22 @@
 .select {
+  height: 2rem;
   padding: var(--space-1) var(--space-2);
   border: var(--border-width) solid var(--color-ink-border);
   border-radius: var(--radius-subtle);
   background: var(--color-surface-page);
   color: var(--color-ink);
   cursor: pointer;
-  font: inherit;
-  font-size: var(--text-sm);
+  line-height: inherit;
+  font-size: var(--text-base);
   transition: border-color var(--motion-hover);
 }
 
 .select:hover {
   border-color: var(--color-ink-muted);
+}
+
+@media (width <= 60rem) {
+  .select {
+    height: 2.75rem;
+  }
 }
