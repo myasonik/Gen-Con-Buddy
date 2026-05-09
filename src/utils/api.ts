@@ -56,9 +56,8 @@ export async function fetchEvents(params: SearchParams): Promise<EventSearchResp
   return { ...data, data: data.data ?? [] };
 }
 
-export async function fetchChangelogList(limit = 6): Promise<ChangelogSummary[]> {
+export async function fetchChangelogList(): Promise<ChangelogSummary[]> {
   const url = new URL("/api/changelog/list", window.location.origin);
-  url.searchParams.set("limit", String(limit));
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}`);

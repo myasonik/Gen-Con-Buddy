@@ -73,19 +73,6 @@ test("fetchChangelogList returns summaries on success", async () => {
   expect(result).toStrictEqual([summary]);
 });
 
-test("fetchChangelogList sends limit param", async () => {
-  let capturedUrl: URL | null = null;
-  server.use(
-    http.get("/api/changelog/list", ({ request }) => {
-      capturedUrl = new URL(request.url);
-      return HttpResponse.json<ListChangelogsResponse>({ entries: [] });
-    }),
-  );
-  await fetchChangelogList(10);
-  // oxlint-disable-next-line typescript/no-non-null-assertion
-  expect(capturedUrl!.searchParams.get("limit")).toBe("10");
-});
-
 test("fetchChangelogList throws on HTTP error", async () => {
   server.use(http.get("/api/changelog/list", () => new HttpResponse(null, { status: 500 })));
   await expect(fetchChangelogList()).rejects.toThrow("HTTP 500");
