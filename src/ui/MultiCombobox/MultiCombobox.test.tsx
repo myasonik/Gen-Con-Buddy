@@ -50,6 +50,24 @@ test("chip remove button calls onValueChange without that value", async () => {
   expect(handleChange).toHaveBeenCalledWith("beta");
 });
 
+test("clicking chip remove button does not open the dropdown", async () => {
+  const user = userEvent.setup();
+  render(
+    <MultiCombobox
+      label="Test Field"
+      value="alpha,beta"
+      onValueChange={() => {}}
+      options={OPTIONS}
+    />,
+  );
+
+  expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+
+  await user.click(screen.getByRole("button", { name: "Remove Alpha Option" }));
+
+  expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+});
+
 test("backspace on empty input removes the last chip", async () => {
   const user = userEvent.setup();
   const handleChange = vi.fn<(value: string) => void>();

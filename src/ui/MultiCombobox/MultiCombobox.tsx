@@ -49,6 +49,7 @@ export function MultiCombobox({
 }: MultiComboboxProps): React.JSX.Element {
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
+  const suppressFocusOpen = useRef(false);
   const [open, setOpen] = useState(false);
   const [filterText, setFilterText] = useState("");
   const filter = Combobox.useFilter();
@@ -73,7 +74,6 @@ export function MultiCombobox({
   return (
     <div
       className={styles.root}
-      onFocus={() => setOpen(true)}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node)) {
           setOpen(false);
@@ -99,6 +99,19 @@ export function MultiCombobox({
         </label>
         <Combobox.InputGroup
           className={styles.inputGroup}
+          onPointerDown={(e) => {
+            if ((e.target as HTMLElement).closest("button")) {
+              suppressFocusOpen.current = true;
+              requestAnimationFrame(() => {
+                suppressFocusOpen.current = false;
+              });
+            }
+          }}
+          onFocus={() => {
+            if (!suppressFocusOpen.current) {
+              setOpen(true);
+            }
+          }}
           onClick={(e) => {
             if ((e.target as HTMLElement).closest("button")) {
               return;

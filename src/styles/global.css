@@ -68,6 +68,7 @@ a:hover {
   outline: var(--focus-ring);
   outline-color: var(--color-accent);
   outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-card);
 }
 
 /* ─── Form Controls ──────────────────────────────────────────────────────── */
