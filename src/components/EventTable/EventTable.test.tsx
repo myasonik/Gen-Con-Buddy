@@ -247,10 +247,8 @@ test("eventType column popover renders Show icon checkbox", async () => {
   const user = userEvent.setup();
   const sharedColumnState = makeSharedColumnState();
   await renderEventTable([makeEvent()], sharedColumnState);
-  const columnActionsButtons = screen.getAllByRole("button", { name: "Column actions" });
-  // eventType is the 3rd column (index 2: gameId=0, title=1, eventType=2)
-  const [, , eventTypePopoverBtn] = columnActionsButtons;
-  await user.click(eventTypePopoverBtn);
+  const typeHeader = screen.getByRole("columnheader", { name: /Type/ });
+  await user.click(within(typeHeader).getByRole("button", { name: "Column actions" }));
   expect(screen.getByRole("checkbox", { name: "Show icon" })).toBeInTheDocument();
 });
 
@@ -258,10 +256,7 @@ test("day column popover renders Day radio button", async () => {
   const user = userEvent.setup();
   const sharedColumnState = makeSharedColumnState();
   await renderEventTable([makeEvent()], sharedColumnState);
-  const columnActionsButtons = screen.getAllByRole("button", { name: "Column actions" });
-  // day is the 16th column (index 15: gameId=0, title=1, eventType=2, group=3, shortDesc=4, longDesc=5, gameSystem=6, rulesEdition=7, minPlayers=8, maxPlayers=9, ageRequired=10, experienceRequired=11, materialsProvided=12, materialsRequired=13, materialsRequiredDetails=14, day=15)
-  const dayColumnIndex = 15;
-  const [dayPopoverBtn] = columnActionsButtons.slice(dayColumnIndex);
-  await user.click(dayPopoverBtn);
+  const dayHeader = screen.getByRole("columnheader", { name: /Day/ });
+  await user.click(within(dayHeader).getByRole("button", { name: "Column actions" }));
   expect(screen.getByRole("radio", { name: "Day" })).toBeInTheDocument();
 });
