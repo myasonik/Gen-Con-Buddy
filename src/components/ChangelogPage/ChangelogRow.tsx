@@ -29,6 +29,23 @@ function isFilterActive(filter: SearchFormValues | undefined): boolean {
   return Boolean(filter.eventType || filter.days || filter.timeStart || filter.timeEnd);
 }
 
+function computeFilterState(
+  filterActive: boolean,
+  cachedEntry: ChangelogEntry | undefined,
+  filteredCounts: { hasMatches: boolean } | null,
+): "dimmed" | "unknown" | undefined {
+  if (!filterActive) {
+    return undefined;
+  }
+  if (cachedEntry === undefined) {
+    return "unknown";
+  }
+  if (filteredCounts?.hasMatches) {
+    return undefined;
+  }
+  return "dimmed";
+}
+
 function deriveFilteredCounts(
   cachedEntry: ChangelogEntry,
   activeFilter: SearchFormValues,
@@ -67,24 +84,11 @@ export function ChangelogRow({
   const cachedEntry = queryClient.getQueryData<ChangelogEntry>(["changelog", "entry", summary.id]);
 
   const filteredCounts =
-    filterActive && activeFilter !== undefined && cachedEntry !== undefined
+    filterActive && cachedEntry !== undefined && activeFilter !== undefined
       ? deriveFilteredCounts(cachedEntry, activeFilter)
       : null;
 
-  function computeFilterState(): "dimmed" | "unknown" | undefined {
-    if (!filterActive || activeFilter === undefined) {
-      return undefined;
-    }
-    if (cachedEntry === undefined) {
-      return "unknown";
-    }
-    if (filteredCounts !== null && filteredCounts.hasMatches) {
-      return undefined;
-    }
-    return "dimmed";
-  }
-
-  const filterState = computeFilterState();
+  const filterState = computeFilterState(filterActive, cachedEntry, filteredCounts);
 
   const createdCount = filteredCounts !== null ? filteredCounts.createdCount : summary.createdCount;
   const updatedCount = filteredCounts !== null ? filteredCounts.updatedCount : summary.updatedCount;
@@ -111,44 +115,45 @@ export function ChangelogRow({
   }
 
   return (
-    <Collapsible
-      className={styles.row}
-      triggerClassName={styles.summary}
-      open={isOpen}
-      data-filter-state={filterState}
-      onOpenChange={(open) => {
-        setIsOpen(open);
-        syncOpenToUrl(open);
-        if (open) {
-          onOpen();
+    <div className={styles.rowWrapper} data-filter-state={filterState}>
+      <Collapsible
+        className={styles.row}
+        triggerClassName={styles.summary}
+        open={isOpen}
+        onOpenChange={(open) => {
+          setIsOpen(open);
+          syncOpenToUrl(open);
+          if (open) {
+            onOpen();
+          }
+        }}
+        trigger={
+          <>
+            <time dateTime={summary.date} className={styles.date}>
+              {format(new Date(summary.date), "MMM d, yyyy h:mm a")}
+            </time>
+            <span className={styles.counts}>
+              <Chip tone="jade">{createdCount} created</Chip>
+              <Chip tone="cobalt">{updatedCount} updated</Chip>
+              <Chip tone="amber">{deletedCount} deleted</Chip>
+              {filterState === "unknown" && (
+                <span className={styles.unknownBadge} aria-label="Filter match unknown">
+                  ?
+                </span>
+              )}
+            </span>
+          </>
         }
-      }}
-      trigger={
-        <>
-          <time dateTime={summary.date} className={styles.date}>
-            {format(new Date(summary.date), "MMM d, yyyy h:mm a")}
-          </time>
-          <span className={styles.counts}>
-            <Chip tone="jade">{createdCount} created</Chip>
-            <Chip tone="cobalt">{updatedCount} updated</Chip>
-            <Chip tone="amber">{deletedCount} deleted</Chip>
-            {filterState === "unknown" && (
-              <span className={styles.unknownBadge} aria-label="Filter match unknown">
-                ?
-              </span>
-            )}
-          </span>
-        </>
-      }
-    >
-      <ChangelogEntryPanel
-        entry={isError ? "error" : entry}
-        sharedColumnState={sharedColumnState}
-        openParam={openParam}
-        position={position}
-        navigate={navigate}
-        activeFilter={activeFilter}
-      />
-    </Collapsible>
+      >
+        <ChangelogEntryPanel
+          entry={isError ? "error" : entry}
+          sharedColumnState={sharedColumnState}
+          openParam={openParam}
+          position={position}
+          navigate={navigate}
+          activeFilter={activeFilter}
+        />
+      </Collapsible>
+    </div>
   );
 }

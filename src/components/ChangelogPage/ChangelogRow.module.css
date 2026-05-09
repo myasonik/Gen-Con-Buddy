@@ -1,11 +1,18 @@
+.rowWrapper {
+  margin-bottom: var(--space-2);
+}
+
+.rowWrapper[data-filter-state="dimmed"] {
+  opacity: 0.4;
+}
+
 .row {
   border: var(--border-width) solid var(--color-ink-divider);
   border-radius: var(--radius-card);
-  margin-bottom: var(--space-2);
   background: var(--color-surface-page);
 }
 
-.row:nth-child(even) {
+.rowWrapper:nth-child(even) .row {
   background: var(--color-surface-row-alt);
 }
 
@@ -63,10 +70,6 @@
   display: flex;
   gap: var(--space-2);
   align-items: center;
-}
-
-.row[data-filter-state="dimmed"] {
-  opacity: 0.4;
 }
 
 .unknownBadge {
