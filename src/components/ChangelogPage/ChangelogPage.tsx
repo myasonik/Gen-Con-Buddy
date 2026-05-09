@@ -4,18 +4,30 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { NavigateFn } from "@tanstack/react-router";
 import { useSharedColumnState } from "../../hooks/useSharedColumnState";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
-import { VisibilityDrawer } from "../EventTable/VisibilityDrawer";
-import { FormatDrawer } from "../EventTable/FormatDrawer";
+import { ColumnControlsPanel } from "../EventTable/ColumnControlsPanel";
 import { fetchChangelogEntry, fetchChangelogList } from "../../utils/api";
+import { SearchForm } from "../SearchForm/SearchForm";
+import type { SearchFormValues } from "../../utils/types";
 import styles from "./ChangelogPage.module.css";
 import { ChangelogRow } from "./ChangelogRow";
 
 interface ChangelogPageProps {
   openParam?: string[];
   navigate?: NavigateFn;
+  eventType?: string;
+  days?: string;
+  timeStart?: string;
+  timeEnd?: string;
 }
 
-export function ChangelogPage({ openParam = [], navigate }: ChangelogPageProps): React.JSX.Element {
+export function ChangelogPage({
+  openParam = [],
+  navigate,
+  eventType = "",
+  days = "",
+  timeStart = "",
+  timeEnd = "",
+}: ChangelogPageProps): React.JSX.Element {
   const posthog = usePostHog();
   const queryClient = useQueryClient();
   const sharedColumnState = useSharedColumnState();
@@ -37,12 +49,30 @@ export function ChangelogPage({ openParam = [], navigate }: ChangelogPageProps):
     }
   }, [summaries, queryClient]);
 
+  const activeFilter: SearchFormValues = { eventType, days, timeStart, timeEnd };
+
+  const handleSearch = (values: SearchFormValues): void => {
+    if (!navigate) {
+      return;
+    }
+    void navigate({
+      to: ".",
+      search: (prev) => ({
+        ...prev,
+        eventType: values.eventType || undefined,
+        days: values.days || undefined,
+        timeStart: values.timeStart || undefined,
+        timeEnd: values.timeEnd || undefined,
+      }),
+      replace: false,
+      resetScroll: false,
+    });
+  };
+
   const handleOpen = (index: number): void => {
     const current = summaries[index];
     if (current) {
-      posthog.capture("changelog_entry_opened", {
-        entry_id: current.id,
-      });
+      posthog.capture("changelog_entry_opened", { entry_id: current.id });
     }
     const next = summaries[index + 1];
     if (next) {
@@ -55,31 +85,32 @@ export function ChangelogPage({ openParam = [], navigate }: ChangelogPageProps):
 
   return (
     <main className={styles.page}>
-      {isLoading && <EmptyState variant="loading" text="LOADING CHANGELOG…" />}
-      {isError && <p>Could not load changelog. Try refreshing.</p>}
-      {!isLoading && !isError && summaries.length === 0 && <p>No changelog entries yet.</p>}
-      {summaries.length > 0 && (
-        <>
-          <h1 className={styles.heading}>Changelog</h1>
-          <div className={styles.controls}>
-            <VisibilityDrawer columnState={sharedColumnState} />
-            <FormatDrawer columnState={sharedColumnState} />
-          </div>
-          <section className={styles.changelogSection}>
-            {summaries.map((summary, i) => (
-              <ChangelogRow
-                key={summary.id}
-                position={i + 1}
-                openParam={openParam}
-                navigate={navigate}
-                summary={summary}
-                onOpen={() => handleOpen(i)}
-                sharedColumnState={sharedColumnState}
-              />
-            ))}
-          </section>
-        </>
-      )}
+      <SearchForm values={activeFilter} onSearch={handleSearch} changelogMode />
+      <div className={styles.content}>
+        {isLoading && <EmptyState variant="loading" text="LOADING CHANGELOG…" />}
+        {isError && <p>Could not load changelog. Try refreshing.</p>}
+        {!isLoading && !isError && summaries.length === 0 && <p>No changelog entries yet.</p>}
+        {summaries.length > 0 && (
+          <>
+            <h1 className={styles.heading}>Changelog</h1>
+            <ColumnControlsPanel columnState={sharedColumnState} />
+            <section className={styles.changelogSection}>
+              {summaries.map((summary, i) => (
+                <ChangelogRow
+                  key={summary.id}
+                  position={i + 1}
+                  openParam={openParam}
+                  navigate={navigate}
+                  summary={summary}
+                  onOpen={() => handleOpen(i)}
+                  sharedColumnState={sharedColumnState}
+                  activeFilter={activeFilter}
+                />
+              ))}
+            </section>
+          </>
+        )}
+      </div>
     </main>
   );
 }

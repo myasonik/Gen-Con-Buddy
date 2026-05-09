@@ -14,9 +14,20 @@ function coerceStringArray(value: unknown): string[] {
   return [];
 }
 
+function coerceString(value: unknown): string {
+  if (typeof value === "string") {
+    return value;
+  }
+  return "";
+}
+
 export const Route = createFileRoute("/changelog")({
   validateSearch: (search: Record<string, unknown>) => ({
     open: coerceStringArray(search.open),
+    eventType: coerceString(search.eventType),
+    days: coerceString(search.days),
+    timeStart: coerceString(search.timeStart),
+    timeEnd: coerceString(search.timeEnd),
   }),
   loaderDeps: ({ search }) => ({ open: search.open }),
   loader: async ({ deps, context }) => {
@@ -42,7 +53,16 @@ export const Route = createFileRoute("/changelog")({
 });
 
 function ChangelogPageRoute(): React.JSX.Element {
-  const { open } = Route.useSearch();
+  const { open, eventType, days, timeStart, timeEnd } = Route.useSearch();
   const navigate = Route.useNavigate();
-  return <ChangelogPage openParam={open} navigate={navigate} />;
+  return (
+    <ChangelogPage
+      openParam={open}
+      navigate={navigate}
+      eventType={eventType}
+      days={days}
+      timeStart={timeStart}
+      timeEnd={timeEnd}
+    />
+  );
 }

@@ -1,7 +1,7 @@
 import React, { startTransition, useState } from "react";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
-import type { ChangelogSummary } from "../../utils/types";
+import type { ChangelogSummary, SearchFormValues } from "../../utils/types";
 import { fetchChangelogEntry } from "../../utils/api";
 import { ChangelogEntryPanel } from "./ChangelogEntryPanel";
 import type { SharedColumnState } from "../EventTable/types";
@@ -18,6 +18,7 @@ interface ChangelogRowProps {
   summary: ChangelogSummary;
   onOpen: () => void;
   sharedColumnState: SharedColumnState;
+  activeFilter?: SearchFormValues;
 }
 
 export function ChangelogRow({
@@ -27,6 +28,7 @@ export function ChangelogRow({
   summary,
   onOpen,
   sharedColumnState,
+  activeFilter,
 }: ChangelogRowProps): React.JSX.Element {
   const openMap = parseOpenParam(openParam);
   const [isOpen, setIsOpen] = useState(() => position !== undefined && openMap.has(position));
@@ -87,6 +89,7 @@ export function ChangelogRow({
         openParam={openParam}
         position={position}
         navigate={navigate}
+        activeFilter={activeFilter}
       />
     </Collapsible>
   );

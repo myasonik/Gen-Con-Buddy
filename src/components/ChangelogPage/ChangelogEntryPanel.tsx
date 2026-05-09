@@ -5,7 +5,8 @@ import { Chip } from "../../ui/Chip/Chip";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { parseSortString } from "../../utils/parseSortString";
 import { sortEvents } from "../../utils/sortEvents";
-import type { ChangelogEntry, Event, SortState } from "../../utils/types";
+import { filterChangelogEvents } from "../../utils/filterChangelogEvents";
+import type { ChangelogEntry, Event, SearchFormValues, SortState } from "../../utils/types";
 import { EventListMobile } from "../EventTable/EventListMobile";
 import { EventTable } from "../EventTable/EventTable";
 import type { SharedColumnState } from "../EventTable/types";
@@ -20,6 +21,7 @@ interface ChangelogEntryPanelProps {
   openParam?: string[];
   position?: number;
   navigate?: NavigateFn;
+  activeFilter?: SearchFormValues;
 }
 
 const CHANGELOG_LINK_STATE = { from: "changelog" } as const;
@@ -68,6 +70,7 @@ export function ChangelogEntryPanel({
   openParam = [],
   position,
   navigate,
+  activeFilter,
 }: ChangelogEntryPanelProps): React.JSX.Element {
   const openForPosition = useMemo(
     () =>
@@ -154,11 +157,17 @@ export function ChangelogEntryPanel({
     return <p>Could not load this entry. Collapse and re-expand to retry.</p>;
   }
 
-  if (
-    entry.createdEvents.length === 0 &&
-    entry.updatedEvents.length === 0 &&
-    entry.deletedEvents.length === 0
-  ) {
+  const createdEvents = activeFilter
+    ? filterChangelogEvents(entry.createdEvents, activeFilter)
+    : entry.createdEvents;
+  const updatedEvents = activeFilter
+    ? filterChangelogEvents(entry.updatedEvents, activeFilter)
+    : entry.updatedEvents;
+  const deletedEvents = activeFilter
+    ? filterChangelogEvents(entry.deletedEvents, activeFilter)
+    : entry.deletedEvents;
+
+  if (createdEvents.length === 0 && updatedEvents.length === 0 && deletedEvents.length === 0) {
     return (
       <EmptyState variant="empty" text="NO CHANGES" subtext="This entry has no event changes." />
     );
@@ -168,19 +177,26 @@ export function ChangelogEntryPanel({
   const updatedSort = openForPosition.get("updated");
   const deletedSort = openForPosition.get("deleted");
 
+  // When a filter has active values, auto-open groups so filtered results are immediately visible.
+  const isFilterActive =
+    activeFilter !== undefined &&
+    Boolean(
+      activeFilter.eventType || activeFilter.days || activeFilter.timeStart || activeFilter.timeEnd,
+    );
+
   return (
     <div className={styles.panel}>
-      {entry.createdEvents.length > 0 && (
+      {createdEvents.length > 0 && (
         <Collapsible
           className={styles.group}
           triggerClassName={styles.groupSummary}
-          open={openForPosition.has("created")}
+          open={isFilterActive ? true : openForPosition.has("created")}
           onOpenChange={(open) => syncGroupToUrl("created", open)}
           trigger={
             <span>
               <span className={styles.groupVerbCreated}>Created</span>{" "}
               <Chip tone="neutral" className={styles.groupCount}>
-                {entry.createdEvents.length}
+                {createdEvents.length}
               </Chip>
             </span>
           }
@@ -188,8 +204,8 @@ export function ChangelogEntryPanel({
           <EventGroup
             events={
               createdSort
-                ? sortEvents(entry.createdEvents, createdSort.field, createdSort.dir)
-                : entry.createdEvents
+                ? sortEvents(createdEvents, createdSort.field, createdSort.dir)
+                : createdEvents
             }
             sharedColumnState={sharedColumnState}
             onSort={makeOnSort("created")}
@@ -198,17 +214,17 @@ export function ChangelogEntryPanel({
           />
         </Collapsible>
       )}
-      {entry.updatedEvents.length > 0 && (
+      {updatedEvents.length > 0 && (
         <Collapsible
           className={styles.group}
           triggerClassName={styles.groupSummary}
-          open={openForPosition.has("updated")}
+          open={isFilterActive ? true : openForPosition.has("updated")}
           onOpenChange={(open) => syncGroupToUrl("updated", open)}
           trigger={
             <span>
               <span className={styles.groupVerbUpdated}>Updated</span>{" "}
               <Chip tone="neutral" className={styles.groupCount}>
-                {entry.updatedEvents.length}
+                {updatedEvents.length}
               </Chip>
             </span>
           }
@@ -216,8 +232,8 @@ export function ChangelogEntryPanel({
           <EventGroup
             events={
               updatedSort
-                ? sortEvents(entry.updatedEvents, updatedSort.field, updatedSort.dir)
-                : entry.updatedEvents
+                ? sortEvents(updatedEvents, updatedSort.field, updatedSort.dir)
+                : updatedEvents
             }
             sharedColumnState={sharedColumnState}
             onSort={makeOnSort("updated")}
@@ -226,17 +242,17 @@ export function ChangelogEntryPanel({
           />
         </Collapsible>
       )}
-      {entry.deletedEvents.length > 0 && (
+      {deletedEvents.length > 0 && (
         <Collapsible
           className={styles.group}
           triggerClassName={styles.groupSummary}
-          open={openForPosition.has("deleted")}
+          open={isFilterActive ? true : openForPosition.has("deleted")}
           onOpenChange={(open) => syncGroupToUrl("deleted", open)}
           trigger={
             <span>
               <span className={styles.groupVerbDeleted}>Deleted</span>{" "}
               <Chip tone="neutral" className={styles.groupCount}>
-                {entry.deletedEvents.length}
+                {deletedEvents.length}
               </Chip>
             </span>
           }
@@ -244,8 +260,8 @@ export function ChangelogEntryPanel({
           <EventGroup
             events={
               deletedSort
-                ? sortEvents(entry.deletedEvents, deletedSort.field, deletedSort.dir)
-                : entry.deletedEvents
+                ? sortEvents(deletedEvents, deletedSort.field, deletedSort.dir)
+                : deletedEvents
             }
             sharedColumnState={sharedColumnState}
             onSort={makeOnSort("deleted")}

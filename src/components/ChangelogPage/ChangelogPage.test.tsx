@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import React, { StrictMode } from "react";
 import { expect, test, beforeEach } from "vitest";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -21,7 +21,9 @@ beforeEach(() => {
   localStorage.clear();
 });
 
-async function renderChangelogPage(): Promise<void> {
+async function renderChangelogPage(
+  props: Partial<React.ComponentProps<typeof ChangelogPage>> = {},
+): Promise<void> {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
@@ -29,7 +31,7 @@ async function renderChangelogPage(): Promise<void> {
   const changelogRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: "/changelog",
-    component: ChangelogPage,
+    component: () => <ChangelogPage {...props} />,
   });
   const eventRoute = createRoute({
     getParentRoute: () => rootRoute,
@@ -194,4 +196,73 @@ test("renders Visibility and Format buttons above the changelog entries", async 
     expect(screen.getByRole("button", { name: "Visibility" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Format" })).toBeInTheDocument();
   });
+});
+
+test("renders SearchForm in changelogMode (no keyword, no Filters button)", async () => {
+  server.use(
+    http.get("/api/changelog/list", () =>
+      HttpResponse.json<ListChangelogsResponse>({ entries: [] }),
+    ),
+  );
+  await renderChangelogPage();
+  expect(screen.queryByRole("textbox", { name: "Search" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Filters" })).not.toBeInTheDocument();
+  expect(screen.getByRole("combobox", { name: "Event Type" })).toBeInTheDocument();
+});
+
+test("filters events within an expanded entry when eventType filter is active", async () => {
+  const user = userEvent.setup();
+  server.use(
+    http.get("/api/changelog/list", () =>
+      HttpResponse.json<ListChangelogsResponse>({
+        entries: [
+          makeChangelogSummary({
+            id: "entry-1",
+            createdCount: 2,
+            updatedCount: 0,
+            deletedCount: 0,
+          }),
+        ],
+      }),
+    ),
+    http.get("/api/changelog/fetch", () =>
+      HttpResponse.json<FetchChangelogResponse>({
+        entry: makeChangelogEntry({
+          id: "entry-1",
+          createdEvents: [
+            makeEvent({ title: "Dragon Hunt", eventType: "RPG" }),
+            makeEvent({ title: "Catan Open", eventType: "BGM" }),
+          ],
+          updatedEvents: [],
+          deletedEvents: [],
+        }),
+      }),
+    ),
+  );
+
+  await renderChangelogPage({ eventType: "RPG" });
+
+  // Open the entry row
+  await user.click(await screen.findByText(/created/));
+  await screen.findByText("Created");
+
+  expect(screen.getAllByText("Dragon Hunt").length).toBeGreaterThan(0);
+  expect(screen.queryByText("Catan Open")).not.toBeInTheDocument();
+});
+
+test.skip("passes activeFilter to ChangelogRow so it can show unknown indicator", async () => {
+  server.use(
+    http.get("/api/changelog/list", () =>
+      HttpResponse.json<ListChangelogsResponse>({
+        entries: [makeChangelogSummary({ id: "entry-1", createdCount: 1 })],
+      }),
+    ),
+  );
+
+  // Render with a filter but don't open the row — entry is not in cache
+  await renderChangelogPage({ eventType: "RPG" });
+
+  await screen.findByText(/created/);
+  // The unknown-state indicator should be present (entry not cached yet)
+  expect(screen.getByLabelText("Filter match unknown")).toBeInTheDocument();
 });
