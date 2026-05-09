@@ -13,7 +13,7 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { server } from "../../test/msw/server";
 import { makeChangelogSummary, makeChangelogEntry, makeEvent } from "../../test/msw/factory";
-import type { FetchChangelogResponse } from "../../utils/types";
+import type { FetchChangelogResponse, SearchFormValues, ChangelogSummary } from "../../utils/types";
 import { ChangelogRow } from "./ChangelogRow";
 import type { SharedColumnState } from "../EventTable/types";
 
@@ -38,13 +38,26 @@ beforeEach(() => {
   localStorage.clear();
 });
 
-function renderRow(
+function renderRow({
   summary = makeChangelogSummary({ id: "entry-1" }),
   onOpen = vi.fn<() => void>(),
-): ReturnType<typeof render> {
+  activeFilter,
+  client,
+}: {
+  summary?: ChangelogSummary;
+  onOpen?: () => void;
+  activeFilter?: SearchFormValues;
+  client?: QueryClient;
+} = {}): ReturnType<typeof render> {
+  const qc = client ?? new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const rootRoute = createRootRoute({
     component: () => (
-      <ChangelogRow summary={summary} onOpen={onOpen} sharedColumnState={stubColumnState} />
+      <ChangelogRow
+        summary={summary}
+        onOpen={onOpen}
+        sharedColumnState={stubColumnState}
+        activeFilter={activeFilter}
+      />
     ),
   });
   const eventRoute = createRoute({
@@ -56,10 +69,9 @@ function renderRow(
     routeTree: rootRoute.addChildren([eventRoute]),
     history: createMemoryHistory({ initialEntries: ["/"] }),
   });
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
     <StrictMode>
-      <QueryClientProvider client={client}>
+      <QueryClientProvider client={qc}>
         <RouterProvider router={router} />
       </QueryClientProvider>
     </StrictMode>,
@@ -67,7 +79,9 @@ function renderRow(
 }
 
 test("renders summary counts", async () => {
-  renderRow(makeChangelogSummary({ createdCount: 3, updatedCount: 1, deletedCount: 2 }));
+  renderRow({
+    summary: makeChangelogSummary({ createdCount: 3, updatedCount: 1, deletedCount: 2 }),
+  });
   await expect(screen.findByText("3 created")).resolves.toBeInTheDocument();
   expect(screen.getByText("1 updated")).toBeInTheDocument();
   expect(screen.getByText("2 deleted")).toBeInTheDocument();
@@ -118,7 +132,7 @@ test("calls onOpen when row is expanded", async () => {
       }),
     ),
   );
-  renderRow(makeChangelogSummary({ id: "entry-1" }), onOpen);
+  renderRow({ summary: makeChangelogSummary({ id: "entry-1" }), onOpen });
   await user.click(await screen.findByText(/created/));
   expect(onOpen).toHaveBeenCalledTimes(1);
 });
@@ -129,4 +143,74 @@ test("shows error message when entry fetch fails", async () => {
   renderRow();
   await user.click(await screen.findByText(/created/));
   await expect(screen.findByText(/could not load this entry/i)).resolves.toBeInTheDocument();
+});
+
+test("shows unknown indicator when filter is active and entry not in cache", async () => {
+  renderRow({ activeFilter: { eventType: "RPG" } });
+  await expect(screen.findByLabelText("Filter match unknown")).resolves.toBeInTheDocument();
+});
+
+test("no unknown indicator when no filter is active", async () => {
+  renderRow();
+  await screen.findByText(/created/);
+  expect(screen.queryByLabelText("Filter match unknown")).not.toBeInTheDocument();
+});
+
+test("dims row when cached entry has no events matching active filter", async () => {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  client.setQueryData(
+    ["changelog", "entry", "entry-1"],
+    makeChangelogEntry({
+      id: "entry-1",
+      createdEvents: [makeEvent({ eventType: "RPG" })],
+      updatedEvents: [],
+      deletedEvents: [],
+    }),
+  );
+  const { container } = renderRow({
+    summary: makeChangelogSummary({ id: "entry-1", createdCount: 1 }),
+    activeFilter: { eventType: "BGM" },
+    client,
+  });
+  await screen.findByText(/created/);
+  expect(container.querySelector("[data-filter-state='dimmed']")).toBeInTheDocument();
+});
+
+test("shows filtered counts when cached entry has matching events", async () => {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  client.setQueryData(
+    ["changelog", "entry", "entry-1"],
+    makeChangelogEntry({
+      id: "entry-1",
+      createdEvents: [makeEvent({ eventType: "RPG" }), makeEvent({ eventType: "BGM" })],
+      updatedEvents: [],
+      deletedEvents: [],
+    }),
+  );
+  renderRow({
+    summary: makeChangelogSummary({ id: "entry-1", createdCount: 2 }),
+    activeFilter: { eventType: "RPG" },
+    client,
+  });
+  await expect(screen.findByText("1 created")).resolves.toBeInTheDocument();
+  expect(screen.queryByText("2 created")).not.toBeInTheDocument();
+});
+
+test("shows normal counts when no filter is active even if entry is cached", async () => {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  client.setQueryData(
+    ["changelog", "entry", "entry-1"],
+    makeChangelogEntry({
+      id: "entry-1",
+      createdEvents: [makeEvent({ eventType: "RPG" }), makeEvent({ eventType: "BGM" })],
+      updatedEvents: [],
+      deletedEvents: [],
+    }),
+  );
+  renderRow({
+    summary: makeChangelogSummary({ id: "entry-1", createdCount: 2 }),
+    client,
+    // no activeFilter
+  });
+  await expect(screen.findByText("2 created")).resolves.toBeInTheDocument();
 });

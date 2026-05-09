@@ -9,6 +9,7 @@ export interface CollapsibleProps {
   onOpenChange?: (open: boolean) => void;
   className?: string;
   triggerClassName?: string;
+  "data-filter-state"?: string;
 }
 
 export function Collapsible({
@@ -18,12 +19,14 @@ export function Collapsible({
   className,
   open,
   onOpenChange,
+  "data-filter-state": dataFilterState,
 }: CollapsibleProps): React.JSX.Element {
   return (
     <BaseCollapsible.Root
       open={open}
       onOpenChange={onOpenChange ? (isOpen) => onOpenChange(isOpen) : undefined}
       className={className}
+      data-filter-state={dataFilterState}
     >
       <BaseCollapsible.Trigger className={triggerClassName}>{trigger}</BaseCollapsible.Trigger>
       <BaseCollapsible.Panel className={styles.panel}>

@@ -210,7 +210,7 @@ test("renders SearchForm in changelogMode (no keyword, no Filters button)", asyn
   expect(screen.getByRole("combobox", { name: "Event Type" })).toBeInTheDocument();
 });
 
-test.skip("passes activeFilter to ChangelogRow so it can show unknown indicator", async () => {
+test("passes activeFilter to ChangelogRow so it can show unknown indicator", async () => {
   server.use(
     http.get("/api/changelog/list", () =>
       HttpResponse.json<ListChangelogsResponse>({
