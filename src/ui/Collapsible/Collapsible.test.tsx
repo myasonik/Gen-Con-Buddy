@@ -45,27 +45,25 @@ test("clicking trigger twice closes an uncontrolled collapsible", async () => {
 });
 
 test("onOpenChange is called with true when closed trigger is clicked", async () => {
-  const onOpenChange =
-    vi.fn<(isOpen: boolean, event: React.MouseEvent<HTMLButtonElement>) => void>();
+  const onOpenChange = vi.fn<(open: boolean) => void>();
   render(
     <Collapsible trigger="Toggle" open={false} onOpenChange={onOpenChange}>
       content
     </Collapsible>,
   );
   await userEvent.click(screen.getByRole("button", { name: "Toggle" }));
-  expect(onOpenChange).toHaveBeenCalledWith(true, expect.anything());
+  expect(onOpenChange).toHaveBeenCalledWith(true);
 });
 
 test("onOpenChange is called with false when open trigger is clicked", async () => {
-  const onOpenChange =
-    vi.fn<(isOpen: boolean, event: React.MouseEvent<HTMLButtonElement>) => void>();
+  const onOpenChange = vi.fn<(open: boolean) => void>();
   render(
     <Collapsible trigger="Toggle" open onOpenChange={onOpenChange}>
       content
     </Collapsible>,
   );
   await userEvent.click(screen.getByRole("button", { name: "Toggle" }));
-  expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
+  expect(onOpenChange).toHaveBeenCalledWith(false);
 });
 
 test("className applies to the root element", () => {
@@ -84,4 +82,16 @@ test("triggerClassName applies to the trigger button", () => {
     </Collapsible>,
   );
   expect(screen.getByRole("button", { name: "Toggle" })).toHaveClass("btn-class");
+});
+
+test("onOpenChange fires on keyboard activation", async () => {
+  const onOpenChange = vi.fn<(open: boolean) => void>();
+  render(
+    <Collapsible trigger="Toggle" open={false} onOpenChange={onOpenChange}>
+      content
+    </Collapsible>,
+  );
+  screen.getByRole("button", { name: "Toggle" }).focus();
+  await userEvent.keyboard(" ");
+  expect(onOpenChange).toHaveBeenCalledWith(true);
 });
