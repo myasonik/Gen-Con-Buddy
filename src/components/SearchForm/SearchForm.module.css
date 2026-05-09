@@ -11,23 +11,30 @@
 
 /* ─── Drawer Fieldsets ───────────────────────────────────────────────────── */
 .fieldset {
-  margin: 0 0 var(--space-4) 0;
+  margin: 0;
   padding: 0;
   min-width: 0;
   border: none;
 }
 
+.fieldset + .fieldset {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: calc(var(--border-width) * 2) solid var(--color-ink-border);
+}
+
 .legend {
+  display: block;
   font-family: var(--font-slab);
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   font-weight: 600;
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
-  color: var(--color-ink-muted);
+  color: var(--color-ink);
   padding: 0 0 var(--space-2) 0;
-  border-bottom: var(--border-width) solid var(--color-ink-divider);
+  border-bottom: calc(var(--border-width) * 2) solid var(--color-ink-border);
   width: 100%;
-  margin-bottom: var(--space-1);
+  margin-bottom: var(--space-3);
 }
 
 .fieldsetBody {

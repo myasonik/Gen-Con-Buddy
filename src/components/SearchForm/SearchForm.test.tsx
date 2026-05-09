@@ -235,8 +235,8 @@ test("duration inputs use 0.5-hour steps to match real event data", async () => 
   const user = userEvent.setup();
   renderSearchForm();
   await user.click(screen.getByRole("button", { name: "Filters" }));
-  const durationGroup = screen.getByRole("group", { name: "Duration" });
-  const [fromInput, toInput] = within(durationGroup).getAllByRole("spinbutton");
+  const fromInput = document.querySelector<HTMLInputElement>('input[name="durationMin"]');
+  const toInput = document.querySelector<HTMLInputElement>('input[name="durationMax"]');
   expect(fromInput).toHaveAttribute("step", "0.5");
   expect(toInput).toHaveAttribute("step", "0.5");
 });

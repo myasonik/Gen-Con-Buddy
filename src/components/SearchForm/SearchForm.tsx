@@ -211,9 +211,9 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
                   />
                 }
               >
-                {/* DURATION */}
+                {/* SESSION */}
                 <fieldset className={styles.fieldset}>
-                  <legend className={styles.legend}>Duration</legend>
+                  <legend className={styles.legend}>Session</legend>
                   <div className={styles.fieldsetBody}>
                     <RangeField label="Duration (hours)">
                       <input
@@ -231,13 +231,20 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
                         {...register("durationMax")}
                       />
                     </RangeField>
-                  </div>
-                </fieldset>
-
-                {/* PLAYERS */}
-                <fieldset className={styles.fieldset}>
-                  <legend className={styles.legend}>Players</legend>
-                  <div className={styles.fieldsetBody}>
+                    <RangeField label="Minimum Play Time">
+                      <input
+                        type="number"
+                        min="0"
+                        className={styles.input}
+                        {...register("minimumPlayTimeMin")}
+                      />
+                      <input
+                        type="number"
+                        min="0"
+                        className={styles.input}
+                        {...register("minimumPlayTimeMax")}
+                      />
+                    </RangeField>
                     <RangeField label="Min Players">
                       <input
                         type="number"
@@ -343,33 +350,10 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
                   </div>
                 </fieldset>
 
-                {/* DETAILS */}
+                {/* GAME */}
                 <fieldset className={styles.fieldset}>
-                  <legend className={styles.legend}>Details</legend>
+                  <legend className={styles.legend}>Game</legend>
                   <div className={styles.fieldsetBody}>
-                    <Field label="Game ID">
-                      <input type="text" className={styles.input} {...register("gameId")} />
-                    </Field>
-                    <Field label="Title">
-                      <input type="text" className={styles.input} {...register("title")} />
-                    </Field>
-                    <Field label="Group">
-                      <input type="text" className={styles.input} {...register("group")} />
-                    </Field>
-                    <Field label="Short Description">
-                      <input
-                        type="text"
-                        className={styles.input}
-                        {...register("shortDescription")}
-                      />
-                    </Field>
-                    <Field label="Long Description">
-                      <input
-                        type="text"
-                        className={styles.input}
-                        {...register("longDescription")}
-                      />
-                    </Field>
                     <GameSystemSelect
                       value={watch("gameSystem") ?? ""}
                       onValueChange={(v) => setValue("gameSystem", v)}
@@ -377,6 +361,14 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
                     <Field label="Rules Edition">
                       <input type="text" className={styles.input} {...register("rulesEdition")} />
                     </Field>
+                    <label className={styles.label}>
+                      Special Category
+                      <Select
+                        value={watch("specialCategory") ?? ""}
+                        onValueChange={(v) => setValue("specialCategory", v)}
+                        options={Object.entries(CATEGORY).map(([k, v]) => ({ value: k, label: v }))}
+                      />
+                    </label>
                     <Field label="Materials Provided">
                       <input
                         type="text"
@@ -399,15 +391,6 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
                         className={styles.input}
                         {...register("materialsRequiredDetails")}
                       />
-                    </Field>
-                    <Field label="Game Masters">
-                      <input type="text" className={styles.input} {...register("gmNames")} />
-                    </Field>
-                    <Field label="Website">
-                      <input type="text" className={styles.input} {...register("website")} />
-                    </Field>
-                    <Field label="Email">
-                      <input type="text" className={styles.input} {...register("email")} />
                     </Field>
                     <label className={styles.label}>
                       Tournament
@@ -446,28 +429,45 @@ export function SearchForm({ values, onSearch }: SearchFormProps): React.JSX.Ele
                         {...register("totalRoundsMax")}
                       />
                     </RangeField>
-                    <RangeField label="Minimum Play Time">
+                  </div>
+                </fieldset>
+
+                {/* DETAILS */}
+                <fieldset className={styles.fieldset}>
+                  <legend className={styles.legend}>Details</legend>
+                  <div className={styles.fieldsetBody}>
+                    <Field label="Game ID">
+                      <input type="text" className={styles.input} {...register("gameId")} />
+                    </Field>
+                    <Field label="Title">
+                      <input type="text" className={styles.input} {...register("title")} />
+                    </Field>
+                    <Field label="Group">
+                      <input type="text" className={styles.input} {...register("group")} />
+                    </Field>
+                    <Field label="Short Description">
                       <input
-                        type="number"
-                        min="0"
+                        type="text"
                         className={styles.input}
-                        {...register("minimumPlayTimeMin")}
+                        {...register("shortDescription")}
                       />
+                    </Field>
+                    <Field label="Long Description">
                       <input
-                        type="number"
-                        min="0"
+                        type="text"
                         className={styles.input}
-                        {...register("minimumPlayTimeMax")}
+                        {...register("longDescription")}
                       />
-                    </RangeField>
-                    <label className={styles.label}>
-                      Special Category
-                      <Select
-                        value={watch("specialCategory") ?? ""}
-                        onValueChange={(v) => setValue("specialCategory", v)}
-                        options={Object.entries(CATEGORY).map(([k, v]) => ({ value: k, label: v }))}
-                      />
-                    </label>
+                    </Field>
+                    <Field label="Game Masters">
+                      <input type="text" className={styles.input} {...register("gmNames")} />
+                    </Field>
+                    <Field label="Website">
+                      <input type="text" className={styles.input} {...register("website")} />
+                    </Field>
+                    <Field label="Email">
+                      <input type="text" className={styles.input} {...register("email")} />
+                    </Field>
                     <RangeField label="Last Modified" stack>
                       <input
                         type="datetime-local"
