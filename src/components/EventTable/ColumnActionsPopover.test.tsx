@@ -13,6 +13,7 @@ function renderPopover(
       activeSortDir={undefined}
       onSort={vi.fn<(sort: string | undefined) => void>()}
       onOpenResize={vi.fn<() => void>()}
+      formatControls={undefined}
       {...overrides}
     />,
   );
@@ -114,4 +115,18 @@ test("does not render sort buttons when sortField is undefined", async () => {
   expect(screen.queryByRole("button", { name: "Sort ascending" })).not.toBeInTheDocument();
   expect(screen.queryByRole("button", { name: "Sort descending" })).not.toBeInTheDocument();
   expect(screen.getByRole("button", { name: "Resize…" })).toBeInTheDocument();
+});
+
+test("renders formatControls inside the popup when provided", async () => {
+  const user = userEvent.setup();
+  renderPopover({ formatControls: <div>Format options</div> });
+  await user.click(screen.getByRole("button", { name: "Column actions" }));
+  expect(screen.getByText("Format options")).toBeInTheDocument();
+});
+
+test("does not render extra content when formatControls is absent", async () => {
+  const user = userEvent.setup();
+  renderPopover();
+  await user.click(screen.getByRole("button", { name: "Column actions" }));
+  expect(screen.queryByText("Format options")).not.toBeInTheDocument();
 });
