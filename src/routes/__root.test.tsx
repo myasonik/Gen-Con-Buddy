@@ -19,3 +19,17 @@ test("Search nav link is not active when on /changelog", async () => {
   const link = screen.getByRole("link", { name: "Search" });
   expect(link).not.toHaveAttribute("data-status", "active");
 });
+
+test("Changelog nav link href contains no filter params", async () => {
+  await renderRoute("/");
+  const link = screen.getByRole("link", { name: "Changelog" });
+  const href = link.getAttribute("href") ?? "";
+  expect(href).not.toMatch(/[?&](eventType|days|timeStart|timeEnd)=/);
+});
+
+test("Changelog nav link href contains no filter params when navigating from a filtered URL", async () => {
+  await renderRoute("/changelog?days=thu&eventType=RPG");
+  const link = screen.getByRole("link", { name: "Changelog" });
+  const href = link.getAttribute("href") ?? "";
+  expect(href).not.toMatch(/[?&](eventType|days|timeStart|timeEnd)=/);
+});

@@ -482,6 +482,81 @@ test("validateSearch round-trips sort embedded in open param", async () => {
   expect(search.open).toContain("1.created.title.asc");
 });
 
+// ── validateSearch filter params ───────────────────────────────────────────
+
+function makeRouter(url: string): ReturnType<typeof createRouter> {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  return createRouter({
+    routeTree,
+    history: createMemoryHistory({ initialEntries: [url] }),
+    parseSearch,
+    stringifySearch,
+    context: { queryClient: client },
+  });
+}
+
+function getChangelogSearch(router: ReturnType<typeof createRouter>): Record<string, unknown> {
+  // router.state.matches contains validated search (post-validateSearch);
+  // the changelog route is the last match when on /changelog
+  const { matches } = router.state;
+  return ((matches[matches.length - 1] as { search?: unknown })?.search ?? {}) as Record<
+    string,
+    unknown
+  >;
+}
+
+test("validateSearch returns undefined for absent filter params", async () => {
+  const router = makeRouter("/changelog");
+  await router.load();
+  const search = getChangelogSearch(router);
+  expect(search.eventType).toBeUndefined();
+  expect(search.days).toBeUndefined();
+  expect(search.timeStart).toBeUndefined();
+  expect(search.timeEnd).toBeUndefined();
+});
+
+test("validateSearch returns undefined for empty-string filter params", async () => {
+  const router = makeRouter("/changelog?eventType=&days=");
+  await router.load();
+  const search = getChangelogSearch(router);
+  expect(search.eventType).toBeUndefined();
+  expect(search.days).toBeUndefined();
+});
+
+test("validateSearch returns string value for present filter params", async () => {
+  const router = makeRouter("/changelog?eventType=RPG&days=thu&timeStart=09%3A00&timeEnd=17%3A00");
+  await router.load();
+  const search = getChangelogSearch(router);
+  expect(search.eventType).toBe("RPG");
+  expect(search.days).toBe("thu");
+  expect(search.timeStart).toBe("09:00");
+  expect(search.timeEnd).toBe("17:00");
+});
+
+test("undefined filter params are not serialized to URL when navigating", async () => {
+  server.use(
+    http.get("/api/changelog/list", () =>
+      HttpResponse.json<ListChangelogsResponse>({ entries: [] }),
+    ),
+  );
+  const { router } = await renderRoute("/changelog?days=thu");
+  // Simulate the Search form being reset (all values cleared → navigate with undefined)
+  await act(async () => {
+    await router.navigate({
+      to: "/changelog",
+      search: {
+        open: [],
+        eventType: undefined,
+        days: undefined,
+        timeStart: undefined,
+        timeEnd: undefined,
+      },
+    });
+  });
+  const { href } = router.state.location;
+  expect(href).not.toMatch(/[?&](eventType|days|timeStart|timeEnd)=/);
+});
+
 test("clicking a column header in a changelog group writes sort to URL", async () => {
   server.use(
     http.get("/api/changelog/list", () =>

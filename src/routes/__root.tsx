@@ -35,7 +35,13 @@ function AppShell(): React.JSX.Element {
           </Link>
           <Link
             to="/changelog"
-            search={{ open: [], eventType: "", days: "", timeStart: "", timeEnd: "" }}
+            search={{
+              open: [],
+              eventType: undefined,
+              days: undefined,
+              timeStart: undefined,
+              timeEnd: undefined,
+            }}
             activeOptions={{ includeSearch: false }}
           >
             Changelog

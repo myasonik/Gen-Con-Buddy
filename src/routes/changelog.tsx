@@ -14,20 +14,20 @@ function coerceStringArray(value: unknown): string[] {
   return [];
 }
 
-function coerceString(value: unknown): string {
-  if (typeof value === "string") {
+function coerceOptionalString(value: unknown): string | undefined {
+  if (typeof value === "string" && value.length > 0) {
     return value;
   }
-  return "";
+  return undefined;
 }
 
 export const Route = createFileRoute("/changelog")({
   validateSearch: (search: Record<string, unknown>) => ({
     open: coerceStringArray(search.open),
-    eventType: coerceString(search.eventType),
-    days: coerceString(search.days),
-    timeStart: coerceString(search.timeStart),
-    timeEnd: coerceString(search.timeEnd),
+    eventType: coerceOptionalString(search.eventType),
+    days: coerceOptionalString(search.days),
+    timeStart: coerceOptionalString(search.timeStart),
+    timeEnd: coerceOptionalString(search.timeEnd),
   }),
   loaderDeps: ({ search }) => ({ open: search.open }),
   loader: async ({ deps, context }) => {
