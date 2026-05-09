@@ -136,10 +136,9 @@ test("toggling a column off hides its header", async () => {
   const user = userEvent.setup();
   renderSearchResults();
   await screen.findAllByRole("row");
-  await user.click(screen.getByRole("button", { name: /Customize columns/ }));
-
-  const checkbox = screen.getByRole("checkbox", { name: "Title" });
-  await user.click(checkbox);
+  await user.click(screen.getByRole("button", { name: "Visibility" }));
+  await user.click(screen.getByRole("checkbox", { name: "Title" }));
+  await user.click(screen.getByRole("button", { name: "Close" }));
 
   expect(screen.queryByRole("columnheader", { name: "Title" })).not.toBeInTheDocument();
 });
@@ -165,15 +164,16 @@ test("reset button restores default column visibility", async () => {
   const user = userEvent.setup();
   renderSearchResults();
   await screen.findAllByRole("row");
-  await user.click(screen.getByRole("button", { name: /Customize columns/ }));
-
-  // gameId is hidden by default — toggle it on
-  const checkbox = screen.getByRole("checkbox", { name: "Game ID" });
-  await user.click(checkbox);
+  // open Visibility drawer, toggle gameId on, close drawer, verify column appears
+  await user.click(screen.getByRole("button", { name: "Visibility" }));
+  await user.click(screen.getByRole("checkbox", { name: "Game ID" }));
+  await user.click(screen.getByRole("button", { name: "Close" }));
   expect(screen.getByRole("columnheader", { name: "Game ID" })).toBeInTheDocument();
 
-  // click reset — gameId should disappear again
-  await user.click(screen.getByRole("button", { name: "Reset to defaults" }));
+  // reopen drawer, click Reset — gameId should disappear again
+  await user.click(screen.getByRole("button", { name: "Visibility" }));
+  await user.click(screen.getByRole("button", { name: "Reset" }));
+  await user.click(screen.getByRole("button", { name: "Close" }));
   expect(screen.queryByRole("columnheader", { name: "Game ID" })).not.toBeInTheDocument();
 
   // title (default-visible) should still be present
@@ -503,9 +503,8 @@ test("reset to defaults clears column sizing from localStorage", async () => {
   localStorage.setItem("gcb-column-sizing", JSON.stringify({ version: 1, value: { title: 300 } }));
   renderSearchResults();
   await screen.findAllByRole("row");
-  await user.click(screen.getByRole("button", { name: /Customize columns/ }));
-
-  await user.click(screen.getByRole("button", { name: "Reset to defaults" }));
+  await user.click(screen.getByRole("button", { name: "Visibility" }));
+  await user.click(screen.getByRole("button", { name: "Reset" }));
 
   expect(localStorage.getItem("gcb-column-sizing")).toBeNull();
 });
@@ -628,7 +627,7 @@ test("type display radio buttons are present with Name checked by default", asyn
   const user = userEvent.setup();
   renderSearchResults();
   await screen.findAllByRole("row");
-  await user.click(screen.getByRole("button", { name: /Customize columns/ }));
+  await user.click(screen.getByRole("button", { name: "Format" }));
   expect(screen.getByRole("radio", { name: "Code" })).toBeInTheDocument();
   expect(screen.getByRole("radio", { name: "Name" })).toBeChecked();
   expect(screen.getByRole("radio", { name: "Both" })).toBeInTheDocument();
@@ -638,7 +637,7 @@ test("Show icon checkbox is present and checked by default", async () => {
   const user = userEvent.setup();
   renderSearchResults();
   await screen.findAllByRole("row");
-  await user.click(screen.getByRole("button", { name: /Customize columns/ }));
+  await user.click(screen.getByRole("button", { name: "Format" }));
   expect(screen.getByRole("checkbox", { name: "Show icon" })).toBeChecked();
 });
 
@@ -650,9 +649,9 @@ test("reset to defaults resets type display to name and icon shown", async () =>
   );
   renderSearchResults();
   await screen.findAllByRole("row");
-  await user.click(screen.getByRole("button", { name: /Customize columns/ }));
+  await user.click(screen.getByRole("button", { name: "Format" }));
   expect(screen.getByRole("radio", { name: "Code" })).toBeChecked();
-  await user.click(screen.getByRole("button", { name: "Reset to defaults" }));
+  await user.click(screen.getByRole("button", { name: "Reset" }));
   expect(screen.getByRole("radio", { name: "Name" })).toBeChecked();
   expect(screen.getByRole("checkbox", { name: "Show icon" })).toBeChecked();
 });
@@ -679,4 +678,16 @@ test("renders EventListMobile on mobile viewport, not EventTable", async () => {
 test("renders EventTable on desktop viewport, not EventListMobile", async () => {
   renderSearchResults();
   await expect(screen.findByRole("table")).resolves.toBeInTheDocument();
+});
+
+test("controls bar renders Visibility, Format, and Sort buttons", async () => {
+  server.use(
+    http.get("*/api/events", () => HttpResponse.json({ data: [makeEvent()], meta: { total: 1 } })),
+  );
+  renderSearchResults();
+  await waitFor(() => {
+    expect(screen.getByRole("button", { name: "Visibility" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Format" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Sort" })).toBeInTheDocument();
+  });
 });

@@ -10,6 +10,7 @@ interface ColumnActionsPopoverProps {
   activeSortDir: "asc" | "desc" | undefined;
   onSort: (sort: string | undefined) => void;
   onOpenResize: () => void;
+  formatControls?: React.ReactNode;
 }
 
 export function ColumnActionsPopover({
@@ -18,6 +19,7 @@ export function ColumnActionsPopover({
   activeSortDir,
   onSort,
   onOpenResize,
+  formatControls,
 }: ColumnActionsPopoverProps): React.JSX.Element {
   const isSortedAsc =
     Boolean(sortField) && activeSortField === sortField && activeSortDir === "asc";
@@ -59,6 +61,12 @@ export function ColumnActionsPopover({
             >
               Resize…
             </Popover.Close>
+            {formatControls !== undefined && (
+              <>
+                <hr className={styles.divider} aria-hidden="true" />
+                <div className={styles.formatSection}>{formatControls}</div>
+              </>
+            )}
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>

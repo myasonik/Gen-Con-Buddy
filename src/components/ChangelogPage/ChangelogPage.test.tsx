@@ -180,3 +180,18 @@ test("opening row[0] prefetches entry for row[1]", async () => {
   await user.click(screen.getAllByText(/created/)[0]);
   await waitFor(() => expect(entry2FetchCount).toBeGreaterThanOrEqual(1));
 });
+
+test("renders Visibility and Format buttons above the changelog entries", async () => {
+  server.use(
+    http.get("/api/changelog/list", () =>
+      HttpResponse.json<ListChangelogsResponse>({
+        entries: [makeChangelogSummary()],
+      }),
+    ),
+  );
+  await renderChangelogPage();
+  await waitFor(() => {
+    expect(screen.getByRole("button", { name: "Visibility" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Format" })).toBeInTheDocument();
+  });
+});

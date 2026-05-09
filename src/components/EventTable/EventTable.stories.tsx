@@ -84,7 +84,6 @@ interface EventTableStoryProps {
   activeSortField?: string;
   activeSortDir?: "asc" | "desc";
   onSort?: (sort: string | undefined) => void;
-  showColumnControls?: boolean;
 }
 
 function EventTableStory({
@@ -92,7 +91,6 @@ function EventTableStory({
   activeSortField,
   activeSortDir,
   onSort,
-  showColumnControls,
 }: EventTableStoryProps): React.JSX.Element {
   const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility();
   const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
@@ -127,7 +125,6 @@ function EventTableStory({
       activeSortDir={activeSortDir}
       onSort={onSort}
       sharedColumnState={sharedColumnState}
-      showColumnControls={showColumnControls}
     />
   );
 }
@@ -151,12 +148,6 @@ export const WithSort: Story = {
   args: {
     activeSortField: "title",
     activeSortDir: "asc",
-  },
-};
-
-export const NoColumnControls: Story = {
-  args: {
-    showColumnControls: false,
   },
 };
 

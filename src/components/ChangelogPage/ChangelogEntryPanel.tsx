@@ -43,7 +43,6 @@ function EventGroup({
         <EventTable
           events={events}
           sharedColumnState={sharedColumnState}
-          showColumnControls={false}
           linkState={CHANGELOG_LINK_STATE}
           onSort={onSort}
           activeSortField={activeSortField}

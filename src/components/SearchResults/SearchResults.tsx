@@ -7,7 +7,9 @@ import type { SearchParams } from "../../utils/types";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { EventTable } from "../EventTable/EventTable";
 import { EventListMobile } from "../EventTable/EventListMobile";
-import { ColumnControlsPanel } from "../EventTable/ColumnControlsPanel";
+import { VisibilityDrawer } from "../EventTable/VisibilityDrawer";
+import { FormatDrawer } from "../EventTable/FormatDrawer";
+import { SortDrawer } from "../EventTable/SortDrawer";
 import { useSharedColumnState } from "../../hooks/useSharedColumnState";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import styles from "./SearchResults.module.css";
@@ -52,6 +54,11 @@ export function SearchResults({
       {data && data.data.length > 0 && (
         <>
           <div className={styles.controlsBar}>
+            <div className={styles.tableControls}>
+              <VisibilityDrawer columnState={sharedColumnState} />
+              <FormatDrawer columnState={sharedColumnState} />
+              <SortDrawer />
+            </div>
             <Pagination
               page={page}
               limit={limit}
@@ -63,20 +70,20 @@ export function SearchResults({
           </div>
           {!isMobile ? (
             <div className={styles.tableView}>
-              <ColumnControlsPanel variant="inline" columnState={sharedColumnState} />
               <EventTable
                 events={data.data}
                 activeSortField={activeSortField}
                 activeSortDir={activeSortDir}
                 onSort={onSort}
                 sharedColumnState={sharedColumnState}
-                showColumnControls={false}
               />
             </div>
           ) : (
             <div className={styles.mobileView}>
               <div className={styles.mobileControls}>
-                <ColumnControlsPanel variant="drawer" columnState={sharedColumnState} />
+                <VisibilityDrawer columnState={sharedColumnState} />
+                <FormatDrawer columnState={sharedColumnState} />
+                <SortDrawer />
               </div>
               <EventListMobile
                 events={data.data}

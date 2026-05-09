@@ -275,6 +275,13 @@ test("filters drawer has role=dialog with accessible name when open", async () =
   expect(screen.getByRole("dialog", { name: "Advanced Filters" })).toBeInTheDocument();
 });
 
+test("Filters drawer opens on the right side", async () => {
+  const user = userEvent.setup();
+  renderSearchForm();
+  await user.click(screen.getByRole("button", { name: /Filters/i }));
+  expect(screen.getByRole("dialog")).toHaveAttribute("data-side", "right");
+});
+
 test("Escape key closes the filters dialog", async () => {
   const user = userEvent.setup();
   renderSearchForm();
