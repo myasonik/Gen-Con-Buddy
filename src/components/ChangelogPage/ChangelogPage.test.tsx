@@ -217,6 +217,8 @@ test("passes activeFilter to ChangelogRow so it can show unknown indicator", asy
         entries: [makeChangelogSummary({ id: "entry-1", createdCount: 1 })],
       }),
     ),
+    // Block the entry fetch so the entry stays out of cache during the assertion
+    http.get("/api/changelog/fetch", () => new Promise<never>(() => {})),
   );
 
   // Render with a filter but don't open the row — entry is not in cache
