@@ -1,4 +1,4 @@
-import React, { startTransition, useState } from "react";
+import React, { startTransition, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import type { SearchFormValues } from "../../utils/searchParamSchema";
@@ -38,7 +38,7 @@ export function ChangelogRow({
   onSort,
   onOpenSortDrawer,
 }: ChangelogRowProps): React.JSX.Element {
-  const openMap = parseOpenParam(openParam);
+  const openMap = useMemo(() => parseOpenParam(openParam), [openParam]);
   const [isOpen, setIsOpen] = useState(() => position !== undefined && openMap.has(position));
   const { data: entry, isError } = useQuery({
     queryKey: ["changelog", "entry", summary.id],

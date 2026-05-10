@@ -25,9 +25,16 @@ export function ColumnActionsPopover({
 }: ColumnActionsPopoverProps): React.JSX.Element {
   const sortEntry = sortField ? activeSort.find((s) => s.field === sortField) : undefined;
   const isInSort = sortEntry !== undefined;
-  const isSortedAsc = sortEntry?.dir === "asc";
-  const isSortedDesc = sortEntry?.dir === "desc";
   const showDrawerButton = Boolean(sortField) && !isInSort && activeSort.length >= 2;
+
+  function handleSortDir(dir: "asc" | "desc", field: string): void {
+    const isSortedThisDir = sortEntry?.dir === dir;
+    if (isInSort) {
+      onSort(isSortedThisDir ? removeSort(activeSort, field) : setSortDir(activeSort, field, dir));
+    } else {
+      onSort(addSort(activeSort, field, dir));
+    }
+  }
 
   return (
     <Popover.Root>
@@ -53,35 +60,15 @@ export function ColumnActionsPopover({
                   <>
                     <Popover.Close
                       render={<Button variant="ghost" className={styles.menuItem} />}
-                      aria-pressed={isSortedAsc}
-                      onClick={() => {
-                        if (isInSort) {
-                          onSort(
-                            isSortedAsc
-                              ? removeSort(activeSort, sortField)
-                              : setSortDir(activeSort, sortField, "asc"),
-                          );
-                        } else {
-                          onSort(addSort(activeSort, sortField, "asc"));
-                        }
-                      }}
+                      aria-pressed={sortEntry?.dir === "asc"}
+                      onClick={() => handleSortDir("asc", sortField)}
                     >
                       Sort ascending
                     </Popover.Close>
                     <Popover.Close
                       render={<Button variant="ghost" className={styles.menuItem} />}
-                      aria-pressed={isSortedDesc}
-                      onClick={() => {
-                        if (isInSort) {
-                          onSort(
-                            isSortedDesc
-                              ? removeSort(activeSort, sortField)
-                              : setSortDir(activeSort, sortField, "desc"),
-                          );
-                        } else {
-                          onSort(addSort(activeSort, sortField, "desc"));
-                        }
-                      }}
+                      aria-pressed={sortEntry?.dir === "desc"}
+                      onClick={() => handleSortDir("desc", sortField)}
                     >
                       Sort descending
                     </Popover.Close>

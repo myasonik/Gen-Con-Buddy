@@ -1,4 +1,4 @@
-import React, { useState, useId } from "react";
+import React, { useState, useId, useMemo } from "react";
 import { GripVertical, ChevronUp, ChevronDown, X } from "lucide-react";
 import {
   DndContext,
@@ -42,8 +42,7 @@ interface SortableItemProps {
   sort: SortState;
   isFirst: boolean;
   isLast: boolean;
-  onUp: () => void;
-  onDown: () => void;
+  onMove: (delta: 1 | -1) => void;
   onToggleDir: () => void;
   onRemove: () => void;
 }
@@ -52,8 +51,7 @@ function SortableItem({
   sort,
   isFirst,
   isLast,
-  onUp,
-  onDown,
+  onMove,
   onToggleDir,
   onRemove,
 }: SortableItemProps): React.JSX.Element {
@@ -77,7 +75,7 @@ function SortableItem({
       <button
         type="button"
         className={styles.iconButton}
-        onClick={onUp}
+        onClick={() => onMove(-1)}
         disabled={isFirst}
         aria-label={`Move ${label} up`}
       >
@@ -86,7 +84,7 @@ function SortableItem({
       <button
         type="button"
         className={styles.iconButton}
-        onClick={onDown}
+        onClick={() => onMove(1)}
         disabled={isLast}
         aria-label={`Move ${label} down`}
       >
@@ -124,32 +122,34 @@ export function SortDrawer({
   const [comboOpen, setComboOpen] = useState(false);
   const inputId = useId();
 
-  const sortedFields = new Set(activeSort.map((s) => s.field));
-
-  // Build combobox options, deduplicated by sortField (Day and Start both use startDateTime)
-  const seenSortFields = new Set<string>();
-  const allOptions = COLUMNS.filter((c) => {
-    if (!c.id || !c.meta?.sortField) {
-      return false;
-    }
-    if (sortedFields.has(c.meta.sortField)) {
-      return false;
-    }
-    if (seenSortFields.has(c.meta.sortField)) {
-      return false;
-    }
-    seenSortFields.add(c.meta.sortField);
-    return true;
-  }).map((c) => ({
-    value: c.meta?.sortField ?? "",
-    label: typeof c.header === "string" ? c.header : (c.id ?? ""),
-    visible: columnVisibility[c.id ?? ""] !== false,
-  }));
-
-  const visibleOptions = allOptions.filter((o) => o.visible);
-  const hiddenOptions = allOptions
-    .filter((o) => !o.visible)
-    .sort((a, b) => a.label.localeCompare(b.label));
+  const { visibleOptions, hiddenOptions } = useMemo(() => {
+    const sortedFields = new Set(activeSort.map((s) => s.field));
+    // Deduplicate by sortField (Day and Start both map to startDateTime)
+    const seenSortFields = new Set<string>();
+    const allOptions = COLUMNS.filter((c) => {
+      if (!c.id || !c.meta?.sortField) {
+        return false;
+      }
+      if (sortedFields.has(c.meta.sortField)) {
+        return false;
+      }
+      if (seenSortFields.has(c.meta.sortField)) {
+        return false;
+      }
+      seenSortFields.add(c.meta.sortField);
+      return true;
+    }).map((c) => ({
+      value: c.meta?.sortField ?? "",
+      label: typeof c.header === "string" ? c.header : (c.id ?? ""),
+      visible: columnVisibility[c.id ?? ""] !== false,
+    }));
+    return {
+      visibleOptions: allOptions.filter((o) => o.visible),
+      hiddenOptions: allOptions
+        .filter((o) => !o.visible)
+        .sort((a, b) => a.label.localeCompare(b.label)),
+    };
+  }, [activeSort, columnVisibility]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -200,7 +200,7 @@ export function SortDrawer({
         <Combobox.Root<string>
           value={comboValue}
           open={comboOpen}
-          onOpenChange={(isOpen) => setComboOpen(isOpen)}
+          onOpenChange={setComboOpen}
           onValueChange={(value) => {
             if (value) {
               const label = getSortFieldLabel(value);
@@ -221,33 +221,31 @@ export function SortDrawer({
           {comboOpen && (
             <Combobox.Portal>
               <Combobox.Positioner sideOffset={4}>
-                <div>
-                  <Combobox.List>
-                    {visibleOptions.length > 0 && (
-                      <Combobox.Group>
-                        <Combobox.GroupLabel>Visible columns</Combobox.GroupLabel>
-                        {visibleOptions.map((opt) => (
-                          <Combobox.Item key={opt.value} value={opt.value}>
-                            {opt.label}
-                          </Combobox.Item>
-                        ))}
-                      </Combobox.Group>
-                    )}
-                    {hiddenOptions.length > 0 && (
-                      <Combobox.Group>
-                        <Combobox.GroupLabel>Other fields</Combobox.GroupLabel>
-                        {hiddenOptions.map((opt) => (
-                          <Combobox.Item key={opt.value} value={opt.value}>
-                            {opt.label}
-                          </Combobox.Item>
-                        ))}
-                      </Combobox.Group>
-                    )}
-                    {visibleOptions.length === 0 && hiddenOptions.length === 0 && (
-                      <div>No fields available</div>
-                    )}
-                  </Combobox.List>
-                </div>
+                <Combobox.List>
+                  {visibleOptions.length > 0 && (
+                    <Combobox.Group>
+                      <Combobox.GroupLabel>Visible columns</Combobox.GroupLabel>
+                      {visibleOptions.map((opt) => (
+                        <Combobox.Item key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </Combobox.Item>
+                      ))}
+                    </Combobox.Group>
+                  )}
+                  {hiddenOptions.length > 0 && (
+                    <Combobox.Group>
+                      <Combobox.GroupLabel>Other fields</Combobox.GroupLabel>
+                      {hiddenOptions.map((opt) => (
+                        <Combobox.Item key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </Combobox.Item>
+                      ))}
+                    </Combobox.Group>
+                  )}
+                  {visibleOptions.length === 0 && hiddenOptions.length === 0 && (
+                    <div>No fields available</div>
+                  )}
+                </Combobox.List>
               </Combobox.Positioner>
             </Combobox.Portal>
           )}
@@ -272,14 +270,8 @@ export function SortDrawer({
                     sort={sort}
                     isFirst={index === 0}
                     isLast={index === activeSort.length - 1}
-                    onUp={() => {
-                      const newIndex = index - 1;
-                      const label = getSortFieldLabel(sort.field);
-                      onSort(reorderSort(activeSort, index, newIndex));
-                      announce(`${label} moved to position ${newIndex + 1}`);
-                    }}
-                    onDown={() => {
-                      const newIndex = index + 1;
+                    onMove={(delta) => {
+                      const newIndex = index + delta;
                       const label = getSortFieldLabel(sort.field);
                       onSort(reorderSort(activeSort, index, newIndex));
                       announce(`${label} moved to position ${newIndex + 1}`);

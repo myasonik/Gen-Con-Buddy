@@ -7,7 +7,6 @@ export function parseOpenParam(values: string[]): OpenMap {
     const segCount = parts.length;
     // Accept 1-segment (position), 2-segment (position.group),
     // and legacy 4-segment (position.group.field.dir) — sort portion silently ignored.
-    // Drop 3-segment and 5+-segment values.
     if (segCount !== 1 && segCount !== 2 && segCount !== 4) continue;
 
     const position = parseInt(parts[0], 10);

@@ -98,10 +98,12 @@ export function EventTable({
 
   const effectiveSort: SortState[] = onSort ? (activeSort ?? []) : internalSort;
 
-  const tanstackSorting = internalSort.map((s) => ({
-    id: COL_ID_BY_SORT_FIELD.get(s.field) ?? s.field,
-    desc: s.dir === "desc",
-  }));
+  const tanstackSorting = onSort
+    ? []
+    : internalSort.map((s) => ({
+        id: COL_ID_BY_SORT_FIELD.get(s.field) ?? s.field,
+        desc: s.dir === "desc",
+      }));
 
   const handleHeaderSortClick = (sortField: string, label: string): void => {
     if (effectiveSort.length >= 2) {
