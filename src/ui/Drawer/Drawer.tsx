@@ -10,6 +10,8 @@ interface DrawerProps {
   footer?: React.ReactNode;
   side?: "left" | "right";
   children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function Drawer({
@@ -18,9 +20,11 @@ export function Drawer({
   footer,
   side = "left",
   children,
+  open,
+  onOpenChange,
 }: DrawerProps): React.JSX.Element {
   return (
-    <Dialog.Root>
+    <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Trigger render={trigger as React.ReactElement} />
       <Dialog.Portal>
         <Dialog.Backdrop className={styles.backdrop} />
