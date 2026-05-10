@@ -193,29 +193,47 @@ Arrow up/down on any column whose `sortField` appears anywhere in `activeSort`. 
 
 ## Changelog Wiring
 
-### `openParam` URL format change
+Sort is page-level on the changelog — one shared sort for all tables across all entries, just like Visibility and Format.
 
-The inner map changes from `Map<groupKey, SortState | undefined>` to a single `SortState[] | undefined` per entry:
+### `openParam` — no changes
 
+`openParam` continues to track only which entries and groups are open. Sort is removed from it entirely. `parseOpenParam`, `serializeOpenParam`, and `OpenMap` are unchanged.
+
+### Changelog route (`src/routes/changelog.tsx`)
+
+Adds `sort?: string` to `validateSearch`, mirroring the index route.
+
+### `ChangelogPage` changes
+
+- Reads `sort` from URL search params, parses to `SortState[]` via `parseSorts`
+- Adds `sortDrawerOpen: boolean` state
+- `onSort` callback: serializes `SortState[]` and navigates with the result
+- Passes `activeSort`, `onSort`, `sortDrawerOpen`, `onSortDrawerOpenChange` to `ColumnControlsPanel`
+- Passes `activeSort`, `onSort`, `onOpenSortDrawer` to each `ChangelogRow`
+
+### `ColumnControlsPanel` changes
+
+Gains a `SortDrawer` alongside Visibility and Format:
+
+```ts
+interface ColumnControlsPanelProps {
+  columnState: SharedColumnState;
+  activeSort: SortState[];
+  onSort: (sorts: SortState[]) => void;
+  sortDrawerOpen: boolean;
+  onSortDrawerOpenChange: (open: boolean) => void;
+}
 ```
-Before: Map<position, Map<groupKey, SortState | undefined>>
-After:  Map<position, SortState[] | undefined>
-```
 
-`parseOpenParam` and `serializeOpenParam` are updated accordingly.
+### `ChangelogRow` changes
+
+Passes `activeSort`, `onSort`, and `onOpenSortDrawer` through to `ChangelogEntryPanel` (same pattern as the existing `sharedColumnState` prop).
 
 ### `ChangelogEntryPanel` changes
 
-- Owns sort state: reads `activeSort: SortState[]` from its entry's slot in `openParam` (via `parseOpenParam`)
-- Owns `sortDrawerOpen: boolean` state
-- `makeOnSort(group)` removed; single `syncEntrySortToUrl` handler updates the entry's sort in the URL
-- All three `EventGroup` instances receive the same `activeSort` and `onSort`
-- Renders a per-entry sort controls row (above the EventGroups) containing only a `SortDrawer`
-- Passes `onOpenSortDrawer={() => setSortDrawerOpen(true)}` to each `EventTable`
-
-### `ColumnControlsPanel` — no changes
-
-`ColumnControlsPanel` is page-level (Visibility + Format, shared across all entries). Sort is per-entry, so the `SortDrawer` lives inside `ChangelogEntryPanel` directly, not in `ColumnControlsPanel`. No prop threading through `ChangelogPage` or `ChangelogRow` is required.
+- `makeOnSort(group)` removed
+- All three `EventGroup` instances receive the same `activeSort`, `onSort`, and `onOpenSortDrawer`
+- `syncGroupSortToUrl` removed (sort no longer stored in `openParam`)
 
 ---
 
