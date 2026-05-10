@@ -3,7 +3,6 @@ import React, { startTransition, useMemo } from "react";
 import { Collapsible } from "../../ui/Collapsible/Collapsible";
 import { Chip } from "../../ui/Chip/Chip";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
-import { sortEvents } from "../../utils/sortEvents";
 import { filterChangelogEvents } from "../../utils/filterChangelogEvents";
 import type { SearchFormValues } from "../../utils/searchParamSchema";
 import type { ChangelogEntry, Event, SortState } from "../../utils/types";
@@ -72,12 +71,12 @@ export function ChangelogEntryPanel({
   const openForPosition = useMemo(
     () =>
       position !== undefined
-        ? (parseOpenParam(openParam).get(position) ?? new Map<string, SortState | undefined>())
-        : new Map<string, SortState | undefined>(),
+        ? (parseOpenParam(openParam).get(position) ?? new Map<string, undefined>())
+        : new Map<string, undefined>(),
     [openParam, position],
   );
 
-  function syncGroupSortToUrl(group: string, sort: SortState | undefined): void {
+  function syncGroupSortToUrl(group: string, _sort: SortState | undefined): void {
     if (!navigate || position === undefined) {
       return;
     }
@@ -92,7 +91,7 @@ export function ChangelogEntryPanel({
             return prev;
           }
           const groupMap = new Map(openMap.get(position) ?? []);
-          groupMap.set(group, sort);
+          groupMap.set(group, undefined);
           openMap.set(position, groupMap);
           return { ...prev, open: serializeOpenParam(openMap) };
         },
@@ -202,7 +201,6 @@ export function ChangelogEntryPanel({
         if (events.length === 0) {
           return null;
         }
-        const sort = openForPosition.get(key);
         return (
           <Collapsible
             key={key}
@@ -220,9 +218,9 @@ export function ChangelogEntryPanel({
             }
           >
             <EventGroup
-              events={sort ? sortEvents(events, sort.field, sort.dir) : events}
+              events={events}
               sharedColumnState={sharedColumnState}
-              activeSort={sort ? [sort] : []}
+              activeSort={[]}
               onSort={makeOnSort(key)}
             />
           </Collapsible>
