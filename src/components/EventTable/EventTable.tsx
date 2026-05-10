@@ -18,6 +18,7 @@ import {
 import { ColumnResizeDialog } from "./ColumnResizeDialog";
 import { announce } from "../../lib/announce";
 import type { Event, SortState } from "../../utils/types";
+import { addSort, removeSort, setSortDir } from "../../utils/sortManipulation";
 import { COLUMNS, SORT_FIELD_BY_COL_ID, COL_ID_BY_SORT_FIELD } from "./columns";
 import { STAFF_PICK_IDS } from "../../utils/staffPicks";
 import type { SharedColumnState } from "./types";
@@ -25,20 +26,38 @@ import styles from "./EventTable.module.css";
 
 export type { SharedColumnState };
 
+function applyHeaderSort(
+  sorts: SortState[],
+  sortField: string,
+  label: string,
+): { newSort: SortState[]; message: string } {
+  const existing = sorts.find((s) => s.field === sortField);
+  if (!existing) {
+    return { newSort: addSort(sorts, sortField), message: `Added ${label} to sort, ascending` };
+  }
+  if (existing.dir === "asc") {
+    return {
+      newSort: setSortDir(sorts, sortField, "desc"),
+      message: `${label} sorted descending`,
+    };
+  }
+  return { newSort: removeSort(sorts, sortField), message: `${label} removed from sort` };
+}
+
 interface EventTableProps {
   events: Event[];
-  activeSortField?: string;
-  activeSortDir?: "asc" | "desc";
-  onSort?: (sort: string | undefined) => void;
+  activeSort?: SortState[];
+  onSort?: (sorts: SortState[]) => void;
+  onOpenSortDrawer?: () => void;
   sharedColumnState: SharedColumnState;
   linkState?: { from: string };
 }
 
 export function EventTable({
   events,
-  activeSortField,
-  activeSortDir,
+  activeSort,
   onSort,
+  onOpenSortDrawer,
   sharedColumnState,
   linkState,
 }: EventTableProps): React.JSX.Element {
@@ -75,55 +94,43 @@ export function EventTable({
     currentWidth: number;
   } | null>(null);
 
+  const [internalSort, setInternalSort] = useState<SortState[]>([]);
+
+  const effectiveSort: SortState[] = onSort ? (activeSort ?? []) : internalSort;
+
+  const tanstackSorting = internalSort.map((s) => ({
+    id: COL_ID_BY_SORT_FIELD.get(s.field) ?? s.field,
+    desc: s.dir === "desc",
+  }));
+
   const handleHeaderSortClick = (sortField: string, label: string): void => {
-    if (activeSortField !== sortField) {
-      onSort?.(`${sortField}.asc`);
-      announce(`Sorted by ${label}, ascending`);
-      posthog.capture("results_sorted", { sort_field: sortField, sort_direction: "asc", label });
-    } else if (activeSortDir === "asc") {
-      onSort?.(`${sortField}.desc`);
-      announce(`Sorted by ${label}, descending`);
-      posthog.capture("results_sorted", { sort_field: sortField, sort_direction: "desc", label });
-    } else {
-      onSort?.(undefined);
-      announce("Sort cleared");
-      posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
+    if (effectiveSort.length >= 2) {
+      onOpenSortDrawer?.();
+      return;
     }
+
+    const { newSort, message } = applyHeaderSort(effectiveSort, sortField, label);
+    announce(message);
+
+    if (onSort) {
+      onSort(newSort);
+    } else {
+      setInternalSort(newSort);
+    }
+    posthog.capture("results_sorted", {
+      sort_fields: newSort.map((s) => s.field),
+      sort_count: newSort.length,
+    });
   };
 
-  const handlePopoverSort = (sorts: SortState[], label: string): void => {
-    const [first] = sorts;
+  const handlePopoverSort = (newSort: SortState[], _label: string): void => {
     if (onSort) {
-      const s = first ? `${first.field}.${first.dir}` : undefined;
-      onSort(s);
-      if (s && first) {
-        const dir = first.dir === "asc" ? "ascending" : "descending";
-        announce(`Sorted by ${label}, ${dir}`);
-        posthog.capture("results_sorted", {
-          sort_field: first.field,
-          sort_direction: first.dir,
-          label,
-        });
-      } else {
-        announce("Sort cleared");
-        posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
-      }
+      onSort(newSort);
     } else {
-      if (!first) {
-        setInternalSorting([]);
-        announce("Sort cleared");
-        posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
-      } else {
-        const colId = COL_ID_BY_SORT_FIELD.get(first.field) ?? first.field;
-        setInternalSorting([{ id: colId, desc: first.dir === "desc" }]);
-        announce(`Sorted by ${label}, ${first.dir === "asc" ? "ascending" : "descending"}`);
-        posthog.capture("results_sorted", {
-          sort_field: first.field,
-          sort_direction: first.dir,
-          label,
-        });
-      }
+      setInternalSort(newSort);
     }
+    announce(newSort.length === 0 ? "Sort cleared" : "Sort updated");
+    posthog.capture("results_sorted", { sort_fields: newSort.map((s) => s.field) });
   };
 
   const table = useReactTable({
@@ -133,6 +140,7 @@ export function EventTable({
     state: {
       columnVisibility: visibility,
       columnSizing: sizing,
+      sorting: onSort ? [] : tanstackSorting,
     },
     onColumnSizingChange: (updater) => {
       setSizing((prev) => {
@@ -142,7 +150,16 @@ export function EventTable({
         );
       });
     },
-    manualSorting: true,
+    onSortingChange: (updater) => {
+      const next = typeof updater === "function" ? updater(tanstackSorting) : updater;
+      setInternalSort(
+        next.map((s) => ({
+          field: SORT_FIELD_BY_COL_ID.get(s.id) ?? s.id,
+          dir: s.desc ? ("desc" as const) : ("asc" as const),
+        })),
+      );
+    },
+    manualSorting: Boolean(onSort),
     manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -193,10 +210,12 @@ export function EventTable({
                     const colHeader = header.column.columnDef.header;
                     const label =
                       typeof colHeader === "string" ? colHeader : (header.column.id ?? "");
-                    const isActive = Boolean(sortField) && activeSortField === sortField;
+                    const isActive =
+                      Boolean(sortField) && effectiveSort.some((s) => s.field === sortField);
+                    const activeEntry = effectiveSort.find((s) => s.field === sortField);
                     let ariaSort: "ascending" | "descending" | "none" = "none";
-                    if (isActive) {
-                      ariaSort = activeSortDir === "asc" ? "ascending" : "descending";
+                    if (isActive && activeEntry) {
+                      ariaSort = activeEntry.dir === "asc" ? "ascending" : "descending";
                     }
                     return (
                       <th
@@ -212,38 +231,28 @@ export function EventTable({
                         }
                       >
                         <div className={styles.thContent}>
-                          {onSort ? (
-                            <button
-                              type="button"
-                              className={styles.sortButton}
-                              onClick={() => sortField && handleHeaderSortClick(sortField, label)}
-                            >
-                              {flexRender(header.column.columnDef.header, header.getContext())}
-                              {isActive && (
-                                <span aria-hidden="true" className={styles.sortIndicator}>
-                                  {activeSortDir === "asc" ? (
-                                    <ArrowUp size={12} aria-hidden="true" />
-                                  ) : (
-                                    <ArrowDown size={12} aria-hidden="true" />
-                                  )}
-                                </span>
-                              )}
-                            </button>
-                          ) : (
-                            <span className={styles.columnLabel}>
-                              {flexRender(header.column.columnDef.header, header.getContext())}
-                            </span>
-                          )}
+                          <button
+                            type="button"
+                            className={styles.sortButton}
+                            onClick={() => sortField && handleHeaderSortClick(sortField, label)}
+                          >
+                            {flexRender(header.column.columnDef.header, header.getContext())}
+                            {isActive && (
+                              <span aria-hidden="true" className={styles.sortIndicator}>
+                                {activeEntry?.dir === "asc" ? (
+                                  <ArrowUp size={12} aria-hidden="true" />
+                                ) : (
+                                  <ArrowDown size={12} aria-hidden="true" />
+                                )}
+                              </span>
+                            )}
+                          </button>
                           {header.column.getCanResize() && (
                             <ColumnActionsPopover
                               sortField={sortField}
-                              activeSort={
-                                activeSortField && activeSortDir
-                                  ? [{ field: activeSortField, dir: activeSortDir }]
-                                  : []
-                              }
-                              onSort={(sorts) => handlePopoverSort(sorts, label)}
-                              onOpenSortDrawer={() => {}}
+                              activeSort={effectiveSort}
+                              onSort={(newSort) => handlePopoverSort(newSort, label)}
+                              onOpenSortDrawer={() => onOpenSortDrawer?.()}
                               onOpenResize={() =>
                                 setResizeTarget({
                                   columnId: header.column.id,

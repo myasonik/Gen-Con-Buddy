@@ -3,7 +3,6 @@ import React, { startTransition, useMemo } from "react";
 import { Collapsible } from "../../ui/Collapsible/Collapsible";
 import { Chip } from "../../ui/Chip/Chip";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
-import { parseSortString } from "../../utils/parseSortString";
 import { sortEvents } from "../../utils/sortEvents";
 import { filterChangelogEvents } from "../../utils/filterChangelogEvents";
 import type { SearchFormValues } from "../../utils/searchParamSchema";
@@ -30,15 +29,13 @@ const CHANGELOG_LINK_STATE = { from: "changelog" } as const;
 function EventGroup({
   events,
   sharedColumnState,
+  activeSort,
   onSort,
-  activeSortField,
-  activeSortDir,
 }: {
   events: Event[];
   sharedColumnState: SharedColumnState;
-  onSort: (sort: string | undefined) => void;
-  activeSortField?: string;
-  activeSortDir?: "asc" | "desc";
+  activeSort?: SortState[];
+  onSort?: (sorts: SortState[]) => void;
 }): React.JSX.Element {
   return (
     <>
@@ -47,9 +44,8 @@ function EventGroup({
           events={events}
           sharedColumnState={sharedColumnState}
           linkState={CHANGELOG_LINK_STATE}
+          activeSort={activeSort}
           onSort={onSort}
-          activeSortField={activeSortField}
-          activeSortDir={activeSortDir}
         />
       </div>
       <div className={styles.mobileView}>
@@ -135,16 +131,9 @@ export function ChangelogEntryPanel({
     });
   }
 
-  function makeOnSort(group: string): (s: string | undefined) => void {
-    return (s) => {
-      if (s === undefined) {
-        syncGroupSortToUrl(group, undefined);
-      } else {
-        const parsed = parseSortString(s);
-        if (parsed) {
-          syncGroupSortToUrl(group, parsed);
-        }
-      }
+  function makeOnSort(group: string): (sorts: SortState[]) => void {
+    return ([first]: SortState[]) => {
+      syncGroupSortToUrl(group, first ?? undefined);
     };
   }
 
@@ -233,9 +222,8 @@ export function ChangelogEntryPanel({
             <EventGroup
               events={sort ? sortEvents(events, sort.field, sort.dir) : events}
               sharedColumnState={sharedColumnState}
+              activeSort={sort ? [sort] : []}
               onSort={makeOnSort(key)}
-              activeSortField={sort?.field}
-              activeSortDir={sort?.dir}
             />
           </Collapsible>
         );

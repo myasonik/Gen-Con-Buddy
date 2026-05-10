@@ -1,7 +1,7 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { EventTable } from "./EventTable";
-import type { Event } from "../../utils/types";
+import type { Event, SortState } from "../../utils/types";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { useTypeDisplay } from "../../hooks/useTypeDisplay";
@@ -83,17 +83,11 @@ const SAMPLE_EVENTS: Event[] = [
 
 interface EventTableStoryProps {
   events: Event[];
-  activeSortField?: string;
-  activeSortDir?: "asc" | "desc";
-  onSort: (sort: string | undefined) => void;
+  activeSort?: SortState[];
+  onSort?: (sorts: SortState[]) => void;
 }
 
-function EventTableStory({
-  events,
-  activeSortField,
-  activeSortDir,
-  onSort,
-}: EventTableStoryProps): React.JSX.Element {
+function EventTableStory({ events, activeSort, onSort }: EventTableStoryProps): React.JSX.Element {
   const { visibility, toggle: toggleVisibility, reset: resetVisibility } = useColumnVisibility();
   const { sizing, setSizing, reset: resetSizing } = useColumnSizing();
   const {
@@ -131,8 +125,7 @@ function EventTableStory({
   return (
     <EventTable
       events={events}
-      activeSortField={activeSortField}
-      activeSortDir={activeSortDir}
+      activeSort={activeSort}
       onSort={onSort}
       sharedColumnState={sharedColumnState}
     />
@@ -156,8 +149,7 @@ export const Default: Story = {};
 
 export const WithSort: Story = {
   args: {
-    activeSortField: "title",
-    activeSortDir: "asc",
+    activeSort: [{ field: "title", dir: "asc" }],
   },
 };
 

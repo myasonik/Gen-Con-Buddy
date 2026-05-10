@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEvents } from "../../utils/api";
-import { parseSortString } from "../../utils/parseSortString";
 import { parseSorts, serializeSorts } from "../../utils/parseSorts";
 import { Pagination } from "../Pagination/Pagination";
 import type { SearchParams } from "../../utils/searchParamSchema";
@@ -36,10 +35,6 @@ export function SearchResults({
     queryKey: ["events", searchParams],
     queryFn: () => fetchEvents(searchParams),
   });
-
-  const activeSortState = searchParams.sort ? parseSortString(searchParams.sort) : null;
-  const activeSortField = activeSortState?.field;
-  const activeSortDir = activeSortState?.dir;
 
   const activeSort: SortState[] = searchParams.sort ? parseSorts(searchParams.sort) : [];
   const [sortDrawerOpen, setSortDrawerOpen] = useState(false);
@@ -95,9 +90,9 @@ export function SearchResults({
             <div className={styles.tableView}>
               <EventTable
                 events={data.data}
-                activeSortField={activeSortField}
-                activeSortDir={activeSortDir}
-                onSort={onSort}
+                activeSort={activeSort}
+                onSort={handleMultiSort}
+                onOpenSortDrawer={() => setSortDrawerOpen(true)}
                 sharedColumnState={sharedColumnState}
               />
             </div>

@@ -430,7 +430,7 @@ test('day column has aria-sort="ascending" when sorted by startDateTime ascendin
   expect(th).toHaveAttribute("aria-sort", "ascending");
 });
 
-test('announces "Sorted by Title, ascending" when clicking unsorted column', async () => {
+test('announces "Added Title to sort, ascending" when clicking unsorted column', async () => {
   const user = userEvent.setup();
   const cleanup = setupLiveRegions();
   renderSearchResults(
@@ -441,12 +441,14 @@ test('announces "Sorted by Title, ascending" when clicking unsorted column', asy
   await screen.findAllByRole("row");
   await user.click(screen.getByRole("button", { name: "Title" }));
   await waitFor(() => {
-    expect(document.getElementById("live-polite")?.textContent).toBe("Sorted by Title, ascending");
+    expect(document.getElementById("live-polite")?.textContent).toBe(
+      "Added Title to sort, ascending",
+    );
   });
   cleanup();
 });
 
-test('announces "Sorted by Title, descending" when clicking ascending column', async () => {
+test('announces "Title sorted descending" when clicking ascending column', async () => {
   const user = userEvent.setup();
   const cleanup = setupLiveRegions();
   renderSearchResults(
@@ -457,12 +459,12 @@ test('announces "Sorted by Title, descending" when clicking ascending column', a
   await screen.findAllByRole("row");
   await user.click(screen.getByRole("button", { name: "Title" }));
   await waitFor(() => {
-    expect(document.getElementById("live-polite")?.textContent).toBe("Sorted by Title, descending");
+    expect(document.getElementById("live-polite")?.textContent).toBe("Title sorted descending");
   });
   cleanup();
 });
 
-test('announces "Sort cleared" when clicking descending column', async () => {
+test('announces "Title removed from sort" when clicking descending column', async () => {
   const user = userEvent.setup();
   const cleanup = setupLiveRegions();
   renderSearchResults(
@@ -473,7 +475,7 @@ test('announces "Sort cleared" when clicking descending column', async () => {
   await screen.findAllByRole("row");
   await user.click(screen.getByRole("button", { name: "Title" }));
   await waitFor(() => {
-    expect(document.getElementById("live-polite")?.textContent).toBe("Sort cleared");
+    expect(document.getElementById("live-polite")?.textContent).toBe("Title removed from sort");
   });
   cleanup();
 });
