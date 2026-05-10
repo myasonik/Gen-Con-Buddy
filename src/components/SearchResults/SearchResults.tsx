@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEvents } from "../../utils/api";
 import { parseSortString } from "../../utils/parseSortString";
+import { parseSorts, serializeSorts } from "../../utils/parseSorts";
 import { Pagination } from "../Pagination/Pagination";
 import type { SearchParams } from "../../utils/searchParamSchema";
+import type { SortState } from "../../utils/types";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { EventTable } from "../EventTable/EventTable";
 import { EventListMobile } from "../EventTable/EventListMobile";
-import { ColumnControlsPanel } from "../EventTable/ColumnControlsPanel";
+import { VisibilityDrawer } from "../EventTable/VisibilityDrawer";
+import { FormatDrawer } from "../EventTable/FormatDrawer";
+import { SortDrawer } from "../EventTable/SortDrawer";
 import { useSharedColumnState } from "../../hooks/useSharedColumnState";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { StaffPickCallout } from "../StaffPickCallout/StaffPickCallout";
@@ -37,6 +41,13 @@ export function SearchResults({
   const activeSortField = activeSortState?.field;
   const activeSortDir = activeSortState?.dir;
 
+  const activeSort: SortState[] = searchParams.sort ? parseSorts(searchParams.sort) : [];
+  const [sortDrawerOpen, setSortDrawerOpen] = useState(false);
+
+  function handleMultiSort(sorts: SortState[]): void {
+    onSort(serializeSorts(sorts));
+  }
+
   return (
     <section>
       {isLoading && <EmptyState variant="loading" text="LOADING QUESTS..." />}
@@ -61,7 +72,15 @@ export function SearchResults({
         <>
           <div className={styles.controlsBar}>
             <div className={styles.tableControls}>
-              <ColumnControlsPanel columnState={sharedColumnState} allowSort />
+              <VisibilityDrawer columnState={sharedColumnState} />
+              <FormatDrawer columnState={sharedColumnState} />
+              <SortDrawer
+                activeSort={activeSort}
+                onSort={handleMultiSort}
+                columnVisibility={sharedColumnState.visibility}
+                open={sortDrawerOpen}
+                onOpenChange={setSortDrawerOpen}
+              />
             </div>
             <Pagination
               page={page}
@@ -85,7 +104,15 @@ export function SearchResults({
           ) : (
             <div className={styles.mobileView}>
               <div className={styles.mobileControls}>
-                <ColumnControlsPanel columnState={sharedColumnState} allowSort />
+                <VisibilityDrawer columnState={sharedColumnState} />
+                <FormatDrawer columnState={sharedColumnState} />
+                <SortDrawer
+                  activeSort={activeSort}
+                  onSort={handleMultiSort}
+                  columnVisibility={sharedColumnState.visibility}
+                  open={sortDrawerOpen}
+                  onOpenChange={setSortDrawerOpen}
+                />
               </div>
               <EventListMobile events={data.data} columnState={sharedColumnState} />
             </div>
