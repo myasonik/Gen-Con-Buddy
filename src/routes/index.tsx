@@ -12,6 +12,8 @@ import {
   type SearchParams,
 } from "../utils/searchParamSchema";
 import { DEFAULT_PAGE_SIZE } from "../utils/constants";
+import { serializeSorts } from "../utils/parseSorts";
+import type { SortState } from "../utils/types";
 import type { ActiveFilter } from "../components/ActiveFilters/getActiveFilters";
 import styles from "./index.module.css";
 
@@ -53,11 +55,11 @@ function SearchPage(): React.JSX.Element {
     });
   };
 
-  const handleSort = (sort: string | undefined): void => {
+  const handleSort = (sorts: SortState[]): void => {
     void navigate({
       search: (prev) => ({
         ...prev,
-        sort,
+        sort: serializeSorts(sorts),
         page: undefined,
       }),
     });

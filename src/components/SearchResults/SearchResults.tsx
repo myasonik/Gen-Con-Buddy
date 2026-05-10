@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEvents } from "../../utils/api";
-import { parseSorts, serializeSorts } from "../../utils/parseSorts";
+import { parseSorts } from "../../utils/parseSorts";
 import { Pagination } from "../Pagination/Pagination";
 import type { SearchParams } from "../../utils/searchParamSchema";
 import type { SortState } from "../../utils/types";
@@ -19,7 +19,7 @@ import styles from "./SearchResults.module.css";
 interface SearchResultsProps {
   searchParams: SearchParams;
   onNavigate: (page: number, limit: number) => void;
-  onSort: (sort: string | undefined) => void;
+  onSort: (sorts: SortState[]) => void;
 }
 
 export function SearchResults({
@@ -38,10 +38,6 @@ export function SearchResults({
 
   const activeSort: SortState[] = searchParams.sort ? parseSorts(searchParams.sort) : [];
   const [sortDrawerOpen, setSortDrawerOpen] = useState(false);
-
-  function handleMultiSort(sorts: SortState[]): void {
-    onSort(serializeSorts(sorts));
-  }
 
   return (
     <section>
@@ -71,7 +67,7 @@ export function SearchResults({
               <FormatDrawer columnState={sharedColumnState} />
               <SortDrawer
                 activeSort={activeSort}
-                onSort={handleMultiSort}
+                onSort={onSort}
                 columnVisibility={sharedColumnState.visibility}
                 open={sortDrawerOpen}
                 onOpenChange={setSortDrawerOpen}
@@ -91,7 +87,7 @@ export function SearchResults({
               <EventTable
                 events={data.data}
                 activeSort={activeSort}
-                onSort={handleMultiSort}
+                onSort={onSort}
                 onOpenSortDrawer={() => setSortDrawerOpen(true)}
                 sharedColumnState={sharedColumnState}
               />
@@ -103,7 +99,7 @@ export function SearchResults({
                 <FormatDrawer columnState={sharedColumnState} />
                 <SortDrawer
                   activeSort={activeSort}
-                  onSort={handleMultiSort}
+                  onSort={onSort}
                   columnVisibility={sharedColumnState.visibility}
                   open={sortDrawerOpen}
                   onOpenChange={setSortDrawerOpen}
