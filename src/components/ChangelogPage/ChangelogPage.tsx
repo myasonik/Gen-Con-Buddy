@@ -47,7 +47,7 @@ export function ChangelogPage({
     }
   }, [summaries, queryClient]);
 
-  const activeSort = parseSorts(sort ?? "");
+  const activeSort = useMemo(() => parseSorts(sort ?? ""), [sort]);
   const [sortDrawerOpen, setSortDrawerOpen] = useState(false);
 
   function handleSort(sorts: SortState[]): void {

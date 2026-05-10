@@ -34,8 +34,8 @@ export function ChangelogRow({
   onOpen,
   sharedColumnState,
   activeFilter,
-  activeSort: _activeSort,
-  onSort: _onSort,
+  activeSort,
+  onSort,
   onOpenSortDrawer: _onOpenSortDrawer,
 }: ChangelogRowProps): React.JSX.Element {
   const openMap = parseOpenParam(openParam);
@@ -123,6 +123,8 @@ export function ChangelogRow({
           position={position}
           navigate={navigate}
           activeFilter={activeFilter}
+          activeSort={activeSort}
+          onSort={onSort}
         />
       </Collapsible>
     </div>

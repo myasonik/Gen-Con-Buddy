@@ -21,6 +21,8 @@ interface ChangelogEntryPanelProps {
   position?: number;
   navigate?: NavigateFn;
   activeFilter?: SearchFormValues;
+  activeSort?: SortState[];
+  onSort?: (sorts: SortState[]) => void;
 }
 
 const CHANGELOG_LINK_STATE = { from: "changelog" } as const;
@@ -67,6 +69,8 @@ export function ChangelogEntryPanel({
   position,
   navigate,
   activeFilter,
+  activeSort,
+  onSort,
 }: ChangelogEntryPanelProps): React.JSX.Element {
   const openForPosition = useMemo(
     () =>
@@ -186,7 +190,12 @@ export function ChangelogEntryPanel({
               </span>
             }
           >
-            <EventGroup events={events} sharedColumnState={sharedColumnState} activeSort={[]} />
+            <EventGroup
+              events={events}
+              sharedColumnState={sharedColumnState}
+              activeSort={activeSort ?? []}
+              onSort={onSort}
+            />
           </Collapsible>
         );
       })}
