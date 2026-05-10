@@ -136,9 +136,18 @@ export function ChangelogRow({
               {format(new Date(summary.date), "MMM d, yyyy h:mm a")}
             </time>
             <span className={styles.counts}>
-              <Chip tone="jade">{createdCount} created</Chip>
-              <Chip tone="cobalt">{updatedCount} updated</Chip>
-              <Chip tone="amber">{deletedCount} deleted</Chip>
+              <Chip tone="jade">
+                {filteredCounts !== null ? `${createdCount}/${summary.createdCount}` : createdCount}{" "}
+                created
+              </Chip>
+              <Chip tone="cobalt">
+                {filteredCounts !== null ? `${updatedCount}/${summary.updatedCount}` : updatedCount}{" "}
+                updated
+              </Chip>
+              <Chip tone="amber">
+                {filteredCounts !== null ? `${deletedCount}/${summary.deletedCount}` : deletedCount}{" "}
+                deleted
+              </Chip>
               {filterState === "unknown" && (
                 <span className={styles.unknownBadge} aria-label="Filter match unknown">
                   ?

@@ -176,24 +176,33 @@ test("dims row when cached entry has no events matching active filter", async ()
   expect(container.querySelector("[data-filter-state='dimmed']")).toBeInTheDocument();
 });
 
-test("shows filtered counts when cached entry has matching events", async () => {
+test("shows filtered/total fraction when filter active and entry cached", async () => {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   client.setQueryData(
     ["changelog", "entry", "entry-1"],
     makeChangelogEntry({
       id: "entry-1",
       createdEvents: [makeEvent({ eventType: "RPG" }), makeEvent({ eventType: "BGM" })],
-      updatedEvents: [],
+      updatedEvents: [
+        makeEvent({ eventType: "RPG" }),
+        makeEvent({ eventType: "RPG" }),
+        makeEvent({ eventType: "BGM" }),
+      ],
       deletedEvents: [],
     }),
   );
   renderRow({
-    summary: makeChangelogSummary({ id: "entry-1", createdCount: 2 }),
+    summary: makeChangelogSummary({
+      id: "entry-1",
+      createdCount: 2,
+      updatedCount: 3,
+      deletedCount: 0,
+    }),
     activeFilter: { eventType: "RPG" },
     client,
   });
-  await expect(screen.findByText("1 created")).resolves.toBeInTheDocument();
-  expect(screen.queryByText("2 created")).not.toBeInTheDocument();
+  await expect(screen.findByText("1/2 created")).resolves.toBeInTheDocument();
+  expect(screen.getByText("2/3 updated")).toBeInTheDocument();
 });
 
 test("shows normal counts when no filter is active even if entry is cached", async () => {
