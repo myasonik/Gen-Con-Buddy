@@ -36,7 +36,7 @@ export function ChangelogRow({
   activeFilter,
   activeSort,
   onSort,
-  onOpenSortDrawer: _onOpenSortDrawer,
+  onOpenSortDrawer,
 }: ChangelogRowProps): React.JSX.Element {
   const openMap = parseOpenParam(openParam);
   const [isOpen, setIsOpen] = useState(() => position !== undefined && openMap.has(position));
@@ -125,6 +125,7 @@ export function ChangelogRow({
           activeFilter={activeFilter}
           activeSort={activeSort}
           onSort={onSort}
+          onOpenSortDrawer={onOpenSortDrawer}
         />
       </Collapsible>
     </div>

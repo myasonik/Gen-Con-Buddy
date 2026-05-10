@@ -12,7 +12,7 @@ import { ChangelogEntryPanel } from "./ChangelogEntryPanel";
 import type { SharedColumnState } from "../EventTable/types";
 import { makeChangelogEntry, makeEvent } from "../../test/msw/factory";
 import type { SearchFormValues } from "../../utils/searchParamSchema";
-import type { ChangelogEntry } from "../../utils/types";
+import type { ChangelogEntry, SortState } from "../../utils/types";
 
 const stubColumnState: SharedColumnState = {
   visibility: {},
@@ -43,6 +43,7 @@ function renderPanelWithRouter(
   columnState: SharedColumnState = stubColumnState,
   openParam: string[] = ["1.created", "1.updated", "1.deleted"],
   activeFilter?: SearchFormValues,
+  activeSort?: SortState[],
 ): ReturnType<typeof render> {
   const rootRoute = createRootRoute({
     component: () => (
@@ -52,6 +53,7 @@ function renderPanelWithRouter(
         openParam={openParam}
         position={1}
         activeFilter={activeFilter}
+        activeSort={activeSort}
       />
     ),
   });
@@ -236,4 +238,29 @@ test("shows NO MATCHES empty state when all events filtered out", async () => {
   renderPanelWithRouter(entry, stubColumnState, [], { eventType: "RPG" });
 
   await expect(screen.findByText("NO MATCHES")).resolves.toBeInTheDocument();
+});
+
+test("renders events in sorted order when activeSort is provided", async () => {
+  const entry = makeChangelogEntry({
+    id: "entry-1",
+    createdEvents: [
+      makeEvent({ title: "Zebra Quest" }),
+      makeEvent({ title: "Alpha Hunt" }),
+      makeEvent({ title: "Mellow Game" }),
+    ],
+    updatedEvents: [],
+    deletedEvents: [],
+  });
+  renderPanelWithRouter(entry, stubColumnState, ["1.created"], undefined, [
+    { field: "title", dir: "asc" },
+  ]);
+
+  // Wait for content to render
+  await screen.findAllByText("Alpha Hunt");
+
+  // The table renders each event as a row; title cells are <td data-col-id="title">
+  const titleCells = document.querySelectorAll<HTMLElement>("td[data-col-id='title']");
+  const titles = Array.from(titleCells).map((el) => el.textContent);
+  // Verify sorted ascending order: Alpha < Mellow < Zebra
+  expect(titles).toStrictEqual(["Alpha Hunt", "Mellow Game", "Zebra Quest"]);
 });

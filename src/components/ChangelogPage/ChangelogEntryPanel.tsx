@@ -11,6 +11,7 @@ import { EventTable } from "../EventTable/EventTable";
 import type { SharedColumnState } from "../EventTable/types";
 import styles from "./ChangelogEntryPanel.module.css";
 import { parseOpenParam, serializeOpenParam } from "./openParam";
+import { sortEventsMulti } from "../../utils/sortEventsMulti";
 
 type EntryValue = ChangelogEntry | "loading" | "error" | undefined;
 
@@ -23,6 +24,7 @@ interface ChangelogEntryPanelProps {
   activeFilter?: SearchFormValues;
   activeSort?: SortState[];
   onSort?: (sorts: SortState[]) => void;
+  onOpenSortDrawer?: () => void;
 }
 
 const CHANGELOG_LINK_STATE = { from: "changelog" } as const;
@@ -32,11 +34,13 @@ function EventGroup({
   sharedColumnState,
   activeSort,
   onSort,
+  onOpenSortDrawer,
 }: {
   events: Event[];
   sharedColumnState: SharedColumnState;
   activeSort?: SortState[];
   onSort?: (sorts: SortState[]) => void;
+  onOpenSortDrawer?: () => void;
 }): React.JSX.Element {
   return (
     <>
@@ -45,8 +49,9 @@ function EventGroup({
           events={events}
           sharedColumnState={sharedColumnState}
           linkState={CHANGELOG_LINK_STATE}
-          activeSort={activeSort}
+          activeSort={activeSort ?? []}
           onSort={onSort}
+          onOpenSortDrawer={onOpenSortDrawer}
         />
       </div>
       <div className={styles.mobileView}>
@@ -71,6 +76,7 @@ export function ChangelogEntryPanel({
   activeFilter,
   activeSort,
   onSort,
+  onOpenSortDrawer,
 }: ChangelogEntryPanelProps): React.JSX.Element {
   const openForPosition = useMemo(
     () =>
@@ -191,10 +197,11 @@ export function ChangelogEntryPanel({
             }
           >
             <EventGroup
-              events={events}
+              events={sortEventsMulti(events, activeSort ?? [])}
               sharedColumnState={sharedColumnState}
               activeSort={activeSort ?? []}
               onSort={onSort}
+              onOpenSortDrawer={onOpenSortDrawer}
             />
           </Collapsible>
         );
