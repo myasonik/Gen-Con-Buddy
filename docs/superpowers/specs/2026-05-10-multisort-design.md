@@ -46,7 +46,11 @@ Multisort is `SortState[]`.
 | `setSortDir(sorts, field, dir)`          | Updates direction for an existing entry.                                                               |
 | `reorderSort(sorts, fromIndex, toIndex)` | Moves entry to new position.                                                                           |
 
-`parseSortString` and `sortEvents` are deleted; all callers updated.
+**Deleted files** (all callers updated):
+
+- `src/utils/parseSortString.ts` + `parseSortString.test.ts` — replaced by `parseSorts`
+- `src/utils/sortEvents.ts` + `sortEvents.test.ts` — replaced by `sortEventsMulti`
+- `src/hooks/useSortState.ts` + `useSortState.test.ts` — superseded by new header-click logic in `EventTable`
 
 ### Prop changes everywhere
 
@@ -155,6 +159,10 @@ A `<ul>` wrapped in dnd-kit's `DndContext` + `SortableContext` (vertical list st
 | 1                 | Toggle dir (asc→desc→clear) | Add field (now 2 sorts)   |
 | 2+                | Call `onOpenSortDrawer()`   | Call `onOpenSortDrawer()` |
 
+### `EventTable.stories.tsx`
+
+`activeSortField`/`activeSortDir` story args replaced with `activeSort: SortState[]`.
+
 ### Header sort indicator
 
 Arrow up/down on any column whose `sortField` appears anywhere in `activeSort`. No rank badge.
@@ -195,9 +203,14 @@ Arrow up/down on any column whose `sortField` appears anywhere in `activeSort`. 
 
 Sort is page-level on the changelog — one shared sort for all tables across all entries, just like Visibility and Format.
 
-### `openParam` — no changes
+### `openParam` simplification
 
-`openParam` continues to track only which entries and groups are open. Sort is removed from it entirely. `parseOpenParam`, `serializeOpenParam`, and `OpenMap` are unchanged.
+Sort is removed from `openParam` entirely. Changes:
+
+- `OpenMap` type: `Map<number, Map<string, SortState | undefined>>` → `Map<number, Map<string, undefined>>`
+- `SortState` import removed
+- The sort-parsing branch in `parseOpenParam` (handling `pos.group.field.dir` tokens) is removed, but old bookmarked URLs with sort embedded still parse gracefully — the group is recognized as open, the sort portion silently ignored
+- `serializeOpenParam` no longer writes sort into the URL
 
 ### Changelog route (`src/routes/changelog.tsx`)
 
