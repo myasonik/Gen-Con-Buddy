@@ -54,8 +54,8 @@ function makeEvent(overrides: Partial<Event["attributes"]> = {}): Event {
 // Gen Con 2026: Wed July 29 – Sun Aug 2
 const THU_EVENT = makeEvent({ startDateTime: "2026-07-30T10:00:00-04:00" }); // Thu 10am ET
 const SAT_EVENT = makeEvent({ startDateTime: "2026-08-01T14:00:00-04:00" }); // Sat 2pm ET
-const RPG_EVENT = makeEvent({ eventType: "RPG" });
-const BGM_EVENT = makeEvent({ eventType: "BGM" });
+const RPG_EVENT = makeEvent({ eventType: "RPG - Role Playing Game" });
+const BGM_EVENT = makeEvent({ eventType: "BGM - Board Game" });
 
 describe("filterChangelogEvents", () => {
   it("returns all events when filter is empty", () => {
@@ -65,11 +65,11 @@ describe("filterChangelogEvents", () => {
   it("filters by single eventType", () => {
     const result = filterChangelogEvents([RPG_EVENT, BGM_EVENT], { eventType: "RPG" });
     expect(result).toHaveLength(1);
-    expect(result[0].attributes.eventType).toBe("RPG");
+    expect(result[0].attributes.eventType).toBe("RPG - Role Playing Game");
   });
 
   it("filters by multiple eventTypes (comma-separated)", () => {
-    const zkill = makeEvent({ eventType: "ZED" });
+    const zkill = makeEvent({ eventType: "ZED - Zombie Elimination Diversion" });
     const result = filterChangelogEvents([RPG_EVENT, BGM_EVENT, zkill], { eventType: "RPG,BGM" });
     expect(result).toHaveLength(2);
   });
@@ -122,9 +122,18 @@ describe("filterChangelogEvents", () => {
   });
 
   it("combines eventType and days filters", () => {
-    const rpgThu = makeEvent({ eventType: "RPG", startDateTime: "2026-07-30T10:00:00-04:00" });
-    const bgmThu = makeEvent({ eventType: "BGM", startDateTime: "2026-07-30T10:00:00-04:00" });
-    const rpgSat = makeEvent({ eventType: "RPG", startDateTime: "2026-08-01T10:00:00-04:00" });
+    const rpgThu = makeEvent({
+      eventType: "RPG - Role Playing Game",
+      startDateTime: "2026-07-30T10:00:00-04:00",
+    });
+    const bgmThu = makeEvent({
+      eventType: "BGM - Board Game",
+      startDateTime: "2026-07-30T10:00:00-04:00",
+    });
+    const rpgSat = makeEvent({
+      eventType: "RPG - Role Playing Game",
+      startDateTime: "2026-08-01T10:00:00-04:00",
+    });
     const result = filterChangelogEvents([rpgThu, bgmThu, rpgSat], {
       eventType: "RPG",
       days: "thu",

@@ -32,7 +32,8 @@ export function filterChangelogEvents(events: Event[], filter: SearchFormValues)
   }
 
   return events.filter((event) => {
-    if (eventTypes.length > 0 && !eventTypes.includes(event.attributes.eventType)) {
+    const [eventTypeCode] = event.attributes.eventType.split(" - ");
+    if (eventTypes.length > 0 && !eventTypes.includes(eventTypeCode ?? "")) {
       return false;
     }
 
