@@ -248,4 +248,21 @@ describe("drawer content (open=true)", () => {
     );
     expect(screen.queryByRole("button", { name: "Clear sorting" })).not.toBeInTheDocument();
   });
+
+  it("combobox shows Visible columns and Other fields groups when some columns are hidden", async () => {
+    const user = userEvent.setup();
+    render(
+      <SortDrawer
+        activeSort={[]}
+        onSort={vi.fn<(sorts: SortState[]) => void>()}
+        columnVisibility={{ gameSystem: false }}
+        open
+        onOpenChange={vi.fn<(open: boolean) => void>()}
+      />,
+    );
+    await user.click(screen.getByRole("combobox"));
+    expect(screen.getByText("Visible columns")).toBeInTheDocument();
+    expect(screen.getByText("Other fields")).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "Game System" })).toBeInTheDocument();
+  });
 });
