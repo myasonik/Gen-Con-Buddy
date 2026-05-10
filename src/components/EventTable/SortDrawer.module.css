@@ -44,3 +44,23 @@
   flex-direction: column;
   gap: var(--space-4);
 }
+
+.iconButton {
+  background: none;
+  border: none;
+  padding: var(--space-1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: var(--color-text);
+  border-radius: var(--radius-sm);
+}
+
+.iconButton:hover {
+  background: var(--color-surface-hover);
+}
+
+.iconButton:disabled {
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}

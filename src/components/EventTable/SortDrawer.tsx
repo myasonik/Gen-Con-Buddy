@@ -22,6 +22,7 @@ import { Button } from "../../ui/Button/Button";
 import { COLUMNS } from "./columns";
 import { addSort, removeSort, setSortDir, reorderSort } from "../../utils/sortManipulation";
 import type { SortState } from "../../utils/types";
+import { announce } from "../../lib/announce";
 import styles from "./SortDrawer.module.css";
 
 interface SortDrawerProps {
@@ -73,21 +74,39 @@ function SortableItem({
       >
         <GripVertical size={14} aria-hidden="true" />
       </button>
-      <button type="button" onClick={onUp} disabled={isFirst} aria-label={`Move ${label} up`}>
+      <button
+        type="button"
+        className={styles.iconButton}
+        onClick={onUp}
+        disabled={isFirst}
+        aria-label={`Move ${label} up`}
+      >
         <ChevronUp size={14} aria-hidden="true" />
       </button>
-      <button type="button" onClick={onDown} disabled={isLast} aria-label={`Move ${label} down`}>
+      <button
+        type="button"
+        className={styles.iconButton}
+        onClick={onDown}
+        disabled={isLast}
+        aria-label={`Move ${label} down`}
+      >
         <ChevronDown size={14} aria-hidden="true" />
       </button>
       <span className={styles.fieldName}>{label}</span>
       <button
         type="button"
+        className={styles.iconButton}
         onClick={onToggleDir}
         aria-label={`${label}: ${sort.dir === "asc" ? "ascending" : "descending"}, click to toggle`}
       >
         {sort.dir === "asc" ? "Asc" : "Desc"}
       </button>
-      <button type="button" onClick={onRemove} aria-label={`Remove ${label} sort`}>
+      <button
+        type="button"
+        className={styles.iconButton}
+        onClick={onRemove}
+        aria-label={`Remove ${label} sort`}
+      >
         <X size={14} aria-hidden="true" />
       </button>
     </li>
@@ -101,7 +120,7 @@ export function SortDrawer({
   open,
   onOpenChange,
 }: SortDrawerProps): React.JSX.Element {
-  const [resetKey, setResetKey] = useState(0);
+  const [comboValue, setComboValue] = useState<string | null>(null);
   const [comboOpen, setComboOpen] = useState(false);
   const inputId = useId();
 
@@ -143,7 +162,9 @@ export function SortDrawer({
       const fromIndex = activeSort.findIndex((s) => s.field === active.id);
       const toIndex = activeSort.findIndex((s) => s.field === over.id);
       if (fromIndex !== -1 && toIndex !== -1) {
+        const label = getSortFieldLabel(String(active.id));
         onSort(reorderSort(activeSort, fromIndex, toIndex));
+        announce(`${label} moved to position ${toIndex + 1}`);
       }
     }
   }
@@ -162,7 +183,14 @@ export function SortDrawer({
       onOpenChange={onOpenChange}
       footer={
         activeSort.length > 0 ? (
-          <Button type="button" variant="ghost" onClick={() => onSort([])}>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => {
+              onSort([]);
+              announce("Sort cleared");
+            }}
+          >
             Clear sorting
           </Button>
         ) : undefined
@@ -170,13 +198,15 @@ export function SortDrawer({
     >
       <div className={styles.drawerBody}>
         <Combobox.Root<string>
-          key={resetKey}
+          value={comboValue}
           open={comboOpen}
           onOpenChange={(isOpen) => setComboOpen(isOpen)}
           onValueChange={(value) => {
             if (value) {
+              const label = getSortFieldLabel(value);
               onSort(addSort(activeSort, value));
-              setResetKey((k) => k + 1);
+              announce(`Sorting by ${label}, ascending`);
+              setComboValue(null);
             }
           }}
         >
@@ -194,28 +224,24 @@ export function SortDrawer({
                 <div>
                   <Combobox.List>
                     {visibleOptions.length > 0 && (
-                      <>
-                        <li role="presentation" aria-hidden="true">
-                          Visible columns
-                        </li>
+                      <Combobox.Group>
+                        <Combobox.GroupLabel>Visible columns</Combobox.GroupLabel>
                         {visibleOptions.map((opt) => (
                           <Combobox.Item key={opt.value} value={opt.value}>
                             {opt.label}
                           </Combobox.Item>
                         ))}
-                      </>
+                      </Combobox.Group>
                     )}
                     {hiddenOptions.length > 0 && (
-                      <>
-                        <li role="presentation" aria-hidden="true">
-                          Other fields
-                        </li>
+                      <Combobox.Group>
+                        <Combobox.GroupLabel>Other fields</Combobox.GroupLabel>
                         {hiddenOptions.map((opt) => (
                           <Combobox.Item key={opt.value} value={opt.value}>
                             {opt.label}
                           </Combobox.Item>
                         ))}
-                      </>
+                      </Combobox.Group>
                     )}
                     {visibleOptions.length === 0 && hiddenOptions.length === 0 && (
                       <div>No fields available</div>
@@ -246,14 +272,31 @@ export function SortDrawer({
                     sort={sort}
                     isFirst={index === 0}
                     isLast={index === activeSort.length - 1}
-                    onUp={() => onSort(reorderSort(activeSort, index, index - 1))}
-                    onDown={() => onSort(reorderSort(activeSort, index, index + 1))}
-                    onToggleDir={() =>
-                      onSort(
-                        setSortDir(activeSort, sort.field, sort.dir === "asc" ? "desc" : "asc"),
-                      )
-                    }
-                    onRemove={() => onSort(removeSort(activeSort, sort.field))}
+                    onUp={() => {
+                      const newIndex = index - 1;
+                      const label = getSortFieldLabel(sort.field);
+                      onSort(reorderSort(activeSort, index, newIndex));
+                      announce(`${label} moved to position ${newIndex + 1}`);
+                    }}
+                    onDown={() => {
+                      const newIndex = index + 1;
+                      const label = getSortFieldLabel(sort.field);
+                      onSort(reorderSort(activeSort, index, newIndex));
+                      announce(`${label} moved to position ${newIndex + 1}`);
+                    }}
+                    onToggleDir={() => {
+                      const newDir = sort.dir === "asc" ? "desc" : "asc";
+                      const label = getSortFieldLabel(sort.field);
+                      onSort(setSortDir(activeSort, sort.field, newDir));
+                      announce(
+                        `${label} sort direction: ${newDir === "asc" ? "ascending" : "descending"}`,
+                      );
+                    }}
+                    onRemove={() => {
+                      const label = getSortFieldLabel(sort.field);
+                      onSort(removeSort(activeSort, sort.field));
+                      announce(`${label} sort removed`);
+                    }}
                   />
                 ))}
               </ul>
