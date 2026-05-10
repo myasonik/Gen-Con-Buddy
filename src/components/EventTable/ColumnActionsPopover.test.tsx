@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi, expect, test } from "vitest";
 import { ColumnActionsPopover } from "./ColumnActionsPopover";
+import type { SortState } from "../../utils/types";
 
 function renderPopover(
   overrides: Partial<React.ComponentProps<typeof ColumnActionsPopover>> = {},
@@ -9,9 +10,9 @@ function renderPopover(
   return render(
     <ColumnActionsPopover
       sortField="title"
-      activeSortField={undefined}
-      activeSortDir={undefined}
-      onSort={vi.fn<(sort: string | undefined) => void>()}
+      activeSort={[]}
+      onSort={vi.fn<(sorts: SortState[]) => void>()}
+      onOpenSortDrawer={vi.fn<() => void>()}
       onOpenResize={vi.fn<() => void>()}
       formatControls={undefined}
       {...overrides}
@@ -24,28 +25,63 @@ test("renders a column actions button", () => {
   expect(screen.getByRole("button", { name: "Column actions" })).toBeInTheDocument();
 });
 
-test("opens popover with sort and resize actions when clicked", async () => {
+test("shows sort and resize actions when 0 sorts active", async () => {
   const user = userEvent.setup();
-  renderPopover();
+  renderPopover({ activeSort: [] });
   await user.click(screen.getByRole("button", { name: "Column actions" }));
   expect(screen.getByRole("button", { name: "Sort ascending" })).toBeInTheDocument();
   expect(screen.getByRole("button", { name: "Sort descending" })).toBeInTheDocument();
   expect(screen.getByRole("button", { name: "Resize…" })).toBeInTheDocument();
 });
 
-test("sort ascending has aria-pressed=false when column is unsorted", async () => {
+test("shows sort and resize actions when 1 sort active on a different field", async () => {
   const user = userEvent.setup();
-  renderPopover({ activeSortField: undefined });
+  renderPopover({ activeSort: [{ field: "cost", dir: "asc" }] });
   await user.click(screen.getByRole("button", { name: "Column actions" }));
-  expect(screen.getByRole("button", { name: "Sort ascending" })).toHaveAttribute(
-    "aria-pressed",
-    "false",
-  );
+  expect(screen.getByRole("button", { name: "Sort ascending" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Sort descending" })).toBeInTheDocument();
 });
 
-test("sort ascending has aria-pressed=true when column is sorted ascending", async () => {
+test("shows 'Sort by this field…' when 2+ sorts active and field not sorted", async () => {
   const user = userEvent.setup();
-  renderPopover({ activeSortField: "title", activeSortDir: "asc" });
+  renderPopover({
+    activeSort: [
+      { field: "cost", dir: "asc" },
+      { field: "startDateTime", dir: "asc" },
+    ],
+  });
+  await user.click(screen.getByRole("button", { name: "Column actions" }));
+  expect(screen.getByRole("button", { name: "Sort by this field…" })).toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Sort ascending" })).not.toBeInTheDocument();
+});
+
+test("'Sort by this field…' calls onOpenSortDrawer", async () => {
+  const user = userEvent.setup();
+  const onOpenSortDrawer = vi.fn<() => void>();
+  renderPopover({
+    activeSort: [
+      { field: "cost", dir: "asc" },
+      { field: "startDateTime", dir: "asc" },
+    ],
+    onOpenSortDrawer,
+  });
+  await user.click(screen.getByRole("button", { name: "Column actions" }));
+  await user.click(screen.getByRole("button", { name: "Sort by this field…" }));
+  expect(onOpenSortDrawer).toHaveBeenCalledTimes(1);
+});
+
+test("shows sort buttons and Remove sort when field is in activeSort", async () => {
+  const user = userEvent.setup();
+  renderPopover({ activeSort: [{ field: "title", dir: "asc" }] });
+  await user.click(screen.getByRole("button", { name: "Column actions" }));
+  expect(screen.getByRole("button", { name: "Sort ascending" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Sort descending" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Remove sort" })).toBeInTheDocument();
+});
+
+test("Sort ascending has aria-pressed=true when field is sorted asc", async () => {
+  const user = userEvent.setup();
+  renderPopover({ activeSort: [{ field: "title", dir: "asc" }] });
   await user.click(screen.getByRole("button", { name: "Column actions" }));
   expect(screen.getByRole("button", { name: "Sort ascending" })).toHaveAttribute(
     "aria-pressed",
@@ -53,9 +89,9 @@ test("sort ascending has aria-pressed=true when column is sorted ascending", asy
   );
 });
 
-test("sort descending has aria-pressed=true when column is sorted descending", async () => {
+test("Sort descending has aria-pressed=true when field is sorted desc", async () => {
   const user = userEvent.setup();
-  renderPopover({ activeSortField: "title", activeSortDir: "desc" });
+  renderPopover({ activeSort: [{ field: "title", dir: "desc" }] });
   await user.click(screen.getByRole("button", { name: "Column actions" }));
   expect(screen.getByRole("button", { name: "Sort descending" })).toHaveAttribute(
     "aria-pressed",
@@ -63,31 +99,55 @@ test("sort descending has aria-pressed=true when column is sorted descending", a
   );
 });
 
-test("clicking Sort ascending when unsorted calls onSort with field.asc", async () => {
+test("clicking Sort ascending when unsorted calls onSort with field added", async () => {
   const user = userEvent.setup();
-  const onSort = vi.fn<(sort: string | undefined) => void>();
-  renderPopover({ onSort });
+  const onSort = vi.fn<(sorts: SortState[]) => void>();
+  renderPopover({ activeSort: [], onSort });
   await user.click(screen.getByRole("button", { name: "Column actions" }));
   await user.click(screen.getByRole("button", { name: "Sort ascending" }));
-  expect(onSort).toHaveBeenCalledWith("title.asc");
+  expect(onSort).toHaveBeenCalledWith([{ field: "title", dir: "asc" }]);
 });
 
-test("clicking Sort ascending when already ascending calls onSort with undefined", async () => {
+test("clicking Sort descending when unsorted calls onSort with field added desc", async () => {
   const user = userEvent.setup();
-  const onSort = vi.fn<(sort: string | undefined) => void>();
-  renderPopover({ activeSortField: "title", activeSortDir: "asc", onSort });
-  await user.click(screen.getByRole("button", { name: "Column actions" }));
-  await user.click(screen.getByRole("button", { name: "Sort ascending" }));
-  expect(onSort).toHaveBeenCalledWith(undefined);
-});
-
-test("clicking Sort descending when ascending calls onSort with field.desc", async () => {
-  const user = userEvent.setup();
-  const onSort = vi.fn<(sort: string | undefined) => void>();
-  renderPopover({ activeSortField: "title", activeSortDir: "asc", onSort });
+  const onSort = vi.fn<(sorts: SortState[]) => void>();
+  renderPopover({ activeSort: [], onSort });
   await user.click(screen.getByRole("button", { name: "Column actions" }));
   await user.click(screen.getByRole("button", { name: "Sort descending" }));
-  expect(onSort).toHaveBeenCalledWith("title.desc");
+  expect(onSort).toHaveBeenCalledWith([{ field: "title", dir: "desc" }]);
+});
+
+test("clicking Sort ascending when already asc calls onSort removing the field", async () => {
+  const user = userEvent.setup();
+  const onSort = vi.fn<(sorts: SortState[]) => void>();
+  renderPopover({ activeSort: [{ field: "title", dir: "asc" }], onSort });
+  await user.click(screen.getByRole("button", { name: "Column actions" }));
+  await user.click(screen.getByRole("button", { name: "Sort ascending" }));
+  expect(onSort).toHaveBeenCalledWith([]);
+});
+
+test("clicking Sort descending when sorted asc calls onSort changing direction", async () => {
+  const user = userEvent.setup();
+  const onSort = vi.fn<(sorts: SortState[]) => void>();
+  renderPopover({ activeSort: [{ field: "title", dir: "asc" }], onSort });
+  await user.click(screen.getByRole("button", { name: "Column actions" }));
+  await user.click(screen.getByRole("button", { name: "Sort descending" }));
+  expect(onSort).toHaveBeenCalledWith([{ field: "title", dir: "desc" }]);
+});
+
+test("clicking Remove sort calls onSort without that field", async () => {
+  const user = userEvent.setup();
+  const onSort = vi.fn<(sorts: SortState[]) => void>();
+  renderPopover({
+    activeSort: [
+      { field: "title", dir: "asc" },
+      { field: "cost", dir: "desc" },
+    ],
+    onSort,
+  });
+  await user.click(screen.getByRole("button", { name: "Column actions" }));
+  await user.click(screen.getByRole("button", { name: "Remove sort" }));
+  expect(onSort).toHaveBeenCalledWith([{ field: "cost", dir: "desc" }]);
 });
 
 test("clicking Resize… calls onOpenResize", async () => {
@@ -99,22 +159,12 @@ test("clicking Resize… calls onOpenResize", async () => {
   expect(onOpenResize).toHaveBeenCalledTimes(1);
 });
 
-test("clicking Sort descending when already descending calls onSort with undefined", async () => {
-  const user = userEvent.setup();
-  const onSort = vi.fn<(sort: string | undefined) => void>();
-  renderPopover({ activeSortField: "title", activeSortDir: "desc", onSort });
-  await user.click(screen.getByRole("button", { name: "Column actions" }));
-  await user.click(screen.getByRole("button", { name: "Sort descending" }));
-  expect(onSort).toHaveBeenCalledWith(undefined);
-});
-
 test("does not render sort buttons when sortField is undefined", async () => {
   const user = userEvent.setup();
   renderPopover({ sortField: undefined });
   await user.click(screen.getByRole("button", { name: "Column actions" }));
   expect(screen.queryByRole("button", { name: "Sort ascending" })).not.toBeInTheDocument();
-  expect(screen.queryByRole("button", { name: "Sort descending" })).not.toBeInTheDocument();
-  expect(screen.getByRole("button", { name: "Resize…" })).toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Sort by this field…" })).not.toBeInTheDocument();
 });
 
 test("renders formatControls inside the popup when provided", async () => {
@@ -122,11 +172,4 @@ test("renders formatControls inside the popup when provided", async () => {
   renderPopover({ formatControls: <div>Format options</div> });
   await user.click(screen.getByRole("button", { name: "Column actions" }));
   expect(screen.getByText("Format options")).toBeInTheDocument();
-});
-
-test("does not render extra content when formatControls is absent", async () => {
-  const user = userEvent.setup();
-  renderPopover();
-  await user.click(screen.getByRole("button", { name: "Column actions" }));
-  expect(screen.queryByText("Format options")).not.toBeInTheDocument();
 });

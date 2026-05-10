@@ -17,8 +17,8 @@ import {
 } from "./FormatDrawer";
 import { ColumnResizeDialog } from "./ColumnResizeDialog";
 import { announce } from "../../lib/announce";
-import type { Event } from "../../utils/types";
-import { COLUMNS } from "./columns";
+import type { Event, SortState } from "../../utils/types";
+import { COLUMNS, SORT_FIELD_BY_COL_ID, COL_ID_BY_SORT_FIELD } from "./columns";
 import { STAFF_PICK_IDS } from "../../utils/staffPicks";
 import type { SharedColumnState } from "./types";
 import styles from "./EventTable.module.css";
@@ -91,19 +91,38 @@ export function EventTable({
     }
   };
 
-  const handlePopoverSort = (s: string | undefined, label: string): void => {
-    onSort?.(s);
-    if (s) {
-      const dir = s.endsWith(".asc") ? "ascending" : "descending";
-      announce(`Sorted by ${label}, ${dir}`);
-      posthog.capture("results_sorted", {
-        sort_field: s.split(".")[0],
-        sort_direction: s.endsWith(".asc") ? "asc" : "desc",
-        label,
-      });
+  const handlePopoverSort = (sorts: SortState[], label: string): void => {
+    const [first] = sorts;
+    if (onSort) {
+      const s = first ? `${first.field}.${first.dir}` : undefined;
+      onSort(s);
+      if (s && first) {
+        const dir = first.dir === "asc" ? "ascending" : "descending";
+        announce(`Sorted by ${label}, ${dir}`);
+        posthog.capture("results_sorted", {
+          sort_field: first.field,
+          sort_direction: first.dir,
+          label,
+        });
+      } else {
+        announce("Sort cleared");
+        posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
+      }
     } else {
-      announce("Sort cleared");
-      posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
+      if (!first) {
+        setInternalSorting([]);
+        announce("Sort cleared");
+        posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
+      } else {
+        const colId = COL_ID_BY_SORT_FIELD.get(first.field) ?? first.field;
+        setInternalSorting([{ id: colId, desc: first.dir === "desc" }]);
+        announce(`Sorted by ${label}, ${first.dir === "asc" ? "ascending" : "descending"}`);
+        posthog.capture("results_sorted", {
+          sort_field: first.field,
+          sort_direction: first.dir,
+          label,
+        });
+      }
     }
   };
 
@@ -217,10 +236,14 @@ export function EventTable({
                           )}
                           {header.column.getCanResize() && (
                             <ColumnActionsPopover
-                              sortField={onSort ? sortField : undefined}
-                              activeSortField={activeSortField}
-                              activeSortDir={activeSortDir}
-                              onSort={(s) => handlePopoverSort(s, label)}
+                              sortField={sortField}
+                              activeSort={
+                                activeSortField && activeSortDir
+                                  ? [{ field: activeSortField, dir: activeSortDir }]
+                                  : []
+                              }
+                              onSort={(sorts) => handlePopoverSort(sorts, label)}
+                              onOpenSortDrawer={() => {}}
                               onOpenResize={() =>
                                 setResizeTarget({
                                   columnId: header.column.id,
