@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { vi, expect, test, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import {
@@ -14,7 +14,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { server } from "../../test/msw/server";
 import { makeChangelogSummary, makeChangelogEntry, makeEvent } from "../../test/msw/factory";
 import type { SearchFormValues } from "../../utils/searchParamSchema";
-import type { FetchChangelogResponse, ChangelogSummary } from "../../utils/types";
+import type { FetchChangelogResponse, ChangelogSummary, SortState } from "../../utils/types";
 import { ChangelogRow } from "./ChangelogRow";
 import type { SharedColumnState } from "../EventTable/types";
 
@@ -49,11 +49,21 @@ function renderRow({
   summary = makeChangelogSummary({ id: "entry-1" }),
   onOpen = vi.fn<() => void>(),
   activeFilter,
+  activeSort,
+  onSort,
+  onOpenSortDrawer,
+  openParam,
+  position,
   client,
 }: {
   summary?: ChangelogSummary;
   onOpen?: () => void;
   activeFilter?: SearchFormValues;
+  activeSort?: SortState[];
+  onSort?: (sorts: SortState[]) => void;
+  onOpenSortDrawer?: () => void;
+  openParam?: string[];
+  position?: number;
   client?: QueryClient;
 } = {}): ReturnType<typeof render> {
   const qc = client ?? new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -64,6 +74,11 @@ function renderRow({
         onOpen={onOpen}
         sharedColumnState={stubColumnState}
         activeFilter={activeFilter}
+        activeSort={activeSort}
+        onSort={onSort}
+        onOpenSortDrawer={onOpenSortDrawer}
+        openParam={openParam}
+        position={position}
       />
     ),
   });
@@ -210,6 +225,38 @@ test("shows filtered/total fraction when filter active and entry cached", async 
   });
   await expect(screen.findByText("1/2 created")).resolves.toBeInTheDocument();
   expect(screen.getByText("2/3 updated")).toBeInTheDocument();
+});
+
+test("forwards activeSort to panel and sorts events in alphabetical order", async () => {
+  server.use(
+    http.get("/api/changelog/fetch", () =>
+      HttpResponse.json<FetchChangelogResponse>({
+        entry: makeChangelogEntry({
+          id: "entry-1",
+          createdEvents: [makeEvent({ title: "Zebra Quest" }), makeEvent({ title: "Alpha Quest" })],
+          updatedEvents: [],
+          deletedEvents: [],
+        }),
+      }),
+    ),
+  );
+  // position=1 + openParam=["1.created"] pre-opens the row and the Created sub-group
+  renderRow({
+    summary: makeChangelogSummary({
+      id: "entry-1",
+      createdCount: 2,
+      updatedCount: 0,
+      deletedCount: 0,
+    }),
+    activeSort: [{ field: "title", dir: "asc" }],
+    position: 1,
+    openParam: ["1.created"],
+  });
+  // Verify title cells in the table appear in alphabetical (ascending) order.
+  const table = await screen.findByRole("table");
+  const { getAllByRole } = within(table);
+  const titleLinks = getAllByRole("link", { name: /Quest/ });
+  expect(titleLinks.map((l) => l.textContent)).toStrictEqual(["Alpha Quest", "Zebra Quest"]);
 });
 
 test("shows normal counts when no filter is active even if entry is cached", async () => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEvents } from "../../utils/api";
 import { parseSorts } from "../../utils/parseSorts";
@@ -36,7 +36,7 @@ export function SearchResults({
     queryFn: () => fetchEvents(searchParams),
   });
 
-  const activeSort: SortState[] = searchParams.sort ? parseSorts(searchParams.sort) : [];
+  const activeSort = useMemo(() => parseSorts(searchParams.sort ?? ""), [searchParams.sort]);
   const [sortDrawerOpen, setSortDrawerOpen] = useState(false);
 
   return (
@@ -65,13 +65,6 @@ export function SearchResults({
             <div className={styles.tableControls}>
               <VisibilityDrawer columnState={sharedColumnState} />
               <FormatDrawer columnState={sharedColumnState} />
-              <SortDrawer
-                activeSort={activeSort}
-                onSort={onSort}
-                columnVisibility={sharedColumnState.visibility}
-                open={sortDrawerOpen}
-                onOpenChange={setSortDrawerOpen}
-              />
             </div>
             <Pagination
               page={page}
@@ -97,13 +90,6 @@ export function SearchResults({
               <div className={styles.mobileControls}>
                 <VisibilityDrawer columnState={sharedColumnState} />
                 <FormatDrawer columnState={sharedColumnState} />
-                <SortDrawer
-                  activeSort={activeSort}
-                  onSort={onSort}
-                  columnVisibility={sharedColumnState.visibility}
-                  open={sortDrawerOpen}
-                  onOpenChange={setSortDrawerOpen}
-                />
               </div>
               <EventListMobile events={data.data} columnState={sharedColumnState} />
             </div>
@@ -114,6 +100,13 @@ export function SearchResults({
             total={data.meta.total}
             onNavigate={onNavigate}
             aria-label="Pagination, bottom"
+          />
+          <SortDrawer
+            activeSort={activeSort}
+            onSort={onSort}
+            columnVisibility={sharedColumnState.visibility}
+            open={sortDrawerOpen}
+            onOpenChange={setSortDrawerOpen}
           />
         </>
       )}

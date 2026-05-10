@@ -351,6 +351,26 @@ test("sends sort param to API when provided in searchParams", async () => {
   expect(capturedUrl!.searchParams.get("sort")).toBe("startDateTime.asc");
 });
 
+test("sends multi-field sort as comma-separated string to API", async () => {
+  let capturedUrl: URL | null = null;
+  server.use(
+    http.get("/api/events/search", ({ request }) => {
+      capturedUrl = new URL(request.url);
+      const response: EventSearchResponse = {
+        data: [makeEvent()],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }),
+  );
+  renderSearchResults({ sort: "startDateTime.asc,title.desc" });
+  await screen.findAllByRole("row");
+  // oxlint-disable-next-line typescript/no-non-null-assertion
+  expect(capturedUrl!.searchParams.get("sort")).toBe("startDateTime.asc,title.desc");
+});
+
 test("omits sort param from API when not in searchParams", async () => {
   let capturedUrl: URL | null = null;
   server.use(
