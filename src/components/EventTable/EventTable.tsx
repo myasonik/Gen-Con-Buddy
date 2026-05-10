@@ -123,14 +123,17 @@ export function EventTable({
     });
   };
 
-  const handlePopoverSort = (newSort: SortState[], _label: string): void => {
+  const handlePopoverSort = (newSort: SortState[]): void => {
     if (onSort) {
       onSort(newSort);
     } else {
       setInternalSort(newSort);
     }
     announce(newSort.length === 0 ? "Sort cleared" : "Sort updated");
-    posthog.capture("results_sorted", { sort_fields: newSort.map((s) => s.field) });
+    posthog.capture("results_sorted", {
+      sort_fields: newSort.map((s) => s.field),
+      sort_count: newSort.length,
+    });
   };
 
   const table = useReactTable({
@@ -251,7 +254,7 @@ export function EventTable({
                             <ColumnActionsPopover
                               sortField={sortField}
                               activeSort={effectiveSort}
-                              onSort={(newSort) => handlePopoverSort(newSort, label)}
+                              onSort={(newSort) => handlePopoverSort(newSort)}
                               onOpenSortDrawer={() => onOpenSortDrawer?.()}
                               onOpenResize={() =>
                                 setResizeTarget({
