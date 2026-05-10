@@ -108,9 +108,7 @@ export function SearchForm({
   return (
     <div className={styles.formRoot}>
       <form id="search-form" onSubmit={handleSubmit(handleSearchSubmit)}>
-        {/* Primary filter strip */}
         <div className={styles.strip}>
-          {/* Keyword search */}
           {!changelogMode && (
             <div className={styles.searchField}>
               <label htmlFor="strip-keyword" className={styles.stripLabel}>
@@ -129,7 +127,6 @@ export function SearchForm({
             </div>
           )}
 
-          {/* Event type */}
           <div className={styles.eventTypeWrap}>
             <EventTypeSelect value={eventType} onValueChange={(v) => setValue("eventType", v)} />
           </div>
@@ -167,7 +164,6 @@ export function SearchForm({
               </div>
             </div>
 
-            {/* Time range */}
             <div className={styles.timeField}>
               <span aria-hidden="true" className={styles.stripLabel}>
                 Time
@@ -220,7 +216,6 @@ export function SearchForm({
                     />
                   }
                 >
-                  {/* SESSION */}
                   <div className={styles.section}>
                     <h3 className={styles.sectionHeading}>Session</h3>
                     <div className={styles.fieldsetBody}>
@@ -304,7 +299,6 @@ export function SearchForm({
                     </div>
                   </div>
 
-                  {/* LOGISTICS */}
                   <div className={styles.section}>
                     <h3 className={styles.sectionHeading}>Logistics</h3>
                     <div className={styles.fieldsetBody}>
@@ -359,7 +353,6 @@ export function SearchForm({
                     </div>
                   </div>
 
-                  {/* GAME */}
                   <div className={styles.section}>
                     <h3 className={styles.sectionHeading}>Game</h3>
                     <div className={styles.fieldsetBody}>
@@ -444,7 +437,6 @@ export function SearchForm({
                     </div>
                   </div>
 
-                  {/* DETAILS */}
                   <div className={styles.section}>
                     <h3 className={styles.sectionHeading}>Details</h3>
                     <div className={styles.fieldsetBody}>

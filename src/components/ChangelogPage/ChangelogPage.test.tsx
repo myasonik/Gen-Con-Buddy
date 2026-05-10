@@ -222,7 +222,7 @@ test("passes activeFilter to ChangelogRow so it can show unknown indicator", asy
   );
 
   // Render with a filter but don't open the row — entry is not in cache
-  await renderChangelogPage({ eventType: "RPG" });
+  await renderChangelogPage({ activeFilter: { eventType: "RPG" } });
 
   await screen.findByText(/created/);
   // The unknown-state indicator should be present (entry not cached yet)

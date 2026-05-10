@@ -59,10 +59,12 @@ function ChangelogPageRoute(): React.JSX.Element {
     <ChangelogPage
       openParam={open}
       navigate={navigate}
-      eventType={eventType}
-      days={days}
-      timeStart={timeStart}
-      timeEnd={timeEnd}
+      activeFilter={{
+        eventType: eventType ?? "",
+        days: days ?? "",
+        timeStart: timeStart ?? "",
+        timeEnd: timeEnd ?? "",
+      }}
     />
   );
 }

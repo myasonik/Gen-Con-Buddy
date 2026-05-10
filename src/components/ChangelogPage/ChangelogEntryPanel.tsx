@@ -135,8 +135,6 @@ export function ChangelogEntryPanel({
   }
 
   function makeOnSort(group: string): (s: string | undefined) => void {
-    // EventTable only calls onSort with strings it constructs as `${field}.${dir}`;
-    // malformed values are silently ignored.
     return (s) => {
       if (s === undefined) {
         syncGroupSortToUrl(group, undefined);
@@ -187,96 +185,60 @@ export function ChangelogEntryPanel({
     );
   }
 
-  const createdSort = openForPosition.get("created");
-  const updatedSort = openForPosition.get("updated");
-  const deletedSort = openForPosition.get("deleted");
+  const groups = [
+    {
+      key: "created" as const,
+      events: createdEvents,
+      verbClass: styles.groupVerbCreated,
+      label: "Created",
+    },
+    {
+      key: "updated" as const,
+      events: updatedEvents,
+      verbClass: styles.groupVerbUpdated,
+      label: "Updated",
+    },
+    {
+      key: "deleted" as const,
+      events: deletedEvents,
+      verbClass: styles.groupVerbDeleted,
+      label: "Deleted",
+    },
+  ];
 
   return (
     <div className={styles.panel}>
-      {createdEvents.length > 0 && (
-        <Collapsible
-          className={styles.group}
-          triggerClassName={styles.groupSummary}
-          open={openForPosition.has("created")}
-          onOpenChange={(open) => syncGroupToUrl("created", open)}
-          trigger={
-            <span>
-              <span className={styles.groupVerbCreated}>Created</span>{" "}
-              <Chip tone="neutral" className={styles.groupCount}>
-                {createdEvents.length}
-              </Chip>
-            </span>
-          }
-        >
-          <EventGroup
-            events={
-              createdSort
-                ? sortEvents(createdEvents, createdSort.field, createdSort.dir)
-                : createdEvents
+      {groups.map(({ key, events, verbClass, label }) => {
+        if (events.length === 0) {
+          return null;
+        }
+        const sort = openForPosition.get(key);
+        return (
+          <Collapsible
+            key={key}
+            className={styles.group}
+            triggerClassName={styles.groupSummary}
+            open={openForPosition.has(key)}
+            onOpenChange={(open) => syncGroupToUrl(key, open)}
+            trigger={
+              <span>
+                <span className={verbClass}>{label}</span>{" "}
+                <Chip tone="neutral" className={styles.groupCount}>
+                  {events.length}
+                </Chip>
+              </span>
             }
-            sharedColumnState={sharedColumnState}
-            onSort={makeOnSort("created")}
-            activeSortField={createdSort?.field}
-            activeSortDir={createdSort?.dir}
-          />
-        </Collapsible>
-      )}
-      {updatedEvents.length > 0 && (
-        <Collapsible
-          className={styles.group}
-          triggerClassName={styles.groupSummary}
-          open={openForPosition.has("updated")}
-          onOpenChange={(open) => syncGroupToUrl("updated", open)}
-          trigger={
-            <span>
-              <span className={styles.groupVerbUpdated}>Updated</span>{" "}
-              <Chip tone="neutral" className={styles.groupCount}>
-                {updatedEvents.length}
-              </Chip>
-            </span>
-          }
-        >
-          <EventGroup
-            events={
-              updatedSort
-                ? sortEvents(updatedEvents, updatedSort.field, updatedSort.dir)
-                : updatedEvents
-            }
-            sharedColumnState={sharedColumnState}
-            onSort={makeOnSort("updated")}
-            activeSortField={updatedSort?.field}
-            activeSortDir={updatedSort?.dir}
-          />
-        </Collapsible>
-      )}
-      {deletedEvents.length > 0 && (
-        <Collapsible
-          className={styles.group}
-          triggerClassName={styles.groupSummary}
-          open={openForPosition.has("deleted")}
-          onOpenChange={(open) => syncGroupToUrl("deleted", open)}
-          trigger={
-            <span>
-              <span className={styles.groupVerbDeleted}>Deleted</span>{" "}
-              <Chip tone="neutral" className={styles.groupCount}>
-                {deletedEvents.length}
-              </Chip>
-            </span>
-          }
-        >
-          <EventGroup
-            events={
-              deletedSort
-                ? sortEvents(deletedEvents, deletedSort.field, deletedSort.dir)
-                : deletedEvents
-            }
-            sharedColumnState={sharedColumnState}
-            onSort={makeOnSort("deleted")}
-            activeSortField={deletedSort?.field}
-            activeSortDir={deletedSort?.dir}
-          />
-        </Collapsible>
-      )}
+          >
+            <EventGroup
+              events={sort ? sortEvents(events, sort.field, sort.dir) : events}
+              sharedColumnState={sharedColumnState}
+              onSort={makeOnSort(key)}
+              activeSortField={sort?.field}
+              activeSortDir={sort?.dir}
+            />
+          </Collapsible>
+        );
+      })}
     </div>
   );
 }

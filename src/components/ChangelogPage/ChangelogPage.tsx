@@ -14,19 +14,13 @@ import { ChangelogRow } from "./ChangelogRow";
 interface ChangelogPageProps {
   openParam?: string[];
   navigate?: NavigateFn;
-  eventType?: string;
-  days?: string;
-  timeStart?: string;
-  timeEnd?: string;
+  activeFilter?: SearchFormValues;
 }
 
 export function ChangelogPage({
   openParam = [],
   navigate,
-  eventType = "",
-  days = "",
-  timeStart = "",
-  timeEnd = "",
+  activeFilter: activeFilterProp,
 }: ChangelogPageProps): React.JSX.Element {
   const posthog = usePostHog();
   const queryClient = useQueryClient();
@@ -50,8 +44,18 @@ export function ChangelogPage({
   }, [summaries, queryClient]);
 
   const activeFilter: SearchFormValues = useMemo(
-    () => ({ eventType, days, timeStart, timeEnd }),
-    [eventType, days, timeStart, timeEnd],
+    () => ({
+      eventType: activeFilterProp?.eventType ?? "",
+      days: activeFilterProp?.days ?? "",
+      timeStart: activeFilterProp?.timeStart ?? "",
+      timeEnd: activeFilterProp?.timeEnd ?? "",
+    }),
+    [
+      activeFilterProp?.eventType,
+      activeFilterProp?.days,
+      activeFilterProp?.timeStart,
+      activeFilterProp?.timeEnd,
+    ],
   );
 
   const handleSearch = (values: SearchFormValues): void => {
