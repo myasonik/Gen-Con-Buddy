@@ -76,31 +76,6 @@ export function ChangelogEntryPanel({
     [openParam, position],
   );
 
-  function syncGroupSortToUrl(group: string, _sort: SortState | undefined): void {
-    if (!navigate || position === undefined) {
-      return;
-    }
-    startTransition(() => {
-      void navigate({
-        to: ".",
-        search: (prev) => {
-          const openMap = new Map(parseOpenParam(prev.open ?? []));
-          // If the entry's position is absent from the map, the outer row was just closed;
-          // don't write back to the URL.
-          if (!openMap.has(position)) {
-            return prev;
-          }
-          const groupMap = new Map(openMap.get(position) ?? []);
-          groupMap.set(group, undefined);
-          openMap.set(position, groupMap);
-          return { ...prev, open: serializeOpenParam(openMap) };
-        },
-        replace: true,
-        resetScroll: false,
-      });
-    });
-  }
-
   function syncGroupToUrl(group: string, nowOpen: boolean): void {
     if (!navigate || position === undefined) {
       return;
@@ -128,12 +103,6 @@ export function ChangelogEntryPanel({
         resetScroll: false,
       });
     });
-  }
-
-  function makeOnSort(group: string): (sorts: SortState[]) => void {
-    return ([first]: SortState[]) => {
-      syncGroupSortToUrl(group, first ?? undefined);
-    };
   }
 
   if (entry === undefined || entry === "loading") {
@@ -217,12 +186,7 @@ export function ChangelogEntryPanel({
               </span>
             }
           >
-            <EventGroup
-              events={events}
-              sharedColumnState={sharedColumnState}
-              activeSort={[]}
-              onSort={makeOnSort(key)}
-            />
+            <EventGroup events={events} sharedColumnState={sharedColumnState} activeSort={[]} />
           </Collapsible>
         );
       })}

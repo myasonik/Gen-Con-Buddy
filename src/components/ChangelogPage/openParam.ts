@@ -8,38 +8,33 @@ export function parseOpenParam(values: string[]): OpenMap {
     // Accept 1-segment (position), 2-segment (position.group),
     // and legacy 4-segment (position.group.field.dir) — sort portion silently ignored.
     // Drop 3-segment and 5+-segment values.
-    if (segCount !== 1 && segCount !== 2 && segCount !== 4) {
-      // skip invalid segment counts
-    } else {
-      const position = parseInt(parts[0], 10);
-      if (!isNaN(position) && position > 0) {
-        if (segCount === 1) {
-          if (!result.has(position)) {
-            result.set(position, new Map());
-          }
-        } else {
-          const [, group, field, dir] = parts;
-          if (group) {
-            // For legacy 4-segment, validate sort portion before accepting group.
-            let valid = true;
-            if (segCount === 4) {
-              if (!field || (dir !== "asc" && dir !== "desc")) {
-                valid = false;
-              }
-            }
+    if (segCount !== 1 && segCount !== 2 && segCount !== 4) continue;
 
-            if (valid) {
-              let groupMap = result.get(position);
-              if (!groupMap) {
-                groupMap = new Map();
-                result.set(position, groupMap);
-              }
-              groupMap.set(group, undefined);
-            }
-          }
-        }
+    const position = parseInt(parts[0], 10);
+    if (isNaN(position) || position <= 0) continue;
+
+    if (segCount === 1) {
+      if (!result.has(position)) {
+        result.set(position, new Map());
       }
+      continue;
     }
+
+    const group = parts[1];
+    if (!group) continue;
+
+    // For legacy 4-segment, validate sort portion before accepting group.
+    if (segCount === 4) {
+      const dir = parts[3];
+      if (!parts[2] || (dir !== "asc" && dir !== "desc")) continue;
+    }
+
+    let groupMap = result.get(position);
+    if (!groupMap) {
+      groupMap = new Map();
+      result.set(position, groupMap);
+    }
+    groupMap.set(group, undefined);
   }
   return result;
 }
