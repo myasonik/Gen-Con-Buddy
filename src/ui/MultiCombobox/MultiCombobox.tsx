@@ -188,7 +188,7 @@ export function MultiCombobox({
                       </Combobox.ItemIndicator>
                     </Combobox.Item>
                   ))}
-                  <Combobox.Empty className={styles.empty}>No results</Combobox.Empty>
+                  {filteredOptions.length === 0 && <div className={styles.empty}>No results</div>}
                 </Combobox.List>
               </div>
             </Combobox.Positioner>
