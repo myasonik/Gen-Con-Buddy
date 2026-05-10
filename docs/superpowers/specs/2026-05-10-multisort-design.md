@@ -185,9 +185,9 @@ Arrow up/down on any column whose `sortField` appears anywhere in `activeSort`. 
 - Pass to `SortDrawer`: `activeSort`, `onSort`, `columnVisibility` (from `sharedColumnState.visibility`), `open={sortDrawerOpen}`, `onOpenChange`
 - Pass to `EventTable`: `activeSort`, `onSort`, `onOpenSortDrawer={() => setSortDrawerOpen(true)}`
 
-### `index.tsx`
+### `SearchResults` prop change
 
-`handleSort` signature stays `(sort: string | undefined) => void` — no change needed.
+`onSort` prop changes from `(sort: string | undefined) => void` to `(sorts: SortState[]) => void`. `SearchResults` serializes to a string internally before calling the route's `handleSort`. `handleSort` in `index.tsx` stays `(sort: string | undefined) => void` — no change needed there.
 
 ---
 
@@ -206,28 +206,16 @@ After:  Map<position, SortState[] | undefined>
 
 ### `ChangelogEntryPanel` changes
 
-- Receives `activeSort: SortState[]` and `onSort: (sorts: SortState[]) => void`
-- `makeOnSort(group)` removed; single `syncEntrySortToUrl` handler used for all groups
+- Owns sort state: reads `activeSort: SortState[]` from its entry's slot in `openParam` (via `parseOpenParam`)
+- Owns `sortDrawerOpen: boolean` state
+- `makeOnSort(group)` removed; single `syncEntrySortToUrl` handler updates the entry's sort in the URL
 - All three `EventGroup` instances receive the same `activeSort` and `onSort`
-- Gains `sortDrawerOpen` state + `onOpenSortDrawer` callback passed to `EventTable`s
+- Renders a per-entry sort controls row (above the EventGroups) containing only a `SortDrawer`
+- Passes `onOpenSortDrawer={() => setSortDrawerOpen(true)}` to each `EventTable`
 
-### `ColumnControlsPanel` changes
+### `ColumnControlsPanel` — no changes
 
-Gains a `SortDrawer` alongside Visibility and Format:
-
-```ts
-interface ColumnControlsPanelProps {
-  columnState: SharedColumnState;
-  activeSort: SortState[];
-  onSort: (sorts: SortState[]) => void;
-  sortDrawerOpen: boolean;
-  onSortDrawerOpenChange: (open: boolean) => void;
-}
-```
-
-### Prop threading
-
-`ChangelogPage` reads sort from the open param per entry and threads `activeSort`, `onSort`, `sortDrawerOpen`, `onSortDrawerOpenChange` down: `ChangelogPage` → `ChangelogRow` → `ChangelogEntryPanel` → `ColumnControlsPanel`.
+`ColumnControlsPanel` is page-level (Visibility + Format, shared across all entries). Sort is per-entry, so the `SortDrawer` lives inside `ChangelogEntryPanel` directly, not in `ColumnControlsPanel`. No prop threading through `ChangelogPage` or `ChangelogRow` is required.
 
 ---
 
