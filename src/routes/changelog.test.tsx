@@ -547,6 +547,7 @@ test("undefined filter params are not serialized to URL when navigating", async 
       to: "/changelog",
       search: {
         open: [],
+        sort: undefined,
         eventType: undefined,
         days: undefined,
         timeStart: undefined,

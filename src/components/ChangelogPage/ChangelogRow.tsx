@@ -2,7 +2,7 @@ import React, { startTransition, useState } from "react";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import type { SearchFormValues } from "../../utils/searchParamSchema";
-import type { ChangelogSummary } from "../../utils/types";
+import type { ChangelogSummary, SortState } from "../../utils/types";
 import { fetchChangelogEntry } from "../../utils/api";
 import { ChangelogEntryPanel } from "./ChangelogEntryPanel";
 import type { SharedColumnState } from "../EventTable/types";
@@ -21,6 +21,9 @@ interface ChangelogRowProps {
   onOpen: () => void;
   sharedColumnState: SharedColumnState;
   activeFilter?: SearchFormValues;
+  activeSort?: SortState[];
+  onSort?: (sorts: SortState[]) => void;
+  onOpenSortDrawer?: () => void;
 }
 
 export function ChangelogRow({
@@ -31,6 +34,9 @@ export function ChangelogRow({
   onOpen,
   sharedColumnState,
   activeFilter,
+  activeSort: _activeSort,
+  onSort: _onSort,
+  onOpenSortDrawer: _onOpenSortDrawer,
 }: ChangelogRowProps): React.JSX.Element {
   const openMap = parseOpenParam(openParam);
   const [isOpen, setIsOpen] = useState(() => position !== undefined && openMap.has(position));

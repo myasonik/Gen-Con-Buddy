@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { usePostHog } from "posthog-js/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { NavigateFn } from "@tanstack/react-router";
@@ -8,18 +8,22 @@ import { ColumnControlsPanel } from "../EventTable/ColumnControlsPanel";
 import { fetchChangelogEntry, fetchChangelogList } from "../../utils/api";
 import { SearchForm } from "../SearchForm/SearchForm";
 import type { SearchFormValues } from "../../utils/searchParamSchema";
+import type { SortState } from "../../utils/types";
+import { parseSorts, serializeSorts } from "../../utils/parseSorts";
 import styles from "./ChangelogPage.module.css";
 import { ChangelogRow } from "./ChangelogRow";
 
 interface ChangelogPageProps {
   openParam?: string[];
   navigate?: NavigateFn;
+  sort?: string;
   activeFilter?: SearchFormValues;
 }
 
 export function ChangelogPage({
   openParam = [],
   navigate,
+  sort,
   activeFilter: activeFilterProp,
 }: ChangelogPageProps): React.JSX.Element {
   const posthog = usePostHog();
@@ -42,6 +46,21 @@ export function ChangelogPage({
       });
     }
   }, [summaries, queryClient]);
+
+  const activeSort = parseSorts(sort ?? "");
+  const [sortDrawerOpen, setSortDrawerOpen] = useState(false);
+
+  function handleSort(sorts: SortState[]): void {
+    if (!navigate) {
+      return;
+    }
+    void navigate({
+      to: ".",
+      search: (prev) => ({ ...prev, sort: serializeSorts(sorts) }),
+      replace: true,
+      resetScroll: false,
+    });
+  }
 
   const activeFilter: SearchFormValues = useMemo(
     () => ({
@@ -100,7 +119,13 @@ export function ChangelogPage({
         {summaries.length > 0 && (
           <>
             <h1 className={styles.heading}>Changelog</h1>
-            <ColumnControlsPanel columnState={sharedColumnState} />
+            <ColumnControlsPanel
+              columnState={sharedColumnState}
+              activeSort={activeSort}
+              onSort={handleSort}
+              sortDrawerOpen={sortDrawerOpen}
+              onSortDrawerOpenChange={setSortDrawerOpen}
+            />
             <section className={styles.changelogSection}>
               {summaries.map((summary, i) => (
                 <ChangelogRow
@@ -112,6 +137,9 @@ export function ChangelogPage({
                   onOpen={() => handleOpen(i)}
                   sharedColumnState={sharedColumnState}
                   activeFilter={activeFilter}
+                  activeSort={activeSort}
+                  onSort={handleSort}
+                  onOpenSortDrawer={() => setSortDrawerOpen(true)}
                 />
               ))}
             </section>
