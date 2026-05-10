@@ -18,7 +18,6 @@
 .section + .section {
   margin-top: var(--space-5);
   padding-top: var(--space-4);
-  border-top: calc(var(--border-width) * 2) solid var(--color-ink-border);
 }
 
 .sectionHeading {

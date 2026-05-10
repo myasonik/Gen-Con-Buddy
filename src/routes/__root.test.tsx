@@ -14,6 +14,12 @@ test("Changelog nav link is active when on /changelog with no open params", asyn
   expect(link).toHaveAttribute("data-status", "active");
 });
 
+test("Search nav link is active when on / with query params", async () => {
+  await renderRoute("/?q=dominion&sort=title");
+  const link = screen.getByRole("link", { name: "Search" });
+  expect(link).toHaveAttribute("data-status", "active");
+});
+
 test("Search nav link is not active when on /changelog", async () => {
   await renderRoute("/changelog");
   const link = screen.getByRole("link", { name: "Search" });

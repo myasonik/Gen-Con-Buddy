@@ -30,7 +30,7 @@ function AppShell(): React.JSX.Element {
         </Link>
         <p className={rootStyles.tagline}>your guide to the best four days in gaming</p>
         <nav className={rootStyles.nav}>
-          <Link to="/" activeOptions={{ exact: true }}>
+          <Link to="/" activeOptions={{ exact: true, includeSearch: false }}>
             Search
           </Link>
           <Link

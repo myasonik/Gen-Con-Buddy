@@ -4,9 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "start": "concurrently -n api,web -c cyan,green \"sh -c 'cd ../Gen-Con-Buddy-API && set -a && source .env && ./bin/gcb api'\" \"vite\"",
-    "start:prod": "VITE_API_URL=https://web-production-e0d43.up.railway.app vite",
+    "start": "vite",
     "build": "tsc -b && vite build",
     "typecheck": "tsc -b --noEmit",
     "preview": "vite preview",
@@ -43,7 +41,6 @@
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/parser": "^8.58.2",
     "@vitejs/plugin-react": "^6.0.1",
-    "concurrently": "^9.2.1",
     "eslint": "^10.3.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "husky": "^9.1.7",

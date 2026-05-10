@@ -1,7 +1,7 @@
 .page {
   display: grid;
   grid-template-rows: auto 1fr auto;
-  height: 100dvh;
+  min-height: 100dvh;
 }
 
 .header {
@@ -27,7 +27,6 @@
 
 @media (width <= 60rem) {
   .page {
-    height: auto;
     min-height: 100dvh;
   }
 

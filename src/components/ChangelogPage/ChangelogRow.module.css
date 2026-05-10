@@ -72,6 +72,32 @@
   align-items: center;
 }
 
+@media (width <= 37.5rem) {
+  .summary {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    row-gap: var(--space-1);
+  }
+
+  .date {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .counts {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .summary::after {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+    margin-left: var(--space-3);
+  }
+}
+
 .unknownBadge {
   display: inline-flex;
   align-items: center;

@@ -3,10 +3,9 @@ import react from "@vitejs/plugin-react";
 import { loadEnv } from "vite";
 import { defineConfig } from "vitest/config";
 
-const apiTarget = process.env.VITE_API_URL ?? "http://localhost:8080";
-
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
+  const apiTarget = env.VITE_API_URL ?? "http://localhost:8080";
   return {
     server: {
       host: true,
