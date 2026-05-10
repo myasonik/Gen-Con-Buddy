@@ -44,9 +44,8 @@ export function serializeOpenParam(map: OpenMap): string[] {
   const positions = [...map.keys()].sort((a, b) => a - b);
   for (const pos of positions) {
     const groupMap = map.get(pos);
-    if (!groupMap) {
-      // skip missing group maps
-    } else if (groupMap.size === 0) {
+    if (!groupMap) continue;
+    if (groupMap.size === 0) {
       result.push(String(pos));
     } else {
       const groups = [...groupMap.keys()].sort();
