@@ -1,7 +1,9 @@
 import React from "react";
+import { usePageTitle } from "../../lib/usePageTitle";
 import styles from "./AboutPage.module.css";
 
 export function AboutPage(): React.JSX.Element {
+  usePageTitle("About | Gen Con Buddy");
   return (
     <main className={styles.page}>
       <div className={styles.content}>

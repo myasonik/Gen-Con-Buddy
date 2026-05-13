@@ -709,3 +709,8 @@ test("event links in changelog carry from:changelog navigation state", async () 
     screen.findByRole("button", { name: /back to changelog/i }),
   ).resolves.toBeInTheDocument();
 });
+
+test("sets document.title to 'Changelog | Gen Con Buddy'", async () => {
+  await renderChangelogPage();
+  expect(document.title).toBe("Changelog | Gen Con Buddy");
+});

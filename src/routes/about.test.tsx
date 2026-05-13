@@ -61,3 +61,8 @@ test("renders game-icons.net attribution link", async () => {
   expect(link).toHaveAttribute("target", "_blank");
   expect(link).toHaveAttribute("rel", "noopener noreferrer");
 });
+
+test("sets document.title to 'About | Gen Con Buddy'", async () => {
+  await renderAboutPage();
+  expect(document.title).toBe("About | Gen Con Buddy");
+});
