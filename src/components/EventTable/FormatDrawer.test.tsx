@@ -1,7 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi, expect, test } from "vitest";
-import { FormatDrawer, TypeFormatControls, DayFormatControls, TimeFormatControls } from "./FormatDrawer";
+import {
+  FormatDrawer,
+  TypeFormatControls,
+  DayFormatControls,
+  TimeFormatControls,
+} from "./FormatDrawer";
 import type { SharedColumnState, TypeDisplay, DayFormat, TimeZone } from "./types";
 
 function makeColumnState(overrides: Partial<SharedColumnState> = {}): SharedColumnState {

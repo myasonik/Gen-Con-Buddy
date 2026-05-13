@@ -16,7 +16,12 @@ import type { DayFormat, TypeDisplay, TimeZone } from "./types";
 async function renderList(
   events: Event[] = [makeEvent()],
   visibility?: Partial<Record<string, boolean>>,
-  opts: { typeDisplay?: TypeDisplay; showTypeIcon?: boolean; dayFormat?: DayFormat; timeZone?: TimeZone } = {},
+  opts: {
+    typeDisplay?: TypeDisplay;
+    showTypeIcon?: boolean;
+    dayFormat?: DayFormat;
+    timeZone?: TimeZone;
+  } = {},
 ): Promise<ReturnType<typeof render>> {
   const { dayFormat, timeZone, ...typeDisplayProps } = opts;
   const rootRoute = createRootRoute({
