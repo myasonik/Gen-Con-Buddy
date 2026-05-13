@@ -17,8 +17,12 @@ interface ThemePopoverProps {
 }
 
 function ThemeIcon({ preference }: { preference: ThemePreference }): React.JSX.Element {
-  if (preference === "light") return <Sun size={16} aria-hidden="true" />;
-  if (preference === "dark") return <Moon size={16} aria-hidden="true" />;
+  if (preference === "light") {
+    return <Sun size={16} aria-hidden="true" />;
+  }
+  if (preference === "dark") {
+    return <Moon size={16} aria-hidden="true" />;
+  }
   return <Eclipse size={16} aria-hidden="true" />;
 }
 

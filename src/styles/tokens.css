@@ -124,7 +124,7 @@
 
   /* Semantic deep text — brightened for dark backgrounds */
   --color-jade-deep: oklch(80% 0.12 148deg);
-  --color-cobalt-deep: oklch(80% 0.10 235deg);
+  --color-cobalt-deep: oklch(80% 0.1 235deg);
   --color-amber-deep: oklch(82% 0.12 62deg);
   --color-error-deep: oklch(82% 0.12 22deg);
 
