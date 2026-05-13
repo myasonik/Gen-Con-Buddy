@@ -3,10 +3,28 @@
   margin: var(--space-2) 0 0;
   padding: 0;
   border-top: var(--border-width) solid var(--color-ink-divider);
+  background-image:
+    linear-gradient(
+      oklch(from var(--color-surface-page) l c h / 0.82),
+      oklch(from var(--color-surface-page) l c h / 0.82)
+    ),
+    url('/wildhavens-bg.webp');
+  background-size: cover;
+  background-position: center 60%;
+}
+
+:global([data-theme="dark"]) .list {
+  background-image:
+    linear-gradient(
+      oklch(from var(--color-surface-page) l c h / 0.82),
+      oklch(from var(--color-surface-page) l c h / 0.82)
+    ),
+    url('/wildhavens-bg.webp');
 }
 
 .item {
   border-bottom: var(--border-width) solid var(--color-ink-divider);
+  background-color: var(--color-surface-page);
 }
 
 .item:nth-child(even) {
@@ -59,8 +77,13 @@
   font-variant-numeric: tabular-nums;
 }
 
-.item[data-staff-pick] {
-  background-color: var(--color-accent-surface);
+.item[data-staff-pick],
+.item[data-staff-pick]:nth-child(even) {
+  background-color: transparent;
+}
+
+.staffPickBadge {
+  margin-bottom: var(--space-1);
 }
 
 .row .mobileDetails {
