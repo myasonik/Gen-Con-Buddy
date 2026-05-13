@@ -105,13 +105,16 @@ Each list item `<li>` receives `data-staff-pick` on the same condition. A `<Chip
 ┌─ accent-surface background, accent-border border ──────────────┐
 │  [heading: "Staff Picks" — font-slab]                          │
 │  [subtext: "Our picks for best new publisher at Gen Con 2026"] │
+│  [VisibilityDrawer] [SortDrawer]                               │
 │  [EventTable or EventListMobile with the 7 events]             │
 └────────────────────────────────────────────────────────────────┘
 ```
 
 The table inside the panel is the unmodified `EventTable` / `EventListMobile`. Row highlighting from Section 2 applies automatically since all 7 events are in `STAFF_PICK_IDS`.
 
-The `WildhavensCallout` uses the same `useMediaQuery("(width <= 60rem)")` breakpoint as `SearchResults` to decide which table variant to render. Column state (`useSharedColumnState`) is instantiated locally within the callout — it does not share state with the main search results table. The callout table is display-only: no sort URL params, no pagination, no column controls toolbar.
+The `WildhavensCallout` uses the same `useMediaQuery("(width <= 60rem)")` breakpoint as `SearchResults` to decide which table variant to render. Column state (`useSharedColumnState`) is instantiated locally within the callout — it does not share state with the main search results table.
+
+Sort and visibility controls are rendered above the table using the same `VisibilityDrawer` and `SortDrawer` components used in `SearchResults`. Sort state is local to the callout (managed via `useSortState`) — it does not affect URL params. No pagination is rendered (7 events, all shown at once). The `FormatDrawer` is omitted — format preferences are inherited from the local column state defaults.
 
 ### `src/components/SearchResults/SearchResults.tsx` — integration
 
@@ -136,7 +139,7 @@ All new code is test-first (TDD). Key test surfaces:
 - **`columns.tsx`**: staff pick rows render the badge; non-staff-pick rows do not.
 - **`EventTable.tsx`**: staff pick rows have `data-staff-pick` attribute; non-staff-pick rows do not.
 - **`EventListMobile.tsx`**: same attribute and badge assertions.
-- **`WildhavensCallout.tsx`**: renders panel when fetch succeeds with data; renders nothing on error; renders nothing when fetch returns 0 events; renders loading state while fetching.
+- **`WildhavensCallout.tsx`**: renders panel when fetch succeeds with data; renders nothing on error; renders nothing when fetch returns 0 events; renders loading state while fetching; VisibilityDrawer and SortDrawer are present when data loads; sort does not change URL params.
 - **`SearchResults.tsx`**: `WildhavensCallout` appears when results are empty; does not appear when results are non-empty or loading.
 
 MSW handlers for the Wildhavens fetch live in `src/test/msw/` as a named handler, overridable per-test.
