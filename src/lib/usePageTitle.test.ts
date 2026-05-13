@@ -17,6 +17,12 @@ test("does nothing when given undefined", () => {
   expect(document.title).toBe("Previous Title");
 });
 
+test("does nothing when given an empty string", () => {
+  document.title = "Previous Title";
+  renderHook(() => usePageTitle(""));
+  expect(document.title).toBe("Previous Title");
+});
+
 test("resets document.title to 'Gen Con Buddy' on unmount", () => {
   const { unmount } = renderHook(() => usePageTitle("Some Page | Gen Con Buddy"));
   unmount();
