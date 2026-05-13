@@ -15,6 +15,7 @@ import { server } from "../../test/msw/server";
 import { makeEvent } from "../../test/msw/factory";
 import { SearchResults } from "./SearchResults";
 import type { SearchParams, EventSearchResponse } from "../../utils/types";
+import { WILDHAVENS_GAME_IDS } from "../../utils/staffPicks";
 import { __reset } from "../../lib/announce";
 
 function setupLiveRegions(): () => void {
@@ -690,4 +691,28 @@ test("controls bar renders Visibility, Format, and Sort buttons", async () => {
     expect(screen.getByRole("button", { name: "Format" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Sort" })).toBeInTheDocument();
   });
+});
+
+test("shows StaffPickCallout when search returns no results", async () => {
+  const staffPickEvents = WILDHAVENS_GAME_IDS.map((gameId) =>
+    makeEvent({ gameId, title: `Staff Pick Game ${gameId}` }),
+  );
+  server.use(
+    http.get("/api/events/search", ({ request }) => {
+      const url = new URL(request.url);
+      const response: EventSearchResponse = url.searchParams.has("group")
+        ? { data: staffPickEvents, meta: { total: staffPickEvents.length }, links: { self: "" }, error: null }
+        : { data: [], meta: { total: 0 }, links: { self: "" }, error: null };
+      return HttpResponse.json(response);
+    }),
+  );
+  renderSearchResults();
+  await screen.findByText("NO QUESTS FOUND");
+  await screen.findByText("Staff Picks");
+});
+
+test("does not show StaffPickCallout when search returns results", async () => {
+  renderSearchResults();
+  await screen.findAllByRole("row");
+  expect(screen.queryByText("Staff Picks")).not.toBeInTheDocument();
 });

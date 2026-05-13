@@ -75,9 +75,9 @@ test("resolvedTheme is 'dark' when OS is dark and theme is 'auto'", () => {
         matches: true,
         media: query,
         onchange: null,
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
+        addEventListener: vi.fn<() => void>(),
+        removeEventListener: vi.fn<() => void>(),
+        dispatchEvent: vi.fn<() => boolean>(),
       }) as unknown as MediaQueryList,
   );
   const { result } = renderHook(() => useTheme());
@@ -100,9 +100,9 @@ test("resolvedTheme follows explicit 'light' preference regardless of OS", () =>
         matches: true,
         media: query,
         onchange: null,
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
+        addEventListener: vi.fn<() => void>(),
+        removeEventListener: vi.fn<() => void>(),
+        dispatchEvent: vi.fn<() => boolean>(),
       }) as unknown as MediaQueryList,
   );
   const { result } = renderHook(() => useTheme());
@@ -119,9 +119,9 @@ test("applies data-theme attribute to documentElement", () => {
         matches: true,
         media: query,
         onchange: null,
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
+        addEventListener: vi.fn<() => void>(),
+        removeEventListener: vi.fn<() => void>(),
+        dispatchEvent: vi.fn<() => boolean>(),
       }) as unknown as MediaQueryList,
   );
   renderHook(() => useTheme());
@@ -135,9 +135,9 @@ test("applies colorScheme style to documentElement", () => {
         matches: true,
         media: query,
         onchange: null,
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
+        addEventListener: vi.fn<() => void>(),
+        removeEventListener: vi.fn<() => void>(),
+        dispatchEvent: vi.fn<() => boolean>(),
       }) as unknown as MediaQueryList,
   );
   renderHook(() => useTheme());
@@ -166,8 +166,8 @@ test("announces when OS changes while theme is 'auto'", async () => {
         addEventListener: (_type: string, handler: EventListenerOrEventListenerObject): void => {
           listeners.push(handler as (e: MediaQueryListEvent) => void);
         },
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
+        removeEventListener: vi.fn<() => void>(),
+        dispatchEvent: vi.fn<() => boolean>(),
       }) as unknown as MediaQueryList,
   );
 
@@ -208,8 +208,8 @@ test("does not announce OS change when preference is explicit 'dark'", async () 
         addEventListener: (_type: string, handler: EventListenerOrEventListenerObject): void => {
           listeners.push(handler as (e: MediaQueryListEvent) => void);
         },
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
+        removeEventListener: vi.fn<() => void>(),
+        dispatchEvent: vi.fn<() => boolean>(),
       }) as unknown as MediaQueryList,
   );
 

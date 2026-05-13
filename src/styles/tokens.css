@@ -109,6 +109,8 @@
   --color-accent: oklch(66% 0.14 34deg);
   --color-accent-deep: oklch(74% 0.15 34deg);
   --color-accent-surface: oklch(24% 0.06 38deg);
+  /* Border inverted for dark: lighter than surface, not darker */
+  --color-accent-border: oklch(from var(--color-accent-surface) calc(l + 0.07) c h);
 
   /* Semantic surfaces */
   --color-jade-surface: oklch(18% 0.03 148deg);
@@ -124,7 +126,7 @@
 
   /* Semantic deep text — brightened for dark backgrounds */
   --color-jade-deep: oklch(80% 0.12 148deg);
-  --color-cobalt-deep: oklch(80% 0.10 235deg);
+  --color-cobalt-deep: oklch(80% 0.1 235deg);
   --color-amber-deep: oklch(82% 0.12 62deg);
   --color-error-deep: oklch(82% 0.12 22deg);
 

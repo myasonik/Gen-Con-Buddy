@@ -12,6 +12,7 @@ import { FormatDrawer } from "../EventTable/FormatDrawer";
 import { SortDrawer } from "../EventTable/SortDrawer";
 import { useSharedColumnState } from "../../hooks/useSharedColumnState";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
+import { StaffPickCallout } from "../StaffPickCallout/StaffPickCallout";
 import styles from "./SearchResults.module.css";
 
 interface SearchResultsProps {
@@ -49,7 +50,10 @@ export function SearchResults({
         />
       )}
       {data && data.data.length === 0 && (
-        <EmptyState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />
+        <>
+          <EmptyState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />
+          <StaffPickCallout />
+        </>
       )}
       {data && data.data.length > 0 && (
         <>

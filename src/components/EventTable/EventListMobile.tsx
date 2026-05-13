@@ -7,6 +7,7 @@ import type { Event } from "../../utils/types";
 import { DescriptionItem, DescriptionList } from "../../ui/DescriptionList/DescriptionList";
 import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
 import { Chip } from "../../ui/Chip/Chip";
+import { STAFF_PICK_IDS } from "../../utils/staffPicks";
 import { COLUMNS, COLUMN_GROUPS } from "./columns";
 import styles from "./EventListMobile.module.css";
 import typeCellStyles from "./typeCell.module.css";
@@ -198,14 +199,17 @@ export function EventListMobile({
             );
         }
 
+        const isStaffPick = STAFF_PICK_IDS.has(a.gameId);
+
         return (
-          <li key={event.id} className={styles.item}>
+          <li key={event.id} className={styles.item} data-staff-pick={isStaffPick || undefined}>
             <Link
               to="/event/$id"
               params={{ id: a.gameId }}
               state={linkState}
               className={styles.row}
             >
+              {isStaffPick && <Chip tone="accent" size="sm">Staff Pick</Chip>}
               {isVisible("title") && <span className={styles.title}>{a.title}</span>}
               {showMeta && (
                 <span className={styles.meta}>

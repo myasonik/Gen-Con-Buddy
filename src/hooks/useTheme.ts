@@ -17,7 +17,10 @@ export function useTheme(): {
 } {
   const [theme, setState] = useStoredState<ThemePreference>(STORAGE_KEY, VERSION, DEFAULT);
   const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");
-  const resolved: "light" | "dark" = theme === "auto" ? (prefersDark ? "dark" : "light") : theme;
+  let resolved: "light" | "dark" = "light";
+  if (theme === "dark" || (theme === "auto" && prefersDark)) {
+    resolved = "dark";
+  }
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", resolved);

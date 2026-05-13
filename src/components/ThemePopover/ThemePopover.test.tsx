@@ -20,7 +20,12 @@ function renderPopover(
   overrides: Partial<React.ComponentProps<typeof ThemePopover>> = {},
 ): ReturnType<typeof render> {
   return render(
-    <ThemePopover theme="auto" resolvedTheme="light" setTheme={vi.fn()} {...overrides} />,
+    <ThemePopover
+      theme="auto"
+      resolvedTheme="light"
+      setTheme={vi.fn<(v: string) => void>()}
+      {...overrides}
+    />,
   );
 }
 

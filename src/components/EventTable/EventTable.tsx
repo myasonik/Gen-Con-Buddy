@@ -23,6 +23,7 @@ import { ColumnResizeDialog } from "./ColumnResizeDialog";
 import { announce } from "../../lib/announce";
 import type { Event } from "../../utils/types";
 import { COLUMNS, SORT_FIELD_BY_COL_ID, COL_ID_BY_SORT_FIELD } from "./columns";
+import { STAFF_PICK_IDS } from "../../utils/staffPicks";
 import type { SharedColumnState } from "./types";
 import styles from "./EventTable.module.css";
 
@@ -302,7 +303,7 @@ export function EventTable({
             </thead>
             <tbody>
               {table.getRowModel().rows.map((row) => (
-                <tr key={row.id}>
+                <tr key={row.id} data-staff-pick={STAFF_PICK_IDS.has(row.original.attributes.gameId) || undefined}>
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} data-col-id={cell.column.id}>
                       {flexRender(cell.column.columnDef.cell, {
