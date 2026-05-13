@@ -88,8 +88,8 @@
 :global([data-theme="dark"]) .tableWrapper {
   background-image:
     linear-gradient(
-      oklch(from var(--color-surface-page) l c h / 0.82),
-      oklch(from var(--color-surface-page) l c h / 0.82)
+      oklch(from var(--color-surface-page) l c h / 0.85),
+      oklch(from var(--color-surface-page) l c h / 0.85)
     ),
     url('/wildhavens-bg.webp');
 }
