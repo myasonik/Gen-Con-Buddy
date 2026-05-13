@@ -45,9 +45,9 @@ function renderCallout(): ReturnType<typeof render> {
   );
 }
 
-test("shows loading state while fetching", async () => {
+test("renders nothing while fetching", async () => {
   renderCallout();
-  await expect(screen.findByText("LOADING STAFF PICKS…")).resolves.toBeInTheDocument();
+  expect(screen.queryByText("Staff Picks")).not.toBeInTheDocument();
 });
 
 test("renders panel heading and controls when events load", async () => {
@@ -74,7 +74,7 @@ test("renders nothing when fetch returns 0 events", async () => {
   renderCallout();
   await waitFor(() => {
     expect(screen.queryByText("Staff Picks")).not.toBeInTheDocument();
-    expect(screen.queryByText("LOADING STAFF PICKS…")).not.toBeInTheDocument();
+    expect(screen.queryByText("Our picks for best new publisher at Gen Con 2026")).not.toBeInTheDocument();
   });
 });
 
@@ -85,6 +85,6 @@ test("renders nothing when fetch errors", async () => {
   renderCallout();
   await waitFor(() => {
     expect(screen.queryByText("Staff Picks")).not.toBeInTheDocument();
-    expect(screen.queryByText("LOADING STAFF PICKS…")).not.toBeInTheDocument();
+    expect(screen.queryByText("Our picks for best new publisher at Gen Con 2026")).not.toBeInTheDocument();
   });
 });

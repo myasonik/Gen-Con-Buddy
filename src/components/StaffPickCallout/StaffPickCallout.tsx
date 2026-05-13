@@ -12,7 +12,6 @@ import { EventTable } from "../EventTable/EventTable";
 import { EventListMobile } from "../EventTable/EventListMobile";
 import { VisibilityDrawer } from "../EventTable/VisibilityDrawer";
 import { SortDrawer } from "../EventTable/SortDrawer";
-import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import styles from "./StaffPickCallout.module.css";
 
 export function StaffPickCallout(): React.JSX.Element | null {
@@ -24,11 +23,7 @@ export function StaffPickCallout(): React.JSX.Element | null {
     queryFn: () => fetchEvents({ group: STAFF_PICK_GROUP, limit: 10 }),
   });
 
-  if (isLoading) {
-    return <EmptyState variant="loading" text="LOADING STAFF PICKS…" />;
-  }
-
-  if (isError || !data || data.data.length === 0) {
+  if (isLoading || isError || !data || data.data.length === 0) {
     return null;
   }
 
