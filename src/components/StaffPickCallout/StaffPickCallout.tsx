@@ -33,7 +33,7 @@ export function StaffPickCallout(): React.JSX.Element | null {
       <h2 className={styles.heading}>Staff Picks</h2>
       <p className={styles.preamble}>{STAFF_PICK_PREAMBLE}</p>
       <p className={styles.preambleDetail}>{STAFF_PICK_PREAMBLE_DETAIL}</p>
-<div className={styles.controls}>
+      <div className={styles.controls}>
         <VisibilityDrawer columnState={sharedColumnState} />
         <FormatDrawer columnState={sharedColumnState} />
         <SortDrawer />
