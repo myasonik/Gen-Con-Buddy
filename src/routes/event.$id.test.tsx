@@ -216,3 +216,21 @@ test("shows 'Back to changelog' when navigated from changelog", async () => {
   expect(screen.getByRole("button", { name: /back to changelog/i })).toBeInTheDocument();
   expect(screen.queryByRole("link", { name: /back to results/i })).not.toBeInTheDocument();
 });
+
+test("sets document.title to event title and gameId after data loads", async () => {
+  server.use(
+    http.get("/api/events/search", ({ request }) => {
+      const url = new URL(request.url);
+      const gameId = url.searchParams.get("gameId") ?? "RPG24000042";
+      return HttpResponse.json<EventSearchResponse>({
+        data: [makeEvent({ gameId, title: "Dungeon Crawl Classic" })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      });
+    }),
+  );
+  await renderRoute("/event/RPG24000042", { queryClient });
+  await screen.findAllByRole("term");
+  expect(document.title).toBe("Dungeon Crawl Classic (RPG24000042) | Gen Con Buddy");
+});

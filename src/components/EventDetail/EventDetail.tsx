@@ -12,6 +12,7 @@ import { DescriptionList, DescriptionItem } from "../../ui/DescriptionList/Descr
 import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
 import { CalendarPlus, ExternalLink } from "lucide-react";
 import { useDayFormat } from "../../hooks/useDayFormat";
+import { usePageTitle } from "../../lib/usePageTitle";
 import { formatDay } from "../../utils/formatDay";
 import { normalizeUrl } from "./normalizeUrl";
 import { normalizeEmail } from "./normalizeEmail";
@@ -31,8 +32,10 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
     queryFn: () => fetchEvents({ gameId, limit: 1 }),
   });
   const { dayFormat } = useDayFormat();
-
   const event = data?.data[0];
+  usePageTitle(
+    event ? `${event.attributes.title} (${event.attributes.gameId}) | Gen Con Buddy` : undefined,
+  );
 
   useEffect(() => {
     if (!event) {
