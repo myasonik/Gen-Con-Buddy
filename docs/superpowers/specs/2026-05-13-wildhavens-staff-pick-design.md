@@ -5,15 +5,15 @@
 
 ## Overview
 
-Highlight seven specific Wildhavens events as staff picks in Gen Con Buddy. Two surfaces are affected: (1) matching rows in search results get an accent background and a "Staff Pick" badge; (2) when a search returns zero results, a Wildhavens callout appears below the empty state showing the 7 events in the standard table format.
+Highlight seven specific Wildhavens events as staff picks in Gen Con Buddy. Two surfaces are affected: (1) matching rows in search results get an accent background and a "Staff Pick" badge; (2) when a search returns zero results, a staff pick callout appears below the empty state showing the 7 events in the standard table format.
 
-The implementation is hardcoded — no config system, no generalizable "staff picks" abstraction. If the featured events change, the constant is edited directly.
+The implementation is hardcoded — no config system, no generalizable "staff picks" abstraction. If the featured events change next year, only `src/utils/staffPicks.ts` needs to be edited. The callout component (`StaffPickCallout`) is publisher-agnostic and reads all display strings from that module.
 
 ---
 
 ## 1. Data Layer
 
-**`src/utils/staffPicks.ts`** — new file, two exports:
+**`src/utils/staffPicks.ts`** — new file, five exports:
 
 ```ts
 export const WILDHAVENS_GAME_IDS: ReadonlyArray<string> = [
@@ -27,9 +27,15 @@ export const WILDHAVENS_GAME_IDS: ReadonlyArray<string> = [
 ] as const;
 
 export const STAFF_PICK_IDS: ReadonlySet<string> = new Set(WILDHAVENS_GAME_IDS);
+
+export const STAFF_PICK_GROUP = "Wildhavens";
+export const STAFF_PICK_HEADING = "Staff Picks";
+export const STAFF_PICK_SUBTEXT = "Our picks for best new publisher at Gen Con 2026";
 ```
 
-`STAFF_PICK_IDS` is used for O(1) row-highlight lookups. `WILDHAVENS_GAME_IDS` is used by the callout to construct the API fetch. No titles are hardcoded — events are always fetched live.
+`STAFF_PICK_IDS` is used for O(1) row-highlight lookups. `WILDHAVENS_GAME_IDS` is used by the callout to construct the API fetch. `STAFF_PICK_GROUP`, `STAFF_PICK_HEADING`, and `STAFF_PICK_SUBTEXT` are the only strings that need updating year-over-year — no component code changes required. No titles are hardcoded — events are always fetched live.
+
+To update the staff pick for a future year: edit `staffPicks.ts` only — swap the game IDs, group name, heading, and subtext. No other files need changing.
 
 ---
 
@@ -46,7 +52,9 @@ cell: ({ row, linkState }) => {
   return (
     <span className={styles.titleCell}>
       {isStaffPick && <Chip tone="accent" size="sm">Staff Pick</Chip>}
-      <Link to="/event/$id" params={{ id: gameId }} state={linkState}>{title}</Link>
+      <Link to="/event/$id" params={{ id: gameId }} state={linkState}>
+        {title}
+      </Link>
     </span>
   );
 }
@@ -75,10 +83,10 @@ In `EventTable.module.css`:
 
 ### `src/components/EventTable/EventListMobile.tsx` — mobile cards
 
-Each list item `<li>` receives `data-staff-pick` on the same condition. A `<Chip tone="accent" size="sm">Staff Pick</Chip>` is rendered alongside the title. The card background is styled in `EventListMobile.module.css`:
+Each list item `<li>` receives `data-staff-pick` on the same condition. A `<Chip tone="accent" size="sm">Staff Pick</Chip>` is rendered inside the `<Link>` before the title. The card background is styled in `EventListMobile.module.css`:
 
 ```css
-.card[data-staff-pick] {
+.item[data-staff-pick] {
   background: var(--color-accent-surface);
 }
 ```
@@ -87,11 +95,11 @@ Each list item `<li>` receives `data-staff-pick` on the same condition. A `<Chip
 
 ## 3. Empty State Callout
 
-### New component: `src/components/WildhavensCallout/`
+### New component: `src/components/StaffPickCallout/`
 
-`WildhavensCallout.tsx` — a self-contained panel that fetches the 7 events and renders them in the standard table format.
+`StaffPickCallout.tsx` — a self-contained panel that fetches the staff pick events and renders them in the standard table format. All publisher-specific strings come from `staffPicks.ts`.
 
-**Data fetching:** Use React Query with `fetchEvents({ group: "Wildhavens", limit: 10 })`. The group name "Wildhavens" must be verified against the live API before implementation. If the API does not support a clean group filter for these events, fall back to `useQueries` — one `fetchEvents({ gameId, limit: 1 })` per ID — and merge the results into a single `Event[]`.
+**Data fetching:** Use React Query with `fetchEvents({ group: STAFF_PICK_GROUP, limit: 10 })`. The `STAFF_PICK_GROUP` value must be verified against the live API before implementation (`attributes.group` on the fetched events). If the API does not support a clean group filter for these events, fall back to `useQueries` — one `fetchEvents({ gameId, limit: 1 })` per ID in `WILDHAVENS_GAME_IDS` — and merge the results into a single `Event[]`.
 
 **States:**
 - Loading: `<EmptyState variant="loading" text="LOADING STAFF PICKS…" />`
@@ -103,18 +111,18 @@ Each list item `<li>` receives `data-staff-pick` on the same condition. A `<Chip
 
 ```
 ┌─ accent-surface background, accent-border border ──────────────┐
-│  [heading: "Staff Picks" — font-slab]                          │
-│  [subtext: "Our picks for best new publisher at Gen Con 2026"] │
+│  [heading: STAFF_PICK_HEADING — font-slab]                     │
+│  [subtext: STAFF_PICK_SUBTEXT]                                 │
 │  [VisibilityDrawer] [SortDrawer]                               │
-│  [EventTable or EventListMobile with the 7 events]             │
+│  [EventTable or EventListMobile with the fetched events]       │
 └────────────────────────────────────────────────────────────────┘
 ```
 
 The table inside the panel is the unmodified `EventTable` / `EventListMobile`. Row highlighting from Section 2 applies automatically since all 7 events are in `STAFF_PICK_IDS`.
 
-The `WildhavensCallout` uses the same `useMediaQuery("(width <= 60rem)")` breakpoint as `SearchResults` to decide which table variant to render. Column state (`useSharedColumnState`) is instantiated locally within the callout — it does not share state with the main search results table.
+The `StaffPickCallout` uses the same `useMediaQuery("(width <= 60rem)")` breakpoint as `SearchResults` to decide which table variant to render. Column state (`useSharedColumnState`) is instantiated locally within the callout — it does not share state with the main search results table.
 
-Sort and visibility controls are rendered above the table using the same `VisibilityDrawer` and `SortDrawer` components used in `SearchResults`. Sort state is local to the callout (managed via `useSortState`) — it does not affect URL params. No pagination is rendered (7 events, all shown at once). The `FormatDrawer` is omitted — format preferences are inherited from the local column state defaults.
+Sort and visibility controls are rendered above the table using the same `VisibilityDrawer` and `SortDrawer` components used in `SearchResults`. Sort state is local to the callout — the table uses its own internal sort state since `onSort` is not passed, meaning no URL params are affected. No pagination is rendered (7 events, all shown at once). The `FormatDrawer` is omitted — format preferences are inherited from the local column state defaults.
 
 ### `src/components/SearchResults/SearchResults.tsx` — integration
 
@@ -122,7 +130,7 @@ Sort and visibility controls are rendered above the table using the same `Visibi
 {data && data.data.length === 0 && (
   <>
     <EmptyState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />
-    <WildhavensCallout />
+    <StaffPickCallout />
   </>
 )}
 ```
@@ -135,11 +143,11 @@ No other changes to `SearchResults`.
 
 All new code is test-first (TDD). Key test surfaces:
 
-- **`staffPicks.ts`**: `STAFF_PICK_IDS` contains exactly the 7 expected IDs; `WILDHAVENS_GAME_IDS` has no duplicates.
+- **`staffPicks.ts`**: `STAFF_PICK_IDS` contains exactly the 7 expected IDs; `WILDHAVENS_GAME_IDS` has no duplicates; string constants are non-empty strings.
 - **`columns.tsx`**: staff pick rows render the badge; non-staff-pick rows do not.
 - **`EventTable.tsx`**: staff pick rows have `data-staff-pick` attribute; non-staff-pick rows do not.
 - **`EventListMobile.tsx`**: same attribute and badge assertions.
-- **`WildhavensCallout.tsx`**: renders panel when fetch succeeds with data; renders nothing on error; renders nothing when fetch returns 0 events; renders loading state while fetching; VisibilityDrawer and SortDrawer are present when data loads; sort does not change URL params.
-- **`SearchResults.tsx`**: `WildhavensCallout` appears when results are empty; does not appear when results are non-empty or loading.
+- **`StaffPickCallout.tsx`**: renders panel when fetch succeeds with data; renders nothing on error; renders nothing when fetch returns 0 events; renders loading state while fetching; VisibilityDrawer and SortDrawer are present when data loads; sort does not change URL params.
+- **`SearchResults.tsx`**: `StaffPickCallout` appears when results are empty; does not appear when results are non-empty or loading.
 
-MSW handlers for the Wildhavens fetch live in `src/test/msw/` as a named handler, overridable per-test.
+MSW handlers for the staff pick fetch live in `src/test/msw/handlers.ts` as a named export (`makeStaffPickHandler`), overridable per-test.

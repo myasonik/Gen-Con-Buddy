@@ -4,7 +4,7 @@
 
 **Goal:** Highlight 7 Wildhavens board game events as staff picks — accented rows with a badge in search results, plus a full-table callout below the empty state.
 
-**Architecture:** A `staffPicks.ts` constants module drives two surfaces: (1) `columns.tsx` and `EventListMobile.tsx` check each event's `gameId` against `STAFF_PICK_IDS` for row styling and badge injection; (2) a new `WildhavensCallout` component fetches the 7 events by group name, renders them in the standard `EventTable`/`EventListMobile`, and is mounted below the empty state in `SearchResults`.
+**Architecture:** A `staffPicks.ts` constants module drives both surfaces and is the single file to edit next year: it exports the game IDs, a lookup Set, and the display strings (group name, heading, subtext). Row treatment checks `STAFF_PICK_IDS` in `columns.tsx` and `EventListMobile.tsx`. A new `StaffPickCallout` component reads all strings from `staffPicks.ts`, fetches events by `STAFF_PICK_GROUP`, and renders them in the standard table — mounted below the empty state in `SearchResults`.
 
 **Tech Stack:** React, TanStack Query (`useQuery`), TanStack Router (`Link`), MSW (tests), Vitest + React Testing Library, CSS Modules.
 
@@ -14,8 +14,8 @@
 
 | Status | Path | Purpose |
 |--------|------|---------|
-| Create | `src/utils/staffPicks.ts` | IDs constant and Set for O(1) lookup |
-| Create | `src/utils/staffPicks.test.ts` | Unit tests for the constants |
+| Create | `src/utils/staffPicks.ts` | IDs, lookup Set, and display string constants |
+| Create | `src/utils/staffPicks.test.ts` | Unit tests for all constants |
 | Modify | `src/components/EventTable/columns.tsx` | Badge in title cell |
 | Modify | `src/components/EventTable/columns.module.css` | `.titleCell` flex layout |
 | Modify | `src/components/EventTable/EventTable.tsx` | `data-staff-pick` on `<tr>` |
@@ -24,10 +24,10 @@
 | Modify | `src/components/EventTable/EventListMobile.tsx` | Badge + `data-staff-pick` on `<li>` |
 | Modify | `src/components/EventTable/EventListMobile.module.css` | Accent card background |
 | Modify | `src/components/EventTable/EventListMobile.test.tsx` | Badge and list-item tests |
-| Modify | `src/test/msw/handlers.ts` | Export `makeWildhavensHandler` |
-| Create | `src/components/WildhavensCallout/WildhavensCallout.tsx` | Callout panel component |
-| Create | `src/components/WildhavensCallout/WildhavensCallout.module.css` | Panel styles |
-| Create | `src/components/WildhavensCallout/WildhavensCallout.test.tsx` | Component tests |
+| Modify | `src/test/msw/handlers.ts` | Export `makeStaffPickHandler` |
+| Create | `src/components/StaffPickCallout/StaffPickCallout.tsx` | Callout panel component |
+| Create | `src/components/StaffPickCallout/StaffPickCallout.module.css` | Panel styles |
+| Create | `src/components/StaffPickCallout/StaffPickCallout.test.tsx` | Component tests |
 | Modify | `src/components/SearchResults/SearchResults.tsx` | Mount callout on empty state |
 | Modify | `src/components/SearchResults/SearchResults.test.tsx` | Callout integration tests |
 
@@ -45,7 +45,13 @@ Create `src/utils/staffPicks.test.ts`:
 
 ```ts
 import { describe, expect, it } from "vitest";
-import { WILDHAVENS_GAME_IDS, STAFF_PICK_IDS } from "./staffPicks";
+import {
+  WILDHAVENS_GAME_IDS,
+  STAFF_PICK_IDS,
+  STAFF_PICK_GROUP,
+  STAFF_PICK_HEADING,
+  STAFF_PICK_SUBTEXT,
+} from "./staffPicks";
 
 describe("WILDHAVENS_GAME_IDS", () => {
   it("contains exactly 7 IDs", () => {
@@ -83,6 +89,23 @@ describe("STAFF_PICK_IDS", () => {
     expect(STAFF_PICK_IDS.size).toBe(WILDHAVENS_GAME_IDS.length);
   });
 });
+
+describe("display string constants", () => {
+  it("STAFF_PICK_GROUP is a non-empty string", () => {
+    expect(typeof STAFF_PICK_GROUP).toBe("string");
+    expect(STAFF_PICK_GROUP.length).toBeGreaterThan(0);
+  });
+
+  it("STAFF_PICK_HEADING is a non-empty string", () => {
+    expect(typeof STAFF_PICK_HEADING).toBe("string");
+    expect(STAFF_PICK_HEADING.length).toBeGreaterThan(0);
+  });
+
+  it("STAFF_PICK_SUBTEXT is a non-empty string", () => {
+    expect(typeof STAFF_PICK_SUBTEXT).toBe("string");
+    expect(STAFF_PICK_SUBTEXT.length).toBeGreaterThan(0);
+  });
+});
 ```
 
 - [ ] **Step 2: Run test to confirm failure**
@@ -107,6 +130,10 @@ export const WILDHAVENS_GAME_IDS: ReadonlyArray<string> = [
 ] as const;
 
 export const STAFF_PICK_IDS: ReadonlySet<string> = new Set(WILDHAVENS_GAME_IDS);
+
+export const STAFF_PICK_GROUP = "Wildhavens";
+export const STAFF_PICK_HEADING = "Staff Picks";
+export const STAFF_PICK_SUBTEXT = "Our picks for best new publisher at Gen Con 2026";
 ```
 
 - [ ] **Step 4: Run test to confirm pass**
@@ -115,13 +142,13 @@ export const STAFF_PICK_IDS: ReadonlySet<string> = new Set(WILDHAVENS_GAME_IDS);
 npx vitest run src/utils/staffPicks.test.ts
 ```
 
-Expected: PASS — 6 tests passing
+Expected: PASS — 9 tests passing
 
 - [ ] **Step 5: Commit**
 
 ```bash
 git add src/utils/staffPicks.ts src/utils/staffPicks.test.ts
-git commit -m "feat: add WILDHAVENS_GAME_IDS and STAFF_PICK_IDS constants"
+git commit -m "feat: add staffPicks constants — IDs, lookup Set, and display strings"
 ```
 
 ---
@@ -178,7 +205,7 @@ Expected: FAIL — `Unable to find an element with the text: Staff Pick`
 
 - [ ] **Step 4: Update the title cell in `src/components/EventTable/columns.tsx`**
 
-Add the import at the top of the file (STAFF_PICK_IDS needs to be imported):
+Add the import at the top of the file:
 
 ```tsx
 import { STAFF_PICK_IDS } from "../../utils/staffPicks";
@@ -212,7 +239,7 @@ Replace the existing `title` column definition:
 npx vitest run src/components/EventTable/EventTable.test.tsx
 ```
 
-Expected: PASS — all tests pass (previously passing tests should still pass)
+Expected: PASS — all tests pass
 
 - [ ] **Step 6: Commit**
 
@@ -241,7 +268,6 @@ test("staff pick row has data-staff-pick attribute", async () => {
     makeEvent({ gameId: "OTHER0001", title: "Regular Game" }),
   ]);
   const rows = screen.getAllByRole("row");
-  // rows[0] is the header; rows[1] and rows[2] are data rows
   const staffPickRow = rows.find((r) => r.textContent?.includes("Staff Pick Game"));
   const regularRow = rows.find((r) => r.textContent?.includes("Regular Game"));
   expect(staffPickRow).toHaveAttribute("data-staff-pick");
@@ -255,7 +281,7 @@ test("staff pick row has data-staff-pick attribute", async () => {
 npx vitest run src/components/EventTable/EventTable.test.tsx
 ```
 
-Expected: FAIL — `Expected element to have attribute "data-staff-pick"` (since the attribute doesn't exist yet)
+Expected: FAIL — `Expected element to have attribute "data-staff-pick"`
 
 - [ ] **Step 3: Add `STAFF_PICK_IDS` import to `EventTable.tsx`**
 
@@ -423,28 +449,28 @@ Expected output (example — verify the exact string):
 "group": "Wildhavens",
 ```
 
-- [ ] **Step 2: Record the exact group name**
+- [ ] **Step 2: Confirm or update `STAFF_PICK_GROUP`**
 
-The exact value of `attributes.group` is the string to use in `fetchEvents({ group: "..." })` in the WildhavensCallout. If it differs from `"Wildhavens"`, update every occurrence in Task 6 steps accordingly before implementing.
+If the API returns a value that differs from `"Wildhavens"`, update `STAFF_PICK_GROUP` in `src/utils/staffPicks.ts` before proceeding. Every other file reads from that constant — no other changes are needed.
 
 ---
 
-## Task 6: MSW Handler + `WildhavensCallout` Component
+## Task 6: MSW Handler + `StaffPickCallout` Component
 
 **Files:**
 - Modify: `src/test/msw/handlers.ts`
-- Create: `src/components/WildhavensCallout/WildhavensCallout.tsx`
-- Create: `src/components/WildhavensCallout/WildhavensCallout.module.css`
-- Create: `src/components/WildhavensCallout/WildhavensCallout.test.tsx`
+- Create: `src/components/StaffPickCallout/StaffPickCallout.tsx`
+- Create: `src/components/StaffPickCallout/StaffPickCallout.module.css`
+- Create: `src/components/StaffPickCallout/StaffPickCallout.test.tsx`
 
 ### Step 6a — MSW handler export
 
-- [ ] **Step 1: Add `makeWildhavensHandler` to `src/test/msw/handlers.ts`**
+- [ ] **Step 1: Add `makeStaffPickHandler` to `src/test/msw/handlers.ts`**
 
 Add after the existing `makeEventPool` export:
 
 ```ts
-export function makeWildhavensHandler(events: Event[]): HttpHandler {
+export function makeStaffPickHandler(events: Event[]): HttpHandler {
   return http.get("/api/events/search", ({ request }) => {
     const url = new URL(request.url);
     if (url.searchParams.get("group") !== null) {
@@ -460,16 +486,16 @@ export function makeWildhavensHandler(events: Event[]): HttpHandler {
 }
 ```
 
-### Step 6b — WildhavensCallout tests
+### Step 6b — StaffPickCallout tests
 
 - [ ] **Step 2: Write the failing tests**
 
-Create `src/components/WildhavensCallout/WildhavensCallout.test.tsx`:
+Create `src/components/StaffPickCallout/StaffPickCallout.test.tsx`:
 
 ```tsx
 import { StrictMode } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
-import { vi, expect, test, beforeEach } from "vitest";
+import { expect, test, beforeEach } from "vitest";
 import {
   createRootRoute,
   createRoute,
@@ -481,9 +507,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http, HttpResponse } from "msw";
 import { server } from "../../test/msw/server";
 import { makeEvent } from "../../test/msw/factory";
-import { makeWildhavensHandler } from "../../test/msw/handlers";
-import { WildhavensCallout } from "./WildhavensCallout";
-import type { EventSearchResponse } from "../../utils/types";
+import { makeStaffPickHandler } from "../../test/msw/handlers";
+import { StaffPickCallout } from "./StaffPickCallout";
 import { WILDHAVENS_GAME_IDS } from "../../utils/staffPicks";
 
 beforeEach(() => {
@@ -492,7 +517,7 @@ beforeEach(() => {
 
 function renderCallout(): ReturnType<typeof render> {
   const rootRoute = createRootRoute({
-    component: () => <WildhavensCallout />,
+    component: () => <StaffPickCallout />,
   });
   const eventRoute = createRoute({
     getParentRoute: () => rootRoute,
@@ -516,14 +541,14 @@ function renderCallout(): ReturnType<typeof render> {
 }
 
 test("shows loading state while fetching", async () => {
-  server.use(makeWildhavensHandler([]));
+  server.use(makeStaffPickHandler([]));
   renderCallout();
   expect(screen.getByText("LOADING STAFF PICKS…")).toBeInTheDocument();
 });
 
 test("renders panel heading and controls when events load", async () => {
   const events = WILDHAVENS_GAME_IDS.map((gameId) => makeEvent({ gameId }));
-  server.use(makeWildhavensHandler(events));
+  server.use(makeStaffPickHandler(events));
   renderCallout();
   await screen.findByText("Staff Picks");
   expect(screen.getByRole("button", { name: /visibility/i })).toBeInTheDocument();
@@ -532,7 +557,7 @@ test("renders panel heading and controls when events load", async () => {
 
 test("renders a row for each fetched event", async () => {
   const events = WILDHAVENS_GAME_IDS.map((gameId) => makeEvent({ gameId }));
-  server.use(makeWildhavensHandler(events));
+  server.use(makeStaffPickHandler(events));
   renderCallout();
   await screen.findByText("Staff Picks");
   const rows = screen.getAllByRole("row");
@@ -541,7 +566,7 @@ test("renders a row for each fetched event", async () => {
 });
 
 test("renders nothing when fetch returns 0 events", async () => {
-  server.use(makeWildhavensHandler([]));
+  server.use(makeStaffPickHandler([]));
   renderCallout();
   await waitFor(() => {
     expect(screen.queryByText("Staff Picks")).not.toBeInTheDocument();
@@ -564,14 +589,14 @@ test("renders nothing when fetch errors", async () => {
 - [ ] **Step 3: Run tests to confirm failure**
 
 ```bash
-npx vitest run src/components/WildhavensCallout/WildhavensCallout.test.tsx
+npx vitest run src/components/StaffPickCallout/StaffPickCallout.test.tsx
 ```
 
-Expected: FAIL — `Cannot find module './WildhavensCallout'`
+Expected: FAIL — `Cannot find module './StaffPickCallout'`
 
 ### Step 6c — Implementation
 
-- [ ] **Step 4: Create `src/components/WildhavensCallout/WildhavensCallout.module.css`**
+- [ ] **Step 4: Create `src/components/StaffPickCallout/StaffPickCallout.module.css`**
 
 ```css
 .panel {
@@ -607,12 +632,17 @@ Expected: FAIL — `Cannot find module './WildhavensCallout'`
 }
 ```
 
-- [ ] **Step 5: Create `src/components/WildhavensCallout/WildhavensCallout.tsx`**
+- [ ] **Step 5: Create `src/components/StaffPickCallout/StaffPickCallout.tsx`**
 
 ```tsx
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEvents } from "../../utils/api";
+import {
+  STAFF_PICK_GROUP,
+  STAFF_PICK_HEADING,
+  STAFF_PICK_SUBTEXT,
+} from "../../utils/staffPicks";
 import { useSharedColumnState } from "../../hooks/useSharedColumnState";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { EventTable } from "../EventTable/EventTable";
@@ -620,15 +650,15 @@ import { EventListMobile } from "../EventTable/EventListMobile";
 import { VisibilityDrawer } from "../EventTable/VisibilityDrawer";
 import { SortDrawer } from "../EventTable/SortDrawer";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
-import styles from "./WildhavensCallout.module.css";
+import styles from "./StaffPickCallout.module.css";
 
-export function WildhavensCallout(): React.JSX.Element | null {
+export function StaffPickCallout(): React.JSX.Element | null {
   const isMobile = useMediaQuery("(width <= 60rem)");
   const sharedColumnState = useSharedColumnState();
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["wildhavens"],
-    queryFn: () => fetchEvents({ group: "Wildhavens", limit: 10 }),
+    queryKey: ["staffPick"],
+    queryFn: () => fetchEvents({ group: STAFF_PICK_GROUP, limit: 10 }),
   });
 
   if (isLoading) {
@@ -641,8 +671,8 @@ export function WildhavensCallout(): React.JSX.Element | null {
 
   return (
     <div className={styles.panel}>
-      <h2 className={styles.heading}>Staff Picks</h2>
-      <p className={styles.subtext}>Our picks for best new publisher at Gen Con 2026</p>
+      <h2 className={styles.heading}>{STAFF_PICK_HEADING}</h2>
+      <p className={styles.subtext}>{STAFF_PICK_SUBTEXT}</p>
       <div className={styles.controls}>
         <VisibilityDrawer columnState={sharedColumnState} />
         <SortDrawer />
@@ -670,7 +700,7 @@ export function WildhavensCallout(): React.JSX.Element | null {
 - [ ] **Step 6: Run tests to confirm pass**
 
 ```bash
-npx vitest run src/components/WildhavensCallout/WildhavensCallout.test.tsx
+npx vitest run src/components/StaffPickCallout/StaffPickCallout.test.tsx
 ```
 
 Expected: PASS — 5 tests passing
@@ -686,8 +716,8 @@ Expected: no errors
 - [ ] **Step 8: Commit**
 
 ```bash
-git add src/test/msw/handlers.ts src/components/WildhavensCallout/
-git commit -m "feat: add WildhavensCallout panel with staff pick events table"
+git add src/test/msw/handlers.ts src/components/StaffPickCallout/
+git commit -m "feat: add StaffPickCallout panel with staff pick events table"
 ```
 
 ---
@@ -703,15 +733,21 @@ git commit -m "feat: add WildhavensCallout panel with staff pick events table"
 Add to `src/components/SearchResults/SearchResults.test.tsx`:
 
 ```tsx
-test("shows WildhavensCallout when search returns no results", async () => {
-  const wildhavensEvents = WILDHAVENS_GAME_IDS.map((gameId) =>
-    makeEvent({ gameId, title: `Wildhavens Game ${gameId}` }),
+import { WILDHAVENS_GAME_IDS } from "../../utils/staffPicks";
+```
+
+(`http`, `HttpResponse`, `makeEvent`, `server`, `EventSearchResponse` are already imported)
+
+```tsx
+test("shows StaffPickCallout when search returns no results", async () => {
+  const staffPickEvents = WILDHAVENS_GAME_IDS.map((gameId) =>
+    makeEvent({ gameId, title: `Staff Pick Game ${gameId}` }),
   );
   server.use(
     http.get("/api/events/search", ({ request }) => {
       const url = new URL(request.url);
       const response: EventSearchResponse = url.searchParams.has("group")
-        ? { data: wildhavensEvents, meta: { total: wildhavensEvents.length }, links: { self: "" }, error: null }
+        ? { data: staffPickEvents, meta: { total: staffPickEvents.length }, links: { self: "" }, error: null }
         : { data: [], meta: { total: 0 }, links: { self: "" }, error: null };
       return HttpResponse.json(response);
     }),
@@ -721,20 +757,12 @@ test("shows WildhavensCallout when search returns no results", async () => {
   await screen.findByText("Staff Picks");
 });
 
-test("does not show WildhavensCallout when search returns results", async () => {
+test("does not show StaffPickCallout when search returns results", async () => {
   renderSearchResults();
   await screen.findAllByRole("row");
   expect(screen.queryByText("Staff Picks")).not.toBeInTheDocument();
 });
 ```
-
-Also add the needed imports at the top of `SearchResults.test.tsx`:
-
-```tsx
-import { WILDHAVENS_GAME_IDS } from "../../utils/staffPicks";
-```
-
-(`http`, `HttpResponse`, `makeEvent`, `server`, `EventSearchResponse` are already imported)
 
 - [ ] **Step 2: Run tests to confirm failure**
 
@@ -744,12 +772,12 @@ npx vitest run src/components/SearchResults/SearchResults.test.tsx
 
 Expected: FAIL — `Unable to find an element with the text: Staff Picks`
 
-- [ ] **Step 3: Add `WildhavensCallout` to `SearchResults.tsx`**
+- [ ] **Step 3: Add `StaffPickCallout` to `SearchResults.tsx`**
 
 Add the import at the top of `src/components/SearchResults/SearchResults.tsx`:
 
 ```tsx
-import { WildhavensCallout } from "../WildhavensCallout/WildhavensCallout";
+import { StaffPickCallout } from "../StaffPickCallout/StaffPickCallout";
 ```
 
 Find the empty-state block (around line 51):
@@ -766,7 +794,7 @@ Replace it with:
 {data && data.data.length === 0 && (
   <>
     <EmptyState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />
-    <WildhavensCallout />
+    <StaffPickCallout />
   </>
 )}
 ```
@@ -799,5 +827,5 @@ Expected: no errors
 
 ```bash
 git add src/components/SearchResults/SearchResults.tsx src/components/SearchResults/SearchResults.test.tsx
-git commit -m "feat: mount WildhavensCallout below empty state in SearchResults"
+git commit -m "feat: mount StaffPickCallout below empty state in SearchResults"
 ```
