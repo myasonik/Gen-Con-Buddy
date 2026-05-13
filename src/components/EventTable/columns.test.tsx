@@ -17,7 +17,7 @@ beforeEach(() => {
   localStorage.clear();
 });
 
-const STAFF_PICK_GAME_ID = Array.from(STAFF_PICK_IDS)[0];
+const [STAFF_PICK_GAME_ID] = Array.from(STAFF_PICK_IDS);
 
 function makeSharedColumnState(
   overrides: Partial<SharedColumnState> = {},

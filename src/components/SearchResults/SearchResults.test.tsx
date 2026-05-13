@@ -700,7 +700,7 @@ test("shows StaffPickCallout when search returns no results", async () => {
   server.use(
     http.get("/api/events/search", ({ request }) => {
       const url = new URL(request.url);
-      const response: EventSearchResponse = url.searchParams.has("group")
+      const response: EventSearchResponse = url.searchParams.has("gameId")
         ? { data: staffPickEvents, meta: { total: staffPickEvents.length }, links: { self: "" }, error: null }
         : { data: [], meta: { total: 0 }, links: { self: "" }, error: null };
       return HttpResponse.json(response);
@@ -708,7 +708,7 @@ test("shows StaffPickCallout when search returns no results", async () => {
   );
   renderSearchResults();
   await screen.findByText("NO QUESTS FOUND");
-  await screen.findByText("Staff Picks");
+  await screen.findByText("Looks like that quest hit a dead end.");
 });
 
 test("does not show StaffPickCallout when search returns results", async () => {

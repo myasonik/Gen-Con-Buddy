@@ -3,12 +3,13 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi, expect, test } from "vitest";
 import { ThemeRadioGroup } from "./ThemeRadioGroup";
+import type { ThemePreference } from "../../hooks/useTheme";
 
 function renderGroup(
   overrides: Partial<React.ComponentProps<typeof ThemeRadioGroup>> = {},
 ): ReturnType<typeof render> {
   return render(
-    <ThemeRadioGroup theme="auto" resolvedTheme="light" onValueChange={vi.fn()} {...overrides} />,
+    <ThemeRadioGroup theme="auto" onValueChange={vi.fn<(v: ThemePreference) => void>()} {...overrides} />,
   );
 }
 
@@ -34,20 +35,6 @@ test("Dark radio is checked when theme is 'dark'", () => {
   expect(screen.getByRole("radio", { name: /Dark/i })).toBeChecked();
 });
 
-test("shows 'Currently: Dark' when theme is auto and resolvedTheme is dark", () => {
-  renderGroup({ theme: "auto", resolvedTheme: "dark" });
-  expect(screen.getByText("Currently: Dark")).toBeInTheDocument();
-});
-
-test("shows 'Currently: Light' when theme is auto and resolvedTheme is light", () => {
-  renderGroup({ theme: "auto", resolvedTheme: "light" });
-  expect(screen.getByText("Currently: Light")).toBeInTheDocument();
-});
-
-test("does not show 'Currently' note when theme is explicit", () => {
-  renderGroup({ theme: "dark" });
-  expect(screen.queryByText(/Currently:/)).not.toBeInTheDocument();
-});
 
 test("onValueChange called with 'light' when Light radio clicked", async () => {
   const onValueChange = vi.fn<(v: string) => void>();

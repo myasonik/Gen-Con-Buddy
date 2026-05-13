@@ -1,21 +1,18 @@
 import React from "react";
 import { RadioGroup } from "@base-ui/react/radio-group";
 import { Radio } from "@base-ui/react/radio";
-import { Sun } from "../../ui/icons/Sun";
-import { Moon } from "../../ui/icons/Moon";
+import { Sun, Moon } from "lucide-react";
 import { Eclipse } from "../../ui/icons/Eclipse";
 import type { ThemePreference } from "../../hooks/useTheme";
 import styles from "./ThemePopover.module.css";
 
 interface ThemeRadioGroupProps {
   theme: ThemePreference;
-  resolvedTheme: "light" | "dark";
   onValueChange: (v: ThemePreference) => void;
 }
 
 export function ThemeRadioGroup({
   theme,
-  resolvedTheme,
   onValueChange,
 }: ThemeRadioGroupProps): React.JSX.Element {
   return (
@@ -48,11 +45,6 @@ export function ThemeRadioGroup({
           <span>Auto</span>
         </label>
       </RadioGroup>
-      {theme === "auto" && (
-        <p className={styles.resolvedNote} aria-hidden="true">
-          Currently: {resolvedTheme === "dark" ? "Dark" : "Light"}
-        </p>
-      )}
     </fieldset>
   );
 }

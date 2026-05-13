@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { WILDHAVENS_GAME_IDS } from "../../utils/staffPicks";
 import {
   createRootRoute,
   createRouter,
@@ -385,6 +386,23 @@ test("renders email as a mailto: link when it is a valid email address", async (
   expect(link).not.toHaveAttribute("rel");
 });
 
+test('displays "None" when special category is the string "none"', async () => {
+  server.use(
+    http.get("/api/events/search", () => {
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId: "RPG24000001", specialCategory: "none" })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }),
+  );
+  renderEventDetail("RPG24000001");
+  await screen.findByText("THE EVENT");
+  expect(screen.getByText("None")).toBeInTheDocument();
+});
+
 test("renders email as plain text when it is not a valid email", async () => {
   server.use(
     http.get("/api/events/search", () => {
@@ -401,4 +419,57 @@ test("renders email as plain text when it is not a valid email", async () => {
   await screen.findByText("CONTACT");
   expect(screen.queryByRole("link", { name: "not-an-email" })).toBeNull();
   expect(screen.getByText("not-an-email")).toBeInTheDocument();
+});
+
+test("shows Staff Pick chip on Wildhavens event detail page", async () => {
+  const [gameId] = WILDHAVENS_GAME_IDS;
+  server.use(
+    http.get("/api/events/search", () => {
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }),
+  );
+  renderEventDetail(gameId);
+  await screen.findByText("THE EVENT");
+  expect(screen.getByText("Staff Pick")).toBeInTheDocument();
+});
+
+test("does not show Staff Pick chip on non-Wildhavens event detail page", async () => {
+  server.use(
+    http.get("/api/events/search", () => {
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId: "RPG24000001" })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }),
+  );
+  renderEventDetail("RPG24000001");
+  await screen.findByText("THE EVENT");
+  expect(screen.queryByText("Staff Pick")).toBeNull();
+});
+
+test("card has data-staff-pick attribute for Wildhavens events", async () => {
+  const [gameId] = WILDHAVENS_GAME_IDS;
+  server.use(
+    http.get("/api/events/search", () => {
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }),
+  );
+  const { container } = renderEventDetail(gameId);
+  await screen.findByText("THE EVENT");
+  expect(container.querySelector("[data-staff-pick]")).not.toBeNull();
 });

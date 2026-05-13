@@ -1,8 +1,7 @@
 import React from "react";
 import { Popover } from "@base-ui/react/popover";
 import { Button } from "../../ui/Button/Button";
-import { Sun } from "../../ui/icons/Sun";
-import { Moon } from "../../ui/icons/Moon";
+import { Sun, Moon } from "lucide-react";
 import { Eclipse } from "../../ui/icons/Eclipse";
 import { announce } from "../../lib/announce";
 import type { ThemePreference } from "../../hooks/useTheme";
@@ -11,7 +10,6 @@ import styles from "./ThemePopover.module.css";
 
 interface ThemePopoverProps {
   theme: ThemePreference;
-  resolvedTheme: "light" | "dark";
   setTheme: (v: ThemePreference) => void;
 }
 
@@ -33,7 +31,7 @@ const LABELS: Record<ThemePreference, string> = {
 
 export function ThemePopover({
   theme,
-  resolvedTheme,
+
   setTheme,
 }: ThemePopoverProps): React.JSX.Element {
   const [open, setOpen] = React.useState(false);
@@ -57,7 +55,6 @@ export function ThemePopover({
           <Popover.Popup className={styles.popup}>
             <ThemeRadioGroup
               theme={theme}
-              resolvedTheme={resolvedTheme}
               onValueChange={handleChange}
             />
           </Popover.Popup>
