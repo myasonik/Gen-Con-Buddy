@@ -28,7 +28,7 @@
 }
 
 .item:nth-child(even) {
-  background: var(--color-surface-row-alt);
+  background-color: var(--color-surface-row-alt);
 }
 
 .row {
