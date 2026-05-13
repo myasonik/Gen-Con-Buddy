@@ -435,3 +435,25 @@ test('shows start and end times in Indianapolis time when timeZone is "indy"', a
   expect(screen.getByText(/06:00/)).toBeInTheDocument();
   expect(screen.getByText(/10:00/)).toBeInTheDocument();
 });
+
+test("staff pick card has data-staff-pick attribute", async () => {
+  const { container } = await renderList([makeEvent({ gameId: "BGM26ND310303" })]);
+  const li = container.querySelector("li");
+  expect(li).toHaveAttribute("data-staff-pick");
+});
+
+test("non-staff-pick card does not have data-staff-pick attribute", async () => {
+  const { container } = await renderList([makeEvent({ gameId: "RPG24000001" })]);
+  const li = container.querySelector("li");
+  expect(li).not.toHaveAttribute("data-staff-pick");
+});
+
+test("staff pick card shows 'Staff Pick' badge", async () => {
+  await renderList([makeEvent({ gameId: "BGM26ND310303" })]);
+  expect(screen.getByText("Staff Pick")).toBeInTheDocument();
+});
+
+test("non-staff-pick card shows no 'Staff Pick' badge", async () => {
+  await renderList([makeEvent({ gameId: "RPG24000001" })]);
+  expect(screen.queryByText("Staff Pick")).not.toBeInTheDocument();
+});
