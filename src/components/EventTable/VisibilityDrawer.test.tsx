@@ -1,9 +1,18 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { vi, expect, test } from "vitest";
+import { vi, expect, test, beforeEach } from "vitest";
 import { VisibilityDrawer } from "./VisibilityDrawer";
 import { COLUMNS } from "./columns";
 import type { SharedColumnState } from "./types";
+
+const { captureFn } = vi.hoisted(() => ({ captureFn: vi.fn<() => void>() }));
+vi.mock("posthog-js/react", () => ({
+  usePostHog: (): { capture: typeof captureFn } => ({ capture: captureFn }),
+}));
+
+beforeEach(() => {
+  captureFn.mockClear();
+});
 
 function makeColumnState(overrides: Partial<SharedColumnState> = {}): SharedColumnState {
   return {
@@ -83,4 +92,27 @@ test("Close button dismisses the drawer", async () => {
   expect(screen.getByRole("group", { name: "The Event" })).toBeInTheDocument();
   await user.click(screen.getByRole("button", { name: "Close" }));
   expect(screen.queryByRole("group", { name: "The Event" })).not.toBeInTheDocument();
+});
+
+test("toggling a hidden column captures column_visibility_toggled with visible: true", async () => {
+  const user = userEvent.setup();
+  const visibility = { ...Object.fromEntries(COLUMNS.map((c) => [c.id, true])), cost: false };
+  render(<VisibilityDrawer columnState={makeColumnState({ visibility })} />);
+  await user.click(screen.getByRole("button", { name: "Visibility" }));
+  await user.click(screen.getByRole("checkbox", { name: "Cost" }));
+  expect(captureFn).toHaveBeenCalledWith(
+    "column_visibility_toggled",
+    expect.objectContaining({ column_id: "cost", visible: true }),
+  );
+});
+
+test("toggling a visible column captures column_visibility_toggled with visible: false", async () => {
+  const user = userEvent.setup();
+  render(<VisibilityDrawer columnState={makeColumnState()} />);
+  await user.click(screen.getByRole("button", { name: "Visibility" }));
+  await user.click(screen.getByRole("checkbox", { name: "Cost" }));
+  expect(captureFn).toHaveBeenCalledWith(
+    "column_visibility_toggled",
+    expect.objectContaining({ column_id: "cost", visible: false }),
+  );
 });

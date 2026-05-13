@@ -1,4 +1,5 @@
 import React from "react";
+import { usePostHog } from "posthog-js/react";
 import { Button } from "../../ui/Button/Button";
 import { Drawer } from "../../ui/Drawer/Drawer";
 import type { SharedColumnState } from "./types";
@@ -11,6 +12,7 @@ interface VisibilityDrawerProps {
 }
 
 export function VisibilityDrawer({ columnState }: VisibilityDrawerProps): React.JSX.Element {
+  const posthog = usePostHog();
   const { visibility, toggleVisibility, resetVisibility, resetSizing } = columnState;
   const colById = new Map(COLUMNS.filter((c) => c.id !== undefined).map((c) => [c.id, c]));
 
@@ -38,7 +40,18 @@ export function VisibilityDrawer({ columnState }: VisibilityDrawerProps): React.
                   <li key={id}>
                     <Checkbox
                       checked={isChecked}
-                      onCheckedChange={() => toggleVisibility(id)}
+                      onCheckedChange={() => {
+                        const newVisible = !visibility[id];
+                        posthog.capture("column_visibility_toggled", {
+                          column_id: id,
+                          column_label: typeof col.header === "string" ? col.header : id,
+                          visible: newVisible,
+                          visible_columns: Object.entries({ ...visibility, [id]: newVisible })
+                            .filter(([, v]) => v)
+                            .map(([k]) => k),
+                        });
+                        toggleVisibility(id);
+                      }}
                       label={typeof col.header === "string" ? col.header : id}
                     />
                   </li>

@@ -1,7 +1,16 @@
 import React from "react";
-import { vi, test, expect } from "vitest";
+import { vi, test, expect, beforeEach } from "vitest";
 import { render, screen, within, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+
+const { captureFn } = vi.hoisted(() => ({ captureFn: vi.fn<() => void>() }));
+vi.mock("posthog-js/react", () => ({
+  usePostHog: (): { capture: typeof captureFn } => ({ capture: captureFn }),
+}));
+
+beforeEach(() => {
+  captureFn.mockClear();
+});
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SearchForm } from "./SearchForm";
 import type { SearchFormValues } from "../../utils/types";
@@ -449,4 +458,27 @@ test("changelogMode reset button clears fields", async () => {
   await user.click(screen.getByRole("button", { name: "Reset" }));
 
   expect(screen.getByRole("checkbox", { name: "Fri" })).not.toBeChecked();
+});
+
+test("search_submitted captures empty active_advanced_filters when no advanced filters are set", async () => {
+  const user = userEvent.setup();
+  renderSearchForm();
+  await user.click(screen.getByRole("button", { name: "Search" }));
+  expect(captureFn).toHaveBeenCalledWith(
+    "search_submitted",
+    expect.objectContaining({ active_advanced_filters: {} }),
+  );
+});
+
+test("search_submitted captures active_advanced_filters as a key-value map of non-empty fields", async () => {
+  const user = userEvent.setup();
+  renderSearchForm();
+  await user.click(screen.getByRole("button", { name: "Filters" }));
+  await user.type(screen.getByRole("textbox", { name: "Title" }), "Dragons");
+  await user.click(screen.getByRole("button", { name: "Close" }));
+  await user.click(screen.getByRole("button", { name: "Search" }));
+  expect(captureFn).toHaveBeenCalledWith(
+    "search_submitted",
+    expect.objectContaining({ active_advanced_filters: { title: "Dragons" } }),
+  );
 });
