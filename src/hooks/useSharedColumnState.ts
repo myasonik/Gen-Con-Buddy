@@ -2,6 +2,7 @@ import { useColumnVisibility } from "./useColumnVisibility";
 import { useColumnSizing } from "./useColumnSizing";
 import { useTypeDisplay } from "./useTypeDisplay";
 import { useDayFormat } from "./useDayFormat";
+import { useTimeZone } from "./useTimeZone";
 import type { SharedColumnState } from "../components/EventTable/types";
 
 export function useSharedColumnState(): SharedColumnState {
@@ -15,6 +16,7 @@ export function useSharedColumnState(): SharedColumnState {
     reset: resetTypeDisplay,
   } = useTypeDisplay();
   const { dayFormat, setDayFormat, reset: resetDayFormat } = useDayFormat();
+  const { timeZone, setTimeZone, reset: resetTimeZone } = useTimeZone();
   return {
     visibility,
     toggleVisibility,
@@ -30,5 +32,8 @@ export function useSharedColumnState(): SharedColumnState {
     dayFormat,
     setDayFormat,
     resetDayFormat,
+    timeZone,
+    setTimeZone,
+    resetTimeZone,
   };
 }
