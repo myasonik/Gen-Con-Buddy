@@ -3,7 +3,7 @@
   position: fixed;
   inset: 0;
   z-index: calc(var(--z-modal) - 1);
-  background: oklch(22% 0.03 48deg / 0.4);
+  background: var(--color-scrim);
   cursor: pointer;
   opacity: 1;
   transition: opacity var(--motion-expand);

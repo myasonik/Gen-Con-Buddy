@@ -30,6 +30,9 @@
   /* ── Scrim ────────────────────────────────────────────────────────────── */
   --color-scrim: oklch(from var(--color-ink) l c h / 0.4);
 
+  /* ── Shadow ──────────────────────────────────────────────────────────────── */
+  --color-shadow-overlay: oklch(from var(--color-ink) l c h / 0.12);
+
   /* ── Surface border variants ─────────────────────────────────────────── */
   --color-jade-border: oklch(from var(--color-jade-surface) calc(l - 0.07) c h);
   --color-cobalt-border: oklch(from var(--color-cobalt-surface) calc(l - 0.07) c h);

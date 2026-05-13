@@ -66,7 +66,7 @@
 
 .chip[data-tone="error"] {
   background: var(--color-error-surface);
-  border-color: oklch(78% 0.07 22deg);
+  border-color: var(--color-error-border);
   color: var(--color-error-deep);
 }
 
