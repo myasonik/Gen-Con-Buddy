@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import type { ColumnDef } from "@tanstack/react-table";
 import { EXP } from "../../utils/enums";
 import type { Event } from "../../utils/types";
+import { STAFF_PICK_IDS } from "../../utils/staffPicks";
 import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
 import { Chip } from "../../ui/Chip/Chip";
 import styles from "./columns.module.css";
@@ -50,9 +51,16 @@ export const COLUMNS: ColumnDef<Event>[] = [
     cell: ({ row, linkState }) => {
       const { gameId, title } = row.original.attributes;
       return (
-        <Link to="/event/$id" params={{ id: gameId }} state={linkState}>
-          {title}
-        </Link>
+        <span>
+          {STAFF_PICK_IDS.has(gameId) && (
+            <Chip tone="accent" size="sm">
+              Staff Pick
+            </Chip>
+          )}
+          <Link to="/event/$id" params={{ id: gameId }} state={linkState}>
+            {title}
+          </Link>
+        </span>
       );
     },
   },
