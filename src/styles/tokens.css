@@ -116,6 +116,12 @@
   --color-amber-surface: oklch(20% 0.035 62deg);
   --color-error-surface: oklch(18% 0.04 22deg);
 
+  /* Semantic colors — brightened for dark backgrounds */
+  --color-jade: oklch(76% 0.14 148deg);
+  --color-cobalt: oklch(76% 0.12 235deg);
+  --color-amber: oklch(78% 0.14 62deg);
+  --color-error: oklch(78% 0.14 22deg);
+
   /* Semantic deep text — brightened for dark backgrounds */
   --color-jade-deep: oklch(80% 0.12 148deg);
   --color-cobalt-deep: oklch(80% 0.10 235deg);
