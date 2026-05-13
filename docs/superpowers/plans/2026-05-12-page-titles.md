@@ -13,6 +13,7 @@
 ### Task 1: Create the `usePageTitle` hook (TDD)
 
 **Files:**
+
 - Create: `src/lib/usePageTitle.test.ts`
 - Create: `src/lib/usePageTitle.ts`
 
@@ -93,6 +94,7 @@ git commit -m "feat: add usePageTitle hook"
 ### Task 2: Set dynamic title on the event detail page (TDD)
 
 **Files:**
+
 - Modify: `src/routes/event.$id.test.tsx` — add one test
 - Modify: `src/components/EventDetail/EventDetail.tsx` — call `usePageTitle`
 
@@ -142,7 +144,9 @@ import { usePageTitle } from "../../lib/usePageTitle";
 
 ```ts
 const { dayFormat } = useDayFormat();
-usePageTitle(event ? `${event.attributes.title} (${event.attributes.gameId}) | Gen Con Buddy` : undefined);
+usePageTitle(
+  event ? `${event.attributes.title} (${event.attributes.gameId}) | Gen Con Buddy` : undefined,
+);
 ```
 
 - [ ] **Step 4: Run tests to verify they pass**
@@ -165,6 +169,7 @@ git commit -m "feat: set page title on event detail page"
 ### Task 3: Set static titles on the remaining pages (TDD)
 
 **Files:**
+
 - Modify: `src/routes/index.test.tsx` — add one test
 - Modify: `src/routes/index.tsx` — call `usePageTitle` in `SearchPage`
 - Modify: `src/routes/about.test.tsx` — add one test
