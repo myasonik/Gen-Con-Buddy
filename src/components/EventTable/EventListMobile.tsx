@@ -10,8 +10,8 @@ import { Chip } from "../../ui/Chip/Chip";
 import { COLUMNS, COLUMN_GROUPS } from "./columns";
 import styles from "./EventListMobile.module.css";
 import typeCellStyles from "./typeCell.module.css";
-import { formatDayCompact } from "../../utils/formatDay";
-import type { DayFormat, TypeDisplay } from "./types";
+import { formatDayCompact, toDisplayDate } from "../../utils/formatDay";
+import type { DayFormat, TypeDisplay, TimeZone } from "./types";
 
 const META_COLUMN_IDS = new Set([
   "eventType",
@@ -96,6 +96,7 @@ interface EventListMobileProps {
   typeDisplay?: TypeDisplay;
   showTypeIcon?: boolean;
   dayFormat?: DayFormat;
+  timeZone?: TimeZone;
   linkState?: { from: string };
 }
 
@@ -105,6 +106,7 @@ export function EventListMobile({
   typeDisplay,
   showTypeIcon,
   dayFormat,
+  timeZone,
   linkState,
 }: EventListMobileProps): React.JSX.Element {
   const vis = visibility ?? COLUMN_VISIBILITY_DEFAULTS;
@@ -131,8 +133,8 @@ export function EventListMobile({
     >
       {events.map((event) => {
         const a = event.attributes;
-        const start = new Date(a.startDateTime);
-        const end = new Date(a.endDateTime);
+        const start = toDisplayDate(a.startDateTime, timeZone ?? "indy");
+        const end = toDisplayDate(a.endDateTime, timeZone ?? "indy");
 
         let playersText: string | null = null;
         if (isVisible("minPlayers") && isVisible("maxPlayers")) {

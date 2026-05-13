@@ -11,20 +11,21 @@ import { makeEvent } from "../../test/msw/factory";
 import { EventListMobile } from "./EventListMobile";
 import { COLUMN_VISIBILITY_DEFAULTS } from "../../hooks/useColumnVisibility";
 import type { Event } from "../../utils/types";
-import type { DayFormat, TypeDisplay } from "./types";
+import type { DayFormat, TypeDisplay, TimeZone } from "./types";
 
 async function renderList(
   events: Event[] = [makeEvent()],
   visibility?: Partial<Record<string, boolean>>,
-  opts: { typeDisplay?: TypeDisplay; showTypeIcon?: boolean; dayFormat?: DayFormat } = {},
+  opts: { typeDisplay?: TypeDisplay; showTypeIcon?: boolean; dayFormat?: DayFormat; timeZone?: TimeZone } = {},
 ): Promise<ReturnType<typeof render>> {
-  const { dayFormat, ...typeDisplayProps } = opts;
+  const { dayFormat, timeZone, ...typeDisplayProps } = opts;
   const rootRoute = createRootRoute({
     component: () => (
       <EventListMobile
         events={events}
         visibility={visibility}
         dayFormat={dayFormat}
+        timeZone={timeZone}
         {...typeDisplayProps}
       />
     ),
@@ -406,4 +407,12 @@ test("shows compact numeric date M/d in numeric mode", async () => {
 test("shows compact long format EEE M/d in long mode", async () => {
   await renderList([makeEvent()], undefined, { dayFormat: "long" });
   expect(screen.getByText(/Thu 8\/1/)).toBeInTheDocument();
+});
+
+test('shows start and end times in Indianapolis time when timeZone is "indy"', async () => {
+  // factory startDateTime "2024-08-01T10:00:00Z" = 06:00 Indianapolis (UTC-4)
+  // factory endDateTime "2024-08-01T14:00:00Z" = 10:00 Indianapolis
+  await renderList([makeEvent()], undefined, { timeZone: "indy" });
+  expect(screen.getByText(/06:00/)).toBeInTheDocument();
+  expect(screen.getByText(/10:00/)).toBeInTheDocument();
 });
