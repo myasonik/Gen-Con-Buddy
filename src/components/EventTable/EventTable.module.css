@@ -80,7 +80,8 @@
 
 .tableWrapper table tbody tr[data-staff-pick],
 .tableWrapper table tbody tr[data-staff-pick]:nth-child(odd),
-.tableWrapper table tbody tr[data-staff-pick]:nth-child(even) {
+.tableWrapper table tbody tr[data-staff-pick]:nth-child(even),
+.tableWrapper table tbody tr[data-staff-pick]:hover {
   background: transparent;
 }
 
