@@ -3,6 +3,8 @@ import { createRootRouteWithContext, Link, Outlet, useRouterState } from "@tanst
 import type { QueryClient } from "@tanstack/react-query";
 import { PostHogProvider, usePostHog } from "posthog-js/react";
 import { Meeple3D } from "../ui/icons/Meeple3D";
+import { useTheme } from "../hooks/useTheme";
+import { ThemePopover } from "../components/ThemePopover/ThemePopover";
 import indexStyles from "./index.module.css";
 import rootStyles from "./__root.module.css";
 
@@ -20,6 +22,8 @@ function PageViewTracker(): null {
 }
 
 function AppShell(): React.JSX.Element {
+  const { theme, resolvedTheme, setTheme } = useTheme();
+
   return (
     <div className={indexStyles.page}>
       {POSTHOG_TOKEN && <PageViewTracker />}
@@ -46,6 +50,7 @@ function AppShell(): React.JSX.Element {
           >
             Changelog
           </Link>
+          <ThemePopover theme={theme} resolvedTheme={resolvedTheme} setTheme={setTheme} />
         </nav>
       </header>
       <Outlet />

@@ -39,3 +39,8 @@ test("Changelog nav link href contains no filter params when navigating from a f
   const href = link.getAttribute("href") ?? "";
   expect(href).not.toMatch(/[?&](eventType|days|timeStart|timeEnd)=/);
 });
+
+test("theme toggle button is present in the nav", async () => {
+  await renderRoute("/");
+  expect(screen.getByRole("button", { name: /Theme:/i })).toBeInTheDocument();
+});
