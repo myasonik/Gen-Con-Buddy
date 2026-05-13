@@ -21,8 +21,13 @@
   composes: surface from "../../styles/popup.module.css";
   display: flex;
   flex-direction: column;
-  min-width: 9.25rem;
+  min-width: 10.5rem;
   border-radius: var(--radius-card);
+  padding-block: var(--space-1);
+}
+
+.popup .menuItem {
+  padding: var(--space-2) var(--space-3);
 }
 
 .popup .menuItem:hover {
@@ -33,9 +38,9 @@
 .divider {
   border: none;
   border-top: var(--border-width) solid var(--color-ink-divider);
-  margin: var(--space-1) 0;
+  margin: var(--space-2) 0;
 }
 
 .formatSection {
-  padding: var(--space-1) var(--space-2) var(--space-2);
+  padding: var(--space-2) var(--space-3) var(--space-3);
 }
