@@ -107,7 +107,7 @@
 
   /* Accent — sienna brightened for dark background readability */
   --color-accent: oklch(66% 0.14 34deg);
-  --color-accent-deep: oklch(58% 0.16 34deg);
+  --color-accent-deep: oklch(74% 0.15 34deg);
   --color-accent-surface: oklch(24% 0.06 38deg);
 
   /* Semantic surfaces */
@@ -115,6 +115,12 @@
   --color-cobalt-surface: oklch(18% 0.03 235deg);
   --color-amber-surface: oklch(20% 0.035 62deg);
   --color-error-surface: oklch(18% 0.04 22deg);
+
+  /* Semantic deep text — brightened for dark backgrounds */
+  --color-jade-deep: oklch(80% 0.12 148deg);
+  --color-cobalt-deep: oklch(80% 0.10 235deg);
+  --color-amber-deep: oklch(82% 0.12 62deg);
+  --color-error-deep: oklch(82% 0.12 22deg);
 
   /* Scrim override: --color-scrim derives from --color-ink which becomes
      near-white in dark mode, producing a cream backdrop. This prevents that. */
