@@ -11,12 +11,13 @@ import {
 } from "@tanstack/react-router";
 import { makeEvent } from "../../test/msw/factory";
 import { EventTable } from "./EventTable";
-import type { DayFormat, SharedColumnState, TypeDisplay } from "./types";
+import type { DayFormat, SharedColumnState, TimeZone, TypeDisplay } from "./types";
 import type { Event } from "../../utils/types";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { useTypeDisplay } from "../../hooks/useTypeDisplay";
 import { useDayFormat } from "../../hooks/useDayFormat";
+import { useTimeZone } from "../../hooks/useTimeZone";
 
 beforeEach(() => {
   localStorage.clear();
@@ -42,6 +43,9 @@ function makeSharedColumnState(overrides: Partial<SharedColumnState> = {}): Shar
     dayFormat: "day",
     setDayFormat: vi.fn<(v: DayFormat) => void>(),
     resetDayFormat: vi.fn<() => void>(),
+    timeZone: "indy",
+    setTimeZone: vi.fn<(v: TimeZone) => void>(),
+    resetTimeZone: vi.fn<() => void>(),
     ...overrides,
   };
 }
@@ -57,6 +61,7 @@ function EventTableWithHooks({ events }: { events: Event[] }): React.JSX.Element
     reset: resetTypeDisplay,
   } = useTypeDisplay();
   const { dayFormat, setDayFormat, reset: resetDayFormat } = useDayFormat();
+  const { timeZone, setTimeZone, reset: resetTimeZone } = useTimeZone();
   const sharedColumnState: SharedColumnState = {
     visibility,
     toggleVisibility,
@@ -72,6 +77,9 @@ function EventTableWithHooks({ events }: { events: Event[] }): React.JSX.Element
     dayFormat,
     setDayFormat,
     resetDayFormat,
+    timeZone,
+    setTimeZone,
+    resetTimeZone,
   };
   return <EventTable events={events} sharedColumnState={sharedColumnState} />;
 }

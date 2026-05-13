@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi, expect, test } from "vitest";
-import { FormatDrawer, TypeFormatControls, DayFormatControls } from "./FormatDrawer";
-import type { SharedColumnState, TypeDisplay, DayFormat } from "./types";
+import { FormatDrawer, TypeFormatControls, DayFormatControls, TimeFormatControls } from "./FormatDrawer";
+import type { SharedColumnState, TypeDisplay, DayFormat, TimeZone } from "./types";
 
 function makeColumnState(overrides: Partial<SharedColumnState> = {}): SharedColumnState {
   return {
@@ -20,6 +20,9 @@ function makeColumnState(overrides: Partial<SharedColumnState> = {}): SharedColu
     dayFormat: "day",
     setDayFormat: vi.fn<SharedColumnState["setDayFormat"]>(),
     resetDayFormat: vi.fn<SharedColumnState["resetDayFormat"]>(),
+    timeZone: "indy",
+    setTimeZone: vi.fn<SharedColumnState["setTimeZone"]>(),
+    resetTimeZone: vi.fn<SharedColumnState["resetTimeZone"]>(),
     ...overrides,
   };
 }
@@ -172,4 +175,48 @@ test("DayFormatControls clicking Full date radio calls setDayFormat with long", 
   render(<DayFormatControls dayFormat="day" setDayFormat={setDayFormat} />);
   await user.click(screen.getByRole("radio", { name: "Full date" }));
   expect(setDayFormat).toHaveBeenCalledWith("long");
+});
+
+test("opens drawer showing Time columns fieldset", async () => {
+  const user = userEvent.setup();
+  render(<FormatDrawer columnState={makeColumnState()} />);
+  await user.click(screen.getByRole("button", { name: "Format" }));
+  expect(screen.getByRole("group", { name: "Time columns" })).toBeInTheDocument();
+});
+
+test("Reset button also calls resetTimeZone", async () => {
+  const user = userEvent.setup();
+  const resetTimeZone = vi.fn<SharedColumnState["resetTimeZone"]>();
+  render(<FormatDrawer columnState={makeColumnState({ resetTimeZone })} />);
+  await user.click(screen.getByRole("button", { name: "Format" }));
+  await user.click(screen.getByRole("button", { name: "Reset" }));
+  expect(resetTimeZone).toHaveBeenCalledTimes(1);
+});
+
+test("TimeFormatControls renders Indianapolis and Local radio buttons", () => {
+  render(<TimeFormatControls timeZone="indy" setTimeZone={vi.fn<(v: TimeZone) => void>()} />);
+  expect(screen.getByRole("radio", { name: "Indianapolis" })).toBeInTheDocument();
+  expect(screen.getByRole("radio", { name: "Local" })).toBeInTheDocument();
+});
+
+test("TimeFormatControls Indianapolis radio is checked when timeZone is indy", () => {
+  render(<TimeFormatControls timeZone="indy" setTimeZone={vi.fn<(v: TimeZone) => void>()} />);
+  expect(screen.getByRole("radio", { name: "Indianapolis" })).toBeChecked();
+  expect(screen.getByRole("radio", { name: "Local" })).not.toBeChecked();
+});
+
+test("TimeFormatControls clicking Local radio calls setTimeZone with local", async () => {
+  const user = userEvent.setup();
+  const setTimeZone = vi.fn<(v: TimeZone) => void>();
+  render(<TimeFormatControls timeZone="indy" setTimeZone={setTimeZone} />);
+  await user.click(screen.getByRole("radio", { name: "Local" }));
+  expect(setTimeZone).toHaveBeenCalledWith("local");
+});
+
+test("TimeFormatControls clicking Indianapolis radio calls setTimeZone with indy", async () => {
+  const user = userEvent.setup();
+  const setTimeZone = vi.fn<(v: TimeZone) => void>();
+  render(<TimeFormatControls timeZone="local" setTimeZone={setTimeZone} />);
+  await user.click(screen.getByRole("radio", { name: "Indianapolis" }));
+  expect(setTimeZone).toHaveBeenCalledWith("indy");
 });

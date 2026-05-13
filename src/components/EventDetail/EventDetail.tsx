@@ -12,8 +12,9 @@ import { DescriptionList, DescriptionItem } from "../../ui/DescriptionList/Descr
 import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
 import { CalendarPlus, ExternalLink } from "lucide-react";
 import { useDayFormat } from "../../hooks/useDayFormat";
+import { useTimeZone } from "../../hooks/useTimeZone";
 import { usePageTitle } from "../../lib/usePageTitle";
-import { formatDay } from "../../utils/formatDay";
+import { formatDay, toDisplayDate } from "../../utils/formatDay";
 import { normalizeUrl } from "./normalizeUrl";
 import { normalizeEmail } from "./normalizeEmail";
 import styles from "./EventDetail.module.css";
@@ -32,6 +33,7 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
     queryFn: () => fetchEvents({ gameId, limit: 1 }),
   });
   const { dayFormat } = useDayFormat();
+  const { timeZone } = useTimeZone();
   const event = data?.data[0];
   usePageTitle(
     event ? `${event.attributes.title} (${event.attributes.gameId}) | Gen Con Buddy` : undefined,
@@ -182,12 +184,14 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
           <h2 className={styles.sectionHeading}>LOGISTICS</h2>
           <DescriptionList>
             <DescriptionItem term="Day">
-              {formatDay(new Date(a.startDateTime), dayFormat)}
+              {formatDay(toDisplayDate(a.startDateTime, timeZone), dayFormat)}
             </DescriptionItem>
             <DescriptionItem term="Start">
-              {format(new Date(a.startDateTime), "HH:mm")}
+              {format(toDisplayDate(a.startDateTime, timeZone), "HH:mm")}
             </DescriptionItem>
-            <DescriptionItem term="End">{format(new Date(a.endDateTime), "HH:mm")}</DescriptionItem>
+            <DescriptionItem term="End">
+              {format(toDisplayDate(a.endDateTime, timeZone), "HH:mm")}
+            </DescriptionItem>
             <DescriptionItem term="Duration">{a.duration} hours</DescriptionItem>
             <DescriptionItem term="Min Play Time">{a.minimumPlayTime} hours</DescriptionItem>
             <DescriptionItem term="Location">{a.location}</DescriptionItem>

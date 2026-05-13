@@ -21,6 +21,9 @@ function makeColumnState(overrides: Partial<SharedColumnState> = {}): SharedColu
     dayFormat: "day",
     setDayFormat: vi.fn<SharedColumnState["setDayFormat"]>(),
     resetDayFormat: vi.fn<SharedColumnState["resetDayFormat"]>(),
+    timeZone: "indy",
+    setTimeZone: vi.fn<SharedColumnState["setTimeZone"]>(),
+    resetTimeZone: vi.fn<SharedColumnState["resetTimeZone"]>(),
     ...overrides,
   };
 }
