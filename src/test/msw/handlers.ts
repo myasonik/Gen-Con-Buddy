@@ -47,6 +47,21 @@ export function makeEventPool(events: Event[]): HttpHandler {
   return buildEventsHandler(events);
 }
 
+export function makeStaffPickHandler(events: Event[]): HttpHandler {
+  return http.get("/api/events/search", ({ request }) => {
+    const url = new URL(request.url);
+    if (url.searchParams.get("group") !== null) {
+      const response: EventSearchResponse = {
+        data: events,
+        meta: { total: events.length },
+        links: { self: request.url },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }
+  });
+}
+
 export const handlers = [
   buildEventsHandler(DEFAULT_POOL),
   http.get("/api/changelog/list", () => {
