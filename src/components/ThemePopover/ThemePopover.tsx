@@ -1,13 +1,12 @@
 import React from "react";
 import { Popover } from "@base-ui/react/popover";
-import { RadioGroup } from "@base-ui/react/radio-group";
-import { Radio } from "@base-ui/react/radio";
 import { Button } from "../../ui/Button/Button";
 import { Sun } from "../../ui/icons/Sun";
 import { Moon } from "../../ui/icons/Moon";
 import { Eclipse } from "../../ui/icons/Eclipse";
 import { announce } from "../../lib/announce";
 import type { ThemePreference } from "../../hooks/useTheme";
+import { ThemeRadioGroup } from "./ThemeRadioGroup";
 import styles from "./ThemePopover.module.css";
 
 interface ThemePopoverProps {
@@ -35,10 +34,9 @@ export function ThemePopover({
 }: ThemePopoverProps): React.JSX.Element {
   const [open, setOpen] = React.useState(false);
 
-  function handleChange(value: string): void {
-    const next = value as ThemePreference;
-    setTheme(next);
-    announce(`Theme: ${LABELS[next]}`);
+  function handleChange(v: ThemePreference): void {
+    setTheme(v);
+    announce(`Theme: ${LABELS[v]}`);
     setOpen(false);
   }
 
@@ -53,37 +51,11 @@ export function ThemePopover({
       <Popover.Portal>
         <Popover.Positioner sideOffset={4} className={styles.positioner}>
           <Popover.Popup className={styles.popup}>
-            <fieldset className={styles.fieldset}>
-              <legend className="sr-only">Theme</legend>
-              <RadioGroup value={theme} onValueChange={handleChange} className={styles.radioGroup}>
-                <label className={styles.option}>
-                  <Radio.Root value="light" className={styles.radio}>
-                    <Radio.Indicator className={styles.radioIndicator} />
-                  </Radio.Root>
-                  <Sun size={14} aria-hidden="true" />
-                  <span>Light</span>
-                </label>
-                <label className={styles.option}>
-                  <Radio.Root value="dark" className={styles.radio}>
-                    <Radio.Indicator className={styles.radioIndicator} />
-                  </Radio.Root>
-                  <Moon size={14} aria-hidden="true" />
-                  <span>Dark</span>
-                </label>
-                <label className={styles.option}>
-                  <Radio.Root value="auto" className={styles.radio}>
-                    <Radio.Indicator className={styles.radioIndicator} />
-                  </Radio.Root>
-                  <Eclipse size={14} aria-hidden="true" />
-                  <span>Auto</span>
-                </label>
-              </RadioGroup>
-              {theme === "auto" && (
-                <p className={styles.resolvedNote} aria-hidden="true">
-                  Currently: {resolvedTheme === "dark" ? "Dark" : "Light"}
-                </p>
-              )}
-            </fieldset>
+            <ThemeRadioGroup
+              theme={theme}
+              resolvedTheme={resolvedTheme}
+              onValueChange={handleChange}
+            />
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>
