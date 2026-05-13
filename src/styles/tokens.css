@@ -89,3 +89,37 @@
   --z-modal: 20;
   --z-popover: 30;
 }
+
+/* ─── Dark Theme Overrides ───────────────────────────────────────────────── */
+[data-theme="dark"] {
+  /* Surfaces — amber anchor at 48° for page, graduating toward 60° for panels */
+  --color-surface-page: oklch(18% 0.016 48deg);
+  --color-surface-panel: oklch(22% 0.018 55deg);
+  --color-surface-row-alt: oklch(20% 0.017 52deg);
+  --color-surface-hover: oklch(26% 0.02 55deg);
+
+  /* Ink — warm near-white, cooler hue than surfaces for analog spread */
+  --color-ink: oklch(90% 0.014 66deg);
+  --color-ink-muted: oklch(72% 0.02 64deg);
+  --color-ink-faint: oklch(55% 0.018 62deg);
+  --color-ink-border: oklch(35% 0.022 58deg);
+  --color-ink-divider: oklch(28% 0.016 56deg);
+
+  /* Accent — sienna brightened for dark background readability */
+  --color-accent: oklch(66% 0.14 34deg);
+  --color-accent-deep: oklch(58% 0.16 34deg);
+  --color-accent-surface: oklch(24% 0.06 38deg);
+
+  /* Semantic surfaces */
+  --color-jade-surface: oklch(18% 0.03 148deg);
+  --color-cobalt-surface: oklch(18% 0.03 235deg);
+  --color-amber-surface: oklch(20% 0.035 62deg);
+  --color-error-surface: oklch(18% 0.04 22deg);
+
+  /* Scrim override: --color-scrim derives from --color-ink which becomes
+     near-white in dark mode, producing a cream backdrop. This prevents that. */
+  --color-scrim: oklch(8% 0.01 48deg / 0.6);
+
+  /* Shadow */
+  --color-shadow-overlay: oklch(8% 0.01 48deg / 0.25);
+}
