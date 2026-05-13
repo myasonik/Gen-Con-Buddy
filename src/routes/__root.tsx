@@ -5,6 +5,7 @@ import { PostHogProvider, usePostHog } from "posthog-js/react";
 import { Meeple3D } from "../ui/icons/Meeple3D";
 import { useTheme } from "../hooks/useTheme";
 import { ThemePopover } from "../components/ThemePopover/ThemePopover";
+import { MobileNav } from "../components/MobileNav/MobileNav";
 import indexStyles from "./index.module.css";
 import rootStyles from "./__root.module.css";
 
@@ -52,6 +53,9 @@ function AppShell(): React.JSX.Element {
           </Link>
           <ThemePopover theme={theme} resolvedTheme={resolvedTheme} setTheme={setTheme} />
         </nav>
+        <div className={rootStyles.mobileNav}>
+          <MobileNav theme={theme} resolvedTheme={resolvedTheme} setTheme={setTheme} />
+        </div>
       </header>
       <Outlet />
       <footer className={rootStyles.footer}>

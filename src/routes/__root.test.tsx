@@ -44,3 +44,8 @@ test("theme toggle button is present in the nav", async () => {
   await renderRoute("/");
   expect(screen.getByRole("button", { name: /Theme:/i })).toBeInTheDocument();
 });
+
+test("hamburger button is present in the nav", async () => {
+  await renderRoute("/");
+  expect(screen.getByRole("button", { name: "Navigation" })).toBeInTheDocument();
+});

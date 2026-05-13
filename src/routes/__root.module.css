@@ -121,8 +121,22 @@
   color: var(--color-ink-muted);
 }
 
+/* ─── Mobile nav wrapper (hidden on desktop) ─────────────────────────────── */
+.mobileNav {
+  display: none;
+}
+
 @media (width <= 60rem) {
   .tagline {
     display: none;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .mobileNav {
+    display: flex;
+    margin-left: auto;
   }
 }
