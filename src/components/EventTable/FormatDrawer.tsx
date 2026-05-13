@@ -4,7 +4,7 @@ import { Drawer } from "../../ui/Drawer/Drawer";
 import { Checkbox } from "../../ui/Checkbox/Checkbox";
 import { SegmentedControl } from "../../ui/SegmentedControl/SegmentedControl";
 import { Targeted } from "../../ui/icons/Targeted";
-import type { SharedColumnState, TypeDisplay, DayFormat } from "./types";
+import type { SharedColumnState, TypeDisplay, DayFormat, TimeZone } from "./types";
 import styles from "./FormatDrawer.module.css";
 
 interface TypeFormatControlsProps {
@@ -77,6 +77,32 @@ export function DayFormatControls({
   );
 }
 
+interface TimeFormatControlsProps {
+  timeZone: TimeZone;
+  setTimeZone: (v: TimeZone) => void;
+}
+
+export function TimeFormatControls({
+  timeZone,
+  setTimeZone,
+}: TimeFormatControlsProps): React.JSX.Element {
+  return (
+    <fieldset className={styles.columnGroup}>
+      <legend className={styles.columnGroupLegend}>Time columns</legend>
+      <div className={styles.typeDisplayRadioGroup}>
+        <SegmentedControl value={timeZone} onValueChange={(v) => setTimeZone(v as TimeZone)}>
+          <SegmentedControl.Option value="indy" indicator={<Targeted size={16} />}>
+            Indianapolis
+          </SegmentedControl.Option>
+          <SegmentedControl.Option value="local" indicator={<Targeted size={16} />}>
+            Local
+          </SegmentedControl.Option>
+        </SegmentedControl>
+      </div>
+    </fieldset>
+  );
+}
+
 interface FormatDrawerProps {
   columnState: SharedColumnState;
 }
@@ -91,6 +117,9 @@ export function FormatDrawer({ columnState }: FormatDrawerProps): React.JSX.Elem
     dayFormat,
     setDayFormat,
     resetDayFormat,
+    timeZone,
+    setTimeZone,
+    resetTimeZone,
   } = columnState;
 
   return (
@@ -110,12 +139,14 @@ export function FormatDrawer({ columnState }: FormatDrawerProps): React.JSX.Elem
           setShowTypeIcon={setShowTypeIcon}
         />
         <DayFormatControls dayFormat={dayFormat} setDayFormat={setDayFormat} />
+        <TimeFormatControls timeZone={timeZone} setTimeZone={setTimeZone} />
         <div className={styles.columnActions}>
           <Button
             variant="ghost"
             onClick={() => {
               resetTypeDisplay();
               resetDayFormat();
+              resetTimeZone();
             }}
           >
             Reset
