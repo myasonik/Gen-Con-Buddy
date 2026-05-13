@@ -11,6 +11,23 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Courier+Prime&family=Source+Sans+3:wght@400;600&family=Zilla+Slab:wght@400;600&display=swap"
       rel="stylesheet"
     />
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("gcb-theme");
+          var parsed = stored ? JSON.parse(stored) : null;
+          var pref = parsed && parsed.version === 1 ? parsed.value : "auto";
+          var resolved =
+            pref === "auto"
+              ? window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light"
+              : pref;
+          document.documentElement.setAttribute("data-theme", resolved);
+          document.documentElement.style.colorScheme = resolved;
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
