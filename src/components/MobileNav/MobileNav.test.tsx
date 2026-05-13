@@ -20,15 +20,13 @@ function setupLiveRegions(): () => void {
 
 interface MobileNavProps {
   theme: "light" | "dark" | "auto";
-  resolvedTheme: "light" | "dark";
   setTheme: (v: "light" | "dark" | "auto") => void;
 }
 
 async function renderNav(overrides: Partial<MobileNavProps> = {}): Promise<ReturnType<typeof render>> {
   const props: MobileNavProps = {
     theme: "auto",
-    resolvedTheme: "light",
-    setTheme: vi.fn(),
+    setTheme: vi.fn<(v: "light" | "dark" | "auto") => void>(),
     ...overrides,
   };
   const rootRoute = createRootRoute({ component: () => <MobileNav {...props} /> });
@@ -38,7 +36,7 @@ async function renderNav(overrides: Partial<MobileNavProps> = {}): Promise<Retur
     routeTree: rootRoute.addChildren([indexRoute, changelogRoute]),
     history: createMemoryHistory({ initialEntries: ["/"] }),
   });
-  let result!: ReturnType<typeof render>;
+  let result: ReturnType<typeof render> = {} as ReturnType<typeof render>;
   await act(async () => {
     result = render(<RouterProvider router={router} />);
   });

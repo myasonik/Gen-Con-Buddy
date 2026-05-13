@@ -35,7 +35,6 @@ test("Dark radio is checked when theme is 'dark'", () => {
   expect(screen.getByRole("radio", { name: /Dark/i })).toBeChecked();
 });
 
-
 test("onValueChange called with 'light' when Light radio clicked", async () => {
   const onValueChange = vi.fn<(v: string) => void>();
   const user = userEvent.setup();

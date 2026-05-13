@@ -1,20 +1,25 @@
 .panel {
   margin-top: var(--space-4);
   padding: var(--space-3) var(--space-4);
-  background: var(--color-accent-surface);
   border: var(--border-width) solid var(--color-accent-border);
   border-radius: var(--radius-card);
 }
 
 .heading {
-  font-family: var(--font-slab);
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   font-weight: 700;
+  margin: 0 0 var(--space-2);
+  color: var(--color-ink);
+}
+
+.preamble {
+  font-size: var(--text-base);
+  font-weight: 600;
   color: var(--color-ink);
   margin: 0 0 var(--space-1);
 }
 
-.subtext {
+.preambleDetail {
   font-size: var(--text-sm);
   color: var(--color-ink-muted);
   margin: 0 0 var(--space-3);

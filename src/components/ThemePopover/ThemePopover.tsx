@@ -31,7 +31,6 @@ const LABELS: Record<ThemePreference, string> = {
 
 export function ThemePopover({
   theme,
-
   setTheme,
 }: ThemePopoverProps): React.JSX.Element {
   const [open, setOpen] = React.useState(false);

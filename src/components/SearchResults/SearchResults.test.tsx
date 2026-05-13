@@ -708,7 +708,7 @@ test("shows StaffPickCallout when search returns no results", async () => {
   );
   renderSearchResults();
   await screen.findByText("NO QUESTS FOUND");
-  await screen.findByText("Looks like that quest hit a dead end.");
+  await screen.findByText("Staff Picks");
 });
 
 test("does not show StaffPickCallout when search returns results", async () => {
