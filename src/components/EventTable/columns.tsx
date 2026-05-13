@@ -7,8 +7,8 @@ import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
 import { Chip } from "../../ui/Chip/Chip";
 import styles from "./columns.module.css";
 import typeCellStyles from "./typeCell.module.css";
-import { formatDay, toDisplayDate } from "../../utils/formatDay";
-import type { DayFormat, TypeDisplay, TimeZone } from "./types";
+import { formatDay, formatTime, toDisplayDate } from "../../utils/formatDay";
+import type { DayFormat, TypeDisplay, TimeZone, TimeFormat } from "./types";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData, TValue> {
@@ -20,6 +20,7 @@ declare module "@tanstack/react-table" {
     showTypeIcon: boolean;
     linkState?: { from: string };
     timeZone: TimeZone;
+    timeFormat: TimeFormat;
   }
 }
 
@@ -170,8 +171,8 @@ export const COLUMNS: ColumnDef<Event>[] = [
     id: "startDateTime",
     header: "Start",
     meta: { sortField: "startDateTime" },
-    cell: ({ row, timeZone }) => (
-      <>{format(toDisplayDate(row.original.attributes.startDateTime, timeZone), "HH:mm")}</>
+    cell: ({ row, timeZone, timeFormat }) => (
+      <>{formatTime(toDisplayDate(row.original.attributes.startDateTime, timeZone), timeFormat)}</>
     ),
   },
   {
@@ -184,8 +185,8 @@ export const COLUMNS: ColumnDef<Event>[] = [
     id: "endDateTime",
     header: "End",
     meta: { sortField: "endDateTime" },
-    cell: ({ row, timeZone }) => (
-      <>{format(toDisplayDate(row.original.attributes.endDateTime, timeZone), "HH:mm")}</>
+    cell: ({ row, timeZone, timeFormat }) => (
+      <>{formatTime(toDisplayDate(row.original.attributes.endDateTime, timeZone), timeFormat)}</>
     ),
   },
   {

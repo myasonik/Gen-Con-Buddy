@@ -13,8 +13,9 @@ import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
 import { CalendarPlus, ExternalLink } from "lucide-react";
 import { useDayFormat } from "../../hooks/useDayFormat";
 import { useTimeZone } from "../../hooks/useTimeZone";
+import { useTimeFormat } from "../../hooks/useTimeFormat";
 import { usePageTitle } from "../../lib/usePageTitle";
-import { formatDay, toDisplayDate } from "../../utils/formatDay";
+import { formatDay, formatTime, toDisplayDate } from "../../utils/formatDay";
 import { normalizeUrl } from "./normalizeUrl";
 import { normalizeEmail } from "./normalizeEmail";
 import styles from "./EventDetail.module.css";
@@ -34,6 +35,7 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
   });
   const { dayFormat } = useDayFormat();
   const { timeZone } = useTimeZone();
+  const { timeFormat } = useTimeFormat();
   const event = data?.data[0];
   usePageTitle(
     event ? `${event.attributes.title} (${event.attributes.gameId}) | Gen Con Buddy` : undefined,
@@ -187,10 +189,10 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
               {formatDay(toDisplayDate(a.startDateTime, timeZone), dayFormat)}
             </DescriptionItem>
             <DescriptionItem term="Start">
-              {format(toDisplayDate(a.startDateTime, timeZone), "HH:mm")}
+              {formatTime(toDisplayDate(a.startDateTime, timeZone), timeFormat)}
             </DescriptionItem>
             <DescriptionItem term="End">
-              {format(toDisplayDate(a.endDateTime, timeZone), "HH:mm")}
+              {formatTime(toDisplayDate(a.endDateTime, timeZone), timeFormat)}
             </DescriptionItem>
             <DescriptionItem term="Duration">{a.duration} hours</DescriptionItem>
             <DescriptionItem term="Min Play Time">{a.minimumPlayTime} hours</DescriptionItem>

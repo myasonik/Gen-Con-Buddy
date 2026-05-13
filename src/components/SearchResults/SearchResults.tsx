@@ -92,6 +92,7 @@ export function SearchResults({
                 showTypeIcon={sharedColumnState.showTypeIcon}
                 dayFormat={sharedColumnState.dayFormat}
                 timeZone={sharedColumnState.timeZone}
+                timeFormat={sharedColumnState.timeFormat}
               />
             </div>
           )}

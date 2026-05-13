@@ -1,6 +1,15 @@
 import { format } from "date-fns";
 import { TZDate } from "@date-fns/tz";
-import type { DayFormat, TimeZone } from "../components/EventTable/types";
+import type { DayFormat, TimeFormat, TimeZone } from "../components/EventTable/types";
+
+function getHour12(): boolean {
+  return new Intl.DateTimeFormat(undefined, { hour: "numeric" }).resolvedOptions().hour12 ?? false;
+}
+
+export function formatTime(date: Date, timeFormat: TimeFormat): string {
+  const use12h = timeFormat === "12h" || (timeFormat === "auto" && getHour12());
+  return format(date, use12h ? "h:mm a" : "HH:mm");
+}
 
 export function toDisplayDate(value: string, timeZone: TimeZone): Date {
   return timeZone === "indy"

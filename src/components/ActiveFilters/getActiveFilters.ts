@@ -81,6 +81,11 @@ function fmtTime(hhmm: string): string {
   const [hStr, mStr] = hhmm.split(":");
   const h = parseInt(hStr, 10);
   const m = parseInt(mStr, 10);
+  const use12h =
+    new Intl.DateTimeFormat(undefined, { hour: "numeric" }).resolvedOptions().hour12 ?? false;
+  if (!use12h) {
+    return m === 0 ? `${hStr}:00` : `${hStr}:${mStr}`;
+  }
   const ampm = h >= 12 ? "PM" : "AM";
   const hour = h % 12 || 12;
   return m === 0 ? `${hour} ${ampm}` : `${hour}:${mStr} ${ampm}`;
