@@ -482,3 +482,41 @@ test("search_submitted captures active_advanced_filters as a key-value map of no
     expect.objectContaining({ active_advanced_filters: { title: "Dragons" } }),
   );
 });
+
+test("search_submitted includes days in active_advanced_filters when day checkboxes are checked", async () => {
+  const user = userEvent.setup();
+  renderSearchForm();
+  await user.click(screen.getByRole("checkbox", { name: "Thu" }));
+  await user.click(screen.getByRole("button", { name: "Search" }));
+  expect(captureFn).toHaveBeenCalledWith(
+    "search_submitted",
+    expect.objectContaining({ active_advanced_filters: expect.objectContaining({ days: "thu" }) }),
+  );
+});
+
+test("search_submitted includes eventType in active_advanced_filters when an event type is selected", async () => {
+  const user = userEvent.setup();
+  renderSearchForm({ eventType: "BGM" });
+  await user.click(screen.getByRole("button", { name: "Search" }));
+  expect(captureFn).toHaveBeenCalledWith(
+    "search_submitted",
+    expect.objectContaining({
+      active_advanced_filters: expect.objectContaining({ eventType: "BGM" }),
+    }),
+  );
+});
+
+test("search_submitted includes timeStart and timeEnd in active_advanced_filters when time range is set", async () => {
+  const user = userEvent.setup();
+  renderSearchForm({ timeStart: "09:00", timeEnd: "17:00" });
+  await user.click(screen.getByRole("button", { name: "Search" }));
+  expect(captureFn).toHaveBeenCalledWith(
+    "search_submitted",
+    expect.objectContaining({
+      active_advanced_filters: expect.objectContaining({
+        timeStart: "09:00",
+        timeEnd: "17:00",
+      }),
+    }),
+  );
+});

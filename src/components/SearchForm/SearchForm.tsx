@@ -139,7 +139,9 @@ export function SearchForm({
       time_start: formValues.timeStart || null,
       time_end: formValues.timeEnd || null,
       active_advanced_filters: Object.fromEntries(
-        ADVANCED_FILTER_KEYS.filter((k) => Boolean(formValues[k])).map((k) => [k, formValues[k]]),
+        (["days", "eventType", "timeStart", "timeEnd", ...ADVANCED_FILTER_KEYS] as const)
+          .filter((k) => Boolean(formValues[k]))
+          .map((k) => [k, formValues[k]]),
       ),
     });
     onSearch(formValues);
