@@ -276,3 +276,19 @@ test("day column popover renders Day radio button", async () => {
   await user.click(within(dayHeader).getByRole("button", { name: "Column actions" }));
   expect(screen.getByRole("radio", { name: "Day" })).toBeInTheDocument();
 });
+
+test("staff pick row has data-staff-pick attribute", async () => {
+  await renderEventTable([makeEvent({ gameId: "BGM26ND310303", title: "Wildhavens Game" })]);
+  const titleCell = screen.getByText("Wildhavens Game");
+  const row = titleCell.closest("tr");
+  expect(row).not.toBeNull();
+  expect(row).toHaveAttribute("data-staff-pick");
+});
+
+test("non-staff-pick row does not have data-staff-pick attribute", async () => {
+  await renderEventTable([makeEvent({ gameId: "RPG24000042", title: "Regular Game" })]);
+  const titleCell = screen.getByText("Regular Game");
+  const row = titleCell.closest("tr");
+  expect(row).not.toBeNull();
+  expect(row).not.toHaveAttribute("data-staff-pick");
+});
