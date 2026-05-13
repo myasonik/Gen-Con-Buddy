@@ -11,7 +11,7 @@ import { makeEvent } from "../../test/msw/factory";
 import { EventListMobile } from "./EventListMobile";
 import { COLUMN_VISIBILITY_DEFAULTS } from "../../hooks/useColumnVisibility";
 import type { Event } from "../../utils/types";
-import type { DayFormat, TypeDisplay, TimeZone } from "./types";
+import type { DayFormat, TimeFormat, TypeDisplay, TimeZone } from "./types";
 
 async function renderList(
   events: Event[] = [makeEvent()],
@@ -21,9 +21,10 @@ async function renderList(
     showTypeIcon?: boolean;
     dayFormat?: DayFormat;
     timeZone?: TimeZone;
+    timeFormat?: TimeFormat;
   } = {},
 ): Promise<ReturnType<typeof render>> {
-  const { dayFormat, timeZone, ...typeDisplayProps } = opts;
+  const { dayFormat, timeZone, timeFormat, ...typeDisplayProps } = opts;
   const rootRoute = createRootRoute({
     component: () => (
       <EventListMobile
@@ -31,6 +32,7 @@ async function renderList(
         visibility={visibility}
         dayFormat={dayFormat}
         timeZone={timeZone}
+        timeFormat={timeFormat}
         {...typeDisplayProps}
       />
     ),
@@ -81,13 +83,13 @@ test("shows day abbreviation derived from startDateTime", async () => {
 
 test("shows formatted start time from startDateTime", async () => {
   // "2024-08-01T10:00:00Z" → 06:00 in Indianapolis (EDT = UTC-4)
-  await renderList([makeEvent()]);
+  await renderList([makeEvent()], undefined, { timeFormat: "24h" });
   expect(screen.getByText(/06:00/)).toBeInTheDocument();
 });
 
 test("shows formatted end time from endDateTime", async () => {
   // "2024-08-01T14:00:00Z" → 10:00 in Indianapolis
-  await renderList([makeEvent()]);
+  await renderList([makeEvent()], undefined, { timeFormat: "24h" });
   expect(screen.getByText(/10:00/)).toBeInTheDocument();
 });
 
@@ -142,13 +144,21 @@ test("hides tickets when visibility.ticketsAvailable is false", async () => {
 });
 
 test("hides day but shows start time when only startDateTime is visible", async () => {
-  await renderList([makeEvent()], { day: false, startDateTime: true, endDateTime: false });
+  await renderList(
+    [makeEvent()],
+    { day: false, startDateTime: true, endDateTime: false },
+    { timeFormat: "24h" },
+  );
   expect(screen.queryByText(/Thu/)).not.toBeInTheDocument();
   expect(screen.getByText(/06:00/)).toBeInTheDocument();
 });
 
 test("hides all time info when day, startDateTime, and endDateTime are all false", async () => {
-  await renderList([makeEvent()], { day: false, startDateTime: false, endDateTime: false });
+  await renderList(
+    [makeEvent()],
+    { day: false, startDateTime: false, endDateTime: false },
+    { timeFormat: "24h" },
+  );
   expect(screen.queryByText(/Thu/)).not.toBeInTheDocument();
   expect(screen.queryByText(/06:00/)).not.toBeInTheDocument();
 });
@@ -185,15 +195,19 @@ test("uses COLUMN_VISIBILITY_DEFAULTS when no visibility prop is passed", async 
 });
 
 test("shows day and end time with no separator when startDateTime is hidden", async () => {
-  await renderList([makeEvent()], {
-    day: true,
-    startDateTime: false,
-    endDateTime: true,
-    minPlayers: false,
-    maxPlayers: false,
-    minimumPlayTime: false,
-    duration: false,
-  });
+  await renderList(
+    [makeEvent()],
+    {
+      day: true,
+      startDateTime: false,
+      endDateTime: true,
+      minPlayers: false,
+      maxPlayers: false,
+      minimumPlayTime: false,
+      duration: false,
+    },
+    { timeFormat: "24h" },
+  );
   expect(screen.getByText(/Thu/)).toBeInTheDocument();
   expect(screen.getByText(/10:00/)).toBeInTheDocument();
   expect(screen.queryByText(/–/)).not.toBeInTheDocument();
@@ -417,7 +431,7 @@ test("shows compact long format EEE M/d in long mode", async () => {
 test('shows start and end times in Indianapolis time when timeZone is "indy"', async () => {
   // factory startDateTime "2024-08-01T10:00:00Z" = 06:00 Indianapolis (UTC-4)
   // factory endDateTime "2024-08-01T14:00:00Z" = 10:00 Indianapolis
-  await renderList([makeEvent()], undefined, { timeZone: "indy" });
+  await renderList([makeEvent()], undefined, { timeZone: "indy", timeFormat: "24h" });
   expect(screen.getByText(/06:00/)).toBeInTheDocument();
   expect(screen.getByText(/10:00/)).toBeInTheDocument();
 });

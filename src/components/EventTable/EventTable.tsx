@@ -13,7 +13,12 @@ import { useSortState } from "../../hooks/useSortState";
 import { useColumnMinSizes } from "../../hooks/useColumnMinSizes";
 import { parseSortString } from "../../utils/parseSortString";
 import { ColumnActionsPopover } from "./ColumnActionsPopover";
-import { TypeFormatControls, DayFormatControls, TimeFormatControls } from "./FormatDrawer";
+import {
+  TypeFormatControls,
+  DayFormatControls,
+  TimeFormatControls,
+  TimeHourControls,
+} from "./FormatDrawer";
 import { ColumnResizeDialog } from "./ColumnResizeDialog";
 import { announce } from "../../lib/announce";
 import type { Event } from "../../utils/types";
@@ -53,6 +58,8 @@ export function EventTable({
     setDayFormat,
     timeZone,
     setTimeZone,
+    timeFormat,
+    setTimeFormat,
   } = sharedColumnState;
 
   // Unique prefix so anchor names don't collide when multiple EventTable instances are on the page
@@ -204,7 +211,12 @@ export function EventTable({
       return <DayFormatControls dayFormat={dayFormat} setDayFormat={setDayFormat} />;
     }
     if (columnId === "startDateTime" || columnId === "endDateTime") {
-      return <TimeFormatControls timeZone={timeZone} setTimeZone={setTimeZone} />;
+      return (
+        <>
+          <TimeFormatControls timeZone={timeZone} setTimeZone={setTimeZone} />
+          <TimeHourControls timeFormat={timeFormat} setTimeFormat={setTimeFormat} />
+        </>
+      );
     }
     return undefined;
   };
@@ -300,6 +312,7 @@ export function EventTable({
                         showTypeIcon,
                         linkState,
                         timeZone,
+                        timeFormat,
                       })}
                     </td>
                   ))}

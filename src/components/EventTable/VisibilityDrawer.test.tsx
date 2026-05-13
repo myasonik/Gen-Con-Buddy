@@ -33,6 +33,9 @@ function makeColumnState(overrides: Partial<SharedColumnState> = {}): SharedColu
     timeZone: "indy",
     setTimeZone: vi.fn<SharedColumnState["setTimeZone"]>(),
     resetTimeZone: vi.fn<SharedColumnState["resetTimeZone"]>(),
+    timeFormat: "auto",
+    setTimeFormat: vi.fn<SharedColumnState["setTimeFormat"]>(),
+    resetTimeFormat: vi.fn<SharedColumnState["resetTimeFormat"]>(),
     ...overrides,
   };
 }

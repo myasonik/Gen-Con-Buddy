@@ -6,8 +6,9 @@ import {
   TypeFormatControls,
   DayFormatControls,
   TimeFormatControls,
+  TimeHourControls,
 } from "./FormatDrawer";
-import type { SharedColumnState, TypeDisplay, DayFormat, TimeZone } from "./types";
+import type { SharedColumnState, TypeDisplay, DayFormat, TimeZone, TimeFormat } from "./types";
 
 function makeColumnState(overrides: Partial<SharedColumnState> = {}): SharedColumnState {
   return {
@@ -28,6 +29,9 @@ function makeColumnState(overrides: Partial<SharedColumnState> = {}): SharedColu
     timeZone: "indy",
     setTimeZone: vi.fn<SharedColumnState["setTimeZone"]>(),
     resetTimeZone: vi.fn<SharedColumnState["resetTimeZone"]>(),
+    timeFormat: "auto",
+    setTimeFormat: vi.fn<SharedColumnState["setTimeFormat"]>(),
+    resetTimeFormat: vi.fn<SharedColumnState["resetTimeFormat"]>(),
     ...overrides,
   };
 }
@@ -224,4 +228,42 @@ test("TimeFormatControls clicking Indianapolis radio calls setTimeZone with indy
   render(<TimeFormatControls timeZone="local" setTimeZone={setTimeZone} />);
   await user.click(screen.getByRole("radio", { name: "Indianapolis" }));
   expect(setTimeZone).toHaveBeenCalledWith("indy");
+});
+
+test("TimeHourControls renders Auto, 12h, 24h radio buttons", () => {
+  render(<TimeHourControls timeFormat="auto" setTimeFormat={vi.fn<(v: TimeFormat) => void>()} />);
+  expect(screen.getByRole("radio", { name: "Auto" })).toBeInTheDocument();
+  expect(screen.getByRole("radio", { name: "12h" })).toBeInTheDocument();
+  expect(screen.getByRole("radio", { name: "24h" })).toBeInTheDocument();
+});
+
+test("TimeHourControls Auto radio is checked when timeFormat is auto", () => {
+  render(<TimeHourControls timeFormat="auto" setTimeFormat={vi.fn<(v: TimeFormat) => void>()} />);
+  expect(screen.getByRole("radio", { name: "Auto" })).toBeChecked();
+  expect(screen.getByRole("radio", { name: "24h" })).not.toBeChecked();
+});
+
+test("TimeHourControls clicking 24h radio calls setTimeFormat with 24h", async () => {
+  const user = userEvent.setup();
+  const setTimeFormat = vi.fn<(v: TimeFormat) => void>();
+  render(<TimeHourControls timeFormat="auto" setTimeFormat={setTimeFormat} />);
+  await user.click(screen.getByRole("radio", { name: "24h" }));
+  expect(setTimeFormat).toHaveBeenCalledWith("24h");
+});
+
+test("TimeHourControls clicking 12h radio calls setTimeFormat with 12h", async () => {
+  const user = userEvent.setup();
+  const setTimeFormat = vi.fn<(v: TimeFormat) => void>();
+  render(<TimeHourControls timeFormat="auto" setTimeFormat={setTimeFormat} />);
+  await user.click(screen.getByRole("radio", { name: "12h" }));
+  expect(setTimeFormat).toHaveBeenCalledWith("12h");
+});
+
+test("Reset button also calls resetTimeFormat", async () => {
+  const user = userEvent.setup();
+  const resetTimeFormat = vi.fn<SharedColumnState["resetTimeFormat"]>();
+  render(<FormatDrawer columnState={makeColumnState({ resetTimeFormat })} />);
+  await user.click(screen.getByRole("button", { name: "Format" }));
+  await user.click(screen.getByRole("button", { name: "Reset" }));
+  expect(resetTimeFormat).toHaveBeenCalledTimes(1);
 });

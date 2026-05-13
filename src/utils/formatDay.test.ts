@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { format } from "date-fns";
-import { formatDay, formatDayCompact, toDisplayDate } from "./formatDay";
+import { formatDay, formatDayCompact, formatTime, toDisplayDate } from "./formatDay";
 
 // 2024-08-01T10:00:00Z = Thu Aug 1 2024 06:00 Indianapolis (UTC-4)
 const DATE = new Date("2024-08-01T10:00:00Z");
@@ -56,4 +56,31 @@ test('toDisplayDate "indy" assigns correct Indianapolis day for near-midnight UT
 test('toDisplayDate "indy" works correctly with formatDay', () => {
   const d = toDisplayDate(INDY_10AM, "indy");
   expect(formatDay(d, "day")).toBe("Thursday");
+});
+
+// formatTime — "2024-08-01T16:00:00-04:00" = 4:00 PM Indianapolis
+const INDY_4PM = new Date("2024-08-01T16:00:00-04:00");
+
+test('formatTime "24h" always returns HH:mm', () => {
+  expect(formatTime(INDY_4PM, "24h")).toBe("16:00");
+});
+
+test('formatTime "12h" always returns h:mm a', () => {
+  expect(formatTime(INDY_4PM, "12h")).toBe("4:00 PM");
+});
+
+test('formatTime "24h" renders morning time without AM/PM', () => {
+  const morning = new Date("2024-08-01T09:30:00-04:00");
+  expect(formatTime(morning, "24h")).toBe("09:30");
+});
+
+test('formatTime "12h" renders morning time with AM', () => {
+  const morning = new Date("2024-08-01T09:30:00-04:00");
+  expect(formatTime(morning, "12h")).toBe("9:30 AM");
+});
+
+test('formatTime "auto" returns a recognizable time string', () => {
+  // auto delegates to OS locale; in en-US (test env) this is 12h format
+  const result = formatTime(INDY_4PM, "auto");
+  expect(result).toMatch(/^(\d{1,2}:\d{2}( [AP]M)?|[01]\d:\d{2})$/);
 });

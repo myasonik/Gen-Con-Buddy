@@ -35,6 +35,9 @@ const stubColumnState: SharedColumnState = {
   timeZone: "indy",
   setTimeZone: () => {},
   resetTimeZone: () => {},
+  timeFormat: "auto",
+  setTimeFormat: () => {},
+  resetTimeFormat: () => {},
 };
 
 beforeEach(() => {

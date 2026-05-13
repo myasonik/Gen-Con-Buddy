@@ -4,7 +4,7 @@ import { Drawer } from "../../ui/Drawer/Drawer";
 import { Checkbox } from "../../ui/Checkbox/Checkbox";
 import { SegmentedControl } from "../../ui/SegmentedControl/SegmentedControl";
 import { Targeted } from "../../ui/icons/Targeted";
-import type { SharedColumnState, TypeDisplay, DayFormat, TimeZone } from "./types";
+import type { SharedColumnState, TypeDisplay, DayFormat, TimeZone, TimeFormat } from "./types";
 import styles from "./FormatDrawer.module.css";
 
 interface TypeFormatControlsProps {
@@ -103,6 +103,35 @@ export function TimeFormatControls({
   );
 }
 
+interface TimeHourControlsProps {
+  timeFormat: TimeFormat;
+  setTimeFormat: (v: TimeFormat) => void;
+}
+
+export function TimeHourControls({
+  timeFormat,
+  setTimeFormat,
+}: TimeHourControlsProps): React.JSX.Element {
+  return (
+    <fieldset className={styles.columnGroup}>
+      <legend className={styles.columnGroupLegend}>Time format</legend>
+      <div className={styles.typeDisplayRadioGroup}>
+        <SegmentedControl value={timeFormat} onValueChange={(v) => setTimeFormat(v as TimeFormat)}>
+          <SegmentedControl.Option value="auto" indicator={<Targeted size={16} />}>
+            Auto
+          </SegmentedControl.Option>
+          <SegmentedControl.Option value="12h" indicator={<Targeted size={16} />}>
+            12h
+          </SegmentedControl.Option>
+          <SegmentedControl.Option value="24h" indicator={<Targeted size={16} />}>
+            24h
+          </SegmentedControl.Option>
+        </SegmentedControl>
+      </div>
+    </fieldset>
+  );
+}
+
 interface FormatDrawerProps {
   columnState: SharedColumnState;
 }
@@ -120,6 +149,9 @@ export function FormatDrawer({ columnState }: FormatDrawerProps): React.JSX.Elem
     timeZone,
     setTimeZone,
     resetTimeZone,
+    timeFormat,
+    setTimeFormat,
+    resetTimeFormat,
   } = columnState;
 
   return (
@@ -140,6 +172,7 @@ export function FormatDrawer({ columnState }: FormatDrawerProps): React.JSX.Elem
         />
         <DayFormatControls dayFormat={dayFormat} setDayFormat={setDayFormat} />
         <TimeFormatControls timeZone={timeZone} setTimeZone={setTimeZone} />
+        <TimeHourControls timeFormat={timeFormat} setTimeFormat={setTimeFormat} />
         <div className={styles.columnActions}>
           <Button
             variant="ghost"
@@ -147,6 +180,7 @@ export function FormatDrawer({ columnState }: FormatDrawerProps): React.JSX.Elem
               resetTypeDisplay();
               resetDayFormat();
               resetTimeZone();
+              resetTimeFormat();
             }}
           >
             Reset

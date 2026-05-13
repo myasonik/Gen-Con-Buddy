@@ -3,6 +3,7 @@ import type { OnChangeFn, ColumnSizingState } from "@tanstack/react-table";
 export type TypeDisplay = "code" | "name" | "both";
 export type DayFormat = "day" | "numeric" | "long";
 export type TimeZone = "indy" | "local";
+export type TimeFormat = "auto" | "12h" | "24h";
 
 export interface SharedColumnState {
   visibility: Record<string, boolean>;
@@ -22,4 +23,7 @@ export interface SharedColumnState {
   timeZone: TimeZone;
   setTimeZone: (v: TimeZone) => void;
   resetTimeZone: () => void;
+  timeFormat: TimeFormat;
+  setTimeFormat: (v: TimeFormat) => void;
+  resetTimeFormat: () => void;
 }
