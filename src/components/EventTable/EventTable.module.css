@@ -6,6 +6,14 @@
 .tableWrapper {
   overflow-x: scroll;
   margin-top: -0.0625rem;
+  background-image:
+    linear-gradient(
+      oklch(from var(--color-surface-page) l c h / 0.82),
+      oklch(from var(--color-surface-page) l c h / 0.82)
+    ),
+    url('/wildhavens-bg.webp');
+  background-size: cover;
+  background-position: center 60%;
 }
 
 .tableWrapper table {
@@ -73,7 +81,16 @@
 .tableWrapper table tbody tr[data-staff-pick],
 .tableWrapper table tbody tr[data-staff-pick]:nth-child(odd),
 .tableWrapper table tbody tr[data-staff-pick]:nth-child(even) {
-  background-color: var(--color-accent-surface);
+  background: transparent;
+}
+
+:global([data-theme="dark"]) .tableWrapper {
+  background-image:
+    linear-gradient(
+      oklch(from var(--color-surface-page) l c h / 0.82),
+      oklch(from var(--color-surface-page) l c h / 0.82)
+    ),
+    url('/wildhavens-bg.webp');
 }
 
 .tableWrapper table td {
@@ -81,6 +98,7 @@
   border: var(--border-width) solid var(--color-ink-divider);
   font-size: var(--text-md);
 }
+
 
 .sortIndicator {
   display: inline-block;
