@@ -6,6 +6,7 @@ import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { useTypeDisplay } from "../../hooks/useTypeDisplay";
 import { useDayFormat } from "../../hooks/useDayFormat";
+import { useTimeZone } from "../../hooks/useTimeZone";
 import type { SharedColumnState } from "./types";
 
 const makeEvent = (id: string, overrides: Partial<Event["attributes"]> = {}): Event => ({
@@ -102,6 +103,7 @@ function EventTableStory({
     reset: resetTypeDisplay,
   } = useTypeDisplay();
   const { dayFormat, setDayFormat, reset: resetDayFormat } = useDayFormat();
+  const { timeZone, setTimeZone, reset: resetTimeZone } = useTimeZone();
   const sharedColumnState: SharedColumnState = {
     visibility,
     toggleVisibility,
@@ -117,6 +119,9 @@ function EventTableStory({
     dayFormat,
     setDayFormat,
     resetDayFormat,
+    timeZone,
+    setTimeZone,
+    resetTimeZone,
   };
   return (
     <EventTable

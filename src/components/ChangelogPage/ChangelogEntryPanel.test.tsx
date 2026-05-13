@@ -28,6 +28,9 @@ const stubColumnState: SharedColumnState = {
   dayFormat: "day",
   setDayFormat: () => {},
   resetDayFormat: () => {},
+  timeZone: "indy",
+  setTimeZone: () => {},
+  resetTimeZone: () => {},
 };
 
 // For tests that render EventTable (which uses Link), a router context is required.

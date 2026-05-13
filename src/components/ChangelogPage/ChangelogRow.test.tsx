@@ -32,6 +32,9 @@ const stubColumnState: SharedColumnState = {
   dayFormat: "day",
   setDayFormat: () => {},
   resetDayFormat: () => {},
+  timeZone: "indy",
+  setTimeZone: () => {},
+  resetTimeZone: () => {},
 };
 
 beforeEach(() => {
