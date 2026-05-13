@@ -205,6 +205,11 @@ test("renders day toggles as a group in the filter strip", async () => {
   expect(screen.getByRole("group", { name: "Days" })).toBeInTheDocument();
 });
 
+test("sets document.title to 'Gen Con Buddy'", async () => {
+  await renderRoute("/");
+  expect(document.title).toBe("Gen Con Buddy");
+});
+
 test("day tiles are checkboxes", async () => {
   await renderRoute("/");
   expect(screen.getByRole("checkbox", { name: "Wed" })).not.toBeChecked();

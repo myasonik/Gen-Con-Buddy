@@ -9,6 +9,7 @@ import { coerceSearchParams } from "../utils/coerceSearchParams";
 import { DEFAULT_PAGE_SIZE } from "../utils/constants";
 import type { SearchFormValues, SearchParams } from "../utils/types";
 import type { ActiveFilter } from "../components/ActiveFilters/getActiveFilters";
+import { usePageTitle } from "../lib/usePageTitle";
 import styles from "./index.module.css";
 
 export const Route = createFileRoute("/")({
@@ -17,6 +18,7 @@ export const Route = createFileRoute("/")({
 });
 
 function SearchPage(): React.JSX.Element {
+  usePageTitle("Gen Con Buddy");
   const posthog = usePostHog();
   const navigate = Route.useNavigate();
   const search = Route.useSearch();
