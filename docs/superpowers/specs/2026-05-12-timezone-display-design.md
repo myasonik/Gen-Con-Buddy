@@ -88,20 +88,22 @@ New `TimeFormatControls` component follows the same pattern as `DayFormatControl
 
 Placed between the existing "Day column" fieldset and the Reset button. The Reset button calls `resetTimeZone()` alongside the existing resets.
 
+`TimeFormatControls` is also wired into `getFormatControls` in `EventTable.tsx` for the `startDateTime` and `endDateTime` column IDs, so it appears in the column-header action popover for those columns — matching the pattern of `DayFormatControls` on the "day" column.
+
 ## Files Changed
 
-| File                                            | Change                                                                                       |
-| ----------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `package.json`                                  | add `@date-fns/tz`                                                                           |
-| `src/components/EventTable/types.ts`            | add `TimeZone`, extend `SharedColumnState` and `CellContext`                                 |
-| `src/hooks/useTimeZone.ts`                      | new file — stored preference hook                                                            |
-| `src/hooks/useSharedColumnState.ts`             | wire in `useTimeZone`                                                                        |
-| `src/utils/formatDay.ts`                        | export `toDisplayDate` helper (no signature change to existing functions)                    |
-| `src/components/EventTable/columns.tsx`         | add `timeZone` to `CellContext` extension; update start/end/day cells to use `toDisplayDate` |
-| `src/components/EventTable/EventTable.tsx`      | pass `timeZone` in cell context                                                              |
-| `src/components/EventTable/EventListMobile.tsx` | add `timeZone` prop; apply to `formatDayCompact` and time `format()` calls                   |
-| `src/components/EventTable/FormatDrawer.tsx`    | add `TimeFormatControls`; wire into `FormatDrawer` and `FormatDrawerProps`                   |
-| `src/components/EventDetail/EventDetail.tsx`    | call `useTimeZone()` directly; apply to `formatDay` and time `format()` calls                |
+| File                                            | Change                                                                                                                            |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `package.json`                                  | add `@date-fns/tz`                                                                                                                |
+| `src/components/EventTable/types.ts`            | add `TimeZone`, extend `SharedColumnState` and `CellContext`                                                                      |
+| `src/hooks/useTimeZone.ts`                      | new file — stored preference hook                                                                                                 |
+| `src/hooks/useSharedColumnState.ts`             | wire in `useTimeZone`                                                                                                             |
+| `src/utils/formatDay.ts`                        | export `toDisplayDate` helper (no signature change to existing functions)                                                         |
+| `src/components/EventTable/columns.tsx`         | add `timeZone` to `CellContext` extension; update start/end/day cells to use `toDisplayDate`                                      |
+| `src/components/EventTable/EventTable.tsx`      | pass `timeZone` in cell context; wire `TimeFormatControls` into `getFormatControls` for `startDateTime` and `endDateTime` columns |
+| `src/components/EventTable/EventListMobile.tsx` | add `timeZone` prop; apply to `formatDayCompact` and time `format()` calls                                                        |
+| `src/components/EventTable/FormatDrawer.tsx`    | add `TimeFormatControls`; wire into `FormatDrawer` and `FormatDrawerProps`                                                        |
+| `src/components/EventDetail/EventDetail.tsx`    | call `useTimeZone()` directly; apply to `formatDay` and time `format()` calls                                                     |
 
 ## Testing
 
