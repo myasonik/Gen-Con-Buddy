@@ -1,4 +1,5 @@
 .surface {
-  background-color: var(--color-surface-panel);
+  background-color: var(--color-surface-page);
   border: var(--border-width) solid var(--color-ink-border);
+  box-shadow: 0 2px 8px oklch(22% 0.03 48 / 0.12);
 }
