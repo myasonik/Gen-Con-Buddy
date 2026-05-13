@@ -14,6 +14,48 @@ import { Field, RangeField } from "../../ui/Field/Field";
 import { decodeDays, encodeDays } from "../../utils/searchParams";
 import styles from "./SearchForm.module.css";
 
+const ADVANCED_FILTER_KEYS: readonly (keyof SearchFormValues)[] = [
+  "gameId",
+  "title",
+  "group",
+  "shortDescription",
+  "longDescription",
+  "gameSystem",
+  "rulesEdition",
+  "minPlayersMin",
+  "minPlayersMax",
+  "maxPlayersMin",
+  "maxPlayersMax",
+  "ageRequired",
+  "experienceRequired",
+  "materialsProvided",
+  "materialsRequired",
+  "materialsRequiredDetails",
+  "durationMin",
+  "durationMax",
+  "gmNames",
+  "website",
+  "email",
+  "tournament",
+  "roundNumberMin",
+  "roundNumberMax",
+  "totalRoundsMin",
+  "totalRoundsMax",
+  "minimumPlayTimeMin",
+  "minimumPlayTimeMax",
+  "attendeeRegistration",
+  "costMin",
+  "costMax",
+  "location",
+  "roomName",
+  "tableNumber",
+  "specialCategory",
+  "ticketsAvailableMin",
+  "ticketsAvailableMax",
+  "lastModifiedStart",
+  "lastModifiedEnd",
+];
+
 const EMPTY_VALUES: SearchFormValues = {
   filter: "",
   gameId: "",
@@ -96,6 +138,9 @@ export function SearchForm({
       days: formValues.days || null,
       time_start: formValues.timeStart || null,
       time_end: formValues.timeEnd || null,
+      active_advanced_filters: Object.fromEntries(
+        ADVANCED_FILTER_KEYS.filter((k) => Boolean(formValues[k])).map((k) => [k, formValues[k]]),
+      ),
     });
     onSearch(formValues);
   };
