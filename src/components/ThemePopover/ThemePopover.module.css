@@ -1,0 +1,94 @@
+/* ─── Trigger ────────────────────────────────────────────────────────────── */
+.trigger {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-ink-faint);
+}
+
+.trigger:hover,
+.trigger:focus-visible,
+.trigger[data-popup-open] {
+  background: var(--color-surface-hover);
+  color: var(--color-ink);
+}
+
+/* ─── Popover shell ──────────────────────────────────────────────────────── */
+.positioner {
+  z-index: var(--z-popover);
+}
+
+.popup {
+  composes: surface from "../../styles/popup.module.css";
+  min-width: 9rem;
+  border-radius: var(--radius-card);
+  padding: var(--space-2) 0;
+}
+
+/* ─── Fieldset reset ─────────────────────────────────────────────────────── */
+.fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* ─── Radio group ────────────────────────────────────────────────────────── */
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  line-height: 1.4;
+}
+
+.option:hover {
+  background: var(--color-surface-hover);
+}
+
+/* ─── Base UI radio primitives ───────────────────────────────────────────── */
+.radio {
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 50%;
+  border: var(--border-width) solid var(--color-ink-border);
+  background: var(--color-surface-page);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.radio[data-checked] {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+}
+
+.radioIndicator {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+  background: var(--color-surface-page);
+  display: none;
+}
+
+.radio[data-checked] .radioIndicator {
+  display: block;
+}
+
+/* ─── Currently note ─────────────────────────────────────────────────────── */
+.resolvedNote {
+  padding: 0 var(--space-3) var(--space-1);
+  font-size: var(--text-2xs);
+  color: var(--color-ink-faint);
+  font-family: var(--font-mono);
+}
