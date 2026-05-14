@@ -16,6 +16,7 @@ import { useTimeZone } from "../../hooks/useTimeZone";
 import { useTimeFormat } from "../../hooks/useTimeFormat";
 import { usePageTitle } from "../../lib/usePageTitle";
 import { formatDay, formatTime, toDisplayDate } from "../../utils/formatDay";
+import { STAFF_PICK_IDS } from "../../utils/staffPicks";
 import { normalizeUrl } from "./normalizeUrl";
 import { normalizeEmail } from "./normalizeEmail";
 import styles from "./EventDetail.module.css";
@@ -74,6 +75,7 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
   }
 
   const a = data.data[0].attributes;
+  const isStaffPick = STAFF_PICK_IDS.has(a.gameId);
 
   return (
     <article className={styles.article}>
@@ -91,9 +93,16 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
         </Button>
       )}
 
-      <div className={styles.card}>
-        <p className={styles.gameIdBadge}>{a.gameId}</p>
-        <h1 className={styles.title}>{a.title}</h1>
+      <div className={styles.card} data-staff-pick={isStaffPick || undefined}>
+        <div className={styles.hero}>
+          <p className={styles.gameIdBadge}>{a.gameId}</p>
+          {isStaffPick && (
+            <p className={styles.staffPickLabel}>
+              <Chip tone="accent" size="sm">Staff Pick</Chip>
+            </p>
+          )}
+          <h1 className={styles.title}>{a.title}</h1>
+        </div>
 
         <div className={styles.actions}>
           <Button
@@ -162,7 +171,9 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
             <DescriptionItem term="Group">{a.group}</DescriptionItem>
             <DescriptionItem term="Game System">{a.gameSystem}</DescriptionItem>
             <DescriptionItem term="Rules Edition">{a.rulesEdition}</DescriptionItem>
-            <DescriptionItem term="Special Category">{a.specialCategory}</DescriptionItem>
+            <DescriptionItem term="Special Category">
+                  {a.specialCategory.toLowerCase() === "none" ? "None" : a.specialCategory}
+                </DescriptionItem>
           </DescriptionList>
         </section>
 

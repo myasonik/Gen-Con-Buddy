@@ -50,7 +50,7 @@ export function makeEventPool(events: Event[]): HttpHandler {
 export function makeStaffPickHandler(events: Event[]): HttpHandler {
   return http.get("/api/events/search", ({ request }) => {
     const url = new URL(request.url);
-    if (url.searchParams.get("group") !== null) {
+    if (url.searchParams.get("gameId") !== null) {
       const response: EventSearchResponse = {
         data: events,
         meta: { total: events.length },

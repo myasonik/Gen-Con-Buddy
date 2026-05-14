@@ -18,6 +18,46 @@
   padding: var(--space-4);
 }
 
+.hero {
+  /* transparent wrapper in base case — no visual change */
+}
+
+.card[data-staff-pick] .hero {
+  background-color: var(--color-surface-page);
+  background-image:
+    linear-gradient(
+      oklch(from var(--color-surface-page) l c h / 0.82),
+      oklch(from var(--color-surface-page) l c h / 0.82)
+    ),
+    url('/wildhavens-bg.webp');
+  background-size: cover;
+  background-position: center 60%;
+  /* bleed to full viewport width */
+  margin-top: calc(-1 * var(--space-4));
+  margin-inline: calc(50% - 50vw);
+  margin-bottom: var(--space-4);
+  padding-top: var(--space-4);
+  padding-inline: calc(50vw - 50%);
+}
+
+:global([data-theme="dark"]) .card[data-staff-pick] .hero {
+  background-image:
+    linear-gradient(
+      oklch(from var(--color-surface-page) l c h / 0.85),
+      oklch(from var(--color-surface-page) l c h / 0.85)
+    ),
+    url('/wildhavens-bg.webp');
+}
+
+/* title margin already handled by hero's own margin-bottom */
+.card[data-staff-pick] .hero .title {
+  margin-bottom: 0;
+}
+
+.staffPickLabel {
+  margin: 0 0 var(--space-2) 0;
+}
+
 .gameIdBadge {
   margin: 0 0 var(--space-2) 0;
   font-family: var(--font-mono);

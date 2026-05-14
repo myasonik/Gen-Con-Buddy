@@ -47,15 +47,24 @@ function renderCallout(): ReturnType<typeof render> {
 
 test("renders nothing while fetching", async () => {
   renderCallout();
-  expect(screen.queryByText("Staff Picks")).not.toBeInTheDocument();
+  expect(screen.queryByText("Looks like that quest hit a dead end.")).not.toBeInTheDocument();
 });
 
-test("renders panel heading and controls when events load", async () => {
+test("renders preamble copy when events load", async () => {
   const events = WILDHAVENS_GAME_IDS.map((gameId) => makeEvent({ gameId }));
   server.use(makeStaffPickHandler(events));
   renderCallout();
-  await screen.findByText("Staff Picks");
+  await screen.findByText("Looks like that quest hit a dead end.");
+  expect(screen.getByText(/If you're still looking for your next adventure/)).toBeInTheDocument();
+});
+
+test("renders panel controls when events load", async () => {
+  const events = WILDHAVENS_GAME_IDS.map((gameId) => makeEvent({ gameId }));
+  server.use(makeStaffPickHandler(events));
+  renderCallout();
+  await screen.findByText("Looks like that quest hit a dead end.");
   expect(screen.getByRole("button", { name: /visibility/i })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: /format/i })).toBeInTheDocument();
   expect(screen.getByRole("button", { name: /sort/i })).toBeInTheDocument();
 });
 
@@ -63,7 +72,7 @@ test("renders a row for each fetched event", async () => {
   const events = WILDHAVENS_GAME_IDS.map((gameId) => makeEvent({ gameId }));
   server.use(makeStaffPickHandler(events));
   renderCallout();
-  await screen.findByText("Staff Picks");
+  await screen.findByText("Looks like that quest hit a dead end.");
   const rows = screen.getAllByRole("row");
   // 1 header row + 7 data rows
   expect(rows).toHaveLength(8);
@@ -73,8 +82,7 @@ test("renders nothing when fetch returns 0 events", async () => {
   server.use(makeStaffPickHandler([]));
   renderCallout();
   await waitFor(() => {
-    expect(screen.queryByText("Staff Picks")).not.toBeInTheDocument();
-    expect(screen.queryByText("Our picks for best new publisher at Gen Con 2026")).not.toBeInTheDocument();
+    expect(screen.queryByText("Looks like that quest hit a dead end.")).not.toBeInTheDocument();
   });
 });
 
@@ -84,7 +92,6 @@ test("renders nothing when fetch errors", async () => {
   );
   renderCallout();
   await waitFor(() => {
-    expect(screen.queryByText("Staff Picks")).not.toBeInTheDocument();
-    expect(screen.queryByText("Our picks for best new publisher at Gen Con 2026")).not.toBeInTheDocument();
+    expect(screen.queryByText("Looks like that quest hit a dead end.")).not.toBeInTheDocument();
   });
 });

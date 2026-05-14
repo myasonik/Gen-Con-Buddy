@@ -2,9 +2,8 @@ import { describe, expect, expectTypeOf, it } from "vitest";
 import {
   WILDHAVENS_GAME_IDS,
   STAFF_PICK_IDS,
-  STAFF_PICK_GROUP,
-  STAFF_PICK_HEADING,
-  STAFF_PICK_SUBTEXT,
+  STAFF_PICK_PREAMBLE,
+  STAFF_PICK_PREAMBLE_DETAIL,
 } from "./staffPicks";
 
 describe("WILDHAVENS_GAME_IDS", () => {
@@ -45,18 +44,13 @@ describe("STAFF_PICK_IDS", () => {
 });
 
 describe("display string constants", () => {
-  it("STAFF_PICK_GROUP is a non-empty string", () => {
-    expectTypeOf(STAFF_PICK_GROUP).toBeString();
-    expect(STAFF_PICK_GROUP.length).toBeGreaterThan(0);
+  it("STAFF_PICK_PREAMBLE is a non-empty string", () => {
+    expectTypeOf(STAFF_PICK_PREAMBLE).toBeString();
+    expect(STAFF_PICK_PREAMBLE.length).toBeGreaterThan(0);
   });
 
-  it("STAFF_PICK_HEADING is a non-empty string", () => {
-    expectTypeOf(STAFF_PICK_HEADING).toBeString();
-    expect(STAFF_PICK_HEADING.length).toBeGreaterThan(0);
-  });
-
-  it("STAFF_PICK_SUBTEXT is a non-empty string", () => {
-    expectTypeOf(STAFF_PICK_SUBTEXT).toBeString();
-    expect(STAFF_PICK_SUBTEXT.length).toBeGreaterThan(0);
+  it("STAFF_PICK_PREAMBLE_DETAIL is a non-empty string", () => {
+    expectTypeOf(STAFF_PICK_PREAMBLE_DETAIL).toBeString();
+    expect(STAFF_PICK_PREAMBLE_DETAIL.length).toBeGreaterThan(0);
   });
 });

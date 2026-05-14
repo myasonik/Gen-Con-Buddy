@@ -10,7 +10,6 @@ import styles from "./MobileNav.module.css";
 
 interface MobileNavProps {
   theme: ThemePreference;
-  resolvedTheme: "light" | "dark";
   setTheme: (v: ThemePreference) => void;
 }
 
@@ -20,7 +19,7 @@ const LABELS: Record<ThemePreference, string> = {
   auto: "Auto",
 };
 
-export function MobileNav({ theme, resolvedTheme, setTheme }: MobileNavProps): React.JSX.Element {
+export function MobileNav({ theme, setTheme }: MobileNavProps): React.JSX.Element {
   const [open, setOpen] = React.useState(false);
 
   function handleThemeChange(v: ThemePreference): void {
@@ -66,7 +65,6 @@ export function MobileNav({ theme, resolvedTheme, setTheme }: MobileNavProps): R
             <hr className={styles.divider} />
             <ThemeRadioGroup
               theme={theme}
-              resolvedTheme={resolvedTheme}
               onValueChange={handleThemeChange}
             />
           </Popover.Popup>

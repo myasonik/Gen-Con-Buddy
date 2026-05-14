@@ -10,6 +10,6 @@ export const WILDHAVENS_GAME_IDS: readonly string[] = [
 
 export const STAFF_PICK_IDS: ReadonlySet<string> = new Set(WILDHAVENS_GAME_IDS);
 
-export const STAFF_PICK_GROUP = "Wildhavens";
-export const STAFF_PICK_HEADING = "Staff Picks";
-export const STAFF_PICK_SUBTEXT = "Our picks for best new publisher at Gen Con 2026";
+export const STAFF_PICK_PREAMBLE = "Looks like that quest hit a dead end.";
+export const STAFF_PICK_PREAMBLE_DETAIL =
+  "If you're still looking for your next adventure, these are some of our favorites at this year's con.";

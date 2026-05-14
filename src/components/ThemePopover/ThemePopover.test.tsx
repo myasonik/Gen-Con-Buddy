@@ -22,7 +22,6 @@ function renderPopover(
   return render(
     <ThemePopover
       theme="auto"
-      resolvedTheme="light"
       setTheme={vi.fn<(v: string) => void>()}
       {...overrides}
     />,
@@ -74,26 +73,6 @@ test("Dark radio is checked when theme is 'dark'", async () => {
   expect(screen.getByRole("radio", { name: /Dark/i })).toBeChecked();
 });
 
-test("shows 'Currently: Dark' note when theme is auto and resolvedTheme is dark", async () => {
-  const user = userEvent.setup();
-  renderPopover({ theme: "auto", resolvedTheme: "dark" });
-  await user.click(screen.getByRole("button", { name: "Theme: Auto" }));
-  expect(screen.getByText("Currently: Dark")).toBeInTheDocument();
-});
-
-test("shows 'Currently: Light' note when theme is auto and resolvedTheme is light", async () => {
-  const user = userEvent.setup();
-  renderPopover({ theme: "auto", resolvedTheme: "light" });
-  await user.click(screen.getByRole("button", { name: "Theme: Auto" }));
-  expect(screen.getByText("Currently: Light")).toBeInTheDocument();
-});
-
-test("does not show 'Currently' note when theme is explicit", async () => {
-  const user = userEvent.setup();
-  renderPopover({ theme: "dark", resolvedTheme: "dark" });
-  await user.click(screen.getByRole("button", { name: "Theme: Dark" }));
-  expect(screen.queryByText(/Currently:/)).not.toBeInTheDocument();
-});
 
 test("selecting Dark calls setTheme with 'dark'", async () => {
   const user = userEvent.setup();

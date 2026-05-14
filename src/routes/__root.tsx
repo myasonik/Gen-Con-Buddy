@@ -23,7 +23,7 @@ function PageViewTracker(): null {
 }
 
 function AppShell(): React.JSX.Element {
-  const { theme, resolvedTheme, setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
 
   return (
     <div className={indexStyles.page}>
@@ -51,10 +51,10 @@ function AppShell(): React.JSX.Element {
           >
             Changelog
           </Link>
-          <ThemePopover theme={theme} resolvedTheme={resolvedTheme} setTheme={setTheme} />
+          <ThemePopover theme={theme} setTheme={setTheme} />
         </nav>
         <div className={rootStyles.mobileNav}>
-          <MobileNav theme={theme} resolvedTheme={resolvedTheme} setTheme={setTheme} />
+          <MobileNav theme={theme} setTheme={setTheme} />
         </div>
       </header>
       <Outlet />

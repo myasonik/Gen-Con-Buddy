@@ -51,7 +51,7 @@ export const COLUMNS: ColumnDef<Event>[] = [
     cell: ({ row, linkState }) => {
       const { gameId, title } = row.original.attributes;
       return (
-        <span>
+        <span className={styles.titleCell}>
           {STAFF_PICK_IDS.has(gameId) && (
             <Chip tone="accent" size="sm">
               Staff Pick
