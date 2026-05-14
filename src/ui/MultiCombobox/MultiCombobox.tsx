@@ -1,6 +1,7 @@
 import React, { useState, useId, useRef } from "react";
 import { ChevronDown, Check } from "lucide-react";
 import { Combobox } from "@base-ui/react/combobox";
+import { parseCSV } from "../../utils/parseCSV";
 import { Chip } from "../Chip/Chip";
 import styles from "./MultiCombobox.module.css";
 
@@ -54,7 +55,7 @@ export function MultiCombobox({
   const [filterText, setFilterText] = useState("");
   const filter = Combobox.useFilter();
 
-  const selectedValues = value ? value.split(",") : [];
+  const selectedValues = parseCSV(value);
 
   const defaultFilter = (option: MultiComboboxOption, text: string): boolean =>
     filter.contains(option.value, text) || filter.contains(option.label, text);

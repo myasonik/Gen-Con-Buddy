@@ -332,3 +332,16 @@ test("two mounted MultiCombobox instances have distinct input ids", () => {
   expect(inputs[1].id).not.toBe("");
   expect(inputs[0].id).not.toBe(inputs[1].id);
 });
+
+test("trailing comma in value does not render an empty chip", () => {
+  render(
+    <MultiCombobox
+      label="Test"
+      value="RPG,"
+      onValueChange={() => {}}
+      options={[{ value: "RPG", label: "Roleplaying Game" }]}
+    />,
+  );
+  expect(screen.getAllByRole("button", { name: /^Remove/ })).toHaveLength(1);
+  expect(screen.getByRole("button", { name: "Remove Roleplaying Game" })).toBeInTheDocument();
+});
