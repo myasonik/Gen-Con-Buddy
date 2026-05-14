@@ -1,4 +1,5 @@
 import type { Event, SearchFormValues } from "./types";
+import { parseCSV } from "./parseCSV";
 import { DAY_DATES } from "./searchParams";
 
 const timeFormatter = new Intl.DateTimeFormat("en-US", {
@@ -23,7 +24,7 @@ function extractTimeET(dateStr: string): string {
 }
 
 export function filterChangelogEvents(events: Event[], filter: SearchFormValues): Event[] {
-  const eventTypes = filter.eventType ? filter.eventType.split(",").filter(Boolean) : [];
+  const eventTypes = parseCSV(filter.eventType);
   const dayList = filter.days ? filter.days.split(",").filter((d) => d in DAY_DATES) : [];
   const hasTimeFilter = Boolean(filter.timeStart || filter.timeEnd);
 

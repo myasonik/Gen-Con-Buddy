@@ -195,3 +195,9 @@ test("two mounted EventTypeSelect instances have distinct input ids", () => {
   expect(inputs[1].id).not.toBe("");
   expect(inputs[0].id).not.toBe(inputs[1].id);
 });
+
+test("trailing comma in value renders only one chip", () => {
+  render(<EventTypeSelect value="RPG," onValueChange={() => {}} />);
+  expect(screen.getAllByRole("button", { name: /^Remove/ })).toHaveLength(1);
+  expect(screen.getByRole("button", { name: "Remove RPG" })).toBeInTheDocument();
+});

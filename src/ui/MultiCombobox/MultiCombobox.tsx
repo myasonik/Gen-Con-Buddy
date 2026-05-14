@@ -1,6 +1,7 @@
 import React, { useState, useRef, useId } from "react";
 import { ChevronDown, Check, X } from "lucide-react";
 import { Combobox } from "@base-ui/react/combobox";
+import { parseCSV } from "../../utils/parseCSV";
 import styles from "./MultiCombobox.module.css";
 
 export interface MultiComboboxOption {
@@ -55,7 +56,7 @@ export function MultiCombobox({
   // Set on ChipRemove pointerdown; cleared on the next Input focus event.
   const suppressFocusOpenRef = useRef(false);
 
-  const selectedValues = value ? value.split(",") : [];
+  const selectedValues = parseCSV(value);
 
   const defaultFilter = (option: MultiComboboxOption, text: string): boolean =>
     filter.contains(option.value, text) || filter.contains(option.label, text);

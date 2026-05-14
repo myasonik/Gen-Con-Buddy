@@ -1,4 +1,5 @@
 import type React from "react";
+import { parseCSV } from "../../utils/parseCSV";
 import { AGE_GROUPS, CATEGORY, EVENT_TYPES, EXP, REGISTRATION, YES_NO } from "../../utils/enums";
 import type { SearchParams } from "../../utils/types";
 import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
@@ -256,7 +257,7 @@ export function getActiveFilters(params: SearchParams): ActiveFilter[] {
           remove: removeKey(def.key),
         });
       } else if (def.type === "multi") {
-        for (const code of (val as string).split(",").filter(Boolean)) {
+        for (const code of parseCSV(val as string)) {
           const label = def.map?.[code] ?? code;
           const k = def.key;
           const chipIcon = def.iconMap ? def.iconMap[code] : def.icon;

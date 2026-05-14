@@ -1,3 +1,4 @@
+import { parseCSV } from "./parseCSV";
 import type { SearchFormValues, SearchParams } from "./types";
 
 // Update this each year once new event data is loaded. Gen Con always runs Wed–Sun in late July/early August.
@@ -56,10 +57,7 @@ export function daysAndTimeToStartDateTime(
 }
 
 export function decodeDays(str?: string): string[] {
-  if (!str) {
-    return [];
-  }
-  return str.split(",");
+  return parseCSV(str);
 }
 
 export function encodeDays(days: string[]): string {

@@ -50,18 +50,6 @@
     url("/wildhavens-bg.webp");
 }
 
-.staffPickLabel {
-  margin: 0 0 var(--space-2) 0;
-}
-
-.gameIdBadge {
-  margin: 0 0 var(--space-2) 0;
-  font-family: var(--font-mono);
-  font-size: var(--text-base);
-  color: var(--color-ink-muted);
-  font-feature-settings: "tnum" 1;
-}
-
 .title {
   font-family: var(--font-display);
   font-size: clamp(2rem, 4vw, 2.5rem);
@@ -80,6 +68,18 @@
 /* title margin already handled by hero's own margin-bottom */
 .card[data-staff-pick] .hero .title {
   margin-bottom: 0;
+}
+
+.staffPickLabel {
+  margin: 0 0 var(--space-2) 0;
+}
+
+.gameIdBadge {
+  margin: 0 0 var(--space-2) 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  color: var(--color-ink-muted);
+  font-feature-settings: "tnum" 1;
 }
 
 .section {

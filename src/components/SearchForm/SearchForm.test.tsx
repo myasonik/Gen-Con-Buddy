@@ -524,3 +524,9 @@ test("search_submitted includes timeStart and timeEnd in active_advanced_filters
     }),
   );
 });
+
+test("trailing comma in eventType value renders only one chip", () => {
+  renderSearchForm({ eventType: "RPG," });
+  expect(screen.getAllByRole("button", { name: /^Remove/ })).toHaveLength(1);
+  expect(screen.getByRole("button", { name: "Remove RPG" })).toBeInTheDocument();
+});
