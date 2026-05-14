@@ -15,6 +15,7 @@
 These errors are on the branch before any new changes and block the commit hook. Fix them all in one pass.
 
 **Files:**
+
 - Modify: `src/components/ThemePopover/ThemePopover.tsx:4-5`
 - Modify: `src/components/EventTable/columns.test.tsx:20`
 - Modify: `src/components/ThemePopover/ThemeRadioGroup.test.tsx:11`
@@ -24,11 +25,14 @@ These errors are on the branch before any new changes and block the commit hook.
 - [ ] **Fix duplicate lucide-react imports in ThemePopover.tsx**
 
 Current lines 4–5:
+
 ```tsx
 import { Sun } from "lucide-react";
 import { Moon } from "lucide-react";
 ```
+
 Replace with:
+
 ```tsx
 import { Sun, Moon } from "lucide-react";
 ```
@@ -36,10 +40,13 @@ import { Sun, Moon } from "lucide-react";
 - [ ] **Fix Array destructuring in columns.test.tsx**
 
 Current line 20:
+
 ```ts
 const STAFF_PICK_GAME_ID = Array.from(STAFF_PICK_IDS)[0];
 ```
+
 Replace with:
+
 ```ts
 const [STAFF_PICK_GAME_ID] = Array.from(STAFF_PICK_IDS);
 ```
@@ -47,15 +54,23 @@ const [STAFF_PICK_GAME_ID] = Array.from(STAFF_PICK_IDS);
 - [ ] **Fix vi.fn() missing type parameter in ThemeRadioGroup.test.tsx**
 
 Current line 11:
+
 ```tsx
 <ThemeRadioGroup theme="auto" onValueChange={vi.fn()} {...overrides} />
 ```
+
 Replace with:
+
 ```tsx
-<ThemeRadioGroup theme="auto" onValueChange={vi.fn<(v: ThemePreference) => void>()} {...overrides} />
+<ThemeRadioGroup
+  theme="auto"
+  onValueChange={vi.fn<(v: ThemePreference) => void>()}
+  {...overrides}
+/>
 ```
 
 Add the import for `ThemePreference` at the top of the file (after existing imports):
+
 ```ts
 import type { ThemePreference } from "../../hooks/useTheme";
 ```
@@ -63,19 +78,25 @@ import type { ThemePreference } from "../../hooks/useTheme";
 - [ ] **Fix Array destructuring in EventDetail.test.tsx (two sites)**
 
 Line 425:
+
 ```ts
 const gameId = WILDHAVENS_GAME_IDS[0];
 ```
+
 Replace with:
+
 ```ts
 const [gameId] = WILDHAVENS_GAME_IDS;
 ```
 
 Line 460 (same pattern, same fix):
+
 ```ts
 const gameId = WILDHAVENS_GAME_IDS[0];
 ```
+
 Replace with:
+
 ```ts
 const [gameId] = WILDHAVENS_GAME_IDS;
 ```
@@ -85,6 +106,7 @@ const [gameId] = WILDHAVENS_GAME_IDS;
 ```bash
 npm run lint
 ```
+
 Expected: no errors, exit 0.
 
 - [ ] **Commit**
@@ -104,30 +126,44 @@ git commit -m "fix: resolve pre-existing lint errors (duplicate import, destruct
 The test at `SearchResults.test.tsx:711` expects "Staff Picks" text from `StaffPickCallout`, but two things are broken: (1) the MSW handler uses `group` param to detect the staff-pick query when the actual query uses `gameId`, so the mock returns empty data; (2) `StaffPickCallout` never renders any "Staff Picks" text for the test to find.
 
 **Files:**
+
 - Modify: `src/components/SearchResults/SearchResults.test.tsx:700-706`
 - Modify: `src/components/StaffPickCallout/StaffPickCallout.tsx`
 
 - [ ] **Fix the MSW handler param check in SearchResults.test.tsx**
 
 Current lines 700–706:
+
 ```tsx
 server.use(
   http.get("/api/events/search", ({ request }) => {
     const url = new URL(request.url);
     const response: EventSearchResponse = url.searchParams.has("group")
-      ? { data: staffPickEvents, meta: { total: staffPickEvents.length }, links: { self: "" }, error: null }
+      ? {
+          data: staffPickEvents,
+          meta: { total: staffPickEvents.length },
+          links: { self: "" },
+          error: null,
+        }
       : { data: [], meta: { total: 0 }, links: { self: "" }, error: null };
     return HttpResponse.json(response);
   }),
 );
 ```
+
 Replace `"group"` with `"gameId"`:
+
 ```tsx
 server.use(
   http.get("/api/events/search", ({ request }) => {
     const url = new URL(request.url);
     const response: EventSearchResponse = url.searchParams.has("gameId")
-      ? { data: staffPickEvents, meta: { total: staffPickEvents.length }, links: { self: "" }, error: null }
+      ? {
+          data: staffPickEvents,
+          meta: { total: staffPickEvents.length },
+          links: { self: "" },
+          error: null,
+        }
       : { data: [], meta: { total: 0 }, links: { self: "" }, error: null };
     return HttpResponse.json(response);
   }),
@@ -143,7 +179,9 @@ return (
   <div className={styles.panel}>
     <p className={styles.preamble}>{STAFF_PICK_PREAMBLE}</p>
 ```
+
 Replace with:
+
 ```tsx
 return (
   <div className={styles.panel}>
@@ -152,6 +190,7 @@ return (
 ```
 
 Add a `.heading` rule to `StaffPickCallout.module.css`:
+
 ```css
 .heading {
   font-size: var(--text-lg);
@@ -166,6 +205,7 @@ Add a `.heading` rule to `StaffPickCallout.module.css`:
 ```bash
 npx vitest run src/components/SearchResults/SearchResults.test.tsx
 ```
+
 Expected: all tests pass including the two "StaffPickCallout" tests at lines 696 and 714.
 
 - [ ] **Commit**
@@ -184,6 +224,7 @@ git commit -m "fix: repair failing StaffPickCallout test and add Staff Picks hea
 The image and overlay currently repeat on every `tr[data-staff-pick]`. Move them to `.tableWrapper` so consecutive pick rows reveal adjacent parts of one continuous image.
 
 **Files:**
+
 - Modify: `src/components/EventTable/EventTable.module.css`
 
 - [ ] **Add background to .tableWrapper**
@@ -199,7 +240,7 @@ Find the `.tableWrapper` rule (currently just `overflow-x: scroll; margin-top: -
       oklch(from var(--color-surface-page) l c h / 0.82),
       oklch(from var(--color-surface-page) l c h / 0.82)
     ),
-    url('/wildhavens-bg.webp');
+    url("/wildhavens-bg.webp");
   background-size: cover;
   background-position: center 60%;
 }
@@ -208,6 +249,7 @@ Find the `.tableWrapper` rule (currently just `overflow-x: scroll; margin-top: -
 - [ ] **Strip background-image from tr[data-staff-pick]**
 
 The current rule for `tr[data-staff-pick]` is:
+
 ```css
 .tableWrapper table tbody tr[data-staff-pick],
 .tableWrapper table tbody tr[data-staff-pick]:nth-child(odd),
@@ -218,12 +260,14 @@ The current rule for `tr[data-staff-pick]` is:
       oklch(from var(--color-surface-page) l c h / 0.82),
       oklch(from var(--color-surface-page) l c h / 0.82)
     ),
-    url('/wildhavens-bg.webp');
+    url("/wildhavens-bg.webp");
   background-size: cover;
   background-position: center 60%;
 }
 ```
+
 Replace entirely with (transparent so the parent image shows through):
+
 ```css
 .tableWrapper table tbody tr[data-staff-pick],
 .tableWrapper table tbody tr[data-staff-pick]:nth-child(odd),
@@ -237,6 +281,7 @@ Replace entirely with (transparent so the parent image shows through):
 The existing dark-mode block repeats the `background-image` on `tr[data-staff-pick]`. Replace it with the background on `.tableWrapper` instead:
 
 Find and replace the entire existing dark-mode block:
+
 ```css
 :global([data-theme="dark"]) .tableWrapper table tbody tr[data-staff-pick],
 :global([data-theme="dark"]) .tableWrapper table tbody tr[data-staff-pick]:nth-child(odd),
@@ -247,10 +292,12 @@ Find and replace the entire existing dark-mode block:
       oklch(from var(--color-surface-page) l c h / 0.82),
       oklch(from var(--color-surface-page) l c h / 0.82)
     ),
-    url('/wildhavens-bg.webp');
+    url("/wildhavens-bg.webp");
 }
 ```
+
 Replace with:
+
 ```css
 :global([data-theme="dark"]) .tableWrapper {
   background-image:
@@ -258,7 +305,7 @@ Replace with:
       oklch(from var(--color-surface-page) l c h / 0.82),
       oklch(from var(--color-surface-page) l c h / 0.82)
     ),
-    url('/wildhavens-bg.webp');
+    url("/wildhavens-bg.webp");
 }
 ```
 
@@ -267,6 +314,7 @@ Replace with:
 ```bash
 npx vitest run src/components/EventTable/
 ```
+
 Expected: all pass. (No new tests for a CSS-only change — existing tests exercise `data-staff-pick` attribute presence.)
 
 - [ ] **Commit**
@@ -283,11 +331,13 @@ git commit -m "feat: stretch staff pick bg image across consecutive desktop rows
 Same pattern as Task 3 but for `EventListMobile.module.css`. Non-pick items currently rely on transparent backgrounds; they need explicit `background-color` to cover the list's image.
 
 **Files:**
+
 - Modify: `src/components/EventTable/EventListMobile.module.css`
 
 - [ ] **Add background to .list**
 
 Current `.list` rule:
+
 ```css
 .list {
   list-style: none;
@@ -296,7 +346,9 @@ Current `.list` rule:
   border-top: var(--border-width) solid var(--color-ink-divider);
 }
 ```
+
 Replace with:
+
 ```css
 .list {
   list-style: none;
@@ -308,13 +360,14 @@ Replace with:
       oklch(from var(--color-surface-page) l c h / 0.82),
       oklch(from var(--color-surface-page) l c h / 0.82)
     ),
-    url('/wildhavens-bg.webp');
+    url("/wildhavens-bg.webp");
   background-size: cover;
   background-position: center 60%;
 }
 ```
 
 Add a dark-mode rule immediately after `.list`:
+
 ```css
 :global([data-theme="dark"]) .list {
   background-image:
@@ -322,19 +375,22 @@ Add a dark-mode rule immediately after `.list`:
       oklch(from var(--color-surface-page) l c h / 0.82),
       oklch(from var(--color-surface-page) l c h / 0.82)
     ),
-    url('/wildhavens-bg.webp');
+    url("/wildhavens-bg.webp");
 }
 ```
 
 - [ ] **Give non-pick .item an explicit base background**
 
 Current `.item` rule:
+
 ```css
 .item {
   border-bottom: var(--border-width) solid var(--color-ink-divider);
 }
 ```
+
 Replace with:
+
 ```css
 .item {
   border-bottom: var(--border-width) solid var(--color-ink-divider);
@@ -347,18 +403,22 @@ Replace with:
 - [ ] **Make staff-pick items transparent**
 
 Current `.item[data-staff-pick]` rule:
+
 ```css
 .item[data-staff-pick] {
   background-color: var(--color-accent-surface);
 }
 ```
+
 Replace with:
+
 ```css
 .item[data-staff-pick],
 .item[data-staff-pick]:nth-child(even) {
   background-color: transparent;
 }
 ```
+
 (The `:nth-child(even)` override is needed so the alternating row rule doesn't win for even-positioned pick items.)
 
 - [ ] **Run tests**
@@ -366,6 +426,7 @@ Replace with:
 ```bash
 npx vitest run src/components/EventTable/EventListMobile
 ```
+
 Expected: all pass.
 
 - [ ] **Commit**
@@ -420,6 +481,7 @@ npm run dev
 - [ ] **Commit any background-size tuning done in this task**
 
 If you changed `background-size` on `.list` from `cover` to `100% auto`:
+
 ```bash
 git add src/components/EventTable/EventListMobile.module.css
 git commit -m "fix: use background-size 100% auto on mobile list to prevent over-zoom"

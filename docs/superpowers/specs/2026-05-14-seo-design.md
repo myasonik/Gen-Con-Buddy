@@ -26,13 +26,13 @@ The root route sets sitewide defaults (og:type, og:image, twitter:card). Child r
 
 ### Per-Route Meta
 
-| Route           | title                                                        | description                                                                                      |
-| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
-| root (default)  | `Gen Con Buddy`                                              | `Fast, deeply filterable event search for Gen Con. Search across event type, time, location, cost, and more.` |
-| `/`             | `Gen Con Buddy`                                              | _(same as root — root default applies)_                                                          |
-| `/changelog`    | `Changelog \| Gen Con Buddy`                                 | `Track last-minute changes to the Gen Con event schedule — additions, updates, and removals.`   |
-| `/about`        | `About \| Gen Con Buddy`                                     | `About Gen Con Buddy — a fast event search tool built for Gen Con attendees.`                   |
-| `/event/$id`    | `{event.title} ({event.gameId}) \| Gen Con Buddy`            | `{eventType} event at Gen Con. GM: {gm}. {startDate}, {startTime}. {location}.`                |
+| Route          | title                                             | description                                                                                                   |
+| -------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| root (default) | `Gen Con Buddy`                                   | `Fast, deeply filterable event search for Gen Con. Search across event type, time, location, cost, and more.` |
+| `/`            | `Gen Con Buddy`                                   | _(same as root — root default applies)_                                                                       |
+| `/changelog`   | `Changelog \| Gen Con Buddy`                      | `Track last-minute changes to the Gen Con event schedule — additions, updates, and removals.`                 |
+| `/about`       | `About \| Gen Con Buddy`                          | `About Gen Con Buddy — a fast event search tool built for Gen Con attendees.`                                 |
+| `/event/$id`   | `{event.title} ({event.gameId}) \| Gen Con Buddy` | `{eventType} event at Gen Con. GM: {gm}. {startDate}, {startTime}. {location}.`                               |
 
 For `/event/$id`, the `head()` function receives `loaderData`. This requires the event detail loader to return the event object (currently it returns nothing). Change the loader to `return` the result of `ensureQueryData` so `loaderData` is typed and available in `head()`.
 
@@ -56,9 +56,15 @@ Each route also sets `og:title` and `og:description` matching its `<title>` and 
 Add a full set of static meta tags to `index.html` as the always-visible fallback for crawlers that don't execute JavaScript (all social platforms). These always show homepage values.
 
 ```html
-<meta name="description" content="Fast, deeply filterable event search for Gen Con. Search across event type, time, location, cost, and more." />
+<meta
+  name="description"
+  content="Fast, deeply filterable event search for Gen Con. Search across event type, time, location, cost, and more."
+/>
 <meta property="og:title" content="Gen Con Buddy" />
-<meta property="og:description" content="Fast, deeply filterable event search for Gen Con. Search across event type, time, location, cost, and more." />
+<meta
+  property="og:description"
+  content="Fast, deeply filterable event search for Gen Con. Search across event type, time, location, cost, and more."
+/>
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://gcb.quest/" />
 <meta property="og:image" content="https://gcb.quest/og-image.png" />
@@ -67,7 +73,10 @@ Add a full set of static meta tags to `index.html` as the always-visible fallbac
 <meta property="og:site_name" content="Gen Con Buddy" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Gen Con Buddy" />
-<meta name="twitter:description" content="Fast, deeply filterable event search for Gen Con. Search across event type, time, location, cost, and more." />
+<meta
+  name="twitter:description"
+  content="Fast, deeply filterable event search for Gen Con. Search across event type, time, location, cost, and more."
+/>
 ```
 
 `<HeadContent />` dynamically overwrites these for Google on navigation. The static fallbacks remain the source of truth for all social crawlers.
@@ -145,7 +154,7 @@ On `/event/$id` only. Injected via TanStack Router `head()` as a `scripts` entry
     "@type": "Offer",
     "price": "{event.cost}",
     "priceCurrency": "USD",
-    "availability": "https://schema.org/InStock"  // SoldOut when ticketsAvailable === 0
+    "availability": "https://schema.org/InStock" // SoldOut when ticketsAvailable === 0
   }
 }
 ```

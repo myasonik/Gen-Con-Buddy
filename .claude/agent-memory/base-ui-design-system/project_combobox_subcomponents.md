@@ -1,18 +1,27 @@
 ---
 name: Base UI Combobox sub-component coverage
-description: Reminders about which Combobox parts the codebase tends to skip and what they buy you
+description: Which Combobox parts MultiCombobox uses, which it skips, and the key FloatingFocusManager trap to avoid
 type: project
 ---
 
-`@base-ui/react/combobox` exports a full set of parts. The `MultiCombobox` primitive in `src/ui/MultiCombobox/` currently uses only `Root`, `InputGroup`, `Input`, `Trigger`, `List`, `Item`, `ItemIndicator`, `useFilter`. It hand-rolls everything else.
+`MultiCombobox` in `src/ui/MultiCombobox/` uses: `Root`, `InputGroup`, `Input`, `Trigger`, `Chips`, `Chip`, `ChipRemove`, `Portal`, `Positioner`, `List`, `Item`, `ItemIndicator`, `Status`, `useFilter`.
 
-**Why:** Each skipped part is doing real work that the wrapper now duplicates (often less correctly):
+**Intentionally NOT used — `Combobox.Popup`**
 
-- `Combobox.Portal` + `Combobox.Positioner` + `Combobox.Popup` — anchored positioning, viewport collision, `aria-hidden` on the rest of the page, scroll/resize tracking. Without them, `position: absolute` on `.list` will clip inside any overflow ancestor (the Drawer already overflows in `SearchForm`).
-- `Combobox.Chips` + `Combobox.Chip` + `Combobox.ChipRemove` — keyboard nav between chips and Backspace-to-remove are wired up automatically. The current wrapper re-implements Backspace in `onKeyDown` and skips chip-to-chip keyboard nav entirely.
-- `Combobox.Label` — automatic `id`/`for` association. Replaces the `useId()` + `<label htmlFor>` boilerplate.
-- `Combobox.Empty` and `Combobox.Status` — politely announce "no matches" / loading state. The current "Loading…" placeholder text is silent to AT.
-- `Combobox.Clear` — accessible "clear all" button.
-- Open-state management on `Root` is internal; passing `open`/`onOpenChange` plus an outer `onFocus`/`onBlur` is fighting the library, not using it.
+`Combobox.Popup` internally instantiates `FloatingFocusManager` (from floating-ui-react). For a non-modal combobox with a typeable input (`isUntrappedTypeableCombobox = true`), FloatingFocusManager calls `markOthers()` with `ariaHidden: true`, which applies `aria-hidden="true"` to every sibling element NOT in its `insideElements` list. The `insideElements` list only contains the floating popup and the Input element — NOT the chips toolbar (sibling of Input) or any ancestor dialog content.
 
-**How to apply:** When reviewing or extending `MultiCombobox` (or a future single-select Combobox), prefer adopting the missing sub-components in this order: Portal/Positioner/Popup (fixes drawer clipping today), then Chips/Chip/ChipRemove (removes manual focus + Backspace code), then Label/Empty/Status (a11y wins), then drop the manual `open` state entirely.
+**Why this matters:** Using `Combobox.Popup` aria-hides the `Combobox.Chips` toolbar whenever the dropdown opens. Chip remove buttons become inaccessible to AT. If the combobox is inside a dialog, the dialog's own buttons (e.g. "Apply Filters") also become aria-hidden.
+
+**Current approach:** Use `{open && <Combobox.Portal>}` with a plain `<div className={styles.popup}>` (instead of `Combobox.Popup`) to avoid FloatingFocusManager entirely. Open/close is managed by controlled `open` state: set in `Combobox.Input`'s `onFocus`, cleared in root `onBlur` when focus leaves the component, and synced with Base UI via `onOpenChange`.
+
+**Still hand-rolled:**
+
+- Manual `open` state + `onFocus`/`onBlur` — needed because Tab-to-open requires controlled state; Base UI's internal open management doesn't expose a "open on input focus" hook cleanly.
+- Backspace-to-remove-last-chip in `Input.onKeyDown` — `comboboxChipsContext` (which Base UI uses internally for Backspace) is only available to descendants of `Combobox.Chips`, not to `Combobox.Input` (a sibling). Base UI's built-in Backspace handler can't reach the chip context from the input.
+- `suppressFocusOpenRef` — prevents `Combobox.ChipRemove`'s programmatic `input.focus()` (called after chip removal) from reopening the dropdown.
+
+**Still not used:**
+
+- `Combobox.Label` — replaced by `useId()` + `<label id>` + `aria-labelledby` on Input. (`Combobox.Input` ignores an `id` prop — it generates its own via `useBaseUiId()`. Use `aria-labelledby` instead.)
+- `Combobox.Empty` — replaced by a manual `{filteredOptions.length === 0 && <div>No results</div>}` check.
+- `Combobox.Clear` — not needed in this UI.

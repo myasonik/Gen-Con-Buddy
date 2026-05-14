@@ -12,30 +12,31 @@
 
 ## File Map
 
-| Status | Path | Purpose |
-|--------|------|---------|
-| Create | `src/utils/staffPicks.ts` | IDs, lookup Set, and display string constants |
-| Create | `src/utils/staffPicks.test.ts` | Unit tests for all constants |
-| Modify | `src/components/EventTable/columns.tsx` | Badge in title cell |
-| Modify | `src/components/EventTable/columns.module.css` | `.titleCell` flex layout |
-| Modify | `src/components/EventTable/EventTable.tsx` | `data-staff-pick` on `<tr>` |
-| Modify | `src/components/EventTable/EventTable.module.css` | Accent row background |
-| Modify | `src/components/EventTable/EventTable.test.tsx` | Badge and row-attribute tests |
-| Modify | `src/components/EventTable/EventListMobile.tsx` | Badge + `data-staff-pick` on `<li>` |
-| Modify | `src/components/EventTable/EventListMobile.module.css` | Accent card background |
-| Modify | `src/components/EventTable/EventListMobile.test.tsx` | Badge and list-item tests |
-| Modify | `src/test/msw/handlers.ts` | Export `makeStaffPickHandler` |
-| Create | `src/components/StaffPickCallout/StaffPickCallout.tsx` | Callout panel component |
-| Create | `src/components/StaffPickCallout/StaffPickCallout.module.css` | Panel styles |
-| Create | `src/components/StaffPickCallout/StaffPickCallout.test.tsx` | Component tests |
-| Modify | `src/components/SearchResults/SearchResults.tsx` | Mount callout on empty state |
-| Modify | `src/components/SearchResults/SearchResults.test.tsx` | Callout integration tests |
+| Status | Path                                                          | Purpose                                       |
+| ------ | ------------------------------------------------------------- | --------------------------------------------- |
+| Create | `src/utils/staffPicks.ts`                                     | IDs, lookup Set, and display string constants |
+| Create | `src/utils/staffPicks.test.ts`                                | Unit tests for all constants                  |
+| Modify | `src/components/EventTable/columns.tsx`                       | Badge in title cell                           |
+| Modify | `src/components/EventTable/columns.module.css`                | `.titleCell` flex layout                      |
+| Modify | `src/components/EventTable/EventTable.tsx`                    | `data-staff-pick` on `<tr>`                   |
+| Modify | `src/components/EventTable/EventTable.module.css`             | Accent row background                         |
+| Modify | `src/components/EventTable/EventTable.test.tsx`               | Badge and row-attribute tests                 |
+| Modify | `src/components/EventTable/EventListMobile.tsx`               | Badge + `data-staff-pick` on `<li>`           |
+| Modify | `src/components/EventTable/EventListMobile.module.css`        | Accent card background                        |
+| Modify | `src/components/EventTable/EventListMobile.test.tsx`          | Badge and list-item tests                     |
+| Modify | `src/test/msw/handlers.ts`                                    | Export `makeStaffPickHandler`                 |
+| Create | `src/components/StaffPickCallout/StaffPickCallout.tsx`        | Callout panel component                       |
+| Create | `src/components/StaffPickCallout/StaffPickCallout.module.css` | Panel styles                                  |
+| Create | `src/components/StaffPickCallout/StaffPickCallout.test.tsx`   | Component tests                               |
+| Modify | `src/components/SearchResults/SearchResults.tsx`              | Mount callout on empty state                  |
+| Modify | `src/components/SearchResults/SearchResults.test.tsx`         | Callout integration tests                     |
 
 ---
 
 ## Task 1: Data Layer — `staffPicks.ts`
 
 **Files:**
+
 - Create: `src/utils/staffPicks.ts`
 - Create: `src/utils/staffPicks.test.ts`
 
@@ -156,6 +157,7 @@ git commit -m "feat: add staffPicks constants — IDs, lookup Set, and display s
 ## Task 2: Title Cell Badge in `columns.tsx`
 
 **Files:**
+
 - Modify: `src/components/EventTable/columns.tsx`
 - Modify: `src/components/EventTable/columns.module.css`
 - Modify: `src/components/EventTable/EventTable.test.tsx` (add tests)
@@ -253,6 +255,7 @@ git commit -m "feat: add Staff Pick badge to title cell for Wildhavens events"
 ## Task 3: Accent Row in `EventTable.tsx`
 
 **Files:**
+
 - Modify: `src/components/EventTable/EventTable.tsx`
 - Modify: `src/components/EventTable/EventTable.module.css`
 - Modify: `src/components/EventTable/EventTable.test.tsx` (add tests)
@@ -338,6 +341,7 @@ git commit -m "feat: accent row background for staff pick events in EventTable"
 ## Task 4: Badge and Accent Card in `EventListMobile`
 
 **Files:**
+
 - Modify: `src/components/EventTable/EventListMobile.tsx`
 - Modify: `src/components/EventTable/EventListMobile.module.css`
 - Modify: `src/components/EventTable/EventListMobile.test.tsx`
@@ -401,10 +405,16 @@ In the `events.map(...)` return block, change the `<li>` opening tag (around lin
 Inside the `<Link>`, add the badge immediately before `{isVisible("title") && ...}`:
 
 ```tsx
-{STAFF_PICK_IDS.has(a.gameId) && (
-  <Chip tone="accent" size="sm">Staff Pick</Chip>
-)}
-{isVisible("title") && <span className={styles.title}>{a.title}</span>}
+{
+  STAFF_PICK_IDS.has(a.gameId) && (
+    <Chip tone="accent" size="sm">
+      Staff Pick
+    </Chip>
+  );
+}
+{
+  isVisible("title") && <span className={styles.title}>{a.title}</span>;
+}
 ```
 
 - [ ] **Step 5: Add accent CSS to `EventListMobile.module.css`**
@@ -445,6 +455,7 @@ curl -s 'https://web-production-e0d43.up.railway.app/api/events/search?gameId=BG
 ```
 
 Expected output (example — verify the exact string):
+
 ```
 "group": "Wildhavens",
 ```
@@ -458,6 +469,7 @@ If the API returns a value that differs from `"Wildhavens"`, update `STAFF_PICK_
 ## Task 6: MSW Handler + `StaffPickCallout` Component
 
 **Files:**
+
 - Modify: `src/test/msw/handlers.ts`
 - Create: `src/components/StaffPickCallout/StaffPickCallout.tsx`
 - Create: `src/components/StaffPickCallout/StaffPickCallout.module.css`
@@ -575,9 +587,7 @@ test("renders nothing when fetch returns 0 events", async () => {
 });
 
 test("renders nothing when fetch errors", async () => {
-  server.use(
-    http.get("/api/events/search", () => HttpResponse.error()),
-  );
+  server.use(http.get("/api/events/search", () => HttpResponse.error()));
   renderCallout();
   await waitFor(() => {
     expect(screen.queryByText("Staff Picks")).not.toBeInTheDocument();
@@ -638,11 +648,7 @@ Expected: FAIL — `Cannot find module './StaffPickCallout'`
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEvents } from "../../utils/api";
-import {
-  STAFF_PICK_GROUP,
-  STAFF_PICK_HEADING,
-  STAFF_PICK_SUBTEXT,
-} from "../../utils/staffPicks";
+import { STAFF_PICK_GROUP, STAFF_PICK_HEADING, STAFF_PICK_SUBTEXT } from "../../utils/staffPicks";
 import { useSharedColumnState } from "../../hooks/useSharedColumnState";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { EventTable } from "../EventTable/EventTable";
@@ -725,6 +731,7 @@ git commit -m "feat: add StaffPickCallout panel with staff pick events table"
 ## Task 7: `SearchResults` Integration
 
 **Files:**
+
 - Modify: `src/components/SearchResults/SearchResults.tsx`
 - Modify: `src/components/SearchResults/SearchResults.test.tsx`
 
@@ -747,7 +754,12 @@ test("shows StaffPickCallout when search returns no results", async () => {
     http.get("/api/events/search", ({ request }) => {
       const url = new URL(request.url);
       const response: EventSearchResponse = url.searchParams.has("group")
-        ? { data: staffPickEvents, meta: { total: staffPickEvents.length }, links: { self: "" }, error: null }
+        ? {
+            data: staffPickEvents,
+            meta: { total: staffPickEvents.length },
+            links: { self: "" },
+            error: null,
+          }
         : { data: [], meta: { total: 0 }, links: { self: "" }, error: null };
       return HttpResponse.json(response);
     }),
@@ -783,20 +795,24 @@ import { StaffPickCallout } from "../StaffPickCallout/StaffPickCallout";
 Find the empty-state block (around line 51):
 
 ```tsx
-{data && data.data.length === 0 && (
-  <EmptyState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />
-)}
+{
+  data && data.data.length === 0 && (
+    <EmptyState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />
+  );
+}
 ```
 
 Replace it with:
 
 ```tsx
-{data && data.data.length === 0 && (
-  <>
-    <EmptyState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />
-    <StaffPickCallout />
-  </>
-)}
+{
+  data && data.data.length === 0 && (
+    <>
+      <EmptyState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />
+      <StaffPickCallout />
+    </>
+  );
+}
 ```
 
 - [ ] **Step 4: Run tests to confirm pass**

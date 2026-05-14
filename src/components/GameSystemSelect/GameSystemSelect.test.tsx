@@ -1,3 +1,4 @@
+import React from "react";
 import { expect, test, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -12,9 +13,11 @@ function renderGameSystemSelect(
 ): ReturnType<typeof render> {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
-    <QueryClientProvider client={client}>
-      <GameSystemSelect value={value} onValueChange={onValueChange} />
-    </QueryClientProvider>,
+    <React.StrictMode>
+      <QueryClientProvider client={client}>
+        <GameSystemSelect value={value} onValueChange={onValueChange} />
+      </QueryClientProvider>
+    </React.StrictMode>,
   );
 }
 

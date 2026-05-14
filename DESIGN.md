@@ -1,21 +1,41 @@
-<!-- DESIGN TARGET — existing CSS tokens do not yet reflect this spec. Run /impeccable craft to update them. -->
-
 ---
 
 name: Gen Con Buddy
 description: Your guide to the best four days in gaming.
 colors:
-surface-page: "#f2ece0"
-surface-panel: "#e4dccf"
-surface-row-alt: "#ece5d5"
-surface-hover: "#dbd2c3"
-ink: "#2a201a"
-ink-muted: "#63503f"
-ink-faint: "#988a7a"
-ink-border: "#c2b5a5"
-ink-divider: "#d8d0c2"
-accent: "#954528"
-accent-deep: "#7c3a1e"
+surface-page: "oklch(92.5% 0.016 72deg)"
+surface-panel: "oklch(88.5% 0.02 72deg)"
+surface-row-alt: "oklch(90.5% 0.018 72deg)"
+surface-hover: "oklch(86.5% 0.022 72deg)"
+ink: "oklch(22% 0.03 48deg)"
+ink-muted: "oklch(42% 0.04 52deg)"
+ink-faint: "oklch(58% 0.03 52deg)"
+ink-border: "oklch(73% 0.024 60deg)"
+ink-divider: "oklch(82% 0.018 60deg)"
+accent: "oklch(48% 0.14 34deg)"
+accent-deep: "oklch(42% 0.13 34deg)"
+accent-surface: "oklch(92% 0.04 42deg)"
+jade: "oklch(43% 0.13 148deg)"
+cobalt: "oklch(44% 0.12 235deg)"
+amber: "oklch(52% 0.15 62deg)"
+error: "oklch(52% 0.18 22deg)"
+colors-dark:
+surface-page: "oklch(18% 0.016 48deg)"
+surface-panel: "oklch(22% 0.018 55deg)"
+surface-row-alt: "oklch(20% 0.017 52deg)"
+surface-hover: "oklch(26% 0.02 55deg)"
+ink: "oklch(90% 0.014 66deg)"
+ink-muted: "oklch(72% 0.02 64deg)"
+ink-faint: "oklch(55% 0.018 62deg)"
+ink-border: "oklch(35% 0.022 58deg)"
+ink-divider: "oklch(28% 0.016 56deg)"
+accent: "oklch(66% 0.14 34deg)"
+accent-deep: "oklch(74% 0.15 34deg)"
+accent-surface: "oklch(24% 0.06 38deg)"
+jade: "oklch(76% 0.14 148deg)"
+cobalt: "oklch(76% 0.12 235deg)"
+amber: "oklch(78% 0.14 62deg)"
+error: "oklch(78% 0.14 22deg)"
 typography:
 display:
 fontFamily: "'Cormorant Garamond', Georgia, serif"
@@ -149,13 +169,92 @@ The palette has three roles: a warm surface system, a warm ink system, and one a
 - **Sienna** (`#954528`, `oklch(46% 0.14 40)`): The signature action color. Deep terracotta — the color of a wooden meeple, a painted board game token, a worn red-orange playing piece. Used on primary buttons, focus rings, active filter chips, active navigation states, and interactive affordances that need to be found immediately. Achieves 5.6:1 contrast against Con Paper.
 - **Deep Sienna** (`#7c3a1e`, `oklch(38% 0.13 38)`): Accent hover state. The same color, pressed. Only appears as a state transition; never used as a static color.
 
+### Semantic Utility Colors
+
+Three semantic signals appear in the changelog view and chip variants. These are purpose-bound utility colors — they carry specific semantic meaning (created, updated, removed, error) and never appear in layout, interactive, or decorative roles. Each has a text color, a deeper text variant for Chip labels, and a tinted surface for chip backgrounds.
+
+- **Jade** (`oklch(43% 0.13 148deg)`): Created / added events. The green of a new piece on the board.
+- **Cobalt** (`oklch(44% 0.12 235deg)`): Updated events. Informational, measured.
+- **Amber** (`oklch(52% 0.15 62deg)`): Deleted / removed events. Cautionary, not alarming.
+- **Error** (`oklch(52% 0.18 22deg)`): Form errors, failure states. Sharper hue and higher chroma than amber — this is the alarm.
+
+These are the only hues in the system outside the warm orange-brown axis. Their presence is contained: changelog labels, Chip component variants, and error feedback only. The Three Roles Rule (surface, ink, accent) governs layout, hierarchy, and interactive affordance. Semantic utilities are a separate register — used only when the content itself carries that semantic meaning.
+
 ### Named Rules
 
-**The Three Roles Rule.** Surface, ink, accent — that is the complete palette. Never add a fourth role (a secondary accent, a semantic green for success, a info blue). Semantic states (error, warning, changelog entries) are expressed through `ink` and `accent` combination and typographic weight, not additional hues. The restraint is what makes the sienna mean something.
+**The Three Roles Rule.** Surface, ink, accent — that is the complete layout palette. Never add a fourth role for decoration, information architecture, or interactive emphasis. Semantic utility colors (jade, cobalt, amber, error) exist for data-driven signals only — changelog entry types, status chips, form errors — not for adding visual variety.
 
 **The No Pure Black Rule.** No `#000000` or `#ffffff` anywhere in the system. Every neutral is tinted toward the warm orange-yellow axis (hue 50–80° in OKLCH). This keeps the system cohesive and analog-feeling at every tier.
 
-## 3. Typography: Four Fonts, Four Jobs
+## 3. Dark Mode
+
+Dark mode inverts the surface hierarchy while preserving the warm analog character. Where light mode reads as warm paper in good light, dark mode reads as the same paper under a lamp at the game table — less ambient light, surfaces retreat, text steps forward. It is not a separate design; it is the same palette in lower light.
+
+### Theme Preference System
+
+Three preference states: **Light** (always light), **Dark** (always dark), **Auto** (follows `prefers-color-scheme`). Stored in `localStorage` under `gcb-theme`. Applied by writing `data-theme="light"` or `data-theme="dark"` on `<html>`, paired with `color-scheme: light` or `color-scheme: dark` for native browser UI (scrollbars, OS form controls). Preference changes are announced to screen readers via `announce()`.
+
+### Dark Surfaces
+
+The page surface anchors at `oklch(18% 0.016 48deg)` — very dark, warm amber-tinged near-black. Each tier adds both lightness and hue, graduating from amber-black (48°) toward yellow-amber (60°) as surfaces get lighter — the quality of lamplight deepening toward warmth.
+
+| Token                     | Dark value               | Role                                                   |
+| ------------------------- | ------------------------ | ------------------------------------------------------ |
+| `--color-surface-page`    | `oklch(18% 0.016 48deg)` | Page background                                        |
+| `--color-surface-panel`   | `oklch(22% 0.018 55deg)` | Drawer, filter sidebar                                 |
+| `--color-surface-row-alt` | `oklch(20% 0.017 52deg)` | Alternating table rows — 2% step, intentionally subtle |
+| `--color-surface-hover`   | `oklch(26% 0.02 55deg)`  | Interactive row hover — tangible but not harsh         |
+
+### Dark Ink
+
+Text inverts to warm near-white. Same four roles, same relative weight steps, same warmth character.
+
+| Token                 | Dark value               | Role                                       |
+| --------------------- | ------------------------ | ------------------------------------------ |
+| `--color-ink`         | `oklch(90% 0.014 66deg)` | Primary text                               |
+| `--color-ink-muted`   | `oklch(72% 0.02 64deg)`  | Secondary text, metadata                   |
+| `--color-ink-faint`   | `oklch(55% 0.018 62deg)` | Placeholder, disabled                      |
+| `--color-ink-border`  | `oklch(35% 0.022 58deg)` | Structural borders — lighter than surfaces |
+| `--color-ink-divider` | `oklch(28% 0.016 56deg)` | Subtle separators                          |
+
+### Dark Accent
+
+Sienna brightens significantly to maintain readability against dark surfaces.
+
+| Token                    | Dark value              | Note                                                           |
+| ------------------------ | ----------------------- | -------------------------------------------------------------- |
+| `--color-accent`         | `oklch(66% 0.14 34deg)` | 18% brighter than light mode                                   |
+| `--color-accent-deep`    | `oklch(74% 0.15 34deg)` | **Lighter** than accent — hover goes toward white in dark mode |
+| `--color-accent-surface` | `oklch(24% 0.06 38deg)` | Accent chip background, subtly tinted over page                |
+
+### Dark Semantic Utilities
+
+All semantic text colors brighten for dark backgrounds; surface tints go very dark (barely a colored shadow over the page surface).
+
+| Token                    | Light                     | Dark                     |
+| ------------------------ | ------------------------- | ------------------------ |
+| `--color-jade`           | `oklch(43% 0.13 148deg)`  | `oklch(76% 0.14 148deg)` |
+| `--color-cobalt`         | `oklch(44% 0.12 235deg)`  | `oklch(76% 0.12 235deg)` |
+| `--color-amber`          | `oklch(52% 0.15 62deg)`   | `oklch(78% 0.14 62deg)`  |
+| `--color-error`          | `oklch(52% 0.18 22deg)`   | `oklch(78% 0.14 22deg)`  |
+| `--color-jade-surface`   | `oklch(93% 0.018 148deg)` | `oklch(18% 0.03 148deg)` |
+| `--color-cobalt-surface` | `oklch(93% 0.018 235deg)` | `oklch(18% 0.03 235deg)` |
+| `--color-amber-surface`  | `oklch(93% 0.022 68deg)`  | `oklch(20% 0.035 62deg)` |
+| `--color-error-surface`  | `oklch(93% 0.03 22deg)`   | `oklch(18% 0.04 22deg)`  |
+
+### Background Texture in Dark Mode
+
+The Wildhavens background image used in `EventTable`, `EventListMobile`, and the staff-pick card header uses an 85% `surface-page` overlay to preserve text contrast in both themes. In dark mode the overlay shifts from warm cream to deep amber-black — no separate dark image needed, the token does the work.
+
+### Named Rules
+
+**The Lamplight Rule.** Dark mode is the same palette under less ambient light — not a separate design. Every element readable in light mode has a clear, physically motivated counterpart in dark mode. If dark mode looks like a different product, something is wrong.
+
+**The Inverted Hover Rule.** In dark mode, hover and pressed states go lighter, not darker. `--color-accent-deep` is lighter than `--color-accent` in dark mode. This is correct physics — applying pressure on a dark field produces light, not shadow.
+
+**The Border Direction Rule.** In light mode, borders sit darker than their surfaces (`calc(l - 0.07)`). In dark mode, borders must sit lighter than their surfaces (`calc(l + 0.07)`). A border that goes darker than its surface in dark mode is invisible. This applies to every semantic surface chip (jade, cobalt, amber, accent, error) and any component that derives border color from surface color at runtime. Border token overrides for all semantic colors live in the `[data-theme="dark"]` block in `tokens.css`; components should use the token vars, not inline relative-color expressions.
+
+## 4. Typography: Four Fonts, Four Jobs
 
 **Display Font:** Cormorant Garamond (with Georgia, serif fallback)
 **Body Font:** Source Sans 3 (with system-ui, sans-serif fallback)
@@ -186,7 +285,7 @@ All four fonts are available on Google Fonts as open source. Load in one request
 
 **The Uppercase Threshold Rule.** Uppercase is only for Title and Label roles. Every other typographic role is sentence case or title case. Uppercase at body size reads as shouting; at 0.8125rem with appropriate tracking, it reads as print.
 
-## 4. Elevation
+## 5. Elevation
 
 Gen Con Buddy is flat by default. The reference aesthetic is print — board game rulebooks, event programs, catalog pages — and printed materials have no inherent elevation. Depth is communicated through tonal layering (the Con Paper → Worn Tan → Row Tint steps) and through Ruled Line borders, not through shadows.
 
@@ -201,7 +300,7 @@ Shadows appear only when an element is genuinely overlaid: popovers, dropdowns, 
 
 **The Print Is Flat Rule.** No decorative shadows on cards, rows, panels, or static UI elements. If it sits on the page, it has no shadow — it IS the page. Shadows appear only to answer a real spatial question: "is this above the content or on it?"
 
-## 5. Components
+## 6. Components
 
 ### Buttons
 
@@ -269,7 +368,7 @@ The EventTypeSelect combobox is a signature component — a multi-select with in
 - **Filter input inside dropdown:** Ghost input treatment (no border, no background, body typography) at the top of the list.
 - **Selected items in trigger:** Show "N types" in Label typography when multiple selected.
 
-## 6. Do's and Don'ts
+## 7. Do's and Don'ts
 
 ### Do:
 
@@ -293,5 +392,7 @@ The EventTypeSelect combobox is a signature component — a multi-select with in
 - **Don't** add a fourth color role. Surface, ink, and sienna are complete. If you feel the urge to add a semantic green or a secondary blue, express the semantic distinction through typographic weight and sienna instead.
 - **Don't** use pill-shaped buttons. Pills are for filter chips — ephemeral, dismissible. A button that persists should have a corner.
 - **Don't** use `border-left` as a colored accent stripe. Not for callouts, not for changelog entries, not for event detail sections. Use background tints or full borders.
+- **Don't** compute borders in dark mode with `calc(l - X)` from a surface token. In dark mode, that direction goes below the surface — invisible. Use the border token vars (`--color-jade-border`, `--color-accent-border`, etc.) which are properly overridden in `[data-theme="dark"]`.
+- **Don't** add a dark mode as a stylistic afterthought. Dark mode gets the same care as light — same warmth, same hierarchy, same analog character. If the dark surface is a generic dark gray with no warmth, it has left the system.
 - **Don't** use Cormorant Garamond below 1.375rem. It is a display face; at small sizes it loses its character and gains optical weight problems. Use Zilla Slab or Source Sans 3 at those scales.
 - **Don't** use Source Sans 3 for UI section headers or labels. That's Zilla Slab's job. Mixing the jobs produces a muddled hierarchy that reads as undesigned.

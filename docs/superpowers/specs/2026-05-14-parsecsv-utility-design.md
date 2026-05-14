@@ -28,14 +28,15 @@ Handles: `undefined`, `""`, trailing comma, leading comma, double comma. One nam
 
 Replace raw `split(",")` (or `split(",").filter(Boolean)`) with `parseCSV` at four call sites:
 
-| File | Reason |
-|---|---|
-| `src/ui/MultiCombobox/MultiCombobox.tsx:58` | Bug fix — renders empty chips |
-| `src/utils/searchParams.ts:62` (`decodeDays`) | Bug fix — could return `[""]` |
-| `src/components/ActiveFilters/getActiveFilters.ts:259` | Standardize |
-| `src/utils/filterChangelogEvents.ts:26` | Standardize |
+| File                                                   | Reason                        |
+| ------------------------------------------------------ | ----------------------------- |
+| `src/ui/MultiCombobox/MultiCombobox.tsx:58`            | Bug fix — renders empty chips |
+| `src/utils/searchParams.ts:62` (`decodeDays`)          | Bug fix — could return `[""]` |
+| `src/components/ActiveFilters/getActiveFilters.ts:259` | Standardize                   |
+| `src/utils/filterChangelogEvents.ts:26`                | Standardize                   |
 
 **Left alone** (domain-specific filtering beyond empty strings):
+
 - `searchParams.ts:43` — filters by `DAY_DATES[d]`
 - `filterChangelogEvents.ts:27` — filters by `d in DAY_DATES`
 - `getActiveFilters.ts:268` — inner remove closure filters by `c !== code`
@@ -43,6 +44,7 @@ Replace raw `split(",")` (or `split(",").filter(Boolean)`) with `parseCSV` at fo
 ### 3. Tests
 
 **`src/utils/parseCSV.test.ts`** — unit tests covering:
+
 - `undefined` → `[]`
 - `""` → `[]`
 - `"RPG"` → `["RPG"]`

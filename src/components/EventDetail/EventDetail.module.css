@@ -29,9 +29,10 @@
       oklch(from var(--color-surface-page) l c h / 0.82),
       oklch(from var(--color-surface-page) l c h / 0.82)
     ),
-    url('/wildhavens-bg.webp');
+    url("/wildhavens-bg.webp");
   background-size: cover;
   background-position: center 60%;
+
   /* bleed to full viewport width */
   margin-top: calc(-1 * var(--space-4));
   margin-inline: calc(50% - 50vw);
@@ -46,12 +47,7 @@
       oklch(from var(--color-surface-page) l c h / 0.85),
       oklch(from var(--color-surface-page) l c h / 0.85)
     ),
-    url('/wildhavens-bg.webp');
-}
-
-/* title margin already handled by hero's own margin-bottom */
-.card[data-staff-pick] .hero .title {
-  margin-bottom: 0;
+    url("/wildhavens-bg.webp");
 }
 
 .staffPickLabel {
@@ -81,17 +77,18 @@
   margin-bottom: var(--space-4);
 }
 
+/* title margin already handled by hero's own margin-bottom */
+.card[data-staff-pick] .hero .title {
+  margin-bottom: 0;
+}
+
 .section {
   margin-bottom: var(--space-5);
 }
 
 .sectionHeading {
-  font-family: var(--font-slab);
+  composes: eyebrow from "../../styles/eyebrow.module.css";
   font-size: var(--text-md);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-eyebrow);
-  color: var(--color-ink-muted);
   padding-bottom: var(--space-2);
   margin: 0 0 var(--space-3) 0;
   border-bottom: var(--border-width) solid var(--color-ink-divider);

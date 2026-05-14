@@ -47,6 +47,7 @@
   --text-base: 1rem;
   --text-lg: 1.0625rem;
   --text-xl: 1.125rem;
+  --text-2xl: 1.375rem;
 
   /* ── Typography ───────────────────────────────────────────────────────── */
   --font-display: "Cormorant Garamond", georgia, serif;
@@ -109,8 +110,13 @@
   --color-accent: oklch(66% 0.14 34deg);
   --color-accent-deep: oklch(74% 0.15 34deg);
   --color-accent-surface: oklch(24% 0.06 38deg);
-  /* Border inverted for dark: lighter than surface, not darker */
+
+  /* Borders inverted for dark: lighter than surface, not darker */
   --color-accent-border: oklch(from var(--color-accent-surface) calc(l + 0.07) c h);
+  --color-jade-border: oklch(from var(--color-jade-surface) calc(l + 0.07) c h);
+  --color-cobalt-border: oklch(from var(--color-cobalt-surface) calc(l + 0.07) c h);
+  --color-amber-border: oklch(from var(--color-amber-surface) calc(l + 0.07) c h);
+  --color-error-border: oklch(from var(--color-error-surface) calc(l + 0.2) c h);
 
   /* Semantic surfaces */
   --color-jade-surface: oklch(18% 0.03 148deg);

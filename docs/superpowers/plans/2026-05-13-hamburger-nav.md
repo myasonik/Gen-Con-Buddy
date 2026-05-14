@@ -12,17 +12,17 @@
 
 ## File Map
 
-| File | Action | Responsibility |
-|---|---|---|
-| `src/components/ThemePopover/ThemeRadioGroup.tsx` | Create | Fieldset + RadioGroup — no side effects, pure render |
-| `src/components/ThemePopover/ThemeRadioGroup.test.tsx` | Create | Unit tests for radio group in isolation |
-| `src/components/ThemePopover/ThemePopover.tsx` | Modify | Delegates radio rendering to `ThemeRadioGroup` |
-| `src/components/MobileNav/MobileNav.tsx` | Create | Hamburger trigger + Popover with links + inline radio group |
-| `src/components/MobileNav/MobileNav.module.css` | Create | Styles for trigger and dropdown panel |
-| `src/components/MobileNav/MobileNav.test.tsx` | Create | Integration tests via `renderRoute` |
-| `src/routes/__root.tsx` | Modify | Render `MobileNav` alongside `<nav>` |
-| `src/routes/__root.module.css` | Modify | Hide `.nav` / show `.mobileNav` at ≤60rem |
-| `src/routes/__root.test.tsx` | Modify | Add test: hamburger button present |
+| File                                                   | Action | Responsibility                                              |
+| ------------------------------------------------------ | ------ | ----------------------------------------------------------- |
+| `src/components/ThemePopover/ThemeRadioGroup.tsx`      | Create | Fieldset + RadioGroup — no side effects, pure render        |
+| `src/components/ThemePopover/ThemeRadioGroup.test.tsx` | Create | Unit tests for radio group in isolation                     |
+| `src/components/ThemePopover/ThemePopover.tsx`         | Modify | Delegates radio rendering to `ThemeRadioGroup`              |
+| `src/components/MobileNav/MobileNav.tsx`               | Create | Hamburger trigger + Popover with links + inline radio group |
+| `src/components/MobileNav/MobileNav.module.css`        | Create | Styles for trigger and dropdown panel                       |
+| `src/components/MobileNav/MobileNav.test.tsx`          | Create | Integration tests via `renderRoute`                         |
+| `src/routes/__root.tsx`                                | Modify | Render `MobileNav` alongside `<nav>`                        |
+| `src/routes/__root.module.css`                         | Modify | Hide `.nav` / show `.mobileNav` at ≤60rem                   |
+| `src/routes/__root.test.tsx`                           | Modify | Add test: hamburger button present                          |
 
 ---
 
@@ -31,6 +31,7 @@
 The radio group UI in `ThemePopover` needs to be a standalone component so `MobileNav` can render it inline without nesting a popover inside a popover.
 
 **Files:**
+
 - Create: `src/components/ThemePopover/ThemeRadioGroup.test.tsx`
 - Create: `src/components/ThemePopover/ThemeRadioGroup.tsx`
 - Modify: `src/components/ThemePopover/ThemePopover.tsx`
@@ -292,6 +293,7 @@ git commit -m "refactor: extract ThemeRadioGroup from ThemePopover for reuse"
 ## Task 2: Create MobileNav (TDD)
 
 **Files:**
+
 - Create: `src/components/MobileNav/MobileNav.test.tsx`
 - Create: `src/components/MobileNav/MobileNav.module.css`
 - Create: `src/components/MobileNav/MobileNav.tsx`
@@ -581,10 +583,7 @@ export function MobileNav({ theme, resolvedTheme, setTheme }: MobileNavProps): R
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
-      <Popover.Trigger
-        render={<Button icon className={styles.trigger} />}
-        aria-label="Navigation"
-      >
+      <Popover.Trigger render={<Button icon className={styles.trigger} />} aria-label="Navigation">
         <Menu size={20} aria-hidden="true" />
       </Popover.Trigger>
       <Popover.Portal>
@@ -655,6 +654,7 @@ git commit -m "feat: add MobileNav component with hamburger popover"
 ## Task 3: Wire up AppShell
 
 **Files:**
+
 - Modify: `src/routes/__root.test.tsx`
 - Modify: `src/routes/__root.tsx`
 - Modify: `src/routes/__root.module.css`
@@ -682,7 +682,7 @@ npx vitest run src/routes/__root.test.tsx 2>&1 | tail -10
 
 Expected: the new test fails with "Unable to find an accessible element with the role 'button' and name 'Navigation'".
 
-- [ ] **Step 3: Update __root.tsx**
+- [ ] **Step 3: Update \_\_root.tsx**
 
 Replace the full contents of `src/routes/__root.tsx`:
 
@@ -781,7 +781,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 });
 ```
 
-- [ ] **Step 4: Update __root.module.css**
+- [ ] **Step 4: Update \_\_root.module.css**
 
 In `src/routes/__root.module.css`, add `.mobileNav` before the existing `@media` block, and add the responsive overrides inside the existing `@media (width <= 60rem)` block.
 
@@ -819,7 +819,7 @@ Replace that entire block with:
 }
 ```
 
-- [ ] **Step 5: Run the __root tests**
+- [ ] **Step 5: Run the \_\_root tests**
 
 ```bash
 npx vitest run src/routes/__root.test.tsx 2>&1 | tail -10

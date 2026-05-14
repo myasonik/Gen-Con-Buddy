@@ -94,7 +94,9 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
           <p className={styles.gameIdBadge}>{a.gameId}</p>
           {isStaffPick && (
             <p className={styles.staffPickLabel}>
-              <Chip tone="accent" size="sm">Staff Pick</Chip>
+              <Chip tone="accent" size="sm">
+                Staff Pick
+              </Chip>
             </p>
           )}
           <h1 className={styles.title}>{a.title}</h1>
@@ -168,8 +170,8 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
             <DescriptionItem term="Game System">{a.gameSystem}</DescriptionItem>
             <DescriptionItem term="Rules Edition">{a.rulesEdition}</DescriptionItem>
             <DescriptionItem term="Special Category">
-                  {a.specialCategory.toLowerCase() === "none" ? "None" : a.specialCategory}
-                </DescriptionItem>
+              {a.specialCategory.toLowerCase() === "none" ? "None" : a.specialCategory}
+            </DescriptionItem>
           </DescriptionList>
         </section>
 

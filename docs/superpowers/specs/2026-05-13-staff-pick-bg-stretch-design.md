@@ -21,6 +21,7 @@ This is pure CSS with no DOM restructuring and no JS. As picks are added, remove
 This is a better anchor than `<tbody>` because `.tableWrapper`'s width is bounded by the viewport, so `background-size: cover` scales the image relative to the visible area rather than the full scrollable content width.
 
 **Changes:**
+
 - `.tableWrapper` gains `background-image` (image + `oklch` overlay), `background-size: cover`, `background-position: center 60%`. Dark-mode rule matches.
 - `tr[data-staff-pick]` drops the `background-image` and `background-size`/`background-position` declarations. It keeps only a transparent `background-color` (no value needed — `transparent` is the initial value, so the existing rule can simply be removed and the `background-color: var(--color-surface-page)` overrides removed too).
 - Non-pick rows already have explicit backgrounds (`var(--color-surface-page)` odd, `var(--color-surface-row-alt)` even) that paint over the container image — no changes needed.
@@ -32,6 +33,7 @@ This is a better anchor than `<tbody>` because `.tableWrapper`'s width is bounde
 **Container:** `.list` (the `<ul>` in `EventListMobile.module.css`).
 
 **Changes:**
+
 - `.list` gains `background-image` (same image + overlay), `background-size: cover`, `background-position: center 60%`. Dark-mode rule matches desktop.
 - `.item[data-staff-pick]` drops `background-color: var(--color-accent-surface)` (replaced by transparency revealing the list bg).
 - Non-pick items need explicit backgrounds because they're currently transparent (relying on the page surface colour bleeding through). Add `background-color: var(--color-surface-page)` to `.item` as a base. `.item:nth-child(even)` already has `var(--color-surface-row-alt)` — no change needed.
@@ -48,7 +50,7 @@ background-image:
     oklch(from var(--color-surface-page) l c h / 0.82),
     oklch(from var(--color-surface-page) l c h / 0.82)
   ),
-  url('/wildhavens-bg.webp');
+  url("/wildhavens-bg.webp");
 ```
 
 The gradient is a flat semi-transparent wash of the surface colour, ensuring text is legible over any part of the image. Dark mode repeats the same declaration (the CSS variable resolves correctly in dark context).

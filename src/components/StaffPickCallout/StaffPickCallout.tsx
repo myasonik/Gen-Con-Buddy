@@ -43,10 +43,7 @@ export function StaffPickCallout(): React.JSX.Element | null {
           <EventTable events={data.data} sharedColumnState={sharedColumnState} />
         </div>
       ) : (
-        <EventListMobile
-          events={data.data}
-          columnState={sharedColumnState}
-        />
+        <EventListMobile events={data.data} columnState={sharedColumnState} />
       )}
     </div>
   );

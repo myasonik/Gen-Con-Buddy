@@ -14,17 +14,13 @@
 }
 
 .columnGroupLegend {
+  composes: eyebrow from "../../styles/eyebrow.module.css";
   display: block;
   width: 100%;
   padding: 0 0 var(--space-1) var(--space-2);
   margin-bottom: var(--space-2);
   border-bottom: var(--border-width) solid var(--color-ink-divider);
-  font-family: var(--font-slab);
   font-size: var(--text-md);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-eyebrow);
-  color: var(--color-ink-muted);
 }
 
 .typeDisplayRadioGroup {

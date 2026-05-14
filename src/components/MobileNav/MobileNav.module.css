@@ -27,15 +27,11 @@
 
 /* ─── Nav links ──────────────────────────────────────────────────────────── */
 .link {
+  composes: eyebrow from "../../styles/eyebrow.module.css";
   display: block;
   padding: var(--space-2) var(--space-3);
-  font-family: var(--font-slab);
   font-size: var(--text-md);
-  font-weight: 600;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
   text-decoration: none;
-  color: var(--color-ink-muted);
   transition: color var(--motion-hover);
 }
 

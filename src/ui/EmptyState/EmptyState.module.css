@@ -19,12 +19,8 @@
 }
 
 .text {
-  font-family: var(--font-slab);
+  composes: eyebrow from "../../styles/eyebrow.module.css";
   font-size: var(--text-base);
-  font-weight: 600;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-  color: var(--color-ink-muted);
   margin: var(--space-2) 0;
 }
 

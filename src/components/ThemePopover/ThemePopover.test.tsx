@@ -20,11 +20,7 @@ function renderPopover(
   overrides: Partial<React.ComponentProps<typeof ThemePopover>> = {},
 ): ReturnType<typeof render> {
   return render(
-    <ThemePopover
-      theme="auto"
-      setTheme={vi.fn<(v: string) => void>()}
-      {...overrides}
-    />,
+    <ThemePopover theme="auto" setTheme={vi.fn<(v: string) => void>()} {...overrides} />,
   );
 }
 
@@ -72,7 +68,6 @@ test("Dark radio is checked when theme is 'dark'", async () => {
   await user.click(screen.getByRole("button", { name: "Theme: Dark" }));
   expect(screen.getByRole("radio", { name: /Dark/i })).toBeChecked();
 });
-
 
 test("selecting Dark calls setTheme with 'dark'", async () => {
   const user = userEvent.setup();

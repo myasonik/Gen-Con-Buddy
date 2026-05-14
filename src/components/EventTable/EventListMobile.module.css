@@ -8,7 +8,7 @@
       oklch(from var(--color-surface-page) l c h / 0.82),
       oklch(from var(--color-surface-page) l c h / 0.82)
     ),
-    url('/wildhavens-bg.webp');
+    url("/wildhavens-bg.webp");
   background-size: cover;
   background-position: center 60%;
 }
@@ -19,7 +19,7 @@
       oklch(from var(--color-surface-page) l c h / 0.85),
       oklch(from var(--color-surface-page) l c h / 0.85)
     ),
-    url('/wildhavens-bg.webp');
+    url("/wildhavens-bg.webp");
 }
 
 .item {
@@ -63,14 +63,12 @@
 }
 
 .typeTag {
+  composes: eyebrow from "../../styles/eyebrow.module.css";
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  font-weight: 600;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-  color: var(--color-ink-faint);
   font-size: var(--text-xs);
+  color: var(--color-ink-faint);
 }
 
 .when {

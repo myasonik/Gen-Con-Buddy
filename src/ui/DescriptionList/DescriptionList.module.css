@@ -10,12 +10,8 @@
 }
 
 .dt {
-  font-family: var(--font-slab);
-  font-size: var(--text-sm);
+  composes: eyebrow from "../../styles/eyebrow.module.css";
   font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-eyebrow);
-  color: var(--color-ink-muted);
   margin-bottom: var(--space-2);
 }
 

@@ -23,7 +23,9 @@ interface MobileNavProps {
   setTheme: (v: "light" | "dark" | "auto") => void;
 }
 
-async function renderNav(overrides: Partial<MobileNavProps> = {}): Promise<ReturnType<typeof render>> {
+async function renderNav(
+  overrides: Partial<MobileNavProps> = {},
+): Promise<ReturnType<typeof render>> {
   const props: MobileNavProps = {
     theme: "auto",
     setTheme: vi.fn<(v: "light" | "dark" | "auto") => void>(),

@@ -9,7 +9,11 @@ function renderGroup(
   overrides: Partial<React.ComponentProps<typeof ThemeRadioGroup>> = {},
 ): ReturnType<typeof render> {
   return render(
-    <ThemeRadioGroup theme="auto" onValueChange={vi.fn<(v: ThemePreference) => void>()} {...overrides} />,
+    <ThemeRadioGroup
+      theme="auto"
+      onValueChange={vi.fn<(v: ThemePreference) => void>()}
+      {...overrides}
+    />,
   );
 }
 

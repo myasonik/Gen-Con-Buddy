@@ -303,7 +303,10 @@ export function EventTable({
             </thead>
             <tbody>
               {table.getRowModel().rows.map((row) => (
-                <tr key={row.id} data-staff-pick={STAFF_PICK_IDS.has(row.original.attributes.gameId) || undefined}>
+                <tr
+                  key={row.id}
+                  data-staff-pick={STAFF_PICK_IDS.has(row.original.attributes.gameId) || undefined}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} data-col-id={cell.column.id}>
                       {flexRender(cell.column.columnDef.cell, {

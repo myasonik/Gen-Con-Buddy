@@ -29,10 +29,11 @@ test("chips expand to show full name when dropdown is open", async () => {
 
   await user.click(screen.getByRole("combobox", { name: "Event Type" }));
 
-  const rpgRemove = screen.getByRole("button", { name: "Remove RPG" });
-  const chip = rpgRemove.closest("[data-tone]");
-  expect(chip).toHaveTextContent("RPG");
-  expect(chip).toHaveTextContent("Roleplaying Game");
+  // FloatingFocusManager aria-hides the chip toolbar while the popup is open,
+  // so we verify expanded content via DOM text rather than an accessible role query.
+  const chipInputRow = screen.getByTestId("chip-input-row");
+  expect(chipInputRow).toHaveTextContent("RPG");
+  expect(chipInputRow).toHaveTextContent("Roleplaying Game");
 });
 
 test("selecting an option calls onValueChange with that code", async () => {
@@ -141,29 +142,13 @@ test("pills expand to show full name when Tab moves focus into the input", async
   );
 
   await user.click(screen.getByRole("button", { name: "Previous element" }));
-  await user.tab(); // → Remove RPG chip button
-  await user.tab(); // → input
+  // Chip removes are tabindex="-1" (Base UI hardcodes this), so Tab goes straight to the Input.
+  await user.tab(); // → Input
 
-  const removeButton = screen.getByRole("button", { name: "Remove RPG" });
-  const chip = removeButton.closest("[data-tone]");
-  expect(chip).toHaveTextContent("Roleplaying Game");
-});
-
-test("pills expand to show full name when Tab moves focus onto a chip button", async () => {
-  const user = userEvent.setup();
-  render(
-    <>
-      <button type="button">Previous element</button>
-      <EventTypeSelect value="RPG" onValueChange={() => {}} />
-    </>,
-  );
-
-  await user.click(screen.getByRole("button", { name: "Previous element" }));
-  await user.tab(); // → Remove RPG chip button (first tab stop in the component)
-
-  const removeButton = screen.getByRole("button", { name: "Remove RPG" });
-  const chip = removeButton.closest("[data-tone]");
-  expect(chip).toHaveTextContent("Roleplaying Game");
+  // Input focus opens the dropdown; FloatingFocusManager then aria-hides the chip toolbar,
+  // so verify expanded content via DOM text rather than a role-based query.
+  const chipInputRow = screen.getByTestId("chip-input-row");
+  expect(chipInputRow).toHaveTextContent("Roleplaying Game");
 });
 
 test("dropdown closes when Tab moves focus out of the component", async () => {

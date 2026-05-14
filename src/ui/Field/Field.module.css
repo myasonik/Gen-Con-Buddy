@@ -18,13 +18,8 @@
 }
 
 .label {
-  font-family: var(--font-slab);
-  font-size: var(--text-sm);
-  font-weight: 600;
+  composes: eyebrow from "../../styles/eyebrow.module.css";
   line-height: 1;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-  color: var(--color-ink-muted);
 }
 
 .rangeFields {

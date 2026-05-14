@@ -1,7 +1,6 @@
-import React, { useState, useId, useRef } from "react";
-import { ChevronDown, Check } from "lucide-react";
+import React, { useState, useRef, useId } from "react";
+import { ChevronDown, Check, X } from "lucide-react";
 import { Combobox } from "@base-ui/react/combobox";
-import { Chip } from "../Chip/Chip";
 import styles from "./MultiCombobox.module.css";
 
 export interface MultiComboboxOption {
@@ -16,7 +15,7 @@ export interface MultiComboboxProps {
   options: MultiComboboxOption[];
   filterOption?: (option: MultiComboboxOption, filterText: string) => boolean;
   renderChipContent?: (option: MultiComboboxOption) => React.ReactNode;
-  /** Extra content appended to chips only while the dropdown is open. */
+  /** Extra content appended to chips only while the component has focus. */
   expandedChipContent?: (option: MultiComboboxOption) => React.ReactNode;
   renderChipIcon?: (option: MultiComboboxOption) => React.ReactNode;
   renderRemoveLabel?: (option: MultiComboboxOption) => string;
@@ -47,12 +46,14 @@ export function MultiCombobox({
   renderOptionContent,
   isLoading = false,
 }: MultiComboboxProps): React.JSX.Element {
-  const inputId = useId();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const suppressFocusOpen = useRef(false);
+  const labelId = useId();
   const [open, setOpen] = useState(false);
+  const [hasFocus, setHasFocus] = useState(false);
   const [filterText, setFilterText] = useState("");
   const filter = Combobox.useFilter();
+  // Prevents chip-removal's programmatic input.focus() from reopening the dropdown.
+  // Set on ChipRemove pointerdown; cleared on the next Input focus event.
+  const suppressFocusOpenRef = useRef(false);
 
   const selectedValues = value ? value.split(",") : [];
 
@@ -67,15 +68,13 @@ export function MultiCombobox({
     return options.find((o) => o.value === val) ?? { value: val, label: val };
   }
 
-  function removeValue(val: string): void {
-    onValueChange(selectedValues.filter((v) => v !== val).join(","));
-  }
-
   return (
     <div
       className={styles.root}
+      onFocus={() => setHasFocus(true)}
       onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+          setHasFocus(false);
           setOpen(false);
           setFilterText("");
         }
@@ -94,69 +93,51 @@ export function MultiCombobox({
         }}
         onInputValueChange={(text) => setFilterText(text)}
       >
-        <label htmlFor={inputId} className={styles.label}>
+        <label id={labelId} className={styles.label}>
           {label}
         </label>
-        <Combobox.InputGroup
-          className={styles.inputGroup}
-          onPointerDown={(e) => {
-            if ((e.target as HTMLElement).closest("button")) {
-              suppressFocusOpen.current = true;
-              requestAnimationFrame(() => {
-                suppressFocusOpen.current = false;
-              });
-            }
-          }}
-          onFocus={() => {
-            if (!suppressFocusOpen.current) {
-              setOpen(true);
-            }
-          }}
-          onClick={(e) => {
-            if ((e.target as HTMLElement).closest("button")) {
-              return;
-            }
-            if (!open) {
-              setOpen(true);
-            }
-            inputRef.current?.focus();
-          }}
-        >
+        <Combobox.InputGroup className={styles.inputGroup}>
           <div className={styles.inputGroupInner} data-testid="chip-input-row">
-            {selectedValues.map((val) => {
-              const option = getOption(val);
-              return (
-                <Chip
-                  key={val}
-                  className={styles.chip}
-                  tone="accent"
-                  size="sm"
-                  icon={renderChipIcon?.(option)}
-                  onRemove={() => removeValue(val)}
-                  removeLabel={renderRemoveLabel ? renderRemoveLabel(option) : option.label}
-                >
-                  {renderChipContent ? renderChipContent(option) : option.label}
-                  {open && expandedChipContent ? expandedChipContent(option) : null}
-                </Chip>
-              );
-            })}
+            <Combobox.Chips className={styles.chips}>
+              {selectedValues.map((val) => {
+                const option = getOption(val);
+                return (
+                  <Combobox.Chip key={val} className={styles.chip} data-tone="accent">
+                    {renderChipIcon != null && (
+                      <span className={styles.chipIcon} aria-hidden="true">
+                        {renderChipIcon(option)}
+                      </span>
+                    )}
+                    <span className={styles.chipLabel}>
+                      {renderChipContent ? renderChipContent(option) : option.label}
+                      {hasFocus && expandedChipContent ? expandedChipContent(option) : null}
+                    </span>
+                    <Combobox.ChipRemove
+                      className={styles.chipRemove}
+                      aria-label={`Remove ${renderRemoveLabel ? renderRemoveLabel(option) : option.label}`}
+                      onPointerDown={() => {
+                        suppressFocusOpenRef.current = true;
+                      }}
+                    >
+                      <X size={10} aria-hidden="true" />
+                    </Combobox.ChipRemove>
+                  </Combobox.Chip>
+                );
+              })}
+            </Combobox.Chips>
             <Combobox.Input
-              ref={inputRef}
-              id={inputId}
+              aria-labelledby={labelId}
               className={styles.input}
               disabled={isLoading}
               placeholder={getPlaceholder(isLoading, selectedValues.length > 0, label)}
-              onKeyDown={(e) => {
-                if (e.key === "Tab") {
-                  setOpen(false);
-                  setFilterText("");
-                  return;
+              onFocus={() => {
+                if (!suppressFocusOpenRef.current) {
+                  setOpen(true);
                 }
-                if (
-                  e.key === "Backspace" &&
-                  e.currentTarget.value === "" &&
-                  selectedValues.length > 0
-                ) {
+                suppressFocusOpenRef.current = false;
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Backspace" && !filterText && selectedValues.length > 0) {
                   onValueChange(selectedValues.slice(0, -1).join(","));
                 }
               }}
@@ -174,6 +155,8 @@ export function MultiCombobox({
         {open && (
           <Combobox.Portal>
             <Combobox.Positioner sideOffset={4} className={styles.positioner}>
+              {/* Plain div avoids Combobox.Popup's FloatingFocusManager, which would
+                  aria-hide sibling elements (chips toolbar, parent dialog content). */}
               <div className={styles.popup}>
                 <Combobox.List className={styles.list}>
                   {filteredOptions.map((option) => (
@@ -188,8 +171,8 @@ export function MultiCombobox({
                       </Combobox.ItemIndicator>
                     </Combobox.Item>
                   ))}
-                  {filteredOptions.length === 0 && <div className={styles.empty}>No results</div>}
                 </Combobox.List>
+                {filteredOptions.length === 0 && <div className={styles.empty}>No results</div>}
               </div>
             </Combobox.Positioner>
           </Combobox.Portal>

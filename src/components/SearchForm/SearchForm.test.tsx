@@ -23,9 +23,11 @@ function renderSearchForm(
 ): ReturnType<typeof render> {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
-    <QueryClientProvider client={client}>
-      <SearchForm values={values} onSearch={onSearch} />
-    </QueryClientProvider>,
+    <React.StrictMode>
+      <QueryClientProvider client={client}>
+        <SearchForm values={values} onSearch={onSearch} />
+      </QueryClientProvider>
+    </React.StrictMode>,
   );
 }
 
@@ -401,9 +403,11 @@ function renderChangelogMode(
 ): ReturnType<typeof render> {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
-    <QueryClientProvider client={client}>
-      <SearchForm values={values} onSearch={onSearch} changelogMode />
-    </QueryClientProvider>,
+    <React.StrictMode>
+      <QueryClientProvider client={client}>
+        <SearchForm values={values} onSearch={onSearch} changelogMode />
+      </QueryClientProvider>
+    </React.StrictMode>,
   );
 }
 

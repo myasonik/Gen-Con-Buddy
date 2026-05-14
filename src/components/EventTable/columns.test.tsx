@@ -19,9 +19,7 @@ beforeEach(() => {
 
 const [STAFF_PICK_GAME_ID] = Array.from(STAFF_PICK_IDS);
 
-function makeSharedColumnState(
-  overrides: Partial<SharedColumnState> = {},
-): SharedColumnState {
+function makeSharedColumnState(overrides: Partial<SharedColumnState> = {}): SharedColumnState {
   return {
     visibility: {},
     toggleVisibility: vi.fn<(id: string) => void>(),
