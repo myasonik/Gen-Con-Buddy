@@ -22,6 +22,22 @@ function coerceOptionalString(value: unknown): string | undefined {
 }
 
 export const Route = createFileRoute("/changelog")({
+  head: () => ({
+    meta: [
+      { title: "Changelog | Gen Con Buddy" },
+      {
+        name: "description",
+        content:
+          "Track last-minute changes to the Gen Con event schedule — additions, updates, and removals.",
+      },
+      { property: "og:title", content: "Changelog | Gen Con Buddy" },
+      {
+        property: "og:description",
+        content:
+          "Track last-minute changes to the Gen Con event schedule — additions, updates, and removals.",
+      },
+    ],
+  }),
   validateSearch: (search: Record<string, unknown>) => ({
     open: coerceStringArray(search.open),
     eventType: coerceOptionalString(search.eventType),

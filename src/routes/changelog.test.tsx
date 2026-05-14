@@ -711,6 +711,15 @@ test("event links in changelog carry from:changelog navigation state", async () 
 });
 
 test("sets document.title to 'Changelog | Gen Con Buddy'", async () => {
-  await renderChangelogPage();
+  const { queryClient: client } = await import("../lib/queryClient");
+  await renderRoute("/changelog", { queryClient: client });
   expect(document.title).toBe("Changelog | Gen Con Buddy");
+});
+
+test("sets og:title meta to 'Changelog | Gen Con Buddy'", async () => {
+  const { queryClient: client } = await import("../lib/queryClient");
+  await renderRoute("/changelog", { queryClient: client });
+  expect(
+    document.querySelector('meta[property="og:title"]')?.getAttribute("content"),
+  ).toBe("Changelog | Gen Con Buddy");
 });

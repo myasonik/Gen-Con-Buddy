@@ -8,7 +8,6 @@ import { ColumnControlsPanel } from "../EventTable/ColumnControlsPanel";
 import { fetchChangelogEntry, fetchChangelogList } from "../../utils/api";
 import { SearchForm } from "../SearchForm/SearchForm";
 import type { SearchFormValues } from "../../utils/types";
-import { usePageTitle } from "../../lib/usePageTitle";
 import styles from "./ChangelogPage.module.css";
 import { ChangelogRow } from "./ChangelogRow";
 
@@ -23,7 +22,6 @@ export function ChangelogPage({
   navigate,
   activeFilter: activeFilterProp,
 }: ChangelogPageProps): React.JSX.Element {
-  usePageTitle("Changelog | Gen Con Buddy");
   const posthog = usePostHog();
   const queryClient = useQueryClient();
   const sharedColumnState = useSharedColumnState();
