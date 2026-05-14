@@ -1,5 +1,5 @@
 import { expect, test, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ActiveFilters } from "./ActiveFilters";
 import type { ActiveFilter } from "./getActiveFilters";
@@ -87,4 +87,22 @@ test("renders no svg when filter has no icon", () => {
     />,
   );
   expect(container.querySelector("svg")).toBeNull();
+});
+
+test("days filter produces one chip per day, not a grouped chip", () => {
+  render(<ActiveFilters searchParams={{ days: "fri,sat" }} onRemove={() => {}} />);
+  const bar = screen.getByRole("list", { name: "Active filters" });
+  expect(within(bar).getByText("Fri")).toBeInTheDocument();
+  expect(within(bar).getByText("Sat")).toBeInTheDocument();
+  expect(within(bar).queryByRole("button", { name: /Days:/ })).toBeNull();
+});
+
+test("eventType filter produces one chip per code, not a grouped chip", () => {
+  render(
+    <ActiveFilters searchParams={{ eventType: "RPG,BGM" }} onRemove={() => {}} />,
+  );
+  const bar = screen.getByRole("list", { name: "Active filters" });
+  expect(within(bar).getByText("RPG - Roleplaying Game")).toBeInTheDocument();
+  expect(within(bar).getByText("BGM - Board Game")).toBeInTheDocument();
+  expect(within(bar).queryByRole("button", { name: /Type:/ })).toBeNull();
 });

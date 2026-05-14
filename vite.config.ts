@@ -39,7 +39,7 @@ export default defineConfig(({ mode }) => {
       environment: "jsdom",
       setupFiles: ["./src/test/setup.ts"],
       exclude: ["**/node_modules/**", "**/.claude/worktrees/**"],
-      pool: "forks",
+      pool: "threads",
       minWorkers: 1,
       maxWorkers: 8,
       testTimeout: 15000,
