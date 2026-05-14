@@ -718,7 +718,7 @@ test("sets document.title to 'Changelog | Gen Con Buddy'", async () => {
 
 test("sets og:title meta to 'Changelog | Gen Con Buddy'", async () => {
   await renderRoute("/changelog", { queryClient });
-  expect(
-    document.querySelector('meta[property="og:title"]')?.getAttribute("content"),
-  ).toBe("Changelog | Gen Con Buddy");
+  expect(document.querySelector('meta[property="og:title"]')?.getAttribute("content")).toBe(
+    "Changelog | Gen Con Buddy",
+  );
 });

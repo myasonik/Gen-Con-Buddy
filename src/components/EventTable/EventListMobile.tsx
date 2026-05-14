@@ -91,7 +91,10 @@ function getMobileValue(id: string, a: Event["attributes"]): string {
   }
 }
 
-type ColumnStateSubset = Pick<SharedColumnState, "visibility" | "typeDisplay" | "showTypeIcon" | "dayFormat" | "timeZone" | "timeFormat">;
+type ColumnStateSubset = Pick<
+  SharedColumnState,
+  "visibility" | "typeDisplay" | "showTypeIcon" | "dayFormat" | "timeZone" | "timeFormat"
+>;
 
 interface EventListMobileProps {
   events: Event[];
@@ -220,7 +223,13 @@ export function EventListMobile({
               state={linkState}
               className={styles.row}
             >
-              {isStaffPick && <span className={styles.staffPickBadge}><Chip tone="accent" size="sm">Staff Pick</Chip></span>}
+              {isStaffPick && (
+                <span className={styles.staffPickBadge}>
+                  <Chip tone="accent" size="sm">
+                    Staff Pick
+                  </Chip>
+                </span>
+              )}
               {isVisible("title") && <span className={styles.title}>{a.title}</span>}
               {showMeta && (
                 <span className={styles.meta}>

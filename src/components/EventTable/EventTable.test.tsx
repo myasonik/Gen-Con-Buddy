@@ -285,7 +285,6 @@ test("staff pick row has data-staff-pick attribute", async () => {
   expect(row).toHaveAttribute("data-staff-pick");
 });
 
-
 test("non-staff-pick row does not have data-staff-pick attribute", async () => {
   await renderEventTable([makeEvent({ gameId: "RPG24000042", title: "Regular Game" })]);
   const titleCell = screen.getByText("Regular Game");

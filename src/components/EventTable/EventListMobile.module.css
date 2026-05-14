@@ -8,7 +8,7 @@
       oklch(from var(--color-surface-page) l c h / 0.82),
       oklch(from var(--color-surface-page) l c h / 0.82)
     ),
-    url('/wildhavens-bg.webp');
+    url("/wildhavens-bg.webp");
   background-size: cover;
   background-position: center 60%;
 }
@@ -19,7 +19,7 @@
       oklch(from var(--color-surface-page) l c h / 0.85),
       oklch(from var(--color-surface-page) l c h / 0.85)
     ),
-    url('/wildhavens-bg.webp');
+    url("/wildhavens-bg.webp");
 }
 
 .item {

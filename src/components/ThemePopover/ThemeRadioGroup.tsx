@@ -11,10 +11,7 @@ interface ThemeRadioGroupProps {
   onValueChange: (v: ThemePreference) => void;
 }
 
-export function ThemeRadioGroup({
-  theme,
-  onValueChange,
-}: ThemeRadioGroupProps): React.JSX.Element {
+export function ThemeRadioGroup({ theme, onValueChange }: ThemeRadioGroupProps): React.JSX.Element {
   return (
     <fieldset className={styles.fieldset}>
       <legend className="sr-only">Theme</legend>

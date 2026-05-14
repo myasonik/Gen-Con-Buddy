@@ -241,7 +241,15 @@ test("sets og:description meta after event data loads", async () => {
       const url = new URL(request.url);
       const gameId = url.searchParams.get("gameId") ?? "RPG24000042";
       return HttpResponse.json<EventSearchResponse>({
-        data: [makeEvent({ gameId, title: "Dragon Hunt", eventType: "RPG", gmNames: "Jane Smith", location: "ICC" })],
+        data: [
+          makeEvent({
+            gameId,
+            title: "Dragon Hunt",
+            eventType: "RPG",
+            gmNames: "Jane Smith",
+            location: "ICC",
+          }),
+        ],
         meta: { total: 1 },
         links: { self: "" },
         error: null,
@@ -250,7 +258,9 @@ test("sets og:description meta after event data loads", async () => {
   );
   await renderRoute("/event/RPG24000042", { queryClient });
   await screen.findAllByRole("term");
-  const content = document.querySelector('meta[property="og:description"]')?.getAttribute("content");
+  const content = document
+    .querySelector('meta[property="og:description"]')
+    ?.getAttribute("content");
   // factory startDateTime "2024-08-01T10:00:00Z" = August 1, 2024 at 6:00 AM in America/Indianapolis
   expect(content).toBe("RPG event at Gen Con. GM: Jane Smith. August 1, 2024 at 6:00 AM. ICC.");
 });
@@ -272,7 +282,7 @@ test("injects JSON-LD structured data script tag after event loads", async () =>
   await screen.findAllByRole("term");
   const script = document.querySelector('script[type="application/ld+json"]');
   expect(script).not.toBeNull();
-  const data = JSON.parse(script!.textContent ?? "{}");
+  const data = JSON.parse(script?.textContent ?? "{}");
   expect(data["@type"]).toBe("Event");
   expect(data.name).toBe("Dragon Hunt");
   expect(data.url).toBe("https://gcb.quest/event/RPG24000042");

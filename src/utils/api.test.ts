@@ -177,11 +177,7 @@ test("fetchEvents with invalid days and timeStart omits startDateTime", async ()
 
 // covers data.entries ?? [] right-side branch
 test("fetchChangelogList returns empty array when entries is absent from response", async () => {
-  server.use(
-    http.get("/api/changelog/list", () =>
-      HttpResponse.json<ListChangelogsResponse>({}),
-    ),
-  );
+  server.use(http.get("/api/changelog/list", () => HttpResponse.json<ListChangelogsResponse>({})));
   const result = await fetchChangelogList();
   expect(result).toStrictEqual([]);
 });

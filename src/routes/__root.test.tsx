@@ -52,7 +52,7 @@ test("hamburger button is present in the nav", async () => {
 
 test("root route sets og:type meta to 'website'", async () => {
   await renderRoute("/");
-  expect(
-    document.querySelector('meta[property="og:type"]')?.getAttribute("content"),
-  ).toBe("website");
+  expect(document.querySelector('meta[property="og:type"]')?.getAttribute("content")).toBe(
+    "website",
+  );
 });

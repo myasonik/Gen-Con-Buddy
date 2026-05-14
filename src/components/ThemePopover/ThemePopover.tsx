@@ -29,10 +29,7 @@ const LABELS: Record<ThemePreference, string> = {
   auto: "Auto",
 };
 
-export function ThemePopover({
-  theme,
-  setTheme,
-}: ThemePopoverProps): React.JSX.Element {
+export function ThemePopover({ theme, setTheme }: ThemePopoverProps): React.JSX.Element {
   const [open, setOpen] = React.useState(false);
 
   function handleChange(v: ThemePreference): void {
@@ -52,10 +49,7 @@ export function ThemePopover({
       <Popover.Portal>
         <Popover.Positioner sideOffset={4} className={styles.positioner}>
           <Popover.Popup className={styles.popup}>
-            <ThemeRadioGroup
-              theme={theme}
-              onValueChange={handleChange}
-            />
+            <ThemeRadioGroup theme={theme} onValueChange={handleChange} />
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>

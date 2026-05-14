@@ -109,6 +109,7 @@
   --color-accent: oklch(66% 0.14 34deg);
   --color-accent-deep: oklch(74% 0.15 34deg);
   --color-accent-surface: oklch(24% 0.06 38deg);
+
   /* Border inverted for dark: lighter than surface, not darker */
   --color-accent-border: oklch(from var(--color-accent-surface) calc(l + 0.07) c h);
 

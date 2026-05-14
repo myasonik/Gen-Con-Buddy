@@ -51,7 +51,11 @@ export function SearchResults({
       )}
       {data && data.data.length === 0 && (
         <>
-          <EmptyState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />
+          <EmptyState
+            variant="empty"
+            text="NO QUESTS FOUND"
+            subtext="Try broadening your search."
+          />
           <StaffPickCallout />
         </>
       )}
@@ -89,10 +93,7 @@ export function SearchResults({
                 <FormatDrawer columnState={sharedColumnState} />
                 <SortDrawer />
               </div>
-              <EventListMobile
-                events={data.data}
-                columnState={sharedColumnState}
-              />
+              <EventListMobile events={data.data} columnState={sharedColumnState} />
             </div>
           )}
           <Pagination

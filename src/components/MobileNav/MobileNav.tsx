@@ -30,10 +30,7 @@ export function MobileNav({ theme, setTheme }: MobileNavProps): React.JSX.Elemen
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
-      <Popover.Trigger
-        render={<Button icon className={styles.trigger} />}
-        aria-label="Navigation"
-      >
+      <Popover.Trigger render={<Button icon className={styles.trigger} />} aria-label="Navigation">
         <Menu size={20} aria-hidden="true" />
       </Popover.Trigger>
       <Popover.Portal>
@@ -63,10 +60,7 @@ export function MobileNav({ theme, setTheme }: MobileNavProps): React.JSX.Elemen
               Changelog
             </Link>
             <hr className={styles.divider} />
-            <ThemeRadioGroup
-              theme={theme}
-              onValueChange={handleThemeChange}
-            />
+            <ThemeRadioGroup theme={theme} onValueChange={handleThemeChange} />
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>

@@ -2,7 +2,7 @@ import React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { fetchEvents } from "../utils/api";
 import { EventDetail } from "../components/EventDetail/EventDetail";
-import type { EventAttributes } from "../utils/types";
+import type { EventAttributes, EventSearchResponse } from "../utils/types";
 
 function formatEventDescription(a: EventAttributes): string {
   const dateTime = new Intl.DateTimeFormat("en-US", {
@@ -18,7 +18,7 @@ function formatEventDescription(a: EventAttributes): string {
 
 export const Route = createFileRoute("/event/$id")({
   head: ({ loaderData }) => {
-    const event = loaderData?.data[0];
+    const event = (loaderData as EventSearchResponse | undefined)?.data[0];
     if (!event) {
       return {};
     }

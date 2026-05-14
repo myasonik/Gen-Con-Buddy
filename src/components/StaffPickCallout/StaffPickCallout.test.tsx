@@ -87,9 +87,7 @@ test("renders nothing when fetch returns 0 events", async () => {
 });
 
 test("renders nothing when fetch errors", async () => {
-  server.use(
-    http.get("/api/events/search", () => HttpResponse.error()),
-  );
+  server.use(http.get("/api/events/search", () => HttpResponse.error()));
   renderCallout();
   await waitFor(() => {
     expect(screen.queryByText("Looks like that quest hit a dead end.")).not.toBeInTheDocument();

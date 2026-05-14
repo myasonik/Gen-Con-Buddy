@@ -40,7 +40,7 @@ test("sets document.title to 'About | Gen Con Buddy'", async () => {
 
 test("sets og:title meta to 'About | Gen Con Buddy'", async () => {
   await renderRoute("/about");
-  expect(
-    document.querySelector('meta[property="og:title"]')?.getAttribute("content"),
-  ).toBe("About | Gen Con Buddy");
+  expect(document.querySelector('meta[property="og:title"]')?.getAttribute("content")).toBe(
+    "About | Gen Con Buddy",
+  );
 });

@@ -15,17 +15,17 @@ CSS in `__root.module.css` hides the desktop `<nav>` at ≤60rem and shows `Mobi
 
 ## File Map
 
-| File | Action | Responsibility |
-|---|---|---|
-| `src/components/ThemePopover/ThemeRadioGroup.tsx` | Create | Fieldset + RadioGroup — no side effects, just renders options |
-| `src/components/ThemePopover/ThemeRadioGroup.test.tsx` | Create | Unit tests for the radio group in isolation |
-| `src/components/ThemePopover/ThemePopover.tsx` | Modify | Delegates radio rendering to `ThemeRadioGroup` |
-| `src/components/MobileNav/MobileNav.tsx` | Create | Hamburger trigger + Popover with links + inline radio group |
-| `src/components/MobileNav/MobileNav.module.css` | Create | Styles for hamburger trigger and dropdown panel |
-| `src/components/MobileNav/MobileNav.test.tsx` | Create | Tests for the mobile nav |
-| `src/routes/__root.tsx` | Modify | Render `MobileNav` alongside `<nav>`; pass `theme`/`setTheme` |
-| `src/routes/__root.module.css` | Modify | Hide `.nav` and show `.mobileNav` at ≤60rem |
-| `src/routes/__root.test.tsx` | Modify | Add test: hamburger button present on mobile |
+| File                                                   | Action | Responsibility                                                |
+| ------------------------------------------------------ | ------ | ------------------------------------------------------------- |
+| `src/components/ThemePopover/ThemeRadioGroup.tsx`      | Create | Fieldset + RadioGroup — no side effects, just renders options |
+| `src/components/ThemePopover/ThemeRadioGroup.test.tsx` | Create | Unit tests for the radio group in isolation                   |
+| `src/components/ThemePopover/ThemePopover.tsx`         | Modify | Delegates radio rendering to `ThemeRadioGroup`                |
+| `src/components/MobileNav/MobileNav.tsx`               | Create | Hamburger trigger + Popover with links + inline radio group   |
+| `src/components/MobileNav/MobileNav.module.css`        | Create | Styles for hamburger trigger and dropdown panel               |
+| `src/components/MobileNav/MobileNav.test.tsx`          | Create | Tests for the mobile nav                                      |
+| `src/routes/__root.tsx`                                | Modify | Render `MobileNav` alongside `<nav>`; pass `theme`/`setTheme` |
+| `src/routes/__root.module.css`                         | Modify | Hide `.nav` and show `.mobileNav` at ≤60rem                   |
+| `src/routes/__root.test.tsx`                           | Modify | Add test: hamburger button present on mobile                  |
 
 ---
 
@@ -65,20 +65,24 @@ interface MobileNavProps {
 **Trigger:** A `<Button icon>` with `aria-label="Navigation"` rendering a `Menu` icon (from `lucide-react`). Uses `Popover.Trigger render={<Button icon />}` — the same pattern as `ThemePopover`.
 
 **Popup contents (top to bottom):**
+
 1. Search `<Link to="/">` — clicking closes the popover
 2. Changelog `<Link to="/changelog">` — clicking closes the popover
 3. A `<hr>` divider
 4. `<ThemeRadioGroup>` — inline, no nesting
 
 **Close behavior:**
+
 - Link clicks: close the popover (`setOpen(false)` in the click handler)
 - Theme selection: calls `setTheme(next)` and `announce(`Theme: ${LABELS[next]}`)` but does **not** close the popover — user may still want to navigate after changing theme
 
 **Popover configuration:**
+
 - `Popover.Positioner align="end" sideOffset={4}` — drops below and right-aligns to the trigger
 - `z-index: var(--z-popover)` on the positioner
 
 **Changelog link search params:** must pass the same `search` object as the desktop nav to avoid TanStack Router type errors:
+
 ```ts
 search={{ open: [], eventType: undefined, days: undefined, timeStart: undefined, timeEnd: undefined }}
 ```
@@ -202,13 +206,14 @@ import { MobileNav } from "../components/MobileNav/MobileNav";
 
 ### `MobileNav.test.tsx`
 
-- Renders a button with `aria-label="Navigation"` 
+- Renders a button with `aria-label="Navigation"`
 - Clicking the button opens the popover showing Search link, Changelog link, and three radio options
 - Clicking the Search link closes the popover
 - Clicking the Changelog link closes the popover
 - Clicking a radio option does NOT close the popover
 - Clicking a radio option calls `setTheme` with the correct value
-- Clicking a radio option fires `announce("Theme: ...")` 
+- Clicking a radio option fires `announce("Theme: ...")`
+
 ### `__root.test.tsx` addition
 
 ```ts

@@ -51,13 +51,17 @@ cell: ({ row, linkState }) => {
   const isStaffPick = STAFF_PICK_IDS.has(gameId);
   return (
     <span className={styles.titleCell}>
-      {isStaffPick && <Chip tone="accent" size="sm">Staff Pick</Chip>}
+      {isStaffPick && (
+        <Chip tone="accent" size="sm">
+          Staff Pick
+        </Chip>
+      )}
       <Link to="/event/$id" params={{ id: gameId }} state={linkState}>
         {title}
       </Link>
     </span>
   );
-}
+};
 ```
 
 `styles.titleCell` is a new CSS Modules rule: `display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap;`.
@@ -102,6 +106,7 @@ Each list item `<li>` receives `data-staff-pick` on the same condition. A `<Chip
 **Data fetching:** Use React Query with `fetchEvents({ group: STAFF_PICK_GROUP, limit: 10 })`. The `STAFF_PICK_GROUP` value must be verified against the live API before implementation (`attributes.group` on the fetched events). If the API does not support a clean group filter for these events, fall back to `useQueries` — one `fetchEvents({ gameId, limit: 1 })` per ID in `WILDHAVENS_GAME_IDS` — and merge the results into a single `Event[]`.
 
 **States:**
+
 - Loading: `<EmptyState variant="loading" text="LOADING STAFF PICKS…" />`
 - Error: render nothing (fail silently — this is a secondary surface)
 - Success with data: render the panel
@@ -127,12 +132,14 @@ Sort and visibility controls are rendered above the table using the same `Visibi
 ### `src/components/SearchResults/SearchResults.tsx` — integration
 
 ```tsx
-{data && data.data.length === 0 && (
-  <>
-    <EmptyState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />
-    <StaffPickCallout />
-  </>
-)}
+{
+  data && data.data.length === 0 && (
+    <>
+      <EmptyState variant="empty" text="NO QUESTS FOUND" subtext="Try broadening your search." />
+      <StaffPickCallout />
+    </>
+  );
+}
 ```
 
 No other changes to `SearchResults`.

@@ -701,7 +701,12 @@ test("shows StaffPickCallout when search returns no results", async () => {
     http.get("/api/events/search", ({ request }) => {
       const url = new URL(request.url);
       const response: EventSearchResponse = url.searchParams.has("gameId")
-        ? { data: staffPickEvents, meta: { total: staffPickEvents.length }, links: { self: "" }, error: null }
+        ? {
+            data: staffPickEvents,
+            meta: { total: staffPickEvents.length },
+            links: { self: "" },
+            error: null,
+          }
         : { data: [], meta: { total: 0 }, links: { self: "" }, error: null };
       return HttpResponse.json(response);
     }),
