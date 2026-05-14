@@ -457,3 +457,45 @@ test("non-staff-pick card shows no 'Staff Pick' badge", async () => {
   await renderList([makeEvent({ gameId: "RPG24000001" })]);
   expect(screen.queryByText("Staff Pick")).not.toBeInTheDocument();
 });
+
+// These three tests cover the showMeta binary-expr short-circuit paths [2], [3], [4]
+// by hiding eventType and all time fields so the first two || terms are false.
+
+test("showMeta is true when only minPlayers is in the meta group", async () => {
+  await renderList([makeEvent({ minPlayers: 2, maxPlayers: 6 })], {
+    eventType: false,
+    day: false,
+    startDateTime: false,
+    endDateTime: false,
+    minPlayers: true,
+    maxPlayers: false,
+    ticketsAvailable: false,
+  });
+  expect(screen.getByText("2")).toBeInTheDocument();
+});
+
+test("showMeta is true when only maxPlayers is in the meta group", async () => {
+  await renderList([makeEvent({ minPlayers: 2, maxPlayers: 6 })], {
+    eventType: false,
+    day: false,
+    startDateTime: false,
+    endDateTime: false,
+    minPlayers: false,
+    maxPlayers: true,
+    ticketsAvailable: false,
+  });
+  expect(screen.getByText("6")).toBeInTheDocument();
+});
+
+test("showMeta is true when only ticketsAvailable is in the meta group", async () => {
+  await renderList([makeEvent({ ticketsAvailable: 3 })], {
+    eventType: false,
+    day: false,
+    startDateTime: false,
+    endDateTime: false,
+    minPlayers: false,
+    maxPlayers: false,
+    ticketsAvailable: true,
+  });
+  expect(screen.getByText("3 tickets")).toBeInTheDocument();
+});

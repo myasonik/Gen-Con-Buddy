@@ -302,3 +302,77 @@ test("gameSystem chip has RuleBook icon", () => {
   const [chip] = getActiveFilters({ gameSystem: "Pathfinder 2E" });
   expect(chip.icon).toBe(RuleBook);
 });
+
+// ── fmtTime branches ────────────────────────────────────────────────────────
+
+test("time chip shows minutes when they are non-zero", () => {
+  const [chip] = getActiveFilters({ timeStart: "09:30" });
+  expect(chip.label).toBe("After 9:30 AM");
+});
+
+test("time chip shows 12 for noon (h % 12 === 0, h >= 12)", () => {
+  const [chip] = getActiveFilters({ timeStart: "12:00" });
+  expect(chip.label).toBe("After 12 PM");
+});
+
+test("time chip shows 12 for midnight (h % 12 === 0, h < 12)", () => {
+  const [chip] = getActiveFilters({ timeStart: "00:00" });
+  expect(chip.label).toBe("After 12 AM");
+});
+
+test("time range chip with non-zero minutes on both ends", () => {
+  const [chip] = getActiveFilters({ timeStart: "09:30", timeEnd: "17:45" });
+  expect(chip.label).toBe("9:30 AM–5:45 PM");
+});
+
+// ── lastModified (dateRange) branches ──────────────────────────────────────
+
+test("lastModified chip formats date range", () => {
+  const [chip] = getActiveFilters({
+    lastModified: "[2026-01-01T00:00:00Z,2026-08-01T00:00:00Z]",
+  });
+  expect(chip.id).toBe("lastModified");
+  expect(chip.label).toContain("Modified:");
+  expect(chip.remove({ lastModified: "[...]" })).toStrictEqual({});
+});
+
+test("lastModified chip with empty start boundary (fmtDate empty string)", () => {
+  const [chip] = getActiveFilters({ lastModified: "[,2026-08-01T00:00:00Z]" });
+  expect(chip.id).toBe("lastModified");
+  expect(chip.label).toContain("Modified:");
+});
+
+test("lastModified chip with invalid format falls back to raw value (fmtDateRange !r)", () => {
+  const [chip] = getActiveFilters({ lastModified: "not-a-range" });
+  expect(chip.label).toBe("Modified: not-a-range");
+});
+
+// ── fmtRange with invalid format (!r branch) ────────────────────────────────
+
+test("duration chip with non-range value falls back to raw value", () => {
+  const [chip] = getActiveFilters({ duration: "not-a-range" });
+  expect(chip.label).toBe("Duration: not-a-range");
+});
+
+// ── fmtCostRange branches ───────────────────────────────────────────────────
+
+test("cost chip with both bounds empty produces no dash", () => {
+  const [chip] = getActiveFilters({ cost: "[,]" });
+  expect(chip.label).toBe("Cost: ");
+});
+
+test("cost chip with non-range value falls back to raw value (fmtCostRange !r)", () => {
+  const [chip] = getActiveFilters({ cost: "not-a-range" });
+  expect(chip.label).toBe("Cost: not-a-range");
+});
+
+test("lastModified chip with invalid date in start position falls back to raw string (fmtDate isNaN)", () => {
+  const [chip] = getActiveFilters({ lastModified: "[not-a-date,2026-08-01T00:00:00Z]" });
+  expect(chip.label).toContain("Modified:");
+  expect(chip.label).toContain("not-a-date");
+});
+
+test("enum chip falls back to raw value when code is not in the map", () => {
+  const [chip] = getActiveFilters({ ageRequired: "UnknownAgeValue" });
+  expect(chip.label).toBe("Age: UnknownAgeValue");
+});

@@ -228,3 +228,26 @@ test("passes activeFilter to ChangelogRow so it can show unknown indicator", asy
   // The unknown-state indicator should be present (entry not cached yet)
   expect(screen.getByLabelText("Filter match unknown")).toBeInTheDocument();
 });
+
+test("passes all activeFilter fields (eventType, days, timeStart, timeEnd) to ChangelogRow", async () => {
+  server.use(
+    http.get("/api/changelog/list", () =>
+      HttpResponse.json<ListChangelogsResponse>({
+        entries: [makeChangelogSummary({ id: "entry-1", createdCount: 1 })],
+      }),
+    ),
+    http.get("/api/changelog/fetch", () => new Promise<never>(() => {})),
+  );
+
+  await renderChangelogPage({
+    activeFilter: {
+      eventType: "RPG",
+      days: "fri",
+      timeStart: "09:00",
+      timeEnd: "17:00",
+    },
+  });
+
+  await screen.findByText(/created/);
+  expect(screen.getByLabelText("Filter match unknown")).toBeInTheDocument();
+});

@@ -195,6 +195,39 @@ test("does not announce on mount", async () => {
   cleanup();
 });
 
+test("announces 'light' when OS changes from dark to light while in auto mode", async () => {
+  const cleanup = setupLiveRegions();
+  const listeners: ((e: MediaQueryListEvent) => void)[] = [];
+
+  vi.spyOn(window, "matchMedia").mockImplementation(
+    (query) =>
+      ({
+        matches: true, // start: OS is dark
+        media: query,
+        onchange: null,
+        addEventListener: (_type: string, handler: EventListenerOrEventListenerObject): void => {
+          listeners.push(handler as (e: MediaQueryListEvent) => void);
+        },
+        removeEventListener: vi.fn<() => void>(),
+        dispatchEvent: vi.fn<() => boolean>(),
+      }) as unknown as MediaQueryList,
+  );
+
+  renderHook(() => useTheme()); // theme === "auto", OS currently dark
+
+  act(() => {
+    listeners.forEach((fn) => fn({ matches: false } as MediaQueryListEvent)); // OS → light
+  });
+
+  await waitFor(() => {
+    expect(document.getElementById("live-polite")?.textContent).toBe(
+      "Theme updated to light (Auto)",
+    );
+  });
+
+  cleanup();
+});
+
 test("does not announce OS change when preference is explicit 'dark'", async () => {
   const cleanup = setupLiveRegions();
   const listeners: ((e: MediaQueryListEvent) => void)[] = [];

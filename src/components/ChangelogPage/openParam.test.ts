@@ -69,6 +69,16 @@ describe("parseOpenParam", () => {
   it("drops 2-segment with non-numeric position", () => {
     expect(parseOpenParam(["x.created"])).toStrictEqual(new Map());
   });
+
+  it("second 1-segment for the same position does not overwrite the existing map", () => {
+    const result = parseOpenParam(["1", "1"]);
+    expect(result.get(1)).toStrictEqual(new Map());
+    expect(result.size).toBe(1);
+  });
+
+  it("drops 4-segment with empty group name", () => {
+    expect(parseOpenParam(["1..title.asc"])).toStrictEqual(new Map());
+  });
 });
 
 describe("serializeOpenParam", () => {

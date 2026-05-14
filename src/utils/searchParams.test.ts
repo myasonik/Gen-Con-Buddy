@@ -338,3 +338,118 @@ describe("encodeDays", () => {
     expect(encodeDays(decodeDays(str))).toBe(str);
   });
 });
+
+describe("buildSearchParams — setRange with max-only", () => {
+  it("encodes a range with only the max side", () => {
+    const result = buildSearchParams({ minPlayersMax: "6" });
+    expect(result.minPlayers).toBe("[,6]");
+  });
+});
+
+describe("buildSearchParams — setDateRange", () => {
+  it("encodes lastModified with both start and end", () => {
+    const result = buildSearchParams({
+      lastModifiedStart: "2026-01-01T00:00",
+      lastModifiedEnd: "2026-08-01T00:00",
+    });
+    expect(result.lastModified).toBe("[2026-01-01T00:00:00Z,2026-08-01T00:00:00Z]");
+  });
+
+  it("encodes lastModified with only start", () => {
+    const result = buildSearchParams({ lastModifiedStart: "2026-01-01T00:00" });
+    expect(result.lastModified).toBe("[2026-01-01T00:00:00Z,]");
+  });
+
+  it("encodes lastModified with only end", () => {
+    const result = buildSearchParams({ lastModifiedEnd: "2026-08-01T00:00" });
+    expect(result.lastModified).toBe("[,2026-08-01T00:00:00Z]");
+  });
+
+  it("omits lastModified when both bounds are empty", () => {
+    const result = buildSearchParams({ lastModifiedStart: "", lastModifiedEnd: "" });
+    expect(result).not.toHaveProperty("lastModified");
+  });
+});
+
+describe("parseSearchParams — range params", () => {
+  it("parses all range params when all are present", () => {
+    const result = parseSearchParams({
+      maxPlayers: "[4,8]",
+      duration: "[1,4]",
+      roundNumber: "[1,3]",
+      totalRounds: "[3,3]",
+      minimumPlayTime: "[30,120]",
+      cost: "[0,5]",
+      ticketsAvailable: "[0,10]",
+    });
+    expect(result.maxPlayersMin).toBe("4");
+    expect(result.maxPlayersMax).toBe("8");
+    expect(result.durationMin).toBe("1");
+    expect(result.durationMax).toBe("4");
+    expect(result.roundNumberMin).toBe("1");
+    expect(result.roundNumberMax).toBe("3");
+    expect(result.totalRoundsMin).toBe("3");
+    expect(result.totalRoundsMax).toBe("3");
+    expect(result.minimumPlayTimeMin).toBe("30");
+    expect(result.minimumPlayTimeMax).toBe("120");
+    expect(result.costMin).toBe("0");
+    expect(result.costMax).toBe("5");
+    expect(result.ticketsAvailableMin).toBe("0");
+    expect(result.ticketsAvailableMax).toBe("10");
+  });
+
+  it("returns undefined fields for absent range params", () => {
+    const result = parseSearchParams({});
+    expect(result.maxPlayersMin).toBeUndefined();
+    expect(result.durationMin).toBeUndefined();
+    expect(result.costMin).toBeUndefined();
+  });
+
+  it("returns undefined min/max when range format is invalid", () => {
+    const result = parseSearchParams({ minPlayers: "not-a-range" });
+    expect(result.minPlayersMin).toBeUndefined();
+    expect(result.minPlayersMax).toBeUndefined();
+  });
+});
+
+describe("parseSearchParams — lastModified (parseDateRange)", () => {
+  it("parses lastModified with both bounds", () => {
+    const result = parseSearchParams({
+      lastModified: "[2026-01-01T00:00:00Z,2026-08-01T00:00:00Z]",
+    });
+    expect(result.lastModifiedStart).toBe("2026-01-01T00:00");
+    expect(result.lastModifiedEnd).toBe("2026-08-01T00:00");
+  });
+
+  it("parses lastModified with empty start boundary", () => {
+    const result = parseSearchParams({ lastModified: "[,2026-08-01T00:00:00Z]" });
+    expect(result.lastModifiedStart).toBe("");
+    expect(result.lastModifiedEnd).toBe("2026-08-01T00:00");
+  });
+
+  it("parses lastModified with empty end boundary", () => {
+    const result = parseSearchParams({ lastModified: "[2026-01-01T00:00:00Z,]" });
+    expect(result.lastModifiedStart).toBe("2026-01-01T00:00");
+    expect(result.lastModifiedEnd).toBe("");
+  });
+
+  it("returns undefined lastModified fields when param is absent", () => {
+    const result = parseSearchParams({});
+    expect(result.lastModifiedStart).toBeUndefined();
+    expect(result.lastModifiedEnd).toBeUndefined();
+  });
+
+  it("returns undefined lastModified fields when format is invalid", () => {
+    const result = parseSearchParams({ lastModified: "not-a-range" });
+    expect(result.lastModifiedStart).toBeUndefined();
+    expect(result.lastModifiedEnd).toBeUndefined();
+  });
+});
+
+describe("buildSearchParams — setRange max-is-undefined branch", () => {
+  it("encodes range with undefined max (covers max ?? '' right-side)", () => {
+    // minPlayersMax is not provided → values.minPlayersMax === undefined → max ?? "" uses fallback
+    const result = buildSearchParams({ minPlayersMin: "2" });
+    expect(result.minPlayers).toBe("[2,]");
+  });
+});

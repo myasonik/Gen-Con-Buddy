@@ -128,3 +128,55 @@ describe("Chip size", () => {
     expect(container.firstChild).toHaveAttribute("data-size", "md");
   });
 });
+
+describe("Chip removeLabel (toRemoveLabel branches)", () => {
+  it("uses removeLabel prop instead of children for the remove button label", () => {
+    const onRemove = vi.fn<() => void>();
+    render(
+      <Chip tone="accent" onRemove={onRemove} removeLabel="Custom Label">
+        BGM
+      </Chip>,
+    );
+    expect(screen.getByRole("button", { name: "Remove Custom Label" })).toBeInTheDocument();
+  });
+
+  it("uses numeric children as the remove label", () => {
+    const onRemove = vi.fn<() => void>();
+    render(
+      <Chip tone="accent" onRemove={onRemove}>
+        {42}
+      </Chip>,
+    );
+    expect(screen.getByRole("button", { name: "Remove 42" })).toBeInTheDocument();
+  });
+
+  it("uses first string in array children as the remove label", () => {
+    const onRemove = vi.fn<() => void>();
+    render(
+      <Chip tone="accent" onRemove={onRemove}>
+        {["BGM", " — Board Game"]}
+      </Chip>,
+    );
+    expect(screen.getByRole("button", { name: "Remove BGM" })).toBeInTheDocument();
+  });
+
+  it("falls back to empty string when array children has no string or number", () => {
+    const onRemove = vi.fn<() => void>();
+    render(
+      <Chip tone="accent" onRemove={onRemove}>
+        {[<span key="a">complex</span>]}
+      </Chip>,
+    );
+    expect(screen.getByRole("button", { name: "Remove" })).toBeInTheDocument();
+  });
+
+  it("falls back to empty string when children is a React element", () => {
+    const onRemove = vi.fn<() => void>();
+    render(
+      <Chip tone="accent" onRemove={onRemove}>
+        <span>complex</span>
+      </Chip>,
+    );
+    expect(screen.getByRole("button", { name: "Remove" })).toBeInTheDocument();
+  });
+});

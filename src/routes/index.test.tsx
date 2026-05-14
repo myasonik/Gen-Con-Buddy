@@ -388,6 +388,30 @@ describe("analytics events", () => {
     );
   });
 
+  it("changing page size fires results_page_size_changed and adds limit to URL", async () => {
+    server.use(
+      http.get("/api/events/search", () =>
+        HttpResponse.json<EventSearchResponse>({
+          data: [makeEvent()],
+          meta: { total: 200 },
+          links: { self: "" },
+          error: null,
+        }),
+      ),
+    );
+    const { user, router } = await renderRoute("/");
+    const bottomNav = await screen.findByRole("navigation", { name: "Pagination, bottom" });
+    captureFn.mockClear();
+
+    await user.selectOptions(within(bottomNav).getByRole("combobox"), "500");
+
+    expect(captureFn).toHaveBeenCalledWith("results_page_size_changed", {
+      previous_limit: 100,
+      new_limit: 500,
+    });
+    expect(router.state.location.searchStr).toContain("limit=500");
+  });
+
   it("results_sorted fires with field and direction on column header click", async () => {
     const user = userEvent.setup();
     server.use(

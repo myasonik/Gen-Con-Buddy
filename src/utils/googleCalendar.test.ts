@@ -111,4 +111,30 @@ describe("buildGoogleCalendarUrl", () => {
       "Gen Con event page: https://www.gencon.com/events/310286",
     );
   });
+
+  it("genConEventId falls back to full gameId when no trailing digits", () => {
+    const url = parseUrl(makeEvent({ gameId: "NODIGITS" }).attributes);
+    expect(url.searchParams.get("details")).toContain(
+      "Gen Con event page: https://www.gencon.com/events/NODIGITS",
+    );
+  });
+
+  it("details block includes experienceRequired when non-empty", () => {
+    const url = parseUrl(
+      makeEvent({ experienceRequired: "Some (You've played a few times)" }).attributes,
+    );
+    expect(url.searchParams.get("details")).toContain(
+      "Experience Required: Some (You've played a few times)",
+    );
+  });
+
+  it("details block omits experienceRequired when empty", () => {
+    const url = parseUrl(makeEvent({ experienceRequired: "" }).attributes);
+    expect(url.searchParams.get("details")).not.toContain("Experience Required:");
+  });
+
+  it("details block includes materialsRequiredDetails when non-empty", () => {
+    const url = parseUrl(makeEvent({ materialsRequiredDetails: "Bring dice" }).attributes);
+    expect(url.searchParams.get("details")).toContain("Materials Details: Bring dice");
+  });
 });

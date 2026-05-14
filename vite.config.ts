@@ -43,6 +43,27 @@ export default defineConfig(({ mode }) => {
       minWorkers: 1,
       maxWorkers: 8,
       testTimeout: 15000,
+      coverage: {
+        provider: "v8",
+        include: ["src/**"],
+        exclude: [
+          "src/test/**",
+          "src/**/*.test.{ts,tsx}",
+          "src/**/*.stories.{ts,tsx}",
+          "src/routeTree.gen.ts",
+          "src/vite-env.d.ts",
+          "src/main.tsx",
+          "src/ui/storyMatrix.tsx",
+          "src/ui/icons/**",
+        ],
+        reporter: ["text", "html", "json", "json-summary"],
+        thresholds: {
+          statements: 90,
+          branches: 90,
+          functions: 90,
+          lines: 90,
+        },
+      },
     },
   };
 });

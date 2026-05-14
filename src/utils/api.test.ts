@@ -158,3 +158,41 @@ test("fetchGameSystemFacets throws when response contains error field", async ()
   );
   await expect(fetchGameSystemFacets()).rejects.toThrow("unavailable");
 });
+
+// covers params.days ?? "wed,thu,fri,sat,sun" right-side branch
+test("fetchEvents with timeStart but no days falls back to all Gen Con days", async () => {
+  const { getUrl } = captureUrl();
+  await fetchEvents({ timeStart: "09:00" });
+  // Without days, the fallback "wed,thu,fri,sat,sun" is used to build startDateTime
+  expect(getUrl()?.searchParams.has("startDateTime")).toBe(true);
+});
+
+// covers if (startDateTime) false branch
+test("fetchEvents with invalid days and timeStart omits startDateTime", async () => {
+  const { getUrl } = captureUrl();
+  await fetchEvents({ days: "invalidday", timeStart: "09:00" });
+  // "invalidday" is not in DAY_DATES so daysAndTimeToStartDateTime returns undefined
+  expect(getUrl()?.searchParams.has("startDateTime")).toBe(false);
+});
+
+// covers data.entries ?? [] right-side branch
+test("fetchChangelogList returns empty array when entries is absent from response", async () => {
+  server.use(
+    http.get("/api/changelog/list", () =>
+      HttpResponse.json<ListChangelogsResponse>({}),
+    ),
+  );
+  const result = await fetchChangelogList();
+  expect(result).toStrictEqual([]);
+});
+
+// covers data.values ?? [] right-side branch
+test("fetchGameSystemFacets returns empty array when values is absent from response", async () => {
+  server.use(
+    http.get("/api/events/facets/gameSystem", () =>
+      HttpResponse.json<GameSystemFacetsResponse>({}),
+    ),
+  );
+  const result = await fetchGameSystemFacets();
+  expect(result).toStrictEqual([]);
+});
