@@ -1,45 +1,16 @@
-import { StrictMode } from "react";
 import { expect, test } from "vitest";
-import { act, render, screen } from "@testing-library/react";
-import {
-  createRootRoute,
-  createRoute,
-  createRouter,
-  RouterProvider,
-  createMemoryHistory,
-  Outlet,
-} from "@tanstack/react-router";
-import { AboutPage } from "../components/AboutPage/AboutPage";
-
-async function renderAboutPage(): Promise<void> {
-  const rootRoute = createRootRoute({ component: () => <Outlet /> });
-  const aboutRoute = createRoute({
-    getParentRoute: () => rootRoute,
-    path: "/about",
-    component: AboutPage,
-  });
-  const router = createRouter({
-    routeTree: rootRoute.addChildren([aboutRoute]),
-    history: createMemoryHistory({ initialEntries: ["/about"] }),
-  });
-  await act(async () => {
-    render(
-      <StrictMode>
-        <RouterProvider router={router} />
-      </StrictMode>,
-    );
-  });
-}
+import { screen } from "@testing-library/react";
+import { renderRoute } from "../test/renderRoute";
 
 test("renders the about page heading", async () => {
-  await renderAboutPage();
+  await renderRoute("/about");
   expect(
     screen.getByRole("heading", { level: 1, name: /about gen con buddy/i }),
   ).toBeInTheDocument();
 });
 
 test("renders a GitHub link with correct href and security attributes", async () => {
-  await renderAboutPage();
+  await renderRoute("/about");
   const link = screen.getByRole("link", { name: /open source on github/i });
   expect(link).toHaveAttribute("href", "https://github.com/myasonik/Gen-Con-Buddy");
   expect(link).toHaveAttribute("target", "_blank");
@@ -47,7 +18,7 @@ test("renders a GitHub link with correct href and security attributes", async ()
 });
 
 test("renders EventDB attribution link", async () => {
-  await renderAboutPage();
+  await renderRoute("/about");
   const link = screen.getByRole("link", { name: /eventdb/i });
   expect(link).toHaveAttribute("href", "https://gencon.eventdb.us/about.php");
   expect(link).toHaveAttribute("target", "_blank");
@@ -55,7 +26,7 @@ test("renders EventDB attribution link", async () => {
 });
 
 test("renders game-icons.net attribution link", async () => {
-  await renderAboutPage();
+  await renderRoute("/about");
   const link = screen.getByRole("link", { name: /game-icons\.net/i });
   expect(link).toHaveAttribute("href", "https://game-icons.net");
   expect(link).toHaveAttribute("target", "_blank");
@@ -63,6 +34,13 @@ test("renders game-icons.net attribution link", async () => {
 });
 
 test("sets document.title to 'About | Gen Con Buddy'", async () => {
-  await renderAboutPage();
+  await renderRoute("/about");
   expect(document.title).toBe("About | Gen Con Buddy");
+});
+
+test("sets og:title meta to 'About | Gen Con Buddy'", async () => {
+  await renderRoute("/about");
+  expect(
+    document.querySelector('meta[property="og:title"]')?.getAttribute("content"),
+  ).toBe("About | Gen Con Buddy");
 });
