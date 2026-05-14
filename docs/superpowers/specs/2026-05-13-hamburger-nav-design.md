@@ -23,7 +23,7 @@ CSS in `__root.module.css` hides the desktop `<nav>` at ≤60rem and shows `Mobi
 | `src/components/MobileNav/MobileNav.tsx` | Create | Hamburger trigger + Popover with links + inline radio group |
 | `src/components/MobileNav/MobileNav.module.css` | Create | Styles for hamburger trigger and dropdown panel |
 | `src/components/MobileNav/MobileNav.test.tsx` | Create | Tests for the mobile nav |
-| `src/routes/__root.tsx` | Modify | Render `MobileNav` alongside `<nav>`; pass `theme`/`resolvedTheme`/`setTheme` |
+| `src/routes/__root.tsx` | Modify | Render `MobileNav` alongside `<nav>`; pass `theme`/`setTheme` |
 | `src/routes/__root.module.css` | Modify | Hide `.nav` and show `.mobileNav` at ≤60rem |
 | `src/routes/__root.test.tsx` | Modify | Add test: hamburger button present on mobile |
 
@@ -38,15 +38,13 @@ A pure presentational component. Renders the `<fieldset>` + `<legend>` + `RadioG
 ```ts
 interface ThemeRadioGroupProps {
   theme: ThemePreference;
-  resolvedTheme: "light" | "dark";
   onValueChange: (v: ThemePreference) => void;
 }
 ```
 
 - Imports `RadioGroup` and `Radio` from `@base-ui/react`
 - Imports `Sun`, `Moon`, `Eclipse` icons
-- Imports `styles` from `ThemePopover.module.css` — reuses existing CSS classes (`.fieldset`, `.radioGroup`, `.option`, `.radio`, `.radioIndicator`, `.resolvedNote`)
-- Renders "Currently: Light/Dark" note when `theme === "auto"`, as `<p aria-hidden="true">`
+- Imports `styles` from `ThemePopover.module.css` — reuses existing CSS classes (`.fieldset`, `.radioGroup`, `.option`, `.radio`, `.radioIndicator`)
 - No new CSS file needed — all classes already exist in `ThemePopover.module.css`
 
 **ThemePopover update:** The existing `handleChange` (which calls `setTheme`, `announce`, `setOpen(false)`) is passed as `onValueChange` to `ThemeRadioGroup`. No behavior change — all existing ThemePopover tests continue to pass.
@@ -60,7 +58,6 @@ interface ThemeRadioGroupProps {
 ```ts
 interface MobileNavProps {
   theme: ThemePreference;
-  resolvedTheme: "light" | "dark";
   setTheme: (v: ThemePreference) => void;
 }
 ```
@@ -186,10 +183,10 @@ import { MobileNav } from "../components/MobileNav/MobileNav";
 <nav className={rootStyles.nav}>
   <Link ...>Search</Link>
   <Link ...>Changelog</Link>
-  <ThemePopover theme={theme} resolvedTheme={resolvedTheme} setTheme={setTheme} />
+  <ThemePopover theme={theme} setTheme={setTheme} />
 </nav>
 <div className={rootStyles.mobileNav}>
-  <MobileNav theme={theme} resolvedTheme={resolvedTheme} setTheme={setTheme} />
+  <MobileNav theme={theme} setTheme={setTheme} />
 </div>
 ```
 
@@ -201,9 +198,6 @@ import { MobileNav } from "../components/MobileNav/MobileNav";
 
 - Renders three radio options (Light, Dark, Auto)
 - Correct radio is checked for each `theme` value
-- "Currently: Dark" note renders when `theme="auto"` and `resolvedTheme="dark"`
-- "Currently: Light" note renders when `theme="auto"` and `resolvedTheme="light"`
-- No "Currently" note when `theme` is explicit
 - `onValueChange` called with `"light"` / `"dark"` / `"auto"` on radio click
 
 ### `MobileNav.test.tsx`

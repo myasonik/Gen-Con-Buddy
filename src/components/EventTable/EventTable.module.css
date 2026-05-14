@@ -3,6 +3,9 @@
   overflow: clip;
 }
 
+/* Background image on the scroll container (not tableClipWrapper) is intentional:
+   cover sizes the image to the visible port width, so horizontal scrolling creates
+   a parallax effect where the image stays fixed while pick rows slide over it. */
 .tableWrapper {
   overflow-x: scroll;
   margin-top: -0.0625rem;

@@ -91,12 +91,7 @@ export function SearchResults({
               </div>
               <EventListMobile
                 events={data.data}
-                visibility={sharedColumnState.visibility}
-                typeDisplay={sharedColumnState.typeDisplay}
-                showTypeIcon={sharedColumnState.showTypeIcon}
-                dayFormat={sharedColumnState.dayFormat}
-                timeZone={sharedColumnState.timeZone}
-                timeFormat={sharedColumnState.timeFormat}
+                columnState={sharedColumnState}
               />
             </div>
           )}

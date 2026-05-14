@@ -12,7 +12,7 @@ import { COLUMNS, COLUMN_GROUPS } from "./columns";
 import styles from "./EventListMobile.module.css";
 import typeCellStyles from "./typeCell.module.css";
 import { formatDayCompact, formatTime, toDisplayDate } from "../../utils/formatDay";
-import type { DayFormat, TypeDisplay, TimeZone, TimeFormat } from "./types";
+import type { DayFormat, TypeDisplay, TimeZone, TimeFormat, SharedColumnState } from "./types";
 
 const META_COLUMN_IDS = new Set([
   "eventType",
@@ -91,8 +91,11 @@ function getMobileValue(id: string, a: Event["attributes"]): string {
   }
 }
 
+type ColumnStateSubset = Pick<SharedColumnState, "visibility" | "typeDisplay" | "showTypeIcon" | "dayFormat" | "timeZone" | "timeFormat">;
+
 interface EventListMobileProps {
   events: Event[];
+  columnState?: ColumnStateSubset;
   visibility?: Partial<Record<string, boolean>>;
   typeDisplay?: TypeDisplay;
   showTypeIcon?: boolean;
@@ -104,14 +107,22 @@ interface EventListMobileProps {
 
 export function EventListMobile({
   events,
-  visibility,
-  typeDisplay,
-  showTypeIcon,
-  dayFormat,
-  timeZone,
-  timeFormat,
+  columnState,
+  visibility: visibilityProp,
+  typeDisplay: typeDisplayProp,
+  showTypeIcon: showTypeIconProp,
+  dayFormat: dayFormatProp,
+  timeZone: timeZoneProp,
+  timeFormat: timeFormatProp,
   linkState,
 }: EventListMobileProps): React.JSX.Element {
+  const visibility = columnState?.visibility ?? visibilityProp;
+  const typeDisplay = columnState?.typeDisplay ?? typeDisplayProp;
+  const showTypeIcon = columnState?.showTypeIcon ?? showTypeIconProp;
+  const dayFormat = columnState?.dayFormat ?? dayFormatProp;
+  const timeZone = columnState?.timeZone ?? timeZoneProp;
+  const timeFormat = columnState?.timeFormat ?? timeFormatProp;
+
   const vis = visibility ?? COLUMN_VISIBILITY_DEFAULTS;
   const isVisible = (id: string): boolean => vis[id] !== false;
 
@@ -209,7 +220,7 @@ export function EventListMobile({
               state={linkState}
               className={styles.row}
             >
-              {isStaffPick && <Chip tone="accent" size="sm">Staff Pick</Chip>}
+              {isStaffPick && <span className={styles.staffPickBadge}><Chip tone="accent" size="sm">Staff Pick</Chip></span>}
               {isVisible("title") && <span className={styles.title}>{a.title}</span>}
               {showMeta && (
                 <span className={styles.meta}>
