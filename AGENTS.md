@@ -26,6 +26,13 @@ All tests use MSW for network interception — never mock API requests or intern
 
 `src/test/setup.ts` pins `process.env.TZ = 'America/Indianapolis'` so date formatting tests (day names, times) are deterministic on any CI box. Gen Con is held in Indianapolis every year, so all date display is relative to that timezone.
 
+**Route tests vs. component tests.** A test belongs in `src/routes/*.test.tsx` only if it requires the router to be meaningful — meaning it verifies one of:
+1. URL mutation after user interaction (page resets, sort params, filter chip removal updating `router.state.location`)
+2. Router navigation (`router.navigate()`, `router.state.resolvedLocation`, deep-link hydration across a navigation event)
+3. Head output (`document.title`, meta tags from `head()`)
+
+Everything else — component shape, aria attributes, chip rendering from search params, form field behavior — belongs in the component's own test file, where it runs without booting a router or QueryClient.
+
 ## Global CSS Escape Hatches
 
 One global utility class in `src/styles/global.css` is intentionally used as a bare string (bypassing CSS Modules encapsulation). Do not replace it with a CSS Module import.

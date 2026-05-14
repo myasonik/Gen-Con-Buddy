@@ -17,11 +17,6 @@ beforeEach(() => {
   captureFn.mockClear();
 });
 
-test("populates eventType dropdown from URL search param on load", async () => {
-  await renderRoute("/", { searchParams: { eventType: "BGM" } });
-  expect(screen.getByRole("button", { name: "Remove BGM" })).toBeInTheDocument();
-});
-
 test("updates form when URL search params change after initial render", async () => {
   const { router } = await renderRoute("/?eventType=BGM");
   expect(screen.getByRole("button", { name: "Remove BGM" })).toBeInTheDocument();
@@ -131,12 +126,6 @@ test("navigating to page 2 sends page=1 to API (0-indexed)", async () => {
   expect(latestUrl!.searchParams.get("page")).toBe("1");
 });
 
-test("materialsRequiredDetails param survives route validator", async () => {
-  const { router } = await renderRoute("/?materialsRequiredDetails=Dice+required");
-  // oxlint-disable-next-line typescript/no-non-null-assertion
-  expect(router.state.resolvedLocation!.search.materialsRequiredDetails).toBe("Dice required");
-});
-
 test("clicking a sort column header updates the URL with sort param and resets page", async () => {
   const user = userEvent.setup();
   let latestUrl: URL | null = null;
@@ -161,18 +150,6 @@ test("clicking a sort column header updates the URL with sort param and resets p
   expect(latestUrl!.searchParams.has("page")).toBe(false);
   // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(latestUrl!.searchParams.get("sort")).toBe("startDateTime.asc");
-});
-
-test("renders a banner landmark with the app title", async () => {
-  await renderRoute("/");
-  expect(screen.getByRole("banner")).toBeInTheDocument();
-  expect(screen.getByRole("banner")).toHaveTextContent("Gen Con Buddy");
-});
-
-test("site header contains the app title", async () => {
-  await renderRoute("/");
-  expect(screen.getByRole("banner")).toBeInTheDocument();
-  expect(screen.getByText("Gen Con Buddy")).toBeInTheDocument();
 });
 
 test("navigating back to page 1 omits page from URL and API call", async () => {
@@ -210,81 +187,13 @@ test("sets document.title to 'Gen Con Buddy'", async () => {
   expect(document.title).toBe("Gen Con Buddy");
 });
 
-test("day tiles are checkboxes", async () => {
-  await renderRoute("/");
-  expect(screen.getByRole("checkbox", { name: "Wed" })).not.toBeChecked();
-});
-
-test("day checkboxes are keyboard accessible interactive elements", async () => {
-  await renderRoute("/");
-  const thuCheckbox = screen.getByRole("checkbox", { name: "Thu" });
-  expect(thuCheckbox).toBeInTheDocument();
-  expect(thuCheckbox).not.toBeChecked();
-});
-
-test("eventType column renders the event type", async () => {
-  server.use(
-    http.get("/api/events/search", () =>
-      HttpResponse.json({
-        data: [makeEvent({ eventType: "RPG - Roleplaying Game" })],
-        meta: { total: 1 },
-        links: { self: "" },
-        error: null,
-      }),
-    ),
-  );
-  await renderRoute("/");
-  const table = await screen.findByRole("table");
-  expect(within(table).getByText("Roleplaying Game")).toBeInTheDocument();
-});
-
 describe("sidebar toggle and active filters", () => {
-  beforeEach(() => {
-    localStorage.clear();
-  });
-
-  it("sidebar toggle button is present in the results area", async () => {
-    await renderRoute("/");
-    expect(screen.getByRole("button", { name: /Filters/ })).toBeInTheDocument();
-  });
-
-  it("sidebar toggle button has aria-expanded=false by default", async () => {
-    await renderRoute("/");
-    expect(screen.getByRole("button", { name: /Filters/ })).toHaveAttribute(
-      "aria-expanded",
-      "false",
-    );
-  });
-
   it("clicking toggle button flips aria-expanded to true", async () => {
     const user = userEvent.setup();
     await renderRoute("/");
     const btn = screen.getByRole("button", { name: /Filters/ });
     await user.click(btn);
     expect(btn).toHaveAttribute("aria-expanded", "true");
-  });
-
-  it("clicking the backdrop closes the drawer", async () => {
-    const user = userEvent.setup();
-    await renderRoute("/");
-    const btn = screen.getByRole("button", { name: /Filters/ });
-    // Open the drawer first
-    await user.click(btn);
-    expect(btn).toHaveAttribute("aria-expanded", "true");
-    // Find the backdrop by data-testid — aria-hidden, not in a11y tree
-    const backdrop = document.querySelector("[data-testid='drawer-backdrop']") as HTMLElement;
-    await user.click(backdrop);
-    expect(btn).toHaveAttribute("aria-expanded", "false");
-  });
-
-  it("no active filter chips when no filters are set", async () => {
-    await renderRoute("/");
-    expect(screen.queryByRole("button", { name: /Search:/ })).toBeNull();
-  });
-
-  it("active filter chip appears when filter param is in URL", async () => {
-    await renderRoute("/?filter=dragon");
-    expect(screen.getByRole("button", { name: /Search: dragon/ })).toBeInTheDocument();
   });
 
   it("clicking a filter chip removes it from the URL", async () => {

@@ -395,6 +395,24 @@ test("reset button clears gameSystem selection", async () => {
   expect(screen.queryByRole("button", { name: "Remove Pathfinder 2E" })).not.toBeInTheDocument();
 });
 
+test("day checkboxes are rendered inside a group named Days", () => {
+  renderSearchForm();
+  expect(screen.getByRole("group", { name: "Days" })).toBeInTheDocument();
+});
+
+test("Filters button has aria-expanded=false by default", () => {
+  renderSearchForm();
+  expect(screen.getByRole("button", { name: "Filters" })).toHaveAttribute("aria-expanded", "false");
+});
+
+test("Filters button has aria-expanded=true after clicking", async () => {
+  const user = userEvent.setup();
+  renderSearchForm();
+  const btn = screen.getByRole("button", { name: "Filters" });
+  await user.click(btn);
+  expect(btn).toHaveAttribute("aria-expanded", "true");
+});
+
 // ── changelogMode ──────────────────────────────────────────────────────────
 
 function renderChangelogMode(
