@@ -234,3 +234,63 @@ test("sets document.title to event title and gameId after data loads", async () 
   await screen.findAllByRole("term");
   expect(document.title).toBe("Dungeon Crawl Classic (RPG24000042) | Gen Con Buddy");
 });
+
+test("sets og:description meta after event data loads", async () => {
+  server.use(
+    http.get("/api/events/search", ({ request }) => {
+      const url = new URL(request.url);
+      const gameId = url.searchParams.get("gameId") ?? "RPG24000042";
+      return HttpResponse.json<EventSearchResponse>({
+        data: [makeEvent({ gameId, title: "Dragon Hunt", eventType: "RPG", gmNames: "Jane Smith", location: "ICC" })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      });
+    }),
+  );
+  await renderRoute("/event/RPG24000042", { queryClient });
+  await screen.findAllByRole("term");
+  const content = document.querySelector('meta[property="og:description"]')?.getAttribute("content");
+  // factory startDateTime "2024-08-01T10:00:00Z" = August 1, 2024, 6:00 AM in America/Indianapolis
+  expect(content).toBe("RPG event at Gen Con. GM: Jane Smith. August 1, 2024, 6:00 AM. ICC.");
+});
+
+test("injects JSON-LD structured data script tag after event loads", async () => {
+  server.use(
+    http.get("/api/events/search", ({ request }) => {
+      const url = new URL(request.url);
+      const gameId = url.searchParams.get("gameId") ?? "RPG24000042";
+      return HttpResponse.json<EventSearchResponse>({
+        data: [makeEvent({ gameId, title: "Dragon Hunt", ticketsAvailable: 0 })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      });
+    }),
+  );
+  await renderRoute("/event/RPG24000042", { queryClient });
+  await screen.findAllByRole("term");
+  const script = document.querySelector('script[type="application/ld+json"]');
+  expect(script).not.toBeNull();
+  const data = JSON.parse(script!.textContent ?? "{}");
+  expect(data["@type"]).toBe("Event");
+  expect(data.name).toBe("Dragon Hunt");
+  expect(data.url).toBe("https://gcb.quest/event/RPG24000042");
+  expect(data.offers.availability).toBe("https://schema.org/SoldOut"); // ticketsAvailable === 0
+  expect(data.organizer.name).toBe("Jane Smith");
+});
+
+test("falls back to root title when event is not found", async () => {
+  server.use(
+    http.get("/api/events/search", () =>
+      HttpResponse.json<EventSearchResponse>({
+        data: [],
+        meta: { total: 0 },
+        links: { self: "" },
+        error: null,
+      }),
+    ),
+  );
+  await renderRoute("/event/RPG24000042", { queryClient });
+  expect(document.title).toBe("Gen Con Buddy");
+});

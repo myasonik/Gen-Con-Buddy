@@ -14,7 +14,6 @@ import { CalendarPlus, ExternalLink } from "lucide-react";
 import { useDayFormat } from "../../hooks/useDayFormat";
 import { useTimeZone } from "../../hooks/useTimeZone";
 import { useTimeFormat } from "../../hooks/useTimeFormat";
-import { usePageTitle } from "../../lib/usePageTitle";
 import { formatDay, formatTime, toDisplayDate } from "../../utils/formatDay";
 import { STAFF_PICK_IDS } from "../../utils/staffPicks";
 import { normalizeUrl } from "./normalizeUrl";
@@ -38,9 +37,6 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
   const { timeZone } = useTimeZone();
   const { timeFormat } = useTimeFormat();
   const event = data?.data[0];
-  usePageTitle(
-    event ? `${event.attributes.title} (${event.attributes.gameId}) | Gen Con Buddy` : undefined,
-  );
 
   useEffect(() => {
     if (!event) {
