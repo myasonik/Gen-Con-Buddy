@@ -1,5 +1,11 @@
 import { useEffect } from "react";
-import { createRootRouteWithContext, Link, Outlet, useRouterState } from "@tanstack/react-router";
+import {
+  createRootRouteWithContext,
+  HeadContent,
+  Link,
+  Outlet,
+  useRouterState,
+} from "@tanstack/react-router";
 import type { QueryClient } from "@tanstack/react-query";
 import { PostHogProvider, usePostHog } from "posthog-js/react";
 import { Meeple3D } from "../ui/icons/Meeple3D";
@@ -22,11 +28,15 @@ function PageViewTracker(): null {
   return null;
 }
 
+const SITE_DESCRIPTION =
+  "Fast, deeply filterable event search for Gen Con. Search across event type, time, location, cost, and more.";
+
 function AppShell(): React.JSX.Element {
   const { theme, setTheme } = useTheme();
 
   return (
     <div className={indexStyles.page}>
+      <HeadContent />
       {POSTHOG_TOKEN && <PageViewTracker />}
       <header role="banner" className={indexStyles.header}>
         <Link to="/" className={rootStyles.brandingTitle}>
@@ -72,6 +82,23 @@ export interface RouterContext {
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
+  head: () => ({
+    meta: [
+      { title: "Gen Con Buddy" },
+      { name: "description", content: SITE_DESCRIPTION },
+      { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Gen Con Buddy" },
+      { property: "og:title", content: "Gen Con Buddy" },
+      { property: "og:description", content: SITE_DESCRIPTION },
+      { property: "og:image", content: "https://gcb.quest/og-image.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://gcb.quest/" },
+      { name: "twitter:title", content: "Gen Con Buddy" },
+      { name: "twitter:description", content: SITE_DESCRIPTION },
+    ],
+  }),
   component: (): React.JSX.Element =>
     POSTHOG_TOKEN ? (
       <PostHogProvider
