@@ -2,27 +2,18 @@ import React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { fetchEvents } from "../utils/api";
 import { EventDetail } from "../components/EventDetail/EventDetail";
+import type { EventAttributes } from "../utils/types";
 
-function formatEventDescription(
-  eventType: string,
-  gmNames: string,
-  startDateTime: string,
-  location: string,
-): string {
-  const date = new Intl.DateTimeFormat("en-US", {
+function formatEventDescription(a: EventAttributes): string {
+  const dateTime = new Intl.DateTimeFormat("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
-    timeZone: "America/Indianapolis",
-  }).format(new Date(startDateTime));
-
-  const time = new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
     minute: "2-digit",
     timeZone: "America/Indianapolis",
-  }).format(new Date(startDateTime));
-
-  return `${eventType} event at Gen Con. GM: ${gmNames}. ${date}, ${time}. ${location}.`;
+  }).format(new Date(a.startDateTime));
+  return `${a.eventType} event at Gen Con. GM: ${a.gmNames}. ${dateTime}. ${a.location}.`;
 }
 
 export const Route = createFileRoute("/event/$id")({
@@ -33,7 +24,7 @@ export const Route = createFileRoute("/event/$id")({
     }
     const a = event.attributes;
     const title = `${a.title} (${a.gameId}) | Gen Con Buddy`;
-    const description = formatEventDescription(a.eventType, a.gmNames, a.startDateTime, a.location);
+    const description = formatEventDescription(a);
 
     return {
       meta: [

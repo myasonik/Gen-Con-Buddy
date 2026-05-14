@@ -94,6 +94,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
+      // og:url is not overridden per-route — all pages share the homepage canonical until SSR lands
       { property: "og:url", content: "https://gcb.quest/" },
       { name: "twitter:title", content: "Gen Con Buddy" },
       { name: "twitter:description", content: SITE_DESCRIPTION },

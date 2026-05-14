@@ -29,6 +29,7 @@ import type {
 } from "../utils/types";
 import { ChangelogPage } from "../components/ChangelogPage/ChangelogPage";
 import { renderRoute } from "../test/renderRoute";
+import { queryClient } from "../lib/queryClient";
 
 beforeEach(() => {
   localStorage.clear();
@@ -711,14 +712,12 @@ test("event links in changelog carry from:changelog navigation state", async () 
 });
 
 test("sets document.title to 'Changelog | Gen Con Buddy'", async () => {
-  const { queryClient: client } = await import("../lib/queryClient");
-  await renderRoute("/changelog", { queryClient: client });
+  await renderRoute("/changelog", { queryClient });
   expect(document.title).toBe("Changelog | Gen Con Buddy");
 });
 
 test("sets og:title meta to 'Changelog | Gen Con Buddy'", async () => {
-  const { queryClient: client } = await import("../lib/queryClient");
-  await renderRoute("/changelog", { queryClient: client });
+  await renderRoute("/changelog", { queryClient });
   expect(
     document.querySelector('meta[property="og:title"]')?.getAttribute("content"),
   ).toBe("Changelog | Gen Con Buddy");

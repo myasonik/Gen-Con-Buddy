@@ -251,8 +251,8 @@ test("sets og:description meta after event data loads", async () => {
   await renderRoute("/event/RPG24000042", { queryClient });
   await screen.findAllByRole("term");
   const content = document.querySelector('meta[property="og:description"]')?.getAttribute("content");
-  // factory startDateTime "2024-08-01T10:00:00Z" = August 1, 2024, 6:00 AM in America/Indianapolis
-  expect(content).toBe("RPG event at Gen Con. GM: Jane Smith. August 1, 2024, 6:00 AM. ICC.");
+  // factory startDateTime "2024-08-01T10:00:00Z" = August 1, 2024 at 6:00 AM in America/Indianapolis
+  expect(content).toBe("RPG event at Gen Con. GM: Jane Smith. August 1, 2024 at 6:00 AM. ICC.");
 });
 
 test("injects JSON-LD structured data script tag after event loads", async () => {

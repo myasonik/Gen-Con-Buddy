@@ -210,11 +210,6 @@ test("sets document.title to 'Gen Con Buddy'", async () => {
   expect(document.title).toBe("Gen Con Buddy");
 });
 
-test("sets document.title to 'Gen Con Buddy' on homepage", async () => {
-  await renderRoute("/");
-  expect(document.title).toBe("Gen Con Buddy");
-});
-
 test("day tiles are checkboxes", async () => {
   await renderRoute("/");
   expect(screen.getByRole("checkbox", { name: "Wed" })).not.toBeChecked();
