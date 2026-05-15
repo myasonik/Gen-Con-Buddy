@@ -5,7 +5,7 @@ import { SearchForm } from "../components/SearchForm/SearchForm";
 import { SearchResults } from "../components/SearchResults/SearchResults";
 import { ActiveFilters } from "../components/ActiveFilters/ActiveFilters";
 import { buildSearchParams, parseSearchParams } from "../utils/searchParams";
-import { coerceSearchParams } from "../utils/coerceSearchParams";
+import { coerceSearchParams } from "../utils/searchParamSchema";
 import { DEFAULT_PAGE_SIZE } from "../utils/constants";
 import type { SearchFormValues, SearchParams } from "../utils/types";
 import type { ActiveFilter } from "../components/ActiveFilters/getActiveFilters";

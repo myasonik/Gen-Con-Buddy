@@ -1,5 +1,5 @@
 import { expect, describe, it } from "vitest";
-import { coerceSearchParams } from "./coerceSearchParams";
+import { coerceSearchParams } from "./searchParamSchema";
 
 describe("coerceSearchParams", () => {
   it("returns all-undefined SearchParams from empty object", () => {
