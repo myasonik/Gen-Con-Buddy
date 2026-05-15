@@ -1,12 +1,6 @@
 import { expect, describe, it } from "vitest";
-import {
-  buildSearchParams,
-  daysAndTimeToStartDateTime,
-  GEN_CON_YEAR,
-  parseSearchParams,
-  decodeDays,
-  encodeDays,
-} from "./searchParams";
+import { daysAndTimeToStartDateTime, GEN_CON_YEAR, decodeDays, encodeDays } from "./searchParams";
+import { buildSearchParams, parseSearchParams } from "./searchParamSchema";
 
 describe("GEN_CON_YEAR", () => {
   it("is 2026 — update this test intentionally when the API year changes", () => {
