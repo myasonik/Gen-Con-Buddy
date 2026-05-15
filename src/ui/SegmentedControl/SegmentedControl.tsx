@@ -5,13 +5,7 @@ import styles from "./SegmentedControl.module.css";
 
 type Variant = "default" | "menu";
 
-interface SegmentedControlContextValue {
-  variant: Variant;
-}
-
-const SegmentedControlContext = React.createContext<SegmentedControlContextValue>({
-  variant: "default",
-});
+const SegmentedControlContext = React.createContext<Variant>("default");
 
 interface SegmentedControlProps {
   value: string;
@@ -31,7 +25,7 @@ function SegmentedControlOption({
   children,
   indicator,
 }: SegmentedControlOptionProps): React.JSX.Element {
-  const { variant } = React.useContext(SegmentedControlContext);
+  const variant = React.useContext(SegmentedControlContext);
 
   if (variant === "menu") {
     return (
@@ -62,7 +56,7 @@ function SegmentedControlRoot({
 }: SegmentedControlProps): React.JSX.Element {
   const rootClass = variant === "menu" ? styles.menuRoot : styles.root;
   return (
-    <SegmentedControlContext.Provider value={{ variant }}>
+    <SegmentedControlContext.Provider value={variant}>
       <RadioGroup
         value={value}
         onValueChange={(v) => onValueChange(v as string)}

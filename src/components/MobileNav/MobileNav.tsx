@@ -1,9 +1,8 @@
 import React from "react";
-import { Menu } from "lucide-react";
+import { Menu, Sun, Moon } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Popover } from "@base-ui/react/popover";
 import { Button } from "../../ui/Button/Button";
-import { Sun, Moon } from "lucide-react";
 import { Eclipse } from "../../ui/icons/Eclipse";
 import { SegmentedControl } from "../../ui/SegmentedControl/SegmentedControl";
 import { announce } from "../../lib/announce";

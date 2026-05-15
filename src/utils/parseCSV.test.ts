@@ -1,32 +1,32 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, it } from "vitest";
 import { parseCSV } from "./parseCSV";
 
 describe("parseCSV", () => {
-  test("undefined returns empty array", () => {
-    expect(parseCSV(undefined)).toEqual([]);
+  it("undefined returns empty array", () => {
+    expect(parseCSV(undefined)).toStrictEqual([]);
   });
 
-  test("empty string returns empty array", () => {
-    expect(parseCSV("")).toEqual([]);
+  it("empty string returns empty array", () => {
+    expect(parseCSV("")).toStrictEqual([]);
   });
 
-  test("single value returns single-element array", () => {
-    expect(parseCSV("RPG")).toEqual(["RPG"]);
+  it("single value returns single-element array", () => {
+    expect(parseCSV("RPG")).toStrictEqual(["RPG"]);
   });
 
-  test("two values returns two-element array", () => {
-    expect(parseCSV("RPG,BGM")).toEqual(["RPG", "BGM"]);
+  it("two values returns two-element array", () => {
+    expect(parseCSV("RPG,BGM")).toStrictEqual(["RPG", "BGM"]);
   });
 
-  test("trailing comma is ignored", () => {
-    expect(parseCSV("RPG,")).toEqual(["RPG"]);
+  it("trailing comma is ignored", () => {
+    expect(parseCSV("RPG,")).toStrictEqual(["RPG"]);
   });
 
-  test("leading comma is ignored", () => {
-    expect(parseCSV(",RPG")).toEqual(["RPG"]);
+  it("leading comma is ignored", () => {
+    expect(parseCSV(",RPG")).toStrictEqual(["RPG"]);
   });
 
-  test("double comma is collapsed", () => {
-    expect(parseCSV("RPG,,BGM")).toEqual(["RPG", "BGM"]);
+  it("double comma is collapsed", () => {
+    expect(parseCSV("RPG,,BGM")).toStrictEqual(["RPG", "BGM"]);
   });
 });
