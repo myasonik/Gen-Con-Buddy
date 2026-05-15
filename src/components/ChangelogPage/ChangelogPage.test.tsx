@@ -256,9 +256,7 @@ test("passes all activeFilter fields (eventType, days, timeStart, timeEnd) to Ch
 test("shows error message when changelog list fetch fails", async () => {
   withNetworkError("/api/changelog/list");
   await renderChangelogPage();
-  await waitFor(() =>
-    expect(
-      screen.getByText("Could not load changelog. Try refreshing."),
-    ).toBeInTheDocument(),
-  );
+  await expect(
+    screen.findByText("Could not load changelog. Try refreshing."),
+  ).resolves.toBeInTheDocument();
 });
