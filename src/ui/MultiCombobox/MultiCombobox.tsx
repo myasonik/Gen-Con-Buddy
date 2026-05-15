@@ -117,6 +117,11 @@ export function MultiCombobox({
                       className={styles.chipRemove}
                       aria-label={`Remove ${renderRemoveLabel ? renderRemoveLabel(option) : option.label}`}
                       tabIndex={0}
+                      onKeyDown={(e) => {
+                        // Stop Tab from bubbling to the ComboboxChip div, which would
+                        // programmatically refocus the chip div and trap forward Tab.
+                        if (e.key === "Tab") e.stopPropagation();
+                      }}
                       onPointerDown={() => {
                         suppressFocusOpenRef.current = true;
                       }}
