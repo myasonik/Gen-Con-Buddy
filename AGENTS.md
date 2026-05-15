@@ -26,6 +26,8 @@ All tests use MSW for network interception — never mock API requests or intern
 
 `src/test/setup.ts` pins `process.env.TZ = 'America/Indianapolis'` so date formatting tests (day names, times) are deterministic on any CI box. Gen Con is held in Indianapolis every year, so all date display is relative to that timezone.
 
+Every `useQuery` call requires an MSW error test in its co-located test file. Use `withNetworkError()` or `withServerError()` from `src/test/apiError.ts` to register the override. Also cover the 200-with-error-envelope path for any fetch function that checks `data.error`.
+
 **Route tests vs. component tests.** A test belongs in `src/routes/*.test.tsx` only if it requires the router to be meaningful — meaning it verifies one of:
 
 1. URL mutation after user interaction (page resets, sort params, filter chip removal updating `router.state.location`)
