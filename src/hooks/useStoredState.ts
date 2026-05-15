@@ -9,6 +9,8 @@ export function useStoredState<T>(
 ): [T, (next: SetStateAction<T>) => void] {
   const [value, setValue] = useState<T>(() => readFromStorage(key, version, defaultValue));
   const prevVersionRef = useRef(version);
+  const defaultValueRef = useRef(defaultValue);
+  defaultValueRef.current = defaultValue;
 
   useEffect(() => {
     if (prevVersionRef.current === version) {
@@ -19,9 +21,9 @@ export function useStoredState<T>(
       }
     } else {
       prevVersionRef.current = version;
-      setValue(readFromStorage(key, version, defaultValue));
+      setValue(readFromStorage(key, version, defaultValueRef.current));
     }
-  }, [key, version, value, defaultValue]);
+  }, [key, version, value]);
 
   const setStoredValue = (next: SetStateAction<T>): void => {
     setValue((prev) => (typeof next === "function" ? (next as (p: T) => T)(prev) : next));
