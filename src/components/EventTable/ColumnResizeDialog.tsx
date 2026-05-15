@@ -1,6 +1,7 @@
 import React, { useState, useId } from "react";
 import { Dialog } from "@base-ui/react/dialog";
 import { Button } from "../../ui/Button/Button";
+import { Input } from "../../ui/Input/Input";
 import styles from "./ColumnResizeDialog.module.css";
 
 interface ColumnResizeDialogProps {
@@ -38,10 +39,9 @@ export function ColumnResizeDialog({
             <label htmlFor={inputId} className={styles.label}>
               Width (px)
             </label>
-            <input
+            <Input
               id={inputId}
               type="number"
-              className={styles.input}
               min={minWidth}
               value={value}
               onChange={(e) => setValue(e.target.value)}

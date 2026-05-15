@@ -1,6 +1,7 @@
 import React from "react";
 import { VisibilityDrawer } from "./VisibilityDrawer";
 import { FormatDrawer } from "./FormatDrawer";
+import { SortDrawer } from "./SortDrawer";
 import type { SharedColumnState } from "./types";
 import styles from "./ColumnControlsPanel.module.css";
 
@@ -13,6 +14,7 @@ export function ColumnControlsPanel({ columnState }: ColumnControlsPanelProps): 
     <div className={styles.controls}>
       <VisibilityDrawer columnState={columnState} />
       <FormatDrawer columnState={columnState} />
+      <SortDrawer />
     </div>
   );
 }

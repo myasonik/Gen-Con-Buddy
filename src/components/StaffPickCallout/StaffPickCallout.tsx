@@ -10,9 +10,7 @@ import { useSharedColumnState } from "../../hooks/useSharedColumnState";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { EventTable } from "../EventTable/EventTable";
 import { EventListMobile } from "../EventTable/EventListMobile";
-import { VisibilityDrawer } from "../EventTable/VisibilityDrawer";
-import { FormatDrawer } from "../EventTable/FormatDrawer";
-import { SortDrawer } from "../EventTable/SortDrawer";
+import { ColumnControlsPanel } from "../EventTable/ColumnControlsPanel";
 import styles from "./StaffPickCallout.module.css";
 
 export function StaffPickCallout(): React.JSX.Element | null {
@@ -33,11 +31,7 @@ export function StaffPickCallout(): React.JSX.Element | null {
       <h2 className={styles.heading}>Staff Picks</h2>
       <p className={styles.preamble}>{STAFF_PICK_PREAMBLE}</p>
       <p className={styles.preambleDetail}>{STAFF_PICK_PREAMBLE_DETAIL}</p>
-      <div className={styles.controls}>
-        <VisibilityDrawer columnState={sharedColumnState} />
-        <FormatDrawer columnState={sharedColumnState} />
-        <SortDrawer />
-      </div>
+      <ColumnControlsPanel columnState={sharedColumnState} />
       {!isMobile ? (
         <div className={styles.tableView}>
           <EventTable events={data.data} sharedColumnState={sharedColumnState} />

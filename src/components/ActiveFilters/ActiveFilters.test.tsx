@@ -98,9 +98,7 @@ test("days filter produces one chip per day, not a grouped chip", () => {
 });
 
 test("eventType filter produces one chip per code, not a grouped chip", () => {
-  render(
-    <ActiveFilters searchParams={{ eventType: "RPG,BGM" }} onRemove={() => {}} />,
-  );
+  render(<ActiveFilters searchParams={{ eventType: "RPG,BGM" }} onRemove={() => {}} />);
   const bar = screen.getByRole("list", { name: "Active filters" });
   expect(within(bar).getByText("RPG - Roleplaying Game")).toBeInTheDocument();
   expect(within(bar).getByText("BGM - Board Game")).toBeInTheDocument();

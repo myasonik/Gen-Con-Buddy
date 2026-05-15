@@ -11,6 +11,7 @@ import { EventTypeSelect } from "../EventTypeSelect/EventTypeSelect";
 import { GameSystemSelect } from "../GameSystemSelect/GameSystemSelect";
 import { Select } from "../../ui/Select/Select";
 import { Field, RangeField } from "../../ui/Field/Field";
+import { Input } from "../../ui/Input/Input";
 import { decodeDays, encodeDays } from "../../utils/searchParams";
 import styles from "./SearchForm.module.css";
 
@@ -163,7 +164,7 @@ export function SearchForm({
               </label>
               <div className={styles.searchGroup}>
                 <Search size={15} className={styles.searchIcon} aria-hidden="true" />
-                <input
+                <Input
                   type="text"
                   id="strip-keyword"
                   className={styles.searchInput}
@@ -216,7 +217,7 @@ export function SearchForm({
                 Time
               </span>
               <div className={styles.timeRange} role="group" aria-label="Time range">
-                <input
+                <Input
                   type="time"
                   step="1800"
                   aria-label="From"
@@ -226,7 +227,7 @@ export function SearchForm({
                 <span className={styles.timeSep} aria-hidden="true">
                   –
                 </span>
-                <input
+                <Input
                   type="time"
                   step="1800"
                   aria-label="To"
@@ -267,62 +268,20 @@ export function SearchForm({
                     <h3 className={styles.sectionHeading}>Session</h3>
                     <div className={styles.fieldsetBody}>
                       <RangeField label="Duration (hours)">
-                        <input
-                          type="number"
-                          min="0"
-                          step="0.5"
-                          className={styles.input}
-                          {...register("durationMin")}
-                        />
-                        <input
-                          type="number"
-                          min="0"
-                          step="0.5"
-                          className={styles.input}
-                          {...register("durationMax")}
-                        />
+                        <Input type="number" min="0" step="0.5" {...register("durationMin")} />
+                        <Input type="number" min="0" step="0.5" {...register("durationMax")} />
                       </RangeField>
                       <RangeField label="Minimum Play Time">
-                        <input
-                          type="number"
-                          min="0"
-                          className={styles.input}
-                          {...register("minimumPlayTimeMin")}
-                        />
-                        <input
-                          type="number"
-                          min="0"
-                          className={styles.input}
-                          {...register("minimumPlayTimeMax")}
-                        />
+                        <Input type="number" min="0" {...register("minimumPlayTimeMin")} />
+                        <Input type="number" min="0" {...register("minimumPlayTimeMax")} />
                       </RangeField>
                       <RangeField label="Min Players">
-                        <input
-                          type="number"
-                          min="0"
-                          className={styles.input}
-                          {...register("minPlayersMin")}
-                        />
-                        <input
-                          type="number"
-                          min="0"
-                          className={styles.input}
-                          {...register("minPlayersMax")}
-                        />
+                        <Input type="number" min="0" {...register("minPlayersMin")} />
+                        <Input type="number" min="0" {...register("minPlayersMax")} />
                       </RangeField>
                       <RangeField label="Max Players">
-                        <input
-                          type="number"
-                          min="0"
-                          className={styles.input}
-                          {...register("maxPlayersMin")}
-                        />
-                        <input
-                          type="number"
-                          min="0"
-                          className={styles.input}
-                          {...register("maxPlayersMax")}
-                        />
+                        <Input type="number" min="0" {...register("maxPlayersMin")} />
+                        <Input type="number" min="0" {...register("maxPlayersMax")} />
                       </RangeField>
                       <label className={styles.label}>
                         Age Required
@@ -349,42 +308,16 @@ export function SearchForm({
                   <div className={styles.section}>
                     <h3 className={styles.sectionHeading}>Logistics</h3>
                     <div className={styles.fieldsetBody}>
-                      <Field label="Location">
-                        <input type="text" className={styles.input} {...register("location")} />
-                      </Field>
-                      <Field label="Room Name">
-                        <input type="text" className={styles.input} {...register("roomName")} />
-                      </Field>
-                      <Field label="Table">
-                        <input type="text" className={styles.input} {...register("tableNumber")} />
-                      </Field>
+                      <Field label="Location" inputProps={register("location")} />
+                      <Field label="Room Name" inputProps={register("roomName")} />
+                      <Field label="Table" inputProps={register("tableNumber")} />
                       <RangeField label="Cost">
-                        <input
-                          type="number"
-                          min="0"
-                          className={styles.input}
-                          {...register("costMin")}
-                        />
-                        <input
-                          type="number"
-                          min="0"
-                          className={styles.input}
-                          {...register("costMax")}
-                        />
+                        <Input type="number" min="0" {...register("costMin")} />
+                        <Input type="number" min="0" {...register("costMax")} />
                       </RangeField>
                       <RangeField label="Tickets Available">
-                        <input
-                          type="number"
-                          min="0"
-                          className={styles.input}
-                          {...register("ticketsAvailableMin")}
-                        />
-                        <input
-                          type="number"
-                          min="0"
-                          className={styles.input}
-                          {...register("ticketsAvailableMax")}
-                        />
+                        <Input type="number" min="0" {...register("ticketsAvailableMin")} />
+                        <Input type="number" min="0" {...register("ticketsAvailableMax")} />
                       </RangeField>
                       <label className={styles.label}>
                         Attendee Registration
@@ -407,9 +340,7 @@ export function SearchForm({
                         value={watch("gameSystem") ?? ""}
                         onValueChange={(v) => setValue("gameSystem", v)}
                       />
-                      <Field label="Rules Edition">
-                        <input type="text" className={styles.input} {...register("rulesEdition")} />
-                      </Field>
+                      <Field label="Rules Edition" inputProps={register("rulesEdition")} />
                       <label className={styles.label}>
                         Special Category
                         <Select
@@ -421,13 +352,10 @@ export function SearchForm({
                           }))}
                         />
                       </label>
-                      <Field label="Materials Provided">
-                        <input
-                          type="text"
-                          className={styles.input}
-                          {...register("materialsProvided")}
-                        />
-                      </Field>
+                      <Field
+                        label="Materials Provided"
+                        inputProps={register("materialsProvided")}
+                      />
                       <label className={styles.label}>
                         Materials Required
                         <Select
@@ -437,13 +365,10 @@ export function SearchForm({
                           aria-label="Materials Required"
                         />
                       </label>
-                      <Field label="Materials Required Details">
-                        <input
-                          type="text"
-                          className={styles.input}
-                          {...register("materialsRequiredDetails")}
-                        />
-                      </Field>
+                      <Field
+                        label="Materials Required Details"
+                        inputProps={register("materialsRequiredDetails")}
+                      />
                       <label className={styles.label}>
                         Tournament
                         <Select
@@ -454,32 +379,12 @@ export function SearchForm({
                         />
                       </label>
                       <RangeField label="Round Number">
-                        <input
-                          type="number"
-                          min="0"
-                          className={styles.input}
-                          {...register("roundNumberMin")}
-                        />
-                        <input
-                          type="number"
-                          min="0"
-                          className={styles.input}
-                          {...register("roundNumberMax")}
-                        />
+                        <Input type="number" min="0" {...register("roundNumberMin")} />
+                        <Input type="number" min="0" {...register("roundNumberMax")} />
                       </RangeField>
                       <RangeField label="Total Rounds">
-                        <input
-                          type="number"
-                          min="0"
-                          className={styles.input}
-                          {...register("totalRoundsMin")}
-                        />
-                        <input
-                          type="number"
-                          min="0"
-                          className={styles.input}
-                          {...register("totalRoundsMax")}
-                        />
+                        <Input type="number" min="0" {...register("totalRoundsMin")} />
+                        <Input type="number" min="0" {...register("totalRoundsMax")} />
                       </RangeField>
                     </div>
                   </div>
@@ -487,49 +392,17 @@ export function SearchForm({
                   <div className={styles.section}>
                     <h3 className={styles.sectionHeading}>Details</h3>
                     <div className={styles.fieldsetBody}>
-                      <Field label="Game ID">
-                        <input type="text" className={styles.input} {...register("gameId")} />
-                      </Field>
-                      <Field label="Title">
-                        <input type="text" className={styles.input} {...register("title")} />
-                      </Field>
-                      <Field label="Group">
-                        <input type="text" className={styles.input} {...register("group")} />
-                      </Field>
-                      <Field label="Short Description">
-                        <input
-                          type="text"
-                          className={styles.input}
-                          {...register("shortDescription")}
-                        />
-                      </Field>
-                      <Field label="Long Description">
-                        <input
-                          type="text"
-                          className={styles.input}
-                          {...register("longDescription")}
-                        />
-                      </Field>
-                      <Field label="Game Masters">
-                        <input type="text" className={styles.input} {...register("gmNames")} />
-                      </Field>
-                      <Field label="Website">
-                        <input type="text" className={styles.input} {...register("website")} />
-                      </Field>
-                      <Field label="Email">
-                        <input type="text" className={styles.input} {...register("email")} />
-                      </Field>
+                      <Field label="Game ID" inputProps={register("gameId")} />
+                      <Field label="Title" inputProps={register("title")} />
+                      <Field label="Group" inputProps={register("group")} />
+                      <Field label="Short Description" inputProps={register("shortDescription")} />
+                      <Field label="Long Description" inputProps={register("longDescription")} />
+                      <Field label="Game Masters" inputProps={register("gmNames")} />
+                      <Field label="Website" inputProps={register("website")} />
+                      <Field label="Email" inputProps={register("email")} />
                       <RangeField label="Last Modified" stack>
-                        <input
-                          type="datetime-local"
-                          className={styles.input}
-                          {...register("lastModifiedStart")}
-                        />
-                        <input
-                          type="datetime-local"
-                          className={styles.input}
-                          {...register("lastModifiedEnd")}
-                        />
+                        <Input type="datetime-local" {...register("lastModifiedStart")} />
+                        <Input type="datetime-local" {...register("lastModifiedEnd")} />
                       </RangeField>
                     </div>
                   </div>

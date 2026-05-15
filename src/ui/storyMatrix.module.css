@@ -14,5 +14,5 @@
 
 .label {
   font-size: var(--text-2xs);
-  color: #666;
+  color: var(--color-ink-faint);
 }

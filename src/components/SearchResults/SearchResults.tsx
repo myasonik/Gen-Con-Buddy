@@ -7,9 +7,7 @@ import type { SearchParams } from "../../utils/types";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { EventTable } from "../EventTable/EventTable";
 import { EventListMobile } from "../EventTable/EventListMobile";
-import { VisibilityDrawer } from "../EventTable/VisibilityDrawer";
-import { FormatDrawer } from "../EventTable/FormatDrawer";
-import { SortDrawer } from "../EventTable/SortDrawer";
+import { ColumnControlsPanel } from "../EventTable/ColumnControlsPanel";
 import { useSharedColumnState } from "../../hooks/useSharedColumnState";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { StaffPickCallout } from "../StaffPickCallout/StaffPickCallout";
@@ -63,9 +61,7 @@ export function SearchResults({
         <>
           <div className={styles.controlsBar}>
             <div className={styles.tableControls}>
-              <VisibilityDrawer columnState={sharedColumnState} />
-              <FormatDrawer columnState={sharedColumnState} />
-              <SortDrawer />
+              <ColumnControlsPanel columnState={sharedColumnState} />
             </div>
             <Pagination
               page={page}
@@ -89,9 +85,7 @@ export function SearchResults({
           ) : (
             <div className={styles.mobileView}>
               <div className={styles.mobileControls}>
-                <VisibilityDrawer columnState={sharedColumnState} />
-                <FormatDrawer columnState={sharedColumnState} />
-                <SortDrawer />
+                <ColumnControlsPanel columnState={sharedColumnState} />
               </div>
               <EventListMobile events={data.data} columnState={sharedColumnState} />
             </div>

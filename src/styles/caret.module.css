@@ -1,0 +1,26 @@
+/* Shared chevron caret — composed into consumer classes via CSS Modules `composes:`.
+ * The composing element must be the Base UI Collapsible.Trigger (or any element
+ * that receives data-panel-open from Base UI) so the open-state rule fires.
+ * Border color is intentionally `currentColor`; set `color` on the element to theme it. */
+
+.caret {
+  /* placeholder so this class is composable */
+}
+
+.caret::after {
+  content: "";
+  display: block;
+  flex-shrink: 0;
+  width: 0.4375rem;
+  height: 0.4375rem;
+  border-right: 0.125rem solid currentColor;
+  border-bottom: 0.125rem solid currentColor;
+  transform: rotate(45deg) translate(-0.0625rem, -0.0625rem);
+  transition:
+    transform var(--motion-expand),
+    border-color var(--motion-hover);
+}
+
+.caret[data-panel-open]::after {
+  transform: rotate(-135deg) translate(-0.0625rem, -0.0625rem);
+}

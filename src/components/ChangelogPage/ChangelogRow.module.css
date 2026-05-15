@@ -17,6 +17,7 @@
 }
 
 .summary {
+  composes: caret from "../../styles/caret.module.css";
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -41,21 +42,10 @@
 }
 
 .summary::after {
-  content: "";
-  display: block;
-  flex-shrink: 0;
-  width: 0.4375rem;
-  height: 0.4375rem;
-  border-right: 0.125rem solid var(--color-ink-muted);
-  border-bottom: 0.125rem solid var(--color-ink-muted);
-  transform: rotate(45deg) translate(-0.0625rem, -0.0625rem);
-  transition:
-    transform var(--motion-expand),
-    border-color var(--motion-hover);
+  border-color: var(--color-ink-muted);
 }
 
 .row[data-open] .summary::after {
-  transform: rotate(-135deg) translate(-0.0625rem, -0.0625rem);
   border-color: var(--color-accent);
 }
 

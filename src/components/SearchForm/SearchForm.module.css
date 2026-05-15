@@ -21,9 +21,12 @@
 }
 
 .sectionHeading {
-  composes: eyebrow from "../../styles/eyebrow.module.css";
   display: block;
+  font-family: var(--font-slab);
   font-size: var(--text-base);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
   color: var(--color-ink);
   padding: 0 0 var(--space-2) 0;
   border-bottom: calc(var(--border-width) * 2) solid var(--color-ink-border);
@@ -38,25 +41,16 @@
 }
 
 .label {
-  composes: eyebrow from "../../styles/eyebrow.module.css";
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  font-family: var(--font-slab);
+  font-size: var(--text-sm);
+  font-weight: 600;
   line-height: 1;
-}
-
-.input {
-  display: block;
-  width: 100%;
-  height: 2rem;
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-subtle);
-  font-size: var(--text-base);
-}
-
-.input:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
 }
 
 /* ─── Primary Strip ──────────────────────────────────────────────────────── */
@@ -72,9 +66,14 @@
 
 /* Strip control label */
 .stripLabel {
-  composes: eyebrow from "../../styles/eyebrow.module.css";
   display: block;
   margin-bottom: var(--space-1);
+  font-family: var(--font-slab);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
 }
 
 /* Keyword search */
@@ -110,12 +109,9 @@
   pointer-events: none;
 }
 
+/* Override left padding to make room for the search icon */
 .searchInput {
-  width: 100%;
-  height: 2rem;
-  padding: var(--space-1) var(--space-2) var(--space-1) calc(var(--space-2) + 1.25rem);
-  border-radius: var(--radius-subtle);
-  font-size: var(--text-base);
+  padding-left: calc(var(--space-2) + 1.25rem);
 }
 
 /* Event type (let the component size itself, cap at a reasonable width) */
@@ -135,15 +131,20 @@
 }
 
 .dayToggle {
-  composes: eyebrow from "../../styles/eyebrow.module.css";
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 2.25rem;
   height: 2rem;
   padding: 0 var(--space-2);
+  font-family: var(--font-slab);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
   border: var(--border-width) solid var(--color-ink-border);
   border-radius: var(--radius-subtle);
+  color: var(--color-ink-muted);
   background: var(--color-surface-page);
   cursor: pointer;
   user-select: none;
@@ -183,12 +184,9 @@
   gap: var(--space-1);
 }
 
+/* Override width for the narrow time picker */
 .timeInput {
   width: 6rem;
-  height: 2rem;
-  padding: var(--space-1) var(--space-2);
-  font-size: var(--text-base);
-  border-radius: var(--radius-subtle);
 }
 
 .timeSep {
@@ -238,7 +236,6 @@
     min-width: 2.75rem;
   }
 
-  .input,
   .searchInput,
   .timeInput {
     height: 2.75rem;
