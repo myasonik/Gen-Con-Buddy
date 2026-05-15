@@ -8,6 +8,7 @@ export function useStoredState<T>(
   defaultValue: T,
 ): [T, (next: SetStateAction<T>) => void] {
   const [value, setValue] = useState<T>(() => readFromStorage(key, version, defaultValue));
+  // key is assumed stable; changing key at runtime would write stale state before re-read
   const prevVersionRef = useRef(version);
   const defaultValueRef = useRef(defaultValue);
   defaultValueRef.current = defaultValue;
