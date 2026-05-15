@@ -333,6 +333,27 @@ test("two mounted MultiCombobox instances have distinct input ids", () => {
   expect(inputs[0].id).not.toBe(inputs[1].id);
 });
 
+test("chip remove buttons are reachable via Tab", async () => {
+  const user = userEvent.setup();
+  render(
+    <>
+      <button>Before</button>
+      <MultiCombobox
+        label="Test Field"
+        value="alpha,beta"
+        onValueChange={() => {}}
+        options={OPTIONS}
+      />
+    </>,
+  );
+
+  await user.click(screen.getByRole("button", { name: "Before" }));
+  await user.tab();
+  expect(screen.getByRole("button", { name: "Remove Alpha Option" })).toHaveFocus();
+  await user.tab();
+  expect(screen.getByRole("button", { name: "Remove Beta Option" })).toHaveFocus();
+});
+
 test("trailing comma in value does not render an empty chip", () => {
   render(
     <MultiCombobox

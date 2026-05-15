@@ -116,6 +116,7 @@ export function MultiCombobox({
                     <Combobox.ChipRemove
                       className={styles.chipRemove}
                       aria-label={`Remove ${renderRemoveLabel ? renderRemoveLabel(option) : option.label}`}
+                      tabIndex={0}
                       onPointerDown={() => {
                         suppressFocusOpenRef.current = true;
                       }}
