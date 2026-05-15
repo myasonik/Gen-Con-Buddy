@@ -61,29 +61,90 @@ test("eventType chip skips empty segment from trailing comma", () => {
   expect(result[0].id).toBe("eventType:RPG");
 });
 
-test("ageRequired uses AGE_GROUPS enum for label", () => {
-  const [chip] = getActiveFilters({ ageRequired: "21+" });
+test("ageRequired: kids uses AGE_GROUPS enum for label", () => {
+  const [chip] = getActiveFilters({ ageRequired: "kids" });
   expect(chip.id).toBe("ageRequired");
-  expect(chip.label).toBe("Age: 21+");
-  expect(chip.remove({ ageRequired: "21+" })).toStrictEqual({});
+  expect(chip.label).toBe("Age: Kids only (12 and under)");
+  expect(chip.remove({ ageRequired: "kids" })).toStrictEqual({});
 });
 
-test("experienceRequired uses EXP enum for label", () => {
-  const [chip] = getActiveFilters({
-    experienceRequired: "None (You've never played before - rules will be taught)",
-  });
+test("ageRequired: everyone uses AGE_GROUPS enum for label", () => {
+  const [chip] = getActiveFilters({ ageRequired: "everyone" });
+  expect(chip.label).toBe("Age: Everyone (6+)");
+});
+
+test("ageRequired: teen uses AGE_GROUPS enum for label", () => {
+  const [chip] = getActiveFilters({ ageRequired: "teen" });
+  expect(chip.label).toBe("Age: Teen (13+)");
+});
+
+test("ageRequired: mature uses AGE_GROUPS enum for label", () => {
+  const [chip] = getActiveFilters({ ageRequired: "mature" });
+  expect(chip.label).toBe("Age: Mature (18+)");
+});
+
+test("ageRequired: drinking uses AGE_GROUPS enum for label", () => {
+  const [chip] = getActiveFilters({ ageRequired: "drinking" });
+  expect(chip.label).toBe("Age: 21+");
+});
+
+test("experienceRequired: none uses EXP enum for label", () => {
+  const [chip] = getActiveFilters({ experienceRequired: "none" });
   expect(chip.label).toBe("Exp: None");
 });
 
-test("attendeeRegistration uses REGISTRATION enum for label", () => {
-  const [chip] = getActiveFilters({
-    attendeeRegistration: "No, this event does not require tickets!",
-  });
+test("experienceRequired: some uses EXP enum for label", () => {
+  const [chip] = getActiveFilters({ experienceRequired: "some" });
+  expect(chip.label).toBe("Exp: Some");
+});
+
+test("experienceRequired: expert uses EXP enum for label", () => {
+  const [chip] = getActiveFilters({ experienceRequired: "expert" });
+  expect(chip.label).toBe("Exp: Expert");
+});
+
+test("attendeeRegistration: open uses REGISTRATION enum for label", () => {
+  const [chip] = getActiveFilters({ attendeeRegistration: "open" });
+  expect(chip.label).toBe("Registration: Open (ticket required)");
+});
+
+test("attendeeRegistration: free uses REGISTRATION enum for label", () => {
+  const [chip] = getActiveFilters({ attendeeRegistration: "free" });
   expect(chip.label).toBe("Registration: Free (no ticket needed)");
 });
 
-test("specialCategory uses CATEGORY enum for label", () => {
-  const [chip] = getActiveFilters({ specialCategory: "Premier Event" });
+test("attendeeRegistration: vig uses REGISTRATION enum for label", () => {
+  const [chip] = getActiveFilters({ attendeeRegistration: "vig" });
+  expect(chip.label).toBe("Registration: VIG only");
+});
+
+test("attendeeRegistration: invite uses REGISTRATION enum for label", () => {
+  const [chip] = getActiveFilters({ attendeeRegistration: "invite" });
+  expect(chip.label).toBe("Registration: Invite only");
+});
+
+test("attendeeRegistration: generic uses REGISTRATION enum for label", () => {
+  const [chip] = getActiveFilters({ attendeeRegistration: "generic" });
+  expect(chip.label).toBe("Registration: Generic ticket");
+});
+
+test("attendeeRegistration: tradeDay uses REGISTRATION enum for label", () => {
+  const [chip] = getActiveFilters({ attendeeRegistration: "tradeDay" });
+  expect(chip.label).toBe("Registration: Trade Day only");
+});
+
+test("specialCategory: none uses CATEGORY enum for label", () => {
+  const [chip] = getActiveFilters({ specialCategory: "none" });
+  expect(chip.label).toBe("Category: None");
+});
+
+test("specialCategory: official uses CATEGORY enum for label", () => {
+  const [chip] = getActiveFilters({ specialCategory: "official" });
+  expect(chip.label).toBe("Category: Gen Con presents");
+});
+
+test("specialCategory: premier uses CATEGORY enum for label", () => {
+  const [chip] = getActiveFilters({ specialCategory: "premier" });
   expect(chip.label).toBe("Category: Premier Event");
 });
 

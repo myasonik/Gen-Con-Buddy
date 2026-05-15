@@ -21,33 +21,32 @@ export const EVENT_TYPES: Record<string, string> = {
 };
 
 export const AGE_GROUPS: Record<string, string> = {
-  "kids only (12 and under)": "Kids only (12 and under)",
-  "Everyone (6+)": "Everyone (6+)",
-  "Teen (13+)": "Teen (13+)",
-  "Mature (18+)": "Mature (18+)",
-  "21+": "21+",
+  kids: "Kids only (12 and under)",
+  everyone: "Everyone (6+)",
+  teen: "Teen (13+)",
+  mature: "Mature (18+)",
+  drinking: "21+",
 };
 
 export const EXP: Record<string, string> = {
-  "None (You've never played before - rules will be taught)": "None",
-  "Some (You've played it a bit and understand the basics)": "Some",
-  "Expert (You play it regularly and know all the rules)": "Expert",
+  none: "None",
+  some: "Some",
+  expert: "Expert",
 };
 
 export const REGISTRATION: Record<string, string> = {
-  "Yes, they can register for this round without having played in any other events":
-    "Open (ticket required)",
-  "No, this event does not require tickets!": "Free (no ticket needed)",
-  "VIG-only!": "VIG only",
-  "No, this event is invite-only.": "Invite only",
-  "No, this is a generic ticket-only event!": "Generic ticket",
-  "Trade Day only!": "Trade Day only",
+  open: "Open (ticket required)",
+  free: "Free (no ticket needed)",
+  vig: "VIG only",
+  invite: "Invite only",
+  generic: "Generic ticket",
+  tradeDay: "Trade Day only",
 };
 
 export const CATEGORY: Record<string, string> = {
   none: "None",
-  "Gen Con presents": "Gen Con presents",
-  "Premier Event": "Premier Event",
+  official: "Gen Con presents",
+  premier: "Premier Event",
 };
 
 export const YES_NO: Record<string, string> = {
