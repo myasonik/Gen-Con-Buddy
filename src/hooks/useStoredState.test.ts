@@ -61,3 +61,37 @@ test("falls back to default when stored entry has matching version but no value 
   const { result } = renderHook(() => useStoredState(KEY, 1, { count: 0 }));
   expect(result.current[0]).toStrictEqual({ count: 0 });
 });
+
+test("does not write stale value to storage when version changes mid-lifecycle", () => {
+  const { result, rerender } = renderHook(
+    ({ version }: { version: number }) => useStoredState(KEY, version, { count: 0 }),
+    { initialProps: { version: 1 } },
+  );
+
+  // Set a value under version 1
+  act(() => {
+    result.current[1]({ count: 99 });
+  });
+
+  // Confirm version 1 data is in storage
+  expect(JSON.parse(localStorage.getItem(KEY) ?? "{}")).toStrictEqual({
+    version: 1,
+    value: { count: 99 },
+  });
+
+  // Change version mid-lifecycle
+  act(() => {
+    rerender({ version: 2 });
+  });
+
+  // State must reset to default — old value belongs to version 1
+  expect(result.current[0]).toStrictEqual({ count: 0 });
+
+  const stored: unknown = JSON.parse(localStorage.getItem(KEY) ?? "{}");
+
+  // Storage must NOT contain stale version-1 data under the version-2 key
+  expect(stored).not.toStrictEqual({ version: 2, value: { count: 99 } });
+
+  // Storage must contain the correct version-2 write (default value)
+  expect(stored).toStrictEqual({ version: 2, value: { count: 0 } });
+});

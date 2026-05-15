@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 type SetStateAction<T> = T | ((prev: T) => T);
 
@@ -8,14 +8,20 @@ export function useStoredState<T>(
   defaultValue: T,
 ): [T, (next: SetStateAction<T>) => void] {
   const [value, setValue] = useState<T>(() => readFromStorage(key, version, defaultValue));
+  const prevVersionRef = useRef(version);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(key, JSON.stringify({ version, value }));
-    } catch {
-      // ignore write errors
+    if (prevVersionRef.current === version) {
+      try {
+        localStorage.setItem(key, JSON.stringify({ version, value }));
+      } catch {
+        // ignore write errors
+      }
+    } else {
+      prevVersionRef.current = version;
+      setValue(readFromStorage(key, version, defaultValue));
     }
-  }, [key, version, value]);
+  }, [key, version, value, defaultValue]);
 
   const setStoredValue = (next: SetStateAction<T>): void => {
     setValue((prev) => (typeof next === "function" ? (next as (p: T) => T)(prev) : next));
