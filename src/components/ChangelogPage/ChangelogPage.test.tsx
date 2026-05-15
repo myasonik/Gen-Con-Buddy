@@ -13,6 +13,7 @@ import {
 } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { server } from "../../test/msw/server";
+import { withNetworkError } from "../../test/apiError";
 import { makeChangelogSummary, makeChangelogEntry, makeEvent } from "../../test/msw/factory";
 import type { ListChangelogsResponse, FetchChangelogResponse } from "../../utils/types";
 import { ChangelogPage } from "./ChangelogPage";
@@ -250,4 +251,14 @@ test("passes all activeFilter fields (eventType, days, timeStart, timeEnd) to Ch
 
   await screen.findByText(/created/);
   expect(screen.getByLabelText("Filter match unknown")).toBeInTheDocument();
+});
+
+test("shows error message when changelog list fetch fails", async () => {
+  withNetworkError("/api/changelog/list");
+  await renderChangelogPage();
+  await waitFor(() =>
+    expect(
+      screen.getByText("Could not load changelog. Try refreshing."),
+    ).toBeInTheDocument(),
+  );
 });
