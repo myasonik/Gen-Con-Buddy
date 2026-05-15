@@ -17,7 +17,7 @@
   font-family: var(--font-slab);
   font-size: 0.9375rem;
   font-weight: 400;
-  letter-spacing: var(--tracking-pill);
+  letter-spacing: 0.04rem;
   color: var(--color-ink);
   user-select: none;
   overflow: hidden;
@@ -73,4 +73,68 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* ─── menu variant ─────────────────────────────────────── */
+
+.menuRoot {
+  display: flex;
+  flex-direction: column;
+}
+
+.menuOption {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-ink);
+  line-height: 1.4;
+  user-select: none;
+}
+
+.menuOption:hover {
+  background: var(--color-surface-hover);
+}
+
+/* 0.875rem filled dot — purely visual, no icon content */
+.menuRadioRoot {
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 50%;
+  border: var(--border-width) solid var(--color-ink-border);
+  background: var(--color-surface-page);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  transition:
+    background-color var(--motion-hover),
+    border-color var(--motion-hover);
+}
+
+.menuRadioRoot[data-checked] {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+}
+
+.menuRadioRoot:focus-visible {
+  outline: var(--focus-ring) var(--color-accent);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* inner dot — shown only when checked */
+.menuRadioIndicator {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+  background: var(--color-surface-page);
+  display: none;
+}
+
+.menuRadioRoot[data-checked] .menuRadioIndicator {
+  display: block;
 }

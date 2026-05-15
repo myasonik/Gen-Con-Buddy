@@ -34,70 +34,70 @@ Single source of truth. Contains:
 
 ### Existing files
 
-| File | Change |
-|---|---|
-| `src/utils/types.ts` | Remove `SearchParams`, `SearchFormValues` |
-| `src/utils/coerceSearchParams.ts` | Delete |
-| `src/utils/searchParams.ts` | Remove `buildSearchParams`, `parseSearchParams` |
-| `src/routes/index.tsx` | Update imports |
-| `src/utils/api.ts` | Update `SearchParams` import |
-| Any component importing `SearchParams`/`SearchFormValues` | Update imports |
-| Test files | Update imports to match new locations |
+| File                                                      | Change                                          |
+| --------------------------------------------------------- | ----------------------------------------------- |
+| `src/utils/types.ts`                                      | Remove `SearchParams`, `SearchFormValues`       |
+| `src/utils/coerceSearchParams.ts`                         | Delete                                          |
+| `src/utils/searchParams.ts`                               | Remove `buildSearchParams`, `parseSearchParams` |
+| `src/routes/index.tsx`                                    | Update imports                                  |
+| `src/utils/api.ts`                                        | Update `SearchParams` import                    |
+| Any component importing `SearchParams`/`SearchFormValues` | Update imports                                  |
+| Test files                                                | Update imports to match new locations           |
 
 ## Schema
 
 ```typescript
 export const SCHEMA = {
   // Pagination
-  limit:            'number',
-  page:             'number',
+  limit: "number",
+  page: "number",
 
   // API-computed (never touch the form)
-  startDateTime:    'apiOnly',
-  endDateTime:      'apiOnly',
-  sort:             'apiOnly',
+  startDateTime: "apiOnly",
+  endDateTime: "apiOnly",
+  sort: "apiOnly",
 
   // Simple string passthroughs
-  filter:           'string',
-  gameId:           'string',
-  title:            'string',
-  eventType:        'string',
-  group:            'string',
-  shortDescription: 'string',
-  longDescription:  'string',
-  gameSystem:       'string',
-  rulesEdition:     'string',
-  ageRequired:      'string',
-  experienceRequired:       'string',
-  materialsProvided:        'string',
-  materialsRequired:        'string',
-  materialsRequiredDetails: 'string',
-  gmNames:          'string',
-  website:          'string',
-  email:            'string',
-  tournament:       'string',
-  attendeeRegistration: 'string',
-  location:         'string',
-  roomName:         'string',
-  tableNumber:      'string',
-  specialCategory:  'string',
-  days:             'string',
-  timeStart:        'string',
-  timeEnd:          'string',
+  filter: "string",
+  gameId: "string",
+  title: "string",
+  eventType: "string",
+  group: "string",
+  shortDescription: "string",
+  longDescription: "string",
+  gameSystem: "string",
+  rulesEdition: "string",
+  ageRequired: "string",
+  experienceRequired: "string",
+  materialsProvided: "string",
+  materialsRequired: "string",
+  materialsRequiredDetails: "string",
+  gmNames: "string",
+  website: "string",
+  email: "string",
+  tournament: "string",
+  attendeeRegistration: "string",
+  location: "string",
+  roomName: "string",
+  tableNumber: "string",
+  specialCategory: "string",
+  days: "string",
+  timeStart: "string",
+  timeEnd: "string",
 
   // Range fields — encoded as "[min,max]" in the URL
-  minPlayers:       'range',
-  maxPlayers:       'range',
-  duration:         'range',
-  roundNumber:      'range',
-  totalRounds:      'range',
-  minimumPlayTime:  'range',
-  cost:             'range',
-  ticketsAvailable: 'range',
+  minPlayers: "range",
+  maxPlayers: "range",
+  duration: "range",
+  roundNumber: "range",
+  totalRounds: "range",
+  minimumPlayTime: "range",
+  cost: "range",
+  ticketsAvailable: "range",
 
   // Date range — encoded as "[isoStart,isoEnd]"
-  lastModified:     'dateRange',
-} as const satisfies Record<string, 'string' | 'number' | 'range' | 'dateRange' | 'apiOnly'>;
+  lastModified: "dateRange",
+} as const satisfies Record<string, "string" | "number" | "range" | "dateRange" | "apiOnly">;
 ```
 
 ## Derived Types
@@ -108,15 +108,17 @@ type SchemaKey = keyof Schema;
 
 // SearchParams: number for 'number' kinds, string for everything else
 export type SearchParams = {
-  [K in SchemaKey]?: Schema[K] extends 'number' ? number : string;
+  [K in SchemaKey]?: Schema[K] extends "number" ? number : string;
 };
 
 // SearchFormValues: range → Min/Max, dateRange → Start/End, apiOnly/number → excluded
-type FormKey<K extends SchemaKey> =
-  Schema[K] extends 'range'     ? `${K}Min` | `${K}Max` :
-  Schema[K] extends 'dateRange' ? `${K}Start` | `${K}End` :
-  Schema[K] extends 'apiOnly' | 'number' ? never :
-  K;
+type FormKey<K extends SchemaKey> = Schema[K] extends "range"
+  ? `${K}Min` | `${K}Max`
+  : Schema[K] extends "dateRange"
+    ? `${K}Start` | `${K}End`
+    : Schema[K] extends "apiOnly" | "number"
+      ? never
+      : K;
 
 export type SearchFormValues = {
   [K in SchemaKey as FormKey<K>]?: string;

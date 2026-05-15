@@ -5,7 +5,7 @@ import { Sun, Moon } from "lucide-react";
 import { Eclipse } from "../../ui/icons/Eclipse";
 import { announce } from "../../lib/announce";
 import type { ThemePreference } from "../../hooks/useTheme";
-import { ThemeRadioGroup } from "./ThemeRadioGroup";
+import { SegmentedControl } from "../../ui/SegmentedControl/SegmentedControl";
 import styles from "./ThemePopover.module.css";
 
 interface ThemePopoverProps {
@@ -49,7 +49,27 @@ export function ThemePopover({ theme, setTheme }: ThemePopoverProps): React.JSX.
       <Popover.Portal>
         <Popover.Positioner sideOffset={4} className={styles.positioner}>
           <Popover.Popup className={styles.popup}>
-            <ThemeRadioGroup theme={theme} onValueChange={handleChange} />
+            <fieldset className={styles.fieldset}>
+              <legend className="sr-only">Theme</legend>
+              <SegmentedControl
+                variant="menu"
+                value={theme}
+                onValueChange={(v) => handleChange(v as ThemePreference)}
+              >
+                <SegmentedControl.Option value="light">
+                  <Sun size={14} aria-hidden="true" />
+                  Light
+                </SegmentedControl.Option>
+                <SegmentedControl.Option value="dark">
+                  <Moon size={14} aria-hidden="true" />
+                  Dark
+                </SegmentedControl.Option>
+                <SegmentedControl.Option value="auto">
+                  <Eclipse size={14} aria-hidden="true" />
+                  Auto
+                </SegmentedControl.Option>
+              </SegmentedControl>
+            </fieldset>
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>

@@ -90,3 +90,63 @@ test("keyboard accessible — arrow key navigates between options and calls onVa
   await user.keyboard("{ArrowDown}");
   expect(onValueChange).toHaveBeenCalledWith("name");
 });
+
+// ─── menu variant ─────────────────────────────────────────────────────────────
+
+test("menu variant renders options in a column (radiogroup has data-variant=menu)", () => {
+  render(
+    <SegmentedControl variant="menu" value="light" onValueChange={() => {}}>
+      <SegmentedControl.Option value="light">Light</SegmentedControl.Option>
+      <SegmentedControl.Option value="dark">Dark</SegmentedControl.Option>
+    </SegmentedControl>,
+  );
+  expect(screen.getByRole("radiogroup")).toHaveAttribute("data-variant", "menu");
+});
+
+test("menu variant renders all option labels", () => {
+  render(
+    <SegmentedControl variant="menu" value="light" onValueChange={() => {}}>
+      <SegmentedControl.Option value="light">Light</SegmentedControl.Option>
+      <SegmentedControl.Option value="dark">Dark</SegmentedControl.Option>
+      <SegmentedControl.Option value="auto">Auto</SegmentedControl.Option>
+    </SegmentedControl>,
+  );
+  expect(screen.getByRole("radio", { name: /Light/i })).toBeInTheDocument();
+  expect(screen.getByRole("radio", { name: /Dark/i })).toBeInTheDocument();
+  expect(screen.getByRole("radio", { name: /Auto/i })).toBeInTheDocument();
+});
+
+test("menu variant does not render indicator prop content", () => {
+  render(
+    <SegmentedControl variant="menu" value="light" onValueChange={() => {}}>
+      <SegmentedControl.Option value="light" indicator={<span data-testid="should-not-appear" />}>
+        Light
+      </SegmentedControl.Option>
+    </SegmentedControl>,
+  );
+  expect(screen.queryByTestId("should-not-appear")).not.toBeInTheDocument();
+});
+
+test("menu variant selected option matches value prop", () => {
+  render(
+    <SegmentedControl variant="menu" value="dark" onValueChange={() => {}}>
+      <SegmentedControl.Option value="light">Light</SegmentedControl.Option>
+      <SegmentedControl.Option value="dark">Dark</SegmentedControl.Option>
+    </SegmentedControl>,
+  );
+  expect(screen.getByRole("radio", { name: /Dark/i })).toBeChecked();
+  expect(screen.getByRole("radio", { name: /Light/i })).not.toBeChecked();
+});
+
+test("menu variant clicking an option calls onValueChange", async () => {
+  const user = userEvent.setup();
+  const onValueChange = vi.fn<(value: string) => void>();
+  render(
+    <SegmentedControl variant="menu" value="light" onValueChange={onValueChange}>
+      <SegmentedControl.Option value="light">Light</SegmentedControl.Option>
+      <SegmentedControl.Option value="dark">Dark</SegmentedControl.Option>
+    </SegmentedControl>,
+  );
+  await user.click(screen.getByRole("radio", { name: /Dark/i }));
+  expect(onValueChange).toHaveBeenCalledWith("dark");
+});

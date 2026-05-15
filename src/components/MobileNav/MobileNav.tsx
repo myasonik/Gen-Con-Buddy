@@ -3,7 +3,9 @@ import { Menu } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Popover } from "@base-ui/react/popover";
 import { Button } from "../../ui/Button/Button";
-import { ThemeRadioGroup } from "../ThemePopover/ThemeRadioGroup";
+import { Sun, Moon } from "lucide-react";
+import { Eclipse } from "../../ui/icons/Eclipse";
+import { SegmentedControl } from "../../ui/SegmentedControl/SegmentedControl";
 import { announce } from "../../lib/announce";
 import type { ThemePreference } from "../../hooks/useTheme";
 import styles from "./MobileNav.module.css";
@@ -60,7 +62,27 @@ export function MobileNav({ theme, setTheme }: MobileNavProps): React.JSX.Elemen
               Changelog
             </Link>
             <hr className={styles.divider} />
-            <ThemeRadioGroup theme={theme} onValueChange={handleThemeChange} />
+            <fieldset className={styles.fieldset}>
+              <legend className="sr-only">Theme</legend>
+              <SegmentedControl
+                variant="menu"
+                value={theme}
+                onValueChange={(v) => handleThemeChange(v as ThemePreference)}
+              >
+                <SegmentedControl.Option value="light">
+                  <Sun size={14} aria-hidden="true" />
+                  Light
+                </SegmentedControl.Option>
+                <SegmentedControl.Option value="dark">
+                  <Moon size={14} aria-hidden="true" />
+                  Dark
+                </SegmentedControl.Option>
+                <SegmentedControl.Option value="auto">
+                  <Eclipse size={14} aria-hidden="true" />
+                  Auto
+                </SegmentedControl.Option>
+              </SegmentedControl>
+            </fieldset>
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>
