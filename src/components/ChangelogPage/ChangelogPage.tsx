@@ -7,7 +7,7 @@ import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { ColumnControlsPanel } from "../EventTable/ColumnControlsPanel";
 import { fetchChangelogEntry, fetchChangelogList } from "../../utils/api";
 import { SearchForm } from "../SearchForm/SearchForm";
-import type { SearchFormValues } from "../../utils/types";
+import type { SearchFormValues } from "../../utils/searchParamSchema";
 import styles from "./ChangelogPage.module.css";
 import { ChangelogRow } from "./ChangelogRow";
 

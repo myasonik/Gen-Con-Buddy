@@ -14,7 +14,8 @@ import { http, HttpResponse } from "msw";
 import { server } from "../../test/msw/server";
 import { makeEvent } from "../../test/msw/factory";
 import { SearchResults } from "./SearchResults";
-import type { SearchParams, EventSearchResponse } from "../../utils/types";
+import type { EventSearchResponse } from "../../utils/types";
+import type { SearchParams } from "../../utils/searchParamSchema";
 import { WILDHAVENS_GAME_IDS } from "../../utils/staffPicks";
 import { __reset } from "../../lib/announce";
 

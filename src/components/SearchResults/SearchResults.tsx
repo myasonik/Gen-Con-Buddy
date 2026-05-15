@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchEvents } from "../../utils/api";
 import { parseSortString } from "../../utils/parseSortString";
 import { Pagination } from "../Pagination/Pagination";
-import type { SearchParams } from "../../utils/types";
+import type { SearchParams } from "../../utils/searchParamSchema";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { EventTable } from "../EventTable/EventTable";
 import { EventListMobile } from "../EventTable/EventListMobile";

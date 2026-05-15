@@ -10,7 +10,7 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { routeTree } from "../routeTree.gen";
 import { parseSearch, stringifySearch } from "../lib/searchSerializer";
-import type { SearchParams } from "../utils/types";
+import type { SearchParams } from "../utils/searchParamSchema";
 
 export async function renderRoute(
   path: string,

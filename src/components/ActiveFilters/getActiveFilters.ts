@@ -1,7 +1,7 @@
 import type React from "react";
 import { parseCSV } from "../../utils/parseCSV";
 import { AGE_GROUPS, CATEGORY, EVENT_TYPES, EXP, REGISTRATION, YES_NO } from "../../utils/enums";
-import type { SearchParams } from "../../utils/types";
+import type { SearchParams } from "../../utils/searchParamSchema";
 import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
 import { MagnifyingGlass } from "../../ui/icons/MagnifyingGlass";
 import { Calendar } from "../../ui/icons/Calendar";

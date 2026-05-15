@@ -1,4 +1,5 @@
-import type { Event, SearchFormValues } from "./types";
+import type { SearchFormValues } from "./searchParamSchema";
+import type { Event } from "./types";
 import { parseCSV } from "./parseCSV";
 import { DAY_DATES } from "./searchParams";
 

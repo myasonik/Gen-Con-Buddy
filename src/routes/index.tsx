@@ -4,9 +4,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SearchForm } from "../components/SearchForm/SearchForm";
 import { SearchResults } from "../components/SearchResults/SearchResults";
 import { ActiveFilters } from "../components/ActiveFilters/ActiveFilters";
-import { coerceSearchParams, buildSearchParams, parseSearchParams } from "../utils/searchParamSchema";
+import {
+  coerceSearchParams,
+  buildSearchParams,
+  parseSearchParams,
+  type SearchFormValues,
+  type SearchParams,
+} from "../utils/searchParamSchema";
 import { DEFAULT_PAGE_SIZE } from "../utils/constants";
-import type { SearchFormValues, SearchParams } from "../utils/types";
 import type { ActiveFilter } from "../components/ActiveFilters/getActiveFilters";
 import styles from "./index.module.css";
 

@@ -11,7 +11,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ChangelogEntryPanel } from "./ChangelogEntryPanel";
 import type { SharedColumnState } from "../EventTable/types";
 import { makeChangelogEntry, makeEvent } from "../../test/msw/factory";
-import type { ChangelogEntry, SearchFormValues } from "../../utils/types";
+import type { SearchFormValues } from "../../utils/searchParamSchema";
+import type { ChangelogEntry } from "../../utils/types";
 
 const stubColumnState: SharedColumnState = {
   visibility: {},

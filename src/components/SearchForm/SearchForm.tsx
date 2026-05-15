@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { Search, RotateCcw, SlidersHorizontal } from "lucide-react";
 import { Dialog } from "@base-ui/react/dialog";
 import { AGE_GROUPS, CATEGORY, EXP, REGISTRATION, YES_NO } from "../../utils/enums";
-import type { SearchFormValues } from "../../utils/types";
+import type { SearchFormValues } from "../../utils/searchParamSchema";
 import { Button } from "../../ui/Button/Button";
 import { Drawer } from "../../ui/Drawer/Drawer";
 import { EventTypeSelect } from "../EventTypeSelect/EventTypeSelect";

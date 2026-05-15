@@ -13,7 +13,7 @@ beforeEach(() => {
 });
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SearchForm } from "./SearchForm";
-import type { SearchFormValues } from "../../utils/types";
+import type { SearchFormValues } from "../../utils/searchParamSchema";
 
 const noop = (): undefined => undefined;
 

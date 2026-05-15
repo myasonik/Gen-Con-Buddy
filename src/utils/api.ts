@@ -1,8 +1,8 @@
 import { daysAndTimeToStartDateTime } from "./searchParams";
 import { DEFAULT_PAGE_SIZE } from "./constants";
+import type { SearchParams } from "./searchParamSchema";
 import type {
   EventSearchResponse,
-  SearchParams,
   ListChangelogsResponse,
   FetchChangelogResponse,
   ChangelogEntry,

@@ -1,7 +1,8 @@
 import React, { startTransition, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { ChangelogEntry, ChangelogSummary, SearchFormValues } from "../../utils/types";
+import type { SearchFormValues } from "../../utils/searchParamSchema";
+import type { ChangelogEntry, ChangelogSummary } from "../../utils/types";
 import { fetchChangelogEntry } from "../../utils/api";
 import { ChangelogEntryPanel } from "./ChangelogEntryPanel";
 import type { SharedColumnState } from "../EventTable/types";

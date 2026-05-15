@@ -13,7 +13,8 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { server } from "../../test/msw/server";
 import { makeChangelogSummary, makeChangelogEntry, makeEvent } from "../../test/msw/factory";
-import type { FetchChangelogResponse, SearchFormValues, ChangelogSummary } from "../../utils/types";
+import type { SearchFormValues } from "../../utils/searchParamSchema";
+import type { FetchChangelogResponse, ChangelogSummary } from "../../utils/types";
 import { ChangelogRow } from "./ChangelogRow";
 import type { SharedColumnState } from "../EventTable/types";
 
