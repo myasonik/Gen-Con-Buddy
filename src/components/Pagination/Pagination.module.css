@@ -27,7 +27,7 @@
   gap: var(--space-3);
   font-family: var(--font-slab);
   font-size: var(--text-md);
-  letter-spacing: 0.04rem;
+  letter-spacing: var(--tracking-pill);
   color: var(--color-ink-muted);
 }
 

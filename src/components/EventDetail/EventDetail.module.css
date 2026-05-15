@@ -32,7 +32,6 @@
     url("/wildhavens-bg.webp");
   background-size: cover;
   background-position: center 60%;
-
   /* bleed to full viewport width */
   margin-top: calc(-1 * var(--space-4));
   margin-inline: calc(50% - 50vw);
@@ -48,21 +47,6 @@
       oklch(from var(--color-surface-page) l c h / 0.85)
     ),
     url("/wildhavens-bg.webp");
-}
-
-.title {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 2.5rem);
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.01rem;
-  font-feature-settings:
-    "kern" 1,
-    "liga" 1,
-    "onum" 1;
-  color: var(--color-ink);
-  padding-bottom: var(--space-3);
-  margin-bottom: var(--space-4);
 }
 
 /* title margin already handled by hero's own margin-bottom */
@@ -82,13 +66,24 @@
   font-feature-settings: "tnum" 1;
 }
 
+.title {
+  composes: display from "../../styles/display.module.css";
+  color: var(--color-ink);
+  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
 .section {
   margin-bottom: var(--space-5);
 }
 
 .sectionHeading {
-  composes: eyebrow from "../../styles/eyebrow.module.css";
+  font-family: var(--font-slab);
   font-size: var(--text-md);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--color-ink-muted);
   padding-bottom: var(--space-2);
   margin: 0 0 var(--space-3) 0;
   border-bottom: var(--border-width) solid var(--color-ink-divider);

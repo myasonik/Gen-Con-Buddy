@@ -9,7 +9,7 @@
   font-family: var(--font-slab);
   font-size: var(--text-base);
   font-weight: 600;
-  letter-spacing: 0.03rem;
+  letter-spacing: var(--tracking-pill);
   border-radius: var(--radius-subtle);
   transition:
     background-color var(--motion-hover),
@@ -69,12 +69,7 @@
 }
 
 .icon {
-  padding: 0.25rem;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  text-align: center;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: var(--radius-subtle);
+  aspect-ratio: 1;
+  padding: var(--space-2);
 }

@@ -15,9 +15,9 @@
   border-radius: var(--radius-subtle);
   transition: background-color var(--motion-hover);
   font-family: var(--font-slab);
-  font-size: var(--text-md);
+  font-size: 0.9375rem;
   font-weight: 400;
-  letter-spacing: 0.04rem;
+  letter-spacing: var(--tracking-pill);
   color: var(--color-ink);
   user-select: none;
   overflow: hidden;
@@ -34,7 +34,7 @@
   justify-content: center;
   width: 1.25rem;
   height: 1.25rem;
-  border: var(--border-width) solid var(--color-ink-border);
+  border: 0.0625rem solid var(--color-ink-border);
   border-radius: 50%;
   background: var(--color-surface-page);
   flex-shrink: 0;

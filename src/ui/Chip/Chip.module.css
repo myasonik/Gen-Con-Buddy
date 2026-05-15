@@ -7,9 +7,9 @@
   border-radius: var(--radius-pill);
   font-family: var(--font-slab);
   font-weight: 600;
-  letter-spacing: 0.03rem;
+  letter-spacing: var(--tracking-pill);
   white-space: nowrap;
-  border: var(--border-width) solid transparent;
+  border: 0.0625rem solid transparent;
 
   /* default: neutral */
   background: var(--color-surface-panel);
@@ -21,14 +21,14 @@
 
 .chip[data-size="md"] {
   padding: 0.1875rem var(--space-2);
-  font-size: var(--text-sm);
+  font-size: 0.875rem;
 }
 
 .chip[data-size="sm"] {
-  padding: var(--border-width) 0.375rem;
-  font-size: var(--text-2xs);
+  padding: 0.0625rem 0.375rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.04rem;
+  letter-spacing: var(--tracking-pill);
   text-transform: uppercase;
 }
 
@@ -42,25 +42,25 @@
 
 .chip[data-tone="accent"] {
   background: var(--color-accent-surface);
-  border-color: var(--color-accent-border);
+  border-color: oklch(from var(--color-accent-surface) calc(l - 0.08) c h);
   color: var(--color-accent-deep);
 }
 
 .chip[data-tone="jade"] {
   background: var(--color-jade-surface);
-  border-color: var(--color-jade-border);
+  border-color: oklch(from var(--color-jade-surface) calc(l - 0.07) c h);
   color: var(--color-jade-deep);
 }
 
 .chip[data-tone="cobalt"] {
   background: var(--color-cobalt-surface);
-  border-color: var(--color-cobalt-border);
+  border-color: oklch(from var(--color-cobalt-surface) calc(l - 0.07) c h);
   color: var(--color-cobalt-deep);
 }
 
 .chip[data-tone="amber"] {
   background: var(--color-amber-surface);
-  border-color: var(--color-amber-border);
+  border-color: oklch(from var(--color-amber-surface) calc(l - 0.07) c h);
   color: var(--color-amber-deep);
 }
 
@@ -68,6 +68,24 @@
   background: var(--color-error-surface);
   border-color: var(--color-error-border);
   color: var(--color-error-deep);
+}
+
+/* ── Composable pill-sm-accent primitive ────────────────────────────────── */
+
+.pillSmAccent {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-slab);
+  font-weight: 700;
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-pill);
+  text-transform: uppercase;
+  padding: var(--border-width) 0.375rem;
+  background: var(--color-accent-surface);
+  border: var(--border-width) solid var(--color-accent-border);
+  color: var(--color-accent-deep);
 }
 
 /* ── Interior elements ──────────────────────────────────────────────────── */

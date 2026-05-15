@@ -1,11 +1,8 @@
 .brandingTitle {
+  composes: display from "../styles/display.module.css";
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  font-family: var(--font-display);
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.01rem;
   line-height: 1;
   text-decoration: none;
   color: var(--color-accent);
@@ -52,12 +49,15 @@
 }
 
 .nav {
-  composes: eyebrow from "../styles/eyebrow.module.css";
   display: flex;
   align-items: center;
   gap: var(--space-3);
   margin-left: auto;
+  font-family: var(--font-slab);
   font-size: var(--text-md);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
 }
 
 .nav a {
@@ -105,8 +105,11 @@
 }
 
 .footerLink {
-  composes: eyebrow from "../styles/eyebrow.module.css";
+  font-family: var(--font-slab);
+  font-size: var(--text-sm);
   font-weight: 400;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
   text-decoration: none;
   color: var(--color-ink-faint);
   transition: color var(--motion-hover);
