@@ -1,6 +1,7 @@
-- [Base UI coverage snapshot](project_base_ui_coverage_status.md) — what's already wrapped in src/ui/ and where the codebase still hand-rolls (Drawer, Chip, SegmentedControl all missing).
-- [Combobox sub-component coverage](project_combobox_subcomponents.md) — MultiCombobox now uses Chips/Chip/ChipRemove; intentionally avoids Combobox.Popup (FloatingFocusManager aria-hides chips + parent dialog buttons); key constraints documented.
-- [Token gaps](project_token_gaps.md) — type scale, border width, scrim, surface-tone borders not yet tokenized despite consistent inline patterns.
-- [Eyebrow pattern duplicated 14+ times](project_eyebrow_pattern.md) — slab/uppercase/eyebrow-tracking treatment redeclared everywhere; needs a shared CSS Module like styles/popup.module.css.
-- [src/ui/ scope rule](project_ui_dir_scope.md) — primitives only; EventTable, ActiveFilters, EventTypeSelect should move to src/components/.
+- [Base UI coverage snapshot](project_base_ui_coverage_status.md) — what's wrapped in src/ui/; all major primitives now exist (Button/Checkbox/Chip/Collapsible/Drawer/Field/MultiCombobox/SegmentedControl/Select/Toggletip).
+- [Combobox sub-component coverage](project_combobox_subcomponents.md) — MultiCombobox uses Chips/Chip/ChipRemove; intentionally avoids Combobox.Popup (FloatingFocusManager aria-hides chips + parent dialog buttons).
+- [Token gaps](project_token_gaps.md) — type scale/border/scrim RESOLVED; remaining: eyebrow-tracking drift (0.03/0.04rem), display type scale untokenized, #666 in storyMatrix.
+- [Recurring violations](project_recurring_violations.md) — Chip primitive bypassed, hand-rolled theme radio, "quest" vocabulary in UI copy, lucide vs game-icons split, SortDrawer stub + ColumnControlsPanel dead code.
+- [Eyebrow pattern](project_eyebrow_pattern.md) — RESOLVED: src/styles/eyebrow.module.css exists and is consumed via composes: across modules.
+- [src/ui/ scope rule](project_ui_dir_scope.md) — primitives only; migration of EventTable/ActiveFilters/EventTypeSelect to src/components/ is complete.
 - [Design review style](feedback_strong_opinions.md) — User wants thorough, opinionated design reviews with concrete code examples; not hedged summaries.

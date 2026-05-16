@@ -130,3 +130,18 @@ test("works without minWidth prop (no clamping)", async () => {
   await user.click(screen.getByRole("button", { name: "Apply" }));
   expect(onApply).toHaveBeenCalledWith(10);
 });
+
+test("pressing Escape calls onClose via onOpenChange", async () => {
+  const user = userEvent.setup();
+  const onClose = vi.fn<() => void>();
+  render(
+    <ColumnResizeDialog
+      columnName="Title"
+      currentWidth={150}
+      onApply={vi.fn<(width: number) => void>()}
+      onClose={onClose}
+    />,
+  );
+  await user.keyboard("{Escape}");
+  expect(onClose).toHaveBeenCalledTimes(1);
+});

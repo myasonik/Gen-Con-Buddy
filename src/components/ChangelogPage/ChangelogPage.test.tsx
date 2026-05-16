@@ -1,5 +1,5 @@
 import React, { StrictMode } from "react";
-import { expect, test, beforeEach } from "vitest";
+import { expect, test, beforeEach, vi } from "vitest";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
@@ -272,4 +272,19 @@ test("handleSearch is a no-op when navigate prop is not provided", async () => {
   const form = document.getElementById("search-form");
   expect(form).not.toBeNull();
   fireEvent.submit(form!);
+});
+
+test("handleSearch calls navigate when navigate prop is provided", async () => {
+  const navigate = vi.fn().mockResolvedValue(undefined);
+  server.use(
+    http.get("/api/changelog/list", () =>
+      HttpResponse.json<ListChangelogsResponse>({ entries: [] }),
+    ),
+  );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await renderChangelogPage({ navigate: navigate as any });
+  const form = document.getElementById("search-form");
+  expect(form).not.toBeNull();
+  fireEvent.submit(form!);
+  await waitFor(() => expect(navigate).toHaveBeenCalledTimes(1));
 });
