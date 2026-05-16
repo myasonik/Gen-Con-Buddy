@@ -13,7 +13,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-1);
-  padding: var(--space-1) var(--space-2);
+  padding: 2px var(--space-2);
   cursor: text;
   min-height: 2rem;
   border: var(--border-width) solid var(--color-ink-border);
@@ -31,9 +31,9 @@
   flex: 1;
   min-width: 0;
 
-  /* chip text at 0.875rem × line-height 1.5 + chip padding 2×0.1875rem = 1.6875rem;
-     anchoring at one chip-row height prevents the container jumping on first selection */
-  min-height: 1.6875rem;
+  /* 2rem total − 2px border − 4px padding = 26px = 1.625rem content area;
+     anchoring at this height prevents the container jumping on first chip selection */
+  min-height: 1.625rem;
 }
 
 .inputGroup:focus-within {
