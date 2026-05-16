@@ -1,6 +1,6 @@
 import React, { StrictMode } from "react";
 import { expect, test, beforeEach } from "vitest";
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import {
@@ -267,8 +267,9 @@ test("handleSearch is a no-op when navigate prop is not provided", async () => {
       HttpResponse.json<ListChangelogsResponse>({ entries: [] }),
     ),
   );
-  const user = userEvent.setup();
-  // navigate is undefined by default — clicking Search should not throw
+  // navigate is undefined by default — directly submitting the form should not throw
   await renderChangelogPage();
-  await user.click(screen.getByRole("button", { name: /search/i }));
+  const form = document.getElementById("search-form");
+  expect(form).not.toBeNull();
+  fireEvent.submit(form!);
 });

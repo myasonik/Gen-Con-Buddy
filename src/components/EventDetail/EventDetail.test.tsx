@@ -1,12 +1,15 @@
-import { StrictMode } from "react";
+import { StrictMode, useEffect } from "react";
 import { expect, test } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import { WILDHAVENS_GAME_IDS } from "../../utils/staffPicks";
 import {
   createRootRoute,
+  createRoute,
   createRouter,
   RouterProvider,
   createMemoryHistory,
+  Outlet,
+  useNavigate,
 } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http, HttpResponse } from "msw";
@@ -15,18 +18,14 @@ import { makeEvent } from "../../test/msw/factory";
 import { EventDetail } from "./EventDetail";
 import type { EventSearchResponse } from "../../utils/types";
 
-function renderEventDetail(
-  gameId: string,
-  { fromChangelog = false }: { fromChangelog?: boolean } = {},
-): ReturnType<typeof render> {
-  const history = createMemoryHistory({ initialEntries: ["/"] });
-  if (fromChangelog) {
-    history.push("/", { from: "changelog" });
-  }
+function renderEventDetail(gameId: string): ReturnType<typeof render> {
   const rootRoute = createRootRoute({
     component: () => <EventDetail gameId={gameId} />,
   });
-  const router = createRouter({ routeTree: rootRoute, history });
+  const router = createRouter({
+    routeTree: rootRoute,
+    history: createMemoryHistory({ initialEntries: ["/"] }),
+  });
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
@@ -489,7 +488,40 @@ test("renders 'Back to changelog' button when navigated from changelog", async (
       }),
     ),
   );
-  renderEventDetail("RPG24000001", { fromChangelog: true });
+
+  // Use a two-route setup so TanStack Router's navigate sets location.state correctly.
+  // history.push() alone doesn't serialize state in the format useLocation() reads.
+  const rootRoute = createRootRoute({ component: () => <Outlet /> });
+  const fromRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: "/changelog",
+    component: function Nav() {
+      const navigate = useNavigate();
+      useEffect(() => {
+        void navigate({ to: "/event", state: { from: "changelog" } });
+      }, [navigate]);
+      return null;
+    },
+  });
+  const eventRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: "/event",
+    component: () => <EventDetail gameId="RPG24000001" />,
+  });
+  const router = createRouter({
+    routeTree: rootRoute.addChildren([fromRoute, eventRoute]),
+    history: createMemoryHistory({ initialEntries: ["/changelog"] }),
+  });
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  await act(async () => {
+    render(
+      <StrictMode>
+        <QueryClientProvider client={client}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </StrictMode>,
+    );
+  });
   await screen.findByText("Epic Dragon Hunt");
   expect(screen.getByRole("button", { name: /back to changelog/i })).toBeInTheDocument();
 });
