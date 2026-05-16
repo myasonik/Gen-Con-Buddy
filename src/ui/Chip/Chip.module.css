@@ -13,7 +13,7 @@
 
   /* default: neutral */
   background: var(--color-surface-panel);
-  border-color: var(--color-ink-divider);
+  border-color: var(--color-ink-border);
   color: var(--color-ink-muted);
 }
 
@@ -36,31 +36,31 @@
 
 .chip[data-tone="neutral"] {
   background: var(--color-surface-panel);
-  border-color: var(--color-ink-divider);
+  border-color: var(--color-ink-border);
   color: var(--color-ink-muted);
 }
 
 .chip[data-tone="accent"] {
   background: var(--color-accent-surface);
-  border-color: oklch(from var(--color-accent-surface) calc(l - 0.08) c h);
+  border-color: var(--color-accent-border);
   color: var(--color-accent-deep);
 }
 
 .chip[data-tone="jade"] {
   background: var(--color-jade-surface);
-  border-color: oklch(from var(--color-jade-surface) calc(l - 0.07) c h);
+  border-color: var(--color-jade-border);
   color: var(--color-jade-deep);
 }
 
 .chip[data-tone="cobalt"] {
   background: var(--color-cobalt-surface);
-  border-color: oklch(from var(--color-cobalt-surface) calc(l - 0.07) c h);
+  border-color: var(--color-cobalt-border);
   color: var(--color-cobalt-deep);
 }
 
 .chip[data-tone="amber"] {
   background: var(--color-amber-surface);
-  border-color: oklch(from var(--color-amber-surface) calc(l - 0.07) c h);
+  border-color: var(--color-amber-border);
   color: var(--color-amber-deep);
 }
 

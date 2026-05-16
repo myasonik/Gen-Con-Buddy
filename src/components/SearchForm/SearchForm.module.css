@@ -21,12 +21,9 @@
 }
 
 .sectionHeading {
+  composes: eyebrow from "../../styles/eyebrow.module.css";
   display: block;
-  font-family: var(--font-slab);
   font-size: var(--text-base);
-  font-weight: 600;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
   color: var(--color-ink);
   padding: 0 0 var(--space-2) 0;
   border-bottom: calc(var(--border-width) * 2) solid var(--color-ink-border);
@@ -41,16 +38,11 @@
 }
 
 .label {
+  composes: eyebrow from "../../styles/eyebrow.module.css";
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
-  font-family: var(--font-slab);
-  font-size: var(--text-sm);
-  font-weight: 600;
   line-height: 1;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-  color: var(--color-ink-muted);
 }
 
 /* ─── Primary Strip ──────────────────────────────────────────────────────── */
@@ -66,14 +58,9 @@
 
 /* Strip control label */
 .stripLabel {
+  composes: eyebrow from "../../styles/eyebrow.module.css";
   display: block;
   margin-bottom: var(--space-1);
-  font-family: var(--font-slab);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-  color: var(--color-ink-muted);
 }
 
 /* Keyword search */
@@ -131,20 +118,15 @@
 }
 
 .dayToggle {
+  composes: eyebrow from "../../styles/eyebrow.module.css";
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 2.25rem;
   height: 2rem;
   padding: 0 var(--space-2);
-  font-family: var(--font-slab);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
   border: var(--border-width) solid var(--color-ink-border);
   border-radius: var(--radius-subtle);
-  color: var(--color-ink-muted);
   background: var(--color-surface-page);
   cursor: pointer;
   user-select: none;
@@ -163,6 +145,10 @@
   background: var(--color-accent);
   color: var(--color-surface-page);
   border-color: var(--color-accent);
+}
+
+.dayToggleWrapper:has(:focus-visible) {
+  z-index: 1;
 }
 
 .dayToggleWrapper:has(:focus-visible) .dayToggle {

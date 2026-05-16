@@ -1,5 +1,4 @@
-import type React from "react";
-import type { LucideProps } from "lucide-react";
+import { createIcon } from "./createIcon";
 import { CombinationLock } from "./CombinationLock";
 import { RollingDices } from "./RollingDices";
 import { PokerHand } from "./PokerHand";
@@ -20,10 +19,7 @@ import { Trade } from "./Trade";
 import { Anvil } from "./Anvil";
 import { JesterHat } from "./JesterHat";
 
-export const EVENT_TYPE_ICONS: Record<
-  string,
-  React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>
-> = {
+export const EVENT_TYPE_ICONS: Record<string, ReturnType<typeof createIcon>> = {
   BGM: RollingDices,
   CGM: PokerHand,
   EGM: Gamepad,

@@ -21,7 +21,7 @@ Friendly, nerdy, reliable. The interface speaks gamer-to-gamer: it knows the dom
 - **Generic SaaS:** The rounded-card, gray-on-white, blue-accent look shared by Notion, Jira, and every B2B productivity tool. This is a gaming tool, not a project tracker.
 - **Corporate event apps:** Eventbrite, conference scheduling apps — technically functional but utterly soulless. Zero personality, zero affinity for the subject matter.
 - **Digital retro / pixel-art:** Chiptune aesthetic, pixelated fonts, neon-on-black arcade styling. Wrong era, wrong medium. The reference is analog tabletop, not a Game Boy.
-- **Fantasy RPG theming:** Parchment textures, Gothic fonts, sword-and-sorcery imagery. Gen Con spans every genre; leaning medieval would alienate half the audience.
+- **Fantasy RPG theming:** Parchment textures, Gothic fonts, sword-and-sorcery imagery. Gen Con spans every genre; leaning medieval would alienate half the audience. This is a visual constraint — gamer-adjacent copy vocabulary ("quest", "adventure") is intentional flavor and not covered by this rule.
 
 ## Design Principles
 

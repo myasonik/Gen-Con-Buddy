@@ -7,7 +7,7 @@
 }
 
 .row {
-  border: var(--border-width) solid var(--color-ink-divider);
+  border: var(--border-width) solid var(--color-ink-border);
   border-radius: var(--radius-card);
   background: var(--color-surface-page);
 }

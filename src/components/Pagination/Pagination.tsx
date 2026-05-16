@@ -60,13 +60,13 @@ export function Pagination({
           />
         )}
         <Button
-          variant="secondary"
+          icon
           className={styles.navButton}
           onClick={() => onNavigate(page - 1, limit)}
           disabled={page === 1}
           aria-label="Previous"
         >
-          <ChevronLeft size={14} aria-hidden="true" />
+          <ChevronLeft size={16} aria-hidden="true" />
         </Button>
         {pageNumbers.map((p, i) =>
           p === "..." ? (
@@ -86,13 +86,13 @@ export function Pagination({
           ),
         )}
         <Button
-          variant="secondary"
+          icon
           className={styles.navButton}
           onClick={() => onNavigate(page + 1, limit)}
           disabled={page === totalPages}
           aria-label="Next"
         >
-          <ChevronRight size={14} aria-hidden="true" />
+          <ChevronRight size={16} aria-hidden="true" />
         </Button>
       </div>
       {!singleLine && (

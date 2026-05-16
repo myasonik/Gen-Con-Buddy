@@ -79,12 +79,8 @@
 }
 
 .sectionHeading {
-  font-family: var(--font-slab);
+  composes: eyebrow from "../../styles/eyebrow.module.css";
   font-size: var(--text-md);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-eyebrow);
-  color: var(--color-ink-muted);
   padding-bottom: var(--space-2);
   margin: 0 0 var(--space-3) 0;
   border-bottom: var(--border-width) solid var(--color-ink-divider);

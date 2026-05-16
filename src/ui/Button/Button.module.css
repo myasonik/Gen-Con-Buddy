@@ -71,5 +71,6 @@
 .icon {
   border-radius: var(--radius-subtle);
   aspect-ratio: 1;
-  padding: var(--space-2);
+  padding: var(--space-1);
+  width: auto;
 }

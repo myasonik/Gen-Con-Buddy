@@ -1,0 +1,13 @@
+/* ─── Eyebrow typography role ────────────────────────────────────────────── */
+
+/* Canonical slab/uppercase treatment used for labels, headings, and tags.   */
+
+/* Compose into any class that uses this role; override per-call-site after. */
+.eyebrow {
+  font-family: var(--font-slab);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}

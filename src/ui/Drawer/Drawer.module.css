@@ -62,7 +62,7 @@
 
 .drawerTitle {
   font-family: var(--font-display);
-  font-size: var(--text-2xl);
+  font-size: var(--text-headline);
   font-weight: 600;
   line-height: 1.2;
   color: var(--color-ink);

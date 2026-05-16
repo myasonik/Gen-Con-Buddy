@@ -1,10 +1,13 @@
 import React from "react";
-import type { LucideProps } from "lucide-react";
 
-type IconProps = Omit<LucideProps, "ref"> &
-  React.RefAttributes<SVGSVGElement> & {
-    "data-testid"?: string;
-  };
+type IconProps = {
+  size?: number | string;
+  color?: string;
+  "data-testid"?: string;
+} & Omit<React.SVGProps<SVGSVGElement>, "color" | "ref"> &
+  React.RefAttributes<SVGSVGElement>;
+
+export type { IconProps };
 
 const hasA11yProp = (props: object): boolean =>
   Object.keys(props).some((k) => k.startsWith("aria-") || k === "role" || k === "title");
@@ -16,7 +19,7 @@ export function createIcon(
 ): React.ForwardRefExoticComponent<IconProps> {
   const Component = React.forwardRef<SVGSVGElement, Omit<IconProps, "ref">>(
     (
-      { size = 24, color = "currentColor", absoluteStrokeWidth: _asw, className, ...props },
+      { size = 24, color = "currentColor", className, ...props },
       ref,
     ) => (
       <svg

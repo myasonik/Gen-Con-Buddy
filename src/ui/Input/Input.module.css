@@ -13,11 +13,6 @@
   transition: border-color var(--motion-hover);
 }
 
-.input:focus {
-  outline: none;
-  border-color: var(--color-ink);
-}
-
 .input[aria-invalid="true"],
 .input[data-invalid] {
   border-color: var(--color-accent);

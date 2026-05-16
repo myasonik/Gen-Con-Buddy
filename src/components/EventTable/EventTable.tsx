@@ -234,7 +234,7 @@ export function EventTable({
         data-testid="table-clip-wrapper"
       >
         <div className={styles.tableWrapper}>
-          <table ref={tableRef}>
+          <table ref={tableRef} className={styles.table}>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
@@ -253,7 +253,7 @@ export function EventTable({
                         key={header.id}
                         aria-sort={sortField ? ariaSort : undefined}
                         scope="col"
-                        className={styles.resizableTh}
+                        className={styles.th}
                         style={
                           {
                             width: header.getSize(),
@@ -305,10 +305,11 @@ export function EventTable({
               {table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
+                  className={styles.row}
                   data-staff-pick={STAFF_PICK_IDS.has(row.original.attributes.gameId) || undefined}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} data-col-id={cell.column.id}>
+                    <td key={cell.id} className={styles.cell} data-col-id={cell.column.id}>
                       {flexRender(cell.column.columnDef.cell, {
                         ...cell.getContext(),
                         dayFormat,

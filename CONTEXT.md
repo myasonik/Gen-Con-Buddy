@@ -7,7 +7,7 @@ A fast, deeply filterable Event search tool for Gen Con attendees. Users search 
 ### Events
 
 **Event**: A scheduled convention session with a defined GM, time slot, location, and player count — the central entity in the app.
-_Avoid_: Quest (UI flavor copy only, not a domain term)
+_Avoid_: Quest as a domain synonym in code, APIs, or data model discussions. "Quest" is flavor copy — warm, gamer-to-gamer language appropriate in UI states (loading, error, empty). Both registers are intentional; the distinction is precision of context, not a prohibition.
 
 **Event Type**: One of 19 official Gen Con categories that classify what kind of activity an Event is (e.g. RPG, BGM, LRP). Each has a short code, a full name, and an icon.
 _Avoid_: Event category, activity type
@@ -66,4 +66,4 @@ _Avoid_: Sync, snapshot, data update
 
 - The keyword freetext field is labeled "Search" in the UI but registered as `filter` in the form schema and API — resolved: "filter" is correct for this field's type; the label is a UI affordance, not a domain name.
 - Backend code refers to all URL query parameters as "search params" — when discussing backend implementation, prefer the backend's own naming. This glossary reflects frontend/domain language.
-- "Quest" appears in loading and empty-state UI copy — resolved: not a domain term. Events are always Events.
+- "Quest" appears in loading and empty-state UI copy — intentional. The site uses a dual register: "Event" for precise domain and technical contexts, "Quest" (and similar gamer-adjacent vocabulary) as flavor copy in UI states. Neither overrides the other.

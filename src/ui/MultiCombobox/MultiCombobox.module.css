@@ -13,7 +13,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-1);
-  padding: 0 var(--space-2);
+  padding: var(--space-1) var(--space-2);
   cursor: text;
   min-height: 2rem;
   border: var(--border-width) solid var(--color-ink-border);
@@ -97,6 +97,13 @@
 .item:hover,
 .item[data-highlighted] {
   background: var(--color-surface-hover);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
 }
 
 .chip {
