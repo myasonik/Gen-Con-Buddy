@@ -49,6 +49,7 @@ One global utility class in `src/styles/global.css` is intentionally used as a b
 **EventDetail `<dl>` layout:** `<dt>`/`<dd>` pairs are stacked (label above value), not side-by-side. Side-by-side requires a fixed label width that breaks visually with long label names.
 
 **Icon libraries:** Two sources are in use and must not be mixed.
+
 - `lucide-react` — generic UI chrome (close, chevron, menu, search, sun/moon, sort arrows, external link). Use for affordance icons with no domain meaning.
 - `src/ui/icons/` (game-icons.net) — domain and brand icons (event types, Meeple). Implement as custom components via `createIcon.tsx`. When adding a domain icon, search game-icons.net first.
 

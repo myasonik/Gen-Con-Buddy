@@ -13,6 +13,7 @@
 ### Task 1: Write the failing regression test
 
 **Files:**
+
 - Modify: `src/hooks/useStoredState.test.ts`
 
 - [ ] **Step 1: Add the regression test to `useStoredState.test.ts`**
@@ -77,6 +78,7 @@ Expected: all tests except the new one pass (7 pass, 1 fail).
 ### Task 2: Implement the fix
 
 **Files:**
+
 - Modify: `src/hooks/useStoredState.ts`
 
 - [ ] **Step 1: Replace the write effect with the combined version-tracking effect**

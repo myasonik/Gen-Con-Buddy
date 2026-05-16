@@ -495,9 +495,10 @@ test("renders 'Back to changelog' button when navigated from changelog", async (
   const fromRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: "/changelog",
-    component: function Nav() {
+    component() {
       const navigate = useNavigate();
       useEffect(() => {
+        // @ts-expect-error — local test router uses /event; app router has /event/$id
         void navigate({ to: "/event", state: { from: "changelog" } });
       }, [navigate]);
       return null;
