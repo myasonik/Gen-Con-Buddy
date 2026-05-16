@@ -15,14 +15,18 @@ import { makeEvent } from "../../test/msw/factory";
 import { EventDetail } from "./EventDetail";
 import type { EventSearchResponse } from "../../utils/types";
 
-function renderEventDetail(gameId: string): ReturnType<typeof render> {
+function renderEventDetail(
+  gameId: string,
+  { fromChangelog = false }: { fromChangelog?: boolean } = {},
+): ReturnType<typeof render> {
+  const history = createMemoryHistory({ initialEntries: ["/"] });
+  if (fromChangelog) {
+    history.push("/", { from: "changelog" });
+  }
   const rootRoute = createRootRoute({
     component: () => <EventDetail gameId={gameId} />,
   });
-  const router = createRouter({
-    routeTree: rootRoute,
-    history: createMemoryHistory({ initialEntries: ["/"] }),
-  });
+  const router = createRouter({ routeTree: rootRoute, history });
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
@@ -472,4 +476,20 @@ test("card has data-staff-pick attribute for Wildhavens events", async () => {
   const { container } = renderEventDetail(gameId);
   await screen.findByText("THE EVENT");
   expect(container.querySelector("[data-staff-pick]")).not.toBeNull();
+});
+
+test("renders 'Back to changelog' button when navigated from changelog", async () => {
+  server.use(
+    http.get("/api/events/search", () =>
+      HttpResponse.json<EventSearchResponse>({
+        data: [makeEvent({ gameId: "RPG24000001", title: "Epic Dragon Hunt" })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      }),
+    ),
+  );
+  renderEventDetail("RPG24000001", { fromChangelog: true });
+  await screen.findByText("Epic Dragon Hunt");
+  expect(screen.getByRole("button", { name: /back to changelog/i })).toBeInTheDocument();
 });

@@ -121,6 +121,44 @@ test("returns {} when canvas context is unavailable", async () => {
   });
 });
 
+test("returns {} when getContext throws", async () => {
+  vi.restoreAllMocks();
+  vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(() => {
+    throw new Error("canvas not supported");
+  });
+  render(<TestTable events={[makeEvent()]} rows={[[{ colId: "day", content: "Wednesday" }]]} />);
+  await waitFor(() => {
+    const result = JSON.parse(screen.getByTestId("result").textContent ?? "");
+    expect(result).toStrictEqual({});
+  });
+});
+
+test("skips cells with empty data-col-id attribute", async () => {
+  function TableWithEmptyColId(): React.ReactElement {
+    const tableRef = useRef<HTMLTableElement>(null);
+    const minSizes = useColumnMinSizes(tableRef, [makeEvent()], { visibility: {} });
+    return (
+      <>
+        <table ref={tableRef}>
+          <tbody>
+            <tr>
+              <td data-col-id="day">Wednesday</td>
+              <td data-col-id="">ignored</td>
+            </tr>
+          </tbody>
+        </table>
+        <div data-testid="result">{JSON.stringify(minSizes)}</div>
+      </>
+    );
+  }
+  render(<TableWithEmptyColId />);
+  await waitFor(() => {
+    const result = JSON.parse(screen.getByTestId("result").textContent ?? "");
+    expect(result.day).toBe(74);
+    expect(Object.keys(result)).toStrictEqual(["day"]);
+  });
+});
+
 test("remeasures when visibility changes", async () => {
   const events = [makeEvent()];
 

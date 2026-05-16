@@ -260,3 +260,15 @@ test("shows error message when changelog list fetch fails", async () => {
     screen.findByText("Could not load changelog. Try refreshing."),
   ).resolves.toBeInTheDocument();
 });
+
+test("handleSearch is a no-op when navigate prop is not provided", async () => {
+  server.use(
+    http.get("/api/changelog/list", () =>
+      HttpResponse.json<ListChangelogsResponse>({ entries: [] }),
+    ),
+  );
+  const user = userEvent.setup();
+  // navigate is undefined by default — clicking Search should not throw
+  await renderChangelogPage();
+  await user.click(screen.getByRole("button", { name: /search/i }));
+});
