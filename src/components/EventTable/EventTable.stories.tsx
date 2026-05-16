@@ -85,7 +85,7 @@ interface EventTableStoryProps {
   events: Event[];
   activeSortField?: string;
   activeSortDir?: "asc" | "desc";
-  onSort?: (sort: string | undefined) => void;
+  onSort: (sort: string | undefined) => void;
 }
 
 function EventTableStory({

@@ -5,13 +5,9 @@ import { createPortal } from "react-dom";
 import {
   useReactTable,
   getCoreRowModel,
-  getSortedRowModel,
   flexRender,
-  type SortingState,
 } from "@tanstack/react-table";
-import { useSortState } from "../../hooks/useSortState";
 import { useColumnMinSizes } from "../../hooks/useColumnMinSizes";
-import { parseSortString } from "../../utils/parseSortString";
 import { ColumnActionsPopover } from "./ColumnActionsPopover";
 import {
   TypeFormatControls,
@@ -22,7 +18,7 @@ import {
 import { ColumnResizeDialog } from "./ColumnResizeDialog";
 import { announce } from "../../lib/announce";
 import type { Event } from "../../utils/types";
-import { COLUMNS, SORT_FIELD_BY_COL_ID, COL_ID_BY_SORT_FIELD } from "./columns";
+import { COLUMNS } from "./columns";
 import { STAFF_PICK_IDS } from "../../utils/staffPicks";
 import type { SharedColumnState } from "./types";
 import styles from "./EventTable.module.css";
@@ -33,7 +29,7 @@ interface EventTableProps {
   events: Event[];
   activeSortField?: string;
   activeSortDir?: "asc" | "desc";
-  onSort?: (sort: string | undefined) => void;
+  onSort: (sort: string | undefined) => void;
   sharedColumnState: SharedColumnState;
   linkState?: { from: string };
 }
@@ -78,98 +74,36 @@ export function EventTable({
     columnName: string;
     currentWidth: number;
   } | null>(null);
-  const [internalSorting, setInternalSorting] = useState<SortingState>([]);
-
-  const externalSort = useSortState({
-    activeSortField,
-    activeSortDir,
-    onSort: (field, dir) => {
-      if (onSort) {
-        onSort(`${field}.${dir}`);
-      }
-    },
-  });
-
-  let effectiveSortField: string | undefined = undefined;
-  if (onSort) {
-    effectiveSortField = activeSortField;
-  } else if (internalSorting.length > 0) {
-    effectiveSortField = SORT_FIELD_BY_COL_ID.get(internalSorting[0].id) ?? internalSorting[0].id;
-  }
-
-  let effectiveSortDir: "asc" | "desc" | undefined = undefined;
-  if (onSort) {
-    effectiveSortDir = activeSortDir;
-  } else if (internalSorting.length > 0) {
-    effectiveSortDir = internalSorting[0].desc ? "desc" : "asc";
-  }
 
   const handleHeaderSortClick = (sortField: string, label: string): void => {
-    if (onSort) {
-      if (effectiveSortField !== sortField) {
-        externalSort.handleColumnClick(COL_ID_BY_SORT_FIELD.get(sortField) ?? sortField);
-        announce(`Sorted by ${label}, ascending`);
-        posthog.capture("results_sorted", { sort_field: sortField, sort_direction: "asc", label });
-      } else if (effectiveSortDir === "asc") {
-        externalSort.handleColumnClick(COL_ID_BY_SORT_FIELD.get(sortField) ?? sortField);
-        announce(`Sorted by ${label}, descending`);
-        posthog.capture("results_sorted", { sort_field: sortField, sort_direction: "desc", label });
-      } else {
-        onSort(undefined);
-        announce("Sort cleared");
-        posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
-      }
+    if (activeSortField !== sortField) {
+      onSort(`${sortField}.asc`);
+      announce(`Sorted by ${label}, ascending`);
+      posthog.capture("results_sorted", { sort_field: sortField, sort_direction: "asc", label });
+    } else if (activeSortDir === "asc") {
+      onSort(`${sortField}.desc`);
+      announce(`Sorted by ${label}, descending`);
+      posthog.capture("results_sorted", { sort_field: sortField, sort_direction: "desc", label });
     } else {
-      const colId = COL_ID_BY_SORT_FIELD.get(sortField) ?? sortField;
-      if (effectiveSortField !== sortField) {
-        setInternalSorting([{ id: colId, desc: false }]);
-        announce(`Sorted by ${label}, ascending`);
-        posthog.capture("results_sorted", { sort_field: sortField, sort_direction: "asc", label });
-      } else if (effectiveSortDir === "asc") {
-        setInternalSorting([{ id: colId, desc: true }]);
-        announce(`Sorted by ${label}, descending`);
-        posthog.capture("results_sorted", { sort_field: sortField, sort_direction: "desc", label });
-      } else {
-        setInternalSorting([]);
-        announce("Sort cleared");
-        posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
-      }
+      onSort(undefined);
+      announce("Sort cleared");
+      posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
     }
   };
 
   const handlePopoverSort = (s: string | undefined, label: string): void => {
-    if (onSort) {
-      onSort(s);
-      if (s) {
-        const dir = s.endsWith(".asc") ? "ascending" : "descending";
-        announce(`Sorted by ${label}, ${dir}`);
-        posthog.capture("results_sorted", {
-          sort_field: s.split(".")[0],
-          sort_direction: s.endsWith(".asc") ? "asc" : "desc",
-          label,
-        });
-      } else {
-        announce("Sort cleared");
-        posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
-      }
+    onSort(s);
+    if (s) {
+      const dir = s.endsWith(".asc") ? "ascending" : "descending";
+      announce(`Sorted by ${label}, ${dir}`);
+      posthog.capture("results_sorted", {
+        sort_field: s.split(".")[0],
+        sort_direction: s.endsWith(".asc") ? "asc" : "desc",
+        label,
+      });
     } else {
-      if (s === undefined) {
-        setInternalSorting([]);
-        announce("Sort cleared");
-        posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
-      } else {
-        const parsed = parseSortString(s);
-        if (parsed) {
-          const colId = COL_ID_BY_SORT_FIELD.get(parsed.field) ?? parsed.field;
-          setInternalSorting([{ id: colId, desc: parsed.dir === "desc" }]);
-          announce(`Sorted by ${label}, ${parsed.dir === "asc" ? "ascending" : "descending"}`);
-          posthog.capture("results_sorted", {
-            sort_field: parsed.field,
-            sort_direction: parsed.dir,
-            label,
-          });
-        }
-      }
+      announce("Sort cleared");
+      posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
     }
   };
 
@@ -180,7 +114,6 @@ export function EventTable({
     state: {
       columnVisibility: visibility,
       columnSizing: sizing,
-      sorting: internalSorting,
     },
     onColumnSizingChange: (updater) => {
       setSizing((prev) => {
@@ -190,11 +123,9 @@ export function EventTable({
         );
       });
     },
-    onSortingChange: setInternalSorting,
-    manualSorting: Boolean(onSort),
+    manualSorting: true,
     manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
   });
 
   const getFormatControls = (columnId: string): React.ReactNode => {
@@ -243,10 +174,10 @@ export function EventTable({
                     const colHeader = header.column.columnDef.header;
                     const label =
                       typeof colHeader === "string" ? colHeader : (header.column.id ?? "");
-                    const isActive = Boolean(sortField) && effectiveSortField === sortField;
+                    const isActive = Boolean(sortField) && activeSortField === sortField;
                     let ariaSort: "ascending" | "descending" | "none" = "none";
                     if (isActive) {
-                      ariaSort = effectiveSortDir === "asc" ? "ascending" : "descending";
+                      ariaSort = activeSortDir === "asc" ? "ascending" : "descending";
                     }
                     return (
                       <th
@@ -270,7 +201,7 @@ export function EventTable({
                             {flexRender(header.column.columnDef.header, header.getContext())}
                             {isActive && (
                               <span aria-hidden="true" className={styles.sortIndicator}>
-                                {effectiveSortDir === "asc" ? (
+                                {activeSortDir === "asc" ? (
                                   <ArrowUp size={12} aria-hidden="true" />
                                 ) : (
                                   <ArrowDown size={12} aria-hidden="true" />
@@ -281,8 +212,8 @@ export function EventTable({
                           {header.column.getCanResize() && (
                             <ColumnActionsPopover
                               sortField={sortField}
-                              activeSortField={effectiveSortField}
-                              activeSortDir={effectiveSortDir}
+                              activeSortField={activeSortField}
+                              activeSortDir={activeSortDir}
                               onSort={(s) => handlePopoverSort(s, label)}
                               onOpenResize={() =>
                                 setResizeTarget({

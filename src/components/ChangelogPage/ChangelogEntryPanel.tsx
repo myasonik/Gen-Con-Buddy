@@ -36,7 +36,7 @@ function EventGroup({
 }: {
   events: Event[];
   sharedColumnState: SharedColumnState;
-  onSort?: (sort: string | undefined) => void;
+  onSort: (sort: string | undefined) => void;
   activeSortField?: string;
   activeSortDir?: "asc" | "desc";
 }): React.JSX.Element {
