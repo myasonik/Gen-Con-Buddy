@@ -53,6 +53,11 @@ export const SCHEMA = {
 type Schema = typeof SCHEMA;
 type SchemaKey = keyof Schema;
 
+/** All SCHEMA keys that can produce an active filter chip — excludes "apiOnly" and "number" fields. */
+export type FilterableKey = {
+  [K in SchemaKey]: Schema[K] extends "apiOnly" | "number" ? never : K;
+}[SchemaKey];
+
 /** URL search params — map directly to API query params. Ranges encoded as "[min,max]". */
 export type SearchParams = {
   [K in SchemaKey]?: Schema[K] extends "number" ? number : string;

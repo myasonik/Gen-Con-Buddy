@@ -3,8 +3,8 @@ import { usePostHog } from "posthog-js/react";
 import { useForm } from "react-hook-form";
 import { Search, RotateCcw, SlidersHorizontal } from "lucide-react";
 import { Dialog } from "@base-ui/react/dialog";
-import { AGE_GROUPS, CATEGORY, EXP, REGISTRATION, YES_NO } from "../../utils/enums";
 import type { SearchFormValues } from "../../utils/searchParamSchema";
+import { enumOptions } from "../../utils/filterFields";
 import { Button } from "../../ui/Button/Button";
 import { Drawer } from "../../ui/Drawer/Drawer";
 import { EventTypeSelect } from "../EventTypeSelect/EventTypeSelect";
@@ -288,10 +288,7 @@ export function SearchForm({
                         <Select
                           value={watch("ageRequired") ?? ""}
                           onValueChange={(v) => setValue("ageRequired", v)}
-                          options={Object.entries(AGE_GROUPS).map(([k, v]) => ({
-                            value: k,
-                            label: v,
-                          }))}
+                          options={enumOptions("ageRequired")}
                         />
                       </label>
                       <label className={styles.label}>
@@ -299,7 +296,7 @@ export function SearchForm({
                         <Select
                           value={watch("experienceRequired") ?? ""}
                           onValueChange={(v) => setValue("experienceRequired", v)}
-                          options={Object.entries(EXP).map(([k, v]) => ({ value: k, label: v }))}
+                          options={enumOptions("experienceRequired")}
                         />
                       </label>
                     </div>
@@ -324,10 +321,7 @@ export function SearchForm({
                         <Select
                           value={watch("attendeeRegistration") ?? ""}
                           onValueChange={(v) => setValue("attendeeRegistration", v)}
-                          options={Object.entries(REGISTRATION).map(([k, v]) => ({
-                            value: k,
-                            label: v,
-                          }))}
+                          options={enumOptions("attendeeRegistration")}
                         />
                       </label>
                     </div>
@@ -346,10 +340,7 @@ export function SearchForm({
                         <Select
                           value={watch("specialCategory") ?? ""}
                           onValueChange={(v) => setValue("specialCategory", v)}
-                          options={Object.entries(CATEGORY).map(([k, v]) => ({
-                            value: k,
-                            label: v,
-                          }))}
+                          options={enumOptions("specialCategory")}
                         />
                       </label>
                       <Field
@@ -361,7 +352,7 @@ export function SearchForm({
                         <Select
                           value={watch("materialsRequired") ?? ""}
                           onValueChange={(v) => setValue("materialsRequired", v)}
-                          options={Object.entries(YES_NO).map(([k, v]) => ({ value: k, label: v }))}
+                          options={enumOptions("materialsRequired")}
                           aria-label="Materials Required"
                         />
                       </label>
@@ -374,7 +365,7 @@ export function SearchForm({
                         <Select
                           value={watch("tournament") ?? ""}
                           onValueChange={(v) => setValue("tournament", v)}
-                          options={Object.entries(YES_NO).map(([k, v]) => ({ value: k, label: v }))}
+                          options={enumOptions("tournament")}
                           aria-label="Tournament"
                         />
                       </label>
