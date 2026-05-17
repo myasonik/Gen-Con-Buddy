@@ -211,7 +211,7 @@ export function EventTable({
                               )}
                             </button>
                           ) : (
-                            <span className={styles.sortButton}>
+                            <span className={styles.columnLabel}>
                               {flexRender(header.column.columnDef.header, header.getContext())}
                             </span>
                           )}
