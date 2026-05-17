@@ -40,7 +40,12 @@ test("renders the Format drawer trigger", () => {
   expect(screen.getByRole("button", { name: "Format" })).toBeInTheDocument();
 });
 
-test("renders the Sort drawer trigger", () => {
-  render(<ColumnControlsPanel columnState={makeColumnState()} />);
+test("renders the Sort drawer trigger when allowSort is true", () => {
+  render(<ColumnControlsPanel columnState={makeColumnState()} allowSort />);
   expect(screen.getByRole("button", { name: "Sort" })).toBeInTheDocument();
+});
+
+test("does not render the Sort drawer trigger when allowSort is absent", () => {
+  render(<ColumnControlsPanel columnState={makeColumnState()} />);
+  expect(screen.queryByRole("button", { name: "Sort" })).toBeNull();
 });

@@ -65,7 +65,7 @@ test("renders panel controls when events load", async () => {
   await screen.findByText("Looks like that quest hit a dead end.");
   expect(screen.getByRole("button", { name: /visibility/i })).toBeInTheDocument();
   expect(screen.getByRole("button", { name: /format/i })).toBeInTheDocument();
-  expect(screen.getByRole("button", { name: /sort/i })).toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /sort/i })).toBeNull();
 });
 
 test("renders a row for each fetched event", async () => {

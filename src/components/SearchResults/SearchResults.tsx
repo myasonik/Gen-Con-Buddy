@@ -61,7 +61,7 @@ export function SearchResults({
         <>
           <div className={styles.controlsBar}>
             <div className={styles.tableControls}>
-              <ColumnControlsPanel columnState={sharedColumnState} />
+              <ColumnControlsPanel columnState={sharedColumnState} allowSort />
             </div>
             <Pagination
               page={page}
@@ -85,7 +85,7 @@ export function SearchResults({
           ) : (
             <div className={styles.mobileView}>
               <div className={styles.mobileControls}>
-                <ColumnControlsPanel columnState={sharedColumnState} />
+                <ColumnControlsPanel columnState={sharedColumnState} allowSort />
               </div>
               <EventListMobile events={data.data} columnState={sharedColumnState} />
             </div>
