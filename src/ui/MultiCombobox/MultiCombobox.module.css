@@ -114,6 +114,12 @@
   overflow: hidden;
 }
 
+.chipIcon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
 .chipRemove {
   border: none;
   background: none;
