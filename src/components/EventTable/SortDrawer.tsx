@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { GripVertical, ChevronUp, ChevronDown, X } from "lucide-react";
 import {
   DndContext,
@@ -17,8 +17,8 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Drawer } from "../../ui/Drawer/Drawer";
-import { Combobox } from "../../ui/Combobox/Combobox";
 import { Button } from "../../ui/Button/Button";
+import { Combobox } from "../../ui/Combobox/Combobox";
 import { COLUMNS } from "./columns";
 import { addSort, removeSort, setSortDir, reorderSort } from "../../utils/sortManipulation";
 import type { SortState } from "../../utils/types";
@@ -36,6 +36,13 @@ interface SortDrawerProps {
 function getSortFieldLabel(sortField: string): string {
   const col = COLUMNS.find((c) => c.meta?.sortField === sortField);
   return typeof col?.header === "string" ? col.header : sortField;
+}
+
+function sortsEqual(a: SortState[], b: SortState[]): boolean {
+  if (a.length !== b.length) {
+    return false;
+  }
+  return a.every((s, i) => s.field === b[i].field && s.dir === b[i].dir);
 }
 
 interface SortableItemProps {
@@ -118,9 +125,22 @@ export function SortDrawer({
   open,
   onOpenChange,
 }: SortDrawerProps): React.JSX.Element {
+  const [stagedSort, setStagedSort] = useState<SortState[]>(activeSort);
+
+  // Reset staged state whenever the drawer opens so it starts fresh from applied state.
+  // Intentionally excludes activeSort from deps — we only want to reset on open, not on
+  // every external sort change while the drawer is already open.
+  useEffect(() => {
+    if (open) {
+      setStagedSort(activeSort);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  const hasPendingChanges = !sortsEqual(stagedSort, activeSort);
+
   const { visibleOptions, hiddenOptions } = useMemo(() => {
-    const sortedFields = new Set(activeSort.map((s) => s.field));
-    // Deduplicate by sortField (Day and Start both map to startDateTime)
+    const sortedFields = new Set(stagedSort.map((s) => s.field));
     const seenSortFields = new Set<string>();
     const allOptions = COLUMNS.filter((c) => {
       if (!c.id || !c.meta?.sortField) {
@@ -145,7 +165,7 @@ export function SortDrawer({
         .filter((o) => !o.visible)
         .sort((a, b) => a.label.localeCompare(b.label)),
     };
-  }, [activeSort, columnVisibility]);
+  }, [stagedSort, columnVisibility]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -155,14 +175,19 @@ export function SortDrawer({
   function handleDragEnd(event: DragEndEvent): void {
     const { active, over } = event;
     if (over && active.id !== over.id) {
-      const fromIndex = activeSort.findIndex((s) => s.field === active.id);
-      const toIndex = activeSort.findIndex((s) => s.field === over.id);
+      const fromIndex = stagedSort.findIndex((s) => s.field === active.id);
+      const toIndex = stagedSort.findIndex((s) => s.field === over.id);
       if (fromIndex !== -1 && toIndex !== -1) {
         const label = getSortFieldLabel(String(active.id));
-        onSort(reorderSort(activeSort, fromIndex, toIndex));
+        setStagedSort(reorderSort(stagedSort, fromIndex, toIndex));
         announce(`${label} moved to position ${toIndex + 1}`);
       }
     }
+  }
+
+  function handleApply(): void {
+    onSort(stagedSort);
+    onOpenChange(false);
   }
 
   const triggerLabel = activeSort.length > 0 ? `Sort · ${activeSort.length}` : "Sort";
@@ -177,19 +202,18 @@ export function SortDrawer({
       title="Sort"
       open={open}
       onOpenChange={onOpenChange}
+      disablePointerDismissal={hasPendingChanges}
       footer={
-        activeSort.length > 0 ? (
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => {
-              onSort([]);
-              announce("Sort cleared");
-            }}
-          >
-            Clear sorting
+        <div className={styles.footerActions}>
+          {stagedSort.length > 0 && (
+            <Button type="button" variant="ghost" onClick={() => setStagedSort([])}>
+              Clear sorting
+            </Button>
+          )}
+          <Button type="button" variant="primary" onClick={handleApply}>
+            Apply
           </Button>
-        ) : undefined
+        </div>
       }
     >
       <div className={styles.drawerBody}>
@@ -202,12 +226,12 @@ export function SortDrawer({
           ]}
           onSelect={(value) => {
             const label = getSortFieldLabel(value);
-            onSort(addSort(activeSort, value));
+            setStagedSort(addSort(stagedSort, value));
             announce(`Sorting by ${label}, ascending`);
           }}
         />
 
-        {activeSort.length === 0 ? (
+        {stagedSort.length === 0 ? (
           <p className={styles.emptyState}>No fields sorted</p>
         ) : (
           <DndContext
@@ -216,33 +240,33 @@ export function SortDrawer({
             onDragEnd={handleDragEnd}
           >
             <SortableContext
-              items={activeSort.map((s) => s.field)}
+              items={stagedSort.map((s) => s.field)}
               strategy={verticalListSortingStrategy}
             >
               <ul className={styles.sortList}>
-                {activeSort.map((sort, index) => (
+                {stagedSort.map((sort, index) => (
                   <SortableItem
                     key={sort.field}
                     sort={sort}
                     isFirst={index === 0}
-                    isLast={index === activeSort.length - 1}
+                    isLast={index === stagedSort.length - 1}
                     onMove={(delta) => {
                       const newIndex = index + delta;
                       const label = getSortFieldLabel(sort.field);
-                      onSort(reorderSort(activeSort, index, newIndex));
+                      setStagedSort(reorderSort(stagedSort, index, newIndex));
                       announce(`${label} moved to position ${newIndex + 1}`);
                     }}
                     onToggleDir={() => {
                       const newDir = sort.dir === "asc" ? "desc" : "asc";
                       const label = getSortFieldLabel(sort.field);
-                      onSort(setSortDir(activeSort, sort.field, newDir));
+                      setStagedSort(setSortDir(stagedSort, sort.field, newDir));
                       announce(
                         `${label} sort direction: ${newDir === "asc" ? "ascending" : "descending"}`,
                       );
                     }}
                     onRemove={() => {
                       const label = getSortFieldLabel(sort.field);
-                      onSort(removeSort(activeSort, sort.field));
+                      setStagedSort(removeSort(stagedSort, sort.field));
                       announce(`${label} sort removed`);
                     }}
                   />

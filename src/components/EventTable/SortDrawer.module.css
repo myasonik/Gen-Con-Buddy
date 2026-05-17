@@ -64,3 +64,10 @@
   color: var(--color-text-muted);
   cursor: not-allowed;
 }
+
+.footerActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}

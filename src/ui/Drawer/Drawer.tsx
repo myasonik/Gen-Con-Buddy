@@ -12,6 +12,7 @@ interface DrawerProps {
   children: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  disablePointerDismissal?: boolean;
 }
 
 export function Drawer({
@@ -22,9 +23,14 @@ export function Drawer({
   children,
   open,
   onOpenChange,
+  disablePointerDismissal = false,
 }: DrawerProps): React.JSX.Element {
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+    <Dialog.Root
+      open={open}
+      onOpenChange={onOpenChange}
+      disablePointerDismissal={disablePointerDismissal}
+    >
       <Dialog.Trigger render={trigger as React.ReactElement} />
       <Dialog.Portal>
         <Dialog.Backdrop className={styles.backdrop} />
