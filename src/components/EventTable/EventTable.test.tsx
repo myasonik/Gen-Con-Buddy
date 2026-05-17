@@ -106,7 +106,6 @@ async function renderEventTable(
   const rootRoute = createRootRoute({
     component: () =>
       sharedColumnState !== undefined ? (
-<<<<<<< HEAD
         <EventTable
           events={events}
           sharedColumnState={sharedColumnState}

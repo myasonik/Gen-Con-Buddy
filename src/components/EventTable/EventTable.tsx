@@ -2,11 +2,7 @@ import React, { useState, useId, useRef } from "react";
 import { usePostHog } from "posthog-js/react";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { createPortal } from "react-dom";
-import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-} from "@tanstack/react-table";
+import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table";
 import { useColumnMinSizes } from "../../hooks/useColumnMinSizes";
 import { ColumnActionsPopover } from "./ColumnActionsPopover";
 import {
