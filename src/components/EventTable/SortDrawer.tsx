@@ -1,4 +1,4 @@
-import React, { useState, useId, useMemo } from "react";
+import React, { useMemo } from "react";
 import { GripVertical, ChevronUp, ChevronDown, X } from "lucide-react";
 import {
   DndContext,
@@ -16,8 +16,8 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Combobox } from "@base-ui/react/combobox";
 import { Drawer } from "../../ui/Drawer/Drawer";
+import { Combobox } from "../../ui/Combobox/Combobox";
 import { Button } from "../../ui/Button/Button";
 import { COLUMNS } from "./columns";
 import { addSort, removeSort, setSortDir, reorderSort } from "../../utils/sortManipulation";
@@ -118,10 +118,6 @@ export function SortDrawer({
   open,
   onOpenChange,
 }: SortDrawerProps): React.JSX.Element {
-  const [comboValue, setComboValue] = useState<string | null>(null);
-  const [comboOpen, setComboOpen] = useState(false);
-  const inputId = useId();
-
   const { visibleOptions, hiddenOptions } = useMemo(() => {
     const sortedFields = new Set(activeSort.map((s) => s.field));
     // Deduplicate by sortField (Day and Start both map to startDateTime)
@@ -197,59 +193,19 @@ export function SortDrawer({
       }
     >
       <div className={styles.drawerBody}>
-        <Combobox.Root<string>
-          value={comboValue}
-          open={comboOpen}
-          onOpenChange={setComboOpen}
-          onValueChange={(value) => {
-            if (value) {
-              const label = getSortFieldLabel(value);
-              onSort(addSort(activeSort, value));
-              announce(`Sorting by ${label}, ascending`);
-              setComboValue(null);
-            }
+        <Combobox
+          label="Pick fields to sort by"
+          placeholder="Search fields…"
+          groups={[
+            { label: "Visible columns", options: visibleOptions },
+            { label: "Other fields", options: hiddenOptions },
+          ]}
+          onSelect={(value) => {
+            const label = getSortFieldLabel(value);
+            onSort(addSort(activeSort, value));
+            announce(`Sorting by ${label}, ascending`);
           }}
-        >
-          <label htmlFor={inputId}>Pick fields to sort by</label>
-          <Combobox.InputGroup>
-            <Combobox.Input id={inputId} placeholder="Search fields…" />
-            <Combobox.Trigger tabIndex={-1} aria-label="Toggle field list">
-              <ChevronDown size={14} aria-hidden="true" />
-            </Combobox.Trigger>
-          </Combobox.InputGroup>
-          <Combobox.Status className="sr-only" />
-          {comboOpen && (
-            <Combobox.Portal>
-              <Combobox.Positioner sideOffset={4}>
-                <Combobox.List>
-                  {visibleOptions.length > 0 && (
-                    <Combobox.Group>
-                      <Combobox.GroupLabel>Visible columns</Combobox.GroupLabel>
-                      {visibleOptions.map((opt) => (
-                        <Combobox.Item key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </Combobox.Item>
-                      ))}
-                    </Combobox.Group>
-                  )}
-                  {hiddenOptions.length > 0 && (
-                    <Combobox.Group>
-                      <Combobox.GroupLabel>Other fields</Combobox.GroupLabel>
-                      {hiddenOptions.map((opt) => (
-                        <Combobox.Item key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </Combobox.Item>
-                      ))}
-                    </Combobox.Group>
-                  )}
-                  {visibleOptions.length === 0 && hiddenOptions.length === 0 && (
-                    <div>No fields available</div>
-                  )}
-                </Combobox.List>
-              </Combobox.Positioner>
-            </Combobox.Portal>
-          )}
-        </Combobox.Root>
+        />
 
         {activeSort.length === 0 ? (
           <p className={styles.emptyState}>No fields sorted</p>
