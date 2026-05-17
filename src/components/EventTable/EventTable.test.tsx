@@ -89,7 +89,7 @@ function EventTableWithHooks({ events }: { events: Event[] }): React.JSX.Element
     setTimeFormat,
     resetTimeFormat,
   };
-  return <EventTable events={events} sharedColumnState={sharedColumnState} onSort={() => {}} />;
+  return <EventTable events={events} sharedColumnState={sharedColumnState} />;
 }
 
 async function renderEventTable(
@@ -421,4 +421,24 @@ test("clicking Sort ascending in popover when already ascending calls onSort wit
   await user.click(screen.getByRole("button", { name: "Sort ascending" }));
 
   expect(onSort).toHaveBeenCalledWith(undefined);
+});
+
+// ── No-sort mode (onSort absent) ──────────────────────────────────────────
+
+test("column headers are non-interactive spans when onSort is absent", async () => {
+  await renderEventTable([makeEvent()]);
+
+  const titleHeader = screen.getByRole("columnheader", { name: /Title/ });
+  expect(within(titleHeader).queryByRole("button", { name: "Title" })).toBeNull();
+});
+
+test("column actions popover has no sort buttons when onSort is absent", async () => {
+  const user = userEvent.setup();
+  await renderEventTable([makeEvent()]);
+
+  const titleHeader = screen.getByRole("columnheader", { name: /Title/ });
+  await user.click(within(titleHeader).getByRole("button", { name: "Column actions" }));
+
+  expect(screen.queryByRole("button", { name: "Sort ascending" })).toBeNull();
+  expect(screen.queryByRole("button", { name: "Sort descending" })).toBeNull();
 });

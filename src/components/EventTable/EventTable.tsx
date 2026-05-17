@@ -29,7 +29,7 @@ interface EventTableProps {
   events: Event[];
   activeSortField?: string;
   activeSortDir?: "asc" | "desc";
-  onSort: (sort: string | undefined) => void;
+  onSort?: (sort: string | undefined) => void;
   sharedColumnState: SharedColumnState;
   linkState?: { from: string };
 }
@@ -77,22 +77,22 @@ export function EventTable({
 
   const handleHeaderSortClick = (sortField: string, label: string): void => {
     if (activeSortField !== sortField) {
-      onSort(`${sortField}.asc`);
+      onSort?.(`${sortField}.asc`);
       announce(`Sorted by ${label}, ascending`);
       posthog.capture("results_sorted", { sort_field: sortField, sort_direction: "asc", label });
     } else if (activeSortDir === "asc") {
-      onSort(`${sortField}.desc`);
+      onSort?.(`${sortField}.desc`);
       announce(`Sorted by ${label}, descending`);
       posthog.capture("results_sorted", { sort_field: sortField, sort_direction: "desc", label });
     } else {
-      onSort(undefined);
+      onSort?.(undefined);
       announce("Sort cleared");
       posthog.capture("results_sorted", { sort_field: null, sort_direction: null, label });
     }
   };
 
   const handlePopoverSort = (s: string | undefined, label: string): void => {
-    onSort(s);
+    onSort?.(s);
     if (s) {
       const dir = s.endsWith(".asc") ? "ascending" : "descending";
       announce(`Sorted by ${label}, ${dir}`);
@@ -182,7 +182,7 @@ export function EventTable({
                     return (
                       <th
                         key={header.id}
-                        aria-sort={sortField ? ariaSort : undefined}
+                        aria-sort={sortField && onSort ? ariaSort : undefined}
                         scope="col"
                         className={styles.th}
                         style={
@@ -193,25 +193,31 @@ export function EventTable({
                         }
                       >
                         <div className={styles.thContent}>
-                          <button
-                            type="button"
-                            className={styles.sortButton}
-                            onClick={() => sortField && handleHeaderSortClick(sortField, label)}
-                          >
-                            {flexRender(header.column.columnDef.header, header.getContext())}
-                            {isActive && (
-                              <span aria-hidden="true" className={styles.sortIndicator}>
-                                {activeSortDir === "asc" ? (
-                                  <ArrowUp size={12} aria-hidden="true" />
-                                ) : (
-                                  <ArrowDown size={12} aria-hidden="true" />
-                                )}
-                              </span>
-                            )}
-                          </button>
+                          {onSort ? (
+                            <button
+                              type="button"
+                              className={styles.sortButton}
+                              onClick={() => sortField && handleHeaderSortClick(sortField, label)}
+                            >
+                              {flexRender(header.column.columnDef.header, header.getContext())}
+                              {isActive && (
+                                <span aria-hidden="true" className={styles.sortIndicator}>
+                                  {activeSortDir === "asc" ? (
+                                    <ArrowUp size={12} aria-hidden="true" />
+                                  ) : (
+                                    <ArrowDown size={12} aria-hidden="true" />
+                                  )}
+                                </span>
+                              )}
+                            </button>
+                          ) : (
+                            <span className={styles.sortButton}>
+                              {flexRender(header.column.columnDef.header, header.getContext())}
+                            </span>
+                          )}
                           {header.column.getCanResize() && (
                             <ColumnActionsPopover
-                              sortField={sortField}
+                              sortField={onSort ? sortField : undefined}
                               activeSortField={activeSortField}
                               activeSortDir={activeSortDir}
                               onSort={(s) => handlePopoverSort(s, label)}

@@ -34,7 +34,7 @@ export function StaffPickCallout(): React.JSX.Element | null {
       <ColumnControlsPanel columnState={sharedColumnState} />
       {!isMobile ? (
         <div className={styles.tableView}>
-          <EventTable events={data.data} sharedColumnState={sharedColumnState} onSort={() => {}} />
+          <EventTable events={data.data} sharedColumnState={sharedColumnState} />
         </div>
       ) : (
         <EventListMobile events={data.data} columnState={sharedColumnState} />
