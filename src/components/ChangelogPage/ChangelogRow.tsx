@@ -1,8 +1,8 @@
-import React, { startTransition, useMemo, useState } from "react";
+import React, { startTransition, useState } from "react";
 import { format } from "date-fns";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import type { SearchFormValues } from "../../utils/searchParamSchema";
-import type { ChangelogEntry, ChangelogSummary } from "../../utils/types";
+import type { ChangelogSummary } from "../../utils/types";
 import { fetchChangelogEntry } from "../../utils/api";
 import { ChangelogEntryPanel } from "./ChangelogEntryPanel";
 import type { SharedColumnState } from "../EventTable/types";
@@ -10,7 +10,7 @@ import { Collapsible } from "../../ui/Collapsible/Collapsible";
 import { Chip } from "../../ui/Chip/Chip";
 import { parseOpenParam, serializeOpenParam } from "./openParam";
 import type { NavigateFn } from "@tanstack/react-router";
-import { filterChangelogEvents } from "../../utils/filterChangelogEvents";
+import { useChangelogEntryFilterState } from "./useChangelogEntryFilterState";
 import styles from "./ChangelogRow.module.css";
 
 interface ChangelogRowProps {
@@ -23,46 +23,6 @@ interface ChangelogRowProps {
   activeFilter?: SearchFormValues;
 }
 
-function isFilterActive(filter: SearchFormValues | undefined): boolean {
-  if (!filter) {
-    return false;
-  }
-  return Boolean(filter.eventType || filter.days || filter.timeStart || filter.timeEnd);
-}
-
-function computeFilterState(
-  filterActive: boolean,
-  cachedEntry: ChangelogEntry | undefined,
-  filteredCounts: { hasMatches: boolean } | null,
-): "dimmed" | "unknown" | undefined {
-  if (!filterActive) {
-    return undefined;
-  }
-  if (cachedEntry === undefined) {
-    return "unknown";
-  }
-  if (filteredCounts?.hasMatches) {
-    return undefined;
-  }
-  return "dimmed";
-}
-
-function deriveFilteredCounts(
-  cachedEntry: ChangelogEntry,
-  activeFilter: SearchFormValues,
-): { createdCount: number; updatedCount: number; deletedCount: number; hasMatches: boolean } {
-  const filteredCreated = filterChangelogEvents(cachedEntry.createdEvents, activeFilter);
-  const filteredUpdated = filterChangelogEvents(cachedEntry.updatedEvents, activeFilter);
-  const filteredDeleted = filterChangelogEvents(cachedEntry.deletedEvents, activeFilter);
-  return {
-    createdCount: filteredCreated.length,
-    updatedCount: filteredUpdated.length,
-    deletedCount: filteredDeleted.length,
-    hasMatches:
-      filteredCreated.length > 0 || filteredUpdated.length > 0 || filteredDeleted.length > 0,
-  };
-}
-
 export function ChangelogRow({
   position,
   openParam = [],
@@ -72,7 +32,6 @@ export function ChangelogRow({
   sharedColumnState,
   activeFilter,
 }: ChangelogRowProps): React.JSX.Element {
-  const queryClient = useQueryClient();
   const openMap = parseOpenParam(openParam);
   const [isOpen, setIsOpen] = useState(() => position !== undefined && openMap.has(position));
   const { data: entry, isError } = useQuery({
@@ -81,22 +40,18 @@ export function ChangelogRow({
     enabled: isOpen,
   });
 
-  const filterActive = isFilterActive(activeFilter);
-  const cachedEntry = queryClient.getQueryData<ChangelogEntry>(["changelog", "entry", summary.id]);
+  const filterState = useChangelogEntryFilterState(summary.id, activeFilter);
+  const isActive = filterState.kind === "active";
+  let filterAttr: "unknown" | "dimmed" | undefined = undefined;
+  if (filterState.kind === "unknown") {
+    filterAttr = "unknown";
+  } else if (isActive && !filterState.hasMatches) {
+    filterAttr = "dimmed";
+  }
 
-  const filteredCounts = useMemo(
-    () =>
-      filterActive && cachedEntry !== undefined && activeFilter !== undefined
-        ? deriveFilteredCounts(cachedEntry, activeFilter)
-        : null,
-    [filterActive, cachedEntry, activeFilter],
-  );
-
-  const filterState = computeFilterState(filterActive, cachedEntry, filteredCounts);
-
-  const createdCount = filteredCounts !== null ? filteredCounts.createdCount : summary.createdCount;
-  const updatedCount = filteredCounts !== null ? filteredCounts.updatedCount : summary.updatedCount;
-  const deletedCount = filteredCounts !== null ? filteredCounts.deletedCount : summary.deletedCount;
+  const createdCount = isActive ? filterState.filtered.created : summary.createdCount;
+  const updatedCount = isActive ? filterState.filtered.updated : summary.updatedCount;
+  const deletedCount = isActive ? filterState.filtered.deleted : summary.deletedCount;
 
   function syncOpenToUrl(nowOpen: boolean): void {
     if (!navigate || position === undefined) {
@@ -119,7 +74,7 @@ export function ChangelogRow({
   }
 
   return (
-    <div className={styles.rowWrapper} data-filter-state={filterState}>
+    <div className={styles.rowWrapper} data-filter-state={filterAttr}>
       <Collapsible
         className={styles.row}
         triggerClassName={styles.summary}
@@ -138,18 +93,15 @@ export function ChangelogRow({
             </time>
             <span className={styles.counts}>
               <Chip tone="jade">
-                {filteredCounts !== null ? `${createdCount}/${summary.createdCount}` : createdCount}{" "}
-                created
+                {isActive ? `${createdCount}/${summary.createdCount}` : createdCount} created
               </Chip>
               <Chip tone="cobalt">
-                {filteredCounts !== null ? `${updatedCount}/${summary.updatedCount}` : updatedCount}{" "}
-                updated
+                {isActive ? `${updatedCount}/${summary.updatedCount}` : updatedCount} updated
               </Chip>
               <Chip tone="amber">
-                {filteredCounts !== null ? `${deletedCount}/${summary.deletedCount}` : deletedCount}{" "}
-                deleted
+                {isActive ? `${deletedCount}/${summary.deletedCount}` : deletedCount} deleted
               </Chip>
-              {filterState === "unknown" && (
+              {filterState.kind === "unknown" && (
                 <span className={styles.unknownBadge} aria-label="Filter match unknown">
                   ?
                 </span>

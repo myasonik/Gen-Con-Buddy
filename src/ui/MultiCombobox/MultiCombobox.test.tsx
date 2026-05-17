@@ -337,7 +337,7 @@ test("chip remove buttons are reachable via Tab", async () => {
   const user = userEvent.setup();
   render(
     <>
-      <button>Before</button>
+      <button type="button">Before</button>
       <MultiCombobox
         label="Test Field"
         value="alpha,beta"

@@ -107,6 +107,7 @@
   --color-ink: oklch(90% 0.014 66deg);
   --color-ink-muted: oklch(72% 0.02 64deg);
   --color-ink-faint: oklch(55% 0.018 62deg);
+
   /* L52% clears 3:1 against both surface-page (L18%) and surface-panel (L22%) */
   --color-ink-border: oklch(52% 0.022 58deg);
   --color-ink-divider: oklch(36% 0.016 56deg);
@@ -118,9 +119,9 @@
 
   /* Semantic border overrides — explicit mid-tone values (L52%+) clear 3:1 against
      chip surfaces (L20–22%). Inline calc(l - X) goes the wrong direction in dark mode. */
-  --color-accent-border: oklch(52% 0.10 34deg);
+  --color-accent-border: oklch(52% 0.1 34deg);
   --color-jade-border: oklch(52% 0.12 148deg);
-  --color-cobalt-border: oklch(52% 0.10 235deg);
+  --color-cobalt-border: oklch(52% 0.1 235deg);
   --color-amber-border: oklch(52% 0.13 62deg);
   --color-error-border: oklch(54% 0.14 22deg);
 

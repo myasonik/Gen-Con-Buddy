@@ -120,7 +120,9 @@ export function MultiCombobox({
                       onKeyDown={(e) => {
                         // Stop Tab from bubbling to the ComboboxChip div, which would
                         // programmatically refocus the chip div and trap forward Tab.
-                        if (e.key === "Tab") e.stopPropagation();
+                        if (e.key === "Tab") {
+                          e.stopPropagation();
+                        }
                       }}
                       onPointerDown={() => {
                         suppressFocusOpenRef.current = true;

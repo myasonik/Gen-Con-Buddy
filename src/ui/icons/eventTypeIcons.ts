@@ -1,4 +1,4 @@
-import { createIcon } from "./createIcon";
+import type { createIcon } from "./createIcon";
 import { CombinationLock } from "./CombinationLock";
 import { RollingDices } from "./RollingDices";
 import { PokerHand } from "./PokerHand";

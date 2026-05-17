@@ -10,6 +10,7 @@ import {
   RouterProvider,
   createMemoryHistory,
   Outlet,
+  type NavigateFn,
 } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { server } from "../../test/msw/server";
@@ -271,20 +272,19 @@ test("handleSearch is a no-op when navigate prop is not provided", async () => {
   await renderChangelogPage();
   const form = document.getElementById("search-form");
   expect(form).not.toBeNull();
-  fireEvent.submit(form!);
+  fireEvent.submit(form as HTMLElement);
 });
 
 test("handleSearch calls navigate when navigate prop is provided", async () => {
-  const navigate = vi.fn().mockResolvedValue(undefined);
+  const navigate = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
   server.use(
     http.get("/api/changelog/list", () =>
       HttpResponse.json<ListChangelogsResponse>({ entries: [] }),
     ),
   );
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await renderChangelogPage({ navigate: navigate as any });
+  await renderChangelogPage({ navigate: navigate as unknown as NavigateFn });
   const form = document.getElementById("search-form");
   expect(form).not.toBeNull();
-  fireEvent.submit(form!);
+  fireEvent.submit(form as HTMLElement);
   await waitFor(() => expect(navigate).toHaveBeenCalledTimes(1));
 });

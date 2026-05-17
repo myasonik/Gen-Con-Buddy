@@ -12,17 +12,18 @@
 
 ## File Map
 
-| Action | Path | Purpose |
-|--------|------|---------|
-| Create | `src/test/apiError.ts` | Exports `withNetworkError` and `withServerError` |
-| Modify | `src/components/ChangelogPage/ChangelogPage.test.tsx` | Add error-branch test |
-| Modify | `AGENTS.md` | Document the requirement under ## Testing |
+| Action | Path                                                  | Purpose                                          |
+| ------ | ----------------------------------------------------- | ------------------------------------------------ |
+| Create | `src/test/apiError.ts`                                | Exports `withNetworkError` and `withServerError` |
+| Modify | `src/components/ChangelogPage/ChangelogPage.test.tsx` | Add error-branch test                            |
+| Modify | `AGENTS.md`                                           | Document the requirement under ## Testing        |
 
 ---
 
 ### Task 1: Create `src/test/apiError.ts`
 
 **Files:**
+
 - Create: `src/test/apiError.ts`
 
 This is a test utility — it lives alongside `src/test/msw/` and `src/test/setup.ts`. It has no runtime imports; everything it touches is test-only.
@@ -62,6 +63,7 @@ git commit -m "test: add withNetworkError / withServerError MSW helpers"
 ### Task 2: Fix ChangelogPage error-branch test gap
 
 **Files:**
+
 - Modify: `src/components/ChangelogPage/ChangelogPage.test.tsx`
 
 `ChangelogPage` already renders `<p>Could not load changelog. Try refreshing.</p>` when `isError` is true (line 98 of `ChangelogPage.tsx`). The behavior exists — it just has no test.
@@ -82,9 +84,7 @@ Append after the last test:
 test("shows error message when changelog list fetch fails", async () => {
   withNetworkError("/api/changelog/list");
   await renderChangelogPage();
-  expect(
-    screen.getByText("Could not load changelog. Try refreshing."),
-  ).toBeInTheDocument();
+  expect(screen.getByText("Could not load changelog. Try refreshing.")).toBeInTheDocument();
 });
 ```
 
@@ -95,6 +95,7 @@ TZ=America/Indianapolis npx vitest run src/components/ChangelogPage/ChangelogPag
 ```
 
 Expected output includes:
+
 ```
 ✓ shows error message when changelog list fetch fails
 ```
@@ -113,6 +114,7 @@ git commit -m "test: cover ChangelogPage isError branch"
 ### Task 3: Document the requirement in AGENTS.md
 
 **Files:**
+
 - Modify: `AGENTS.md`
 
 The `## Testing` section starts at line 23 with: `All tests use MSW for network interception...` Add a new paragraph after the `src/test/setup.ts` timezone note (after line 27) and before the **Route tests vs. component tests** section.
