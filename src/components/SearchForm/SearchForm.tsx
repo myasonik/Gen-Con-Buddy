@@ -10,7 +10,16 @@ import { Drawer } from "../../ui/Drawer/Drawer";
 import { EventTypeSelect } from "../EventTypeSelect/EventTypeSelect";
 import { FacetMultiSelect } from "../FacetMultiSelect/FacetMultiSelect";
 import { FacetSelect } from "../FacetSelect/FacetSelect";
-import { AGE_GROUPS, CATEGORY, EXP, REGISTRATION } from "../../utils/enums";
+import {
+  AGE_GROUPS,
+  AGE_VALUE_MAP,
+  CATEGORY,
+  CATEGORY_VALUE_MAP,
+  EXP,
+  EXP_VALUE_MAP,
+  REGISTRATION,
+  REGISTRATION_VALUE_MAP,
+} from "../../utils/enums";
 import { Select } from "../../ui/Select/Select";
 import { Field, RangeField } from "../../ui/Field/Field";
 import { Input } from "../../ui/Input/Input";
@@ -289,6 +298,7 @@ export function SearchForm({
                         field="ageRequired"
                         label="Age Required"
                         labelMap={AGE_GROUPS}
+                        valueMap={AGE_VALUE_MAP}
                         value={watch("ageRequired") ?? ""}
                         onValueChange={(v) => setValue("ageRequired", v)}
                       />
@@ -296,6 +306,7 @@ export function SearchForm({
                         field="experienceRequired"
                         label="Experience Required"
                         labelMap={EXP}
+                        valueMap={EXP_VALUE_MAP}
                         value={watch("experienceRequired") ?? ""}
                         onValueChange={(v) => setValue("experienceRequired", v)}
                       />
@@ -336,6 +347,7 @@ export function SearchForm({
                         field="attendeeRegistration"
                         label="Attendee Registration"
                         labelMap={REGISTRATION}
+                        valueMap={REGISTRATION_VALUE_MAP}
                         value={watch("attendeeRegistration") ?? ""}
                         onValueChange={(v) => setValue("attendeeRegistration", v)}
                       />
@@ -356,6 +368,7 @@ export function SearchForm({
                         field="specialCategory"
                         label="Special Category"
                         labelMap={CATEGORY}
+                        valueMap={CATEGORY_VALUE_MAP}
                         value={watch("specialCategory") ?? ""}
                         onValueChange={(v) => setValue("specialCategory", v)}
                       />

@@ -8,6 +8,7 @@ export interface FacetSelectProps {
   field: string;
   label: string;
   labelMap: Record<string, string>;
+  valueMap?: Record<string, string>;
   value: string;
   onValueChange: (value: string) => void;
 }
@@ -16,6 +17,7 @@ export function FacetSelect({
   field,
   label,
   labelMap,
+  valueMap,
   value,
   onValueChange,
 }: FacetSelectProps): React.JSX.Element | null {
@@ -33,10 +35,10 @@ export function FacetSelect({
     return null;
   }
 
-  const options = (facets ?? []).map((f) => ({
-    value: f.value,
-    label: `${labelMap[f.value] ?? f.value} (${f.count})`,
-  }));
+  const options = (facets ?? []).map((f) => {
+    const key = valueMap?.[f.value] ?? f.value;
+    return { value: key, label: `${labelMap[key] ?? key} (${f.count})` };
+  });
 
   return (
     <label className={styles.label}>

@@ -6,14 +6,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http, HttpResponse } from "msw";
 import { server } from "../../test/msw/server";
 import type { FacetResponse } from "../../utils/types";
-import { AGE_GROUPS } from "../../utils/enums";
+import { AGE_GROUPS, AGE_VALUE_MAP } from "../../utils/enums";
 import { FacetSelect } from "./FacetSelect";
 
 const AGE_FACETS: FacetResponse = {
   values: [
-    { value: "everyone", count: 412 },
-    { value: "mature", count: 87 },
-    { value: "teen", count: 45 },
+    { value: "Everyone (6+)", count: 412 },
+    { value: "Mature (18+)", count: 87 },
+    { value: "Teen (13+)", count: 45 },
     { value: "unknown_raw_value", count: 5 },
   ],
 };
@@ -34,6 +34,7 @@ function renderFacetSelect(
           field="ageRequired"
           label="Age Required"
           labelMap={AGE_GROUPS}
+          valueMap={AGE_VALUE_MAP}
           value={value}
           onValueChange={onValueChange}
         />
@@ -58,14 +59,14 @@ test("renders options with mapped labels and counts after loading", async () => 
   expect(screen.getByRole("option", { name: "Teen (13+) (45)" })).toBeInTheDocument();
 });
 
-test("falls back to raw value for unmapped backend values", async () => {
+test("falls back to raw stored value for unmapped backend values", async () => {
   renderFacetSelect();
   await waitFor(() =>
     expect(screen.getByRole("option", { name: "unknown_raw_value (5)" })).toBeInTheDocument(),
   );
 });
 
-test("selecting an option calls onValueChange with the raw backend value", async () => {
+test("selecting an option calls onValueChange with the short key", async () => {
   const user = userEvent.setup();
   const handleChange = vi.fn<(value: string) => void>();
   renderFacetSelect("", handleChange);
