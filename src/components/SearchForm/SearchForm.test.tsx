@@ -73,7 +73,7 @@ test("renders Group, Location, Room Name as facet comboboxes in Logistics", asyn
   });
 });
 
-test("renders Age Required, Experience Required, Attendee Registration, Special Category as facet selects", async () => {
+test("renders Age Required, Experience Required, Special Category as facet comboboxes, Attendee Registration as facet select", async () => {
   const user = userEvent.setup();
   renderSearchForm();
   await user.click(screen.getByRole("button", { name: "Filters" }));

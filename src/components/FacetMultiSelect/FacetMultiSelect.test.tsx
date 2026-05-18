@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http, HttpResponse } from "msw";
 import { server } from "../../test/msw/server";
 import type { FacetResponse } from "../../utils/types";
+import { AGE_GROUPS } from "../../utils/enums";
 import { FacetMultiSelect } from "./FacetMultiSelect";
 
 const LOCATION_FACETS: FacetResponse = {
@@ -137,4 +138,36 @@ test("renders null when API returns 200 with error field", async () => {
   );
   const { container } = renderFacetMultiSelect();
   await waitFor(() => expect(container).toBeEmptyDOMElement());
+});
+
+test("labelMap maps raw values to human-readable option labels", async () => {
+  const user = userEvent.setup();
+  const AGE_FACETS: FacetResponse = {
+    values: [
+      { value: "everyone", count: 142 },
+      { value: "mature", count: 34 },
+    ],
+  };
+  server.use(http.get("/api/events/facets/ageRequired", () => HttpResponse.json(AGE_FACETS)));
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  render(
+    <React.StrictMode>
+      <QueryClientProvider client={client}>
+        <FacetMultiSelect
+          field="ageRequired"
+          label="Age Required"
+          labelMap={AGE_GROUPS}
+          value=""
+          onValueChange={vi.fn<(v: string) => void>()}
+        />
+      </QueryClientProvider>
+    </React.StrictMode>,
+  );
+  await waitFor(() =>
+    expect(screen.getByRole("combobox", { name: "Age Required" })).not.toBeDisabled(),
+  );
+  await user.click(screen.getByRole("combobox", { name: "Age Required" }));
+  expect(screen.getByRole("option", { name: "Everyone (6+)" })).toBeInTheDocument();
+  expect(screen.getByRole("option", { name: "Mature (18+)" })).toBeInTheDocument();
+  expect(screen.queryByRole("option", { name: "everyone" })).not.toBeInTheDocument();
 });

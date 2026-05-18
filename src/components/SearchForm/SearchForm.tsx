@@ -285,14 +285,14 @@ export function SearchForm({
                         <Input type="number" min="0" {...register("maxPlayersMin")} />
                         <Input type="number" min="0" {...register("maxPlayersMax")} />
                       </RangeField>
-                      <FacetSelect
+                      <FacetMultiSelect
                         field="ageRequired"
                         label="Age Required"
                         labelMap={AGE_GROUPS}
                         value={watch("ageRequired") ?? ""}
                         onValueChange={(v) => setValue("ageRequired", v)}
                       />
-                      <FacetSelect
+                      <FacetMultiSelect
                         field="experienceRequired"
                         label="Experience Required"
                         labelMap={EXP}
@@ -352,7 +352,7 @@ export function SearchForm({
                         onValueChange={(v) => setValue("gameSystem", v)}
                       />
                       <Field label="Rules Edition" inputProps={register("rulesEdition")} />
-                      <FacetSelect
+                      <FacetMultiSelect
                         field="specialCategory"
                         label="Special Category"
                         labelMap={CATEGORY}

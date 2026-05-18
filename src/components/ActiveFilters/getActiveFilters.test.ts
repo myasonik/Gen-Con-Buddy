@@ -61,46 +61,46 @@ test("eventType chip skips empty segment from trailing comma", () => {
   expect(result[0].id).toBe("eventType:RPG");
 });
 
-test("ageRequired: kids uses AGE_GROUPS enum for label", () => {
+test("ageRequired: kids produces multi chip with mapped label", () => {
   const [chip] = getActiveFilters({ ageRequired: "kids" });
-  expect(chip.id).toBe("ageRequired");
-  expect(chip.label).toBe("Age: Kids only (12 and under)");
+  expect(chip.id).toBe("ageRequired:kids");
+  expect(chip.label).toBe("Kids only (12 and under)");
   expect(chip.remove({ ageRequired: "kids" })).toStrictEqual({});
 });
 
-test("ageRequired: everyone uses AGE_GROUPS enum for label", () => {
+test("ageRequired: everyone uses AGE_GROUPS label", () => {
   const [chip] = getActiveFilters({ ageRequired: "everyone" });
-  expect(chip.label).toBe("Age: Everyone (6+)");
+  expect(chip.label).toBe("Everyone (6+)");
 });
 
-test("ageRequired: teen uses AGE_GROUPS enum for label", () => {
+test("ageRequired: teen uses AGE_GROUPS label", () => {
   const [chip] = getActiveFilters({ ageRequired: "teen" });
-  expect(chip.label).toBe("Age: Teen (13+)");
+  expect(chip.label).toBe("Teen (13+)");
 });
 
-test("ageRequired: mature uses AGE_GROUPS enum for label", () => {
+test("ageRequired: mature uses AGE_GROUPS label", () => {
   const [chip] = getActiveFilters({ ageRequired: "mature" });
-  expect(chip.label).toBe("Age: Mature (18+)");
+  expect(chip.label).toBe("Mature (18+)");
 });
 
-test("ageRequired: drinking uses AGE_GROUPS enum for label", () => {
+test("ageRequired: drinking uses AGE_GROUPS label", () => {
   const [chip] = getActiveFilters({ ageRequired: "drinking" });
-  expect(chip.label).toBe("Age: 21+");
+  expect(chip.label).toBe("21+");
 });
 
-test("experienceRequired: none uses EXP enum for label", () => {
+test("experienceRequired: none produces multi chip with mapped label", () => {
   const [chip] = getActiveFilters({ experienceRequired: "none" });
-  expect(chip.label).toBe("Exp: None");
+  expect(chip.label).toBe("None");
 });
 
-test("experienceRequired: some uses EXP enum for label", () => {
+test("experienceRequired: some uses EXP label", () => {
   const [chip] = getActiveFilters({ experienceRequired: "some" });
-  expect(chip.label).toBe("Exp: Some");
+  expect(chip.label).toBe("Some");
 });
 
-test("experienceRequired: expert uses EXP enum for label", () => {
+test("experienceRequired: expert uses EXP label", () => {
   const [chip] = getActiveFilters({ experienceRequired: "expert" });
-  expect(chip.label).toBe("Exp: Expert");
+  expect(chip.label).toBe("Expert");
 });
 
 test("attendeeRegistration: open uses REGISTRATION enum for label", () => {
@@ -133,19 +133,20 @@ test("attendeeRegistration: tradeDay uses REGISTRATION enum for label", () => {
   expect(chip.label).toBe("Registration: Trade Day only");
 });
 
-test("specialCategory: none uses CATEGORY enum for label", () => {
+test("specialCategory: none produces multi chip with mapped label", () => {
   const [chip] = getActiveFilters({ specialCategory: "none" });
-  expect(chip.label).toBe("Category: None");
+  expect(chip.id).toBe("specialCategory:none");
+  expect(chip.label).toBe("None");
 });
 
-test("specialCategory: official uses CATEGORY enum for label", () => {
+test("specialCategory: official uses CATEGORY label", () => {
   const [chip] = getActiveFilters({ specialCategory: "official" });
-  expect(chip.label).toBe("Category: Gen Con presents");
+  expect(chip.label).toBe("Gen Con presents");
 });
 
-test("specialCategory: premier uses CATEGORY enum for label", () => {
+test("specialCategory: premier uses CATEGORY label", () => {
   const [chip] = getActiveFilters({ specialCategory: "premier" });
-  expect(chip.label).toBe("Category: Premier Event");
+  expect(chip.label).toBe("Premier Event");
 });
 
 test("days param produces one chip per day", () => {
@@ -433,7 +434,8 @@ test("lastModified chip with invalid date in start position falls back to raw st
   expect(chip.label).toContain("not-a-date");
 });
 
-test("enum chip falls back to raw value when code is not in the map", () => {
+test("multi chip falls back to raw value when code is not in the map", () => {
   const [chip] = getActiveFilters({ ageRequired: "UnknownAgeValue" });
-  expect(chip.label).toBe("Age: UnknownAgeValue");
+  expect(chip.id).toBe("ageRequired:UnknownAgeValue");
+  expect(chip.label).toBe("UnknownAgeValue");
 });

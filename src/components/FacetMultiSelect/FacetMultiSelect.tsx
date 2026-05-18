@@ -7,6 +7,7 @@ import styles from "./FacetMultiSelect.module.css";
 export interface FacetMultiSelectProps {
   field: string;
   label: string;
+  labelMap?: Record<string, string>;
   value: string;
   onValueChange: (value: string) => void;
 }
@@ -14,6 +15,7 @@ export interface FacetMultiSelectProps {
 export function FacetMultiSelect({
   field,
   label,
+  labelMap,
   value,
   onValueChange,
 }: FacetMultiSelectProps): React.JSX.Element | null {
@@ -30,8 +32,8 @@ export function FacetMultiSelect({
   const countMap = useMemo(() => new Map((facets ?? []).map((f) => [f.value, f.count])), [facets]);
 
   const options = useMemo(
-    () => (facets ?? []).map((f) => ({ value: f.value, label: f.value })),
-    [facets],
+    () => (facets ?? []).map((f) => ({ value: f.value, label: labelMap?.[f.value] ?? f.value })),
+    [facets, labelMap],
   );
 
   if (isError) {
