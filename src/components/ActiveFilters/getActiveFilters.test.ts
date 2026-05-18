@@ -90,17 +90,17 @@ test("ageRequired: drinking uses AGE_GROUPS label", () => {
 
 test("experienceRequired: none produces multi chip with mapped label", () => {
   const [chip] = getActiveFilters({ experienceRequired: "none" });
-  expect(chip.label).toBe("None");
+  expect(chip.label).toBe("None (You've never played before - rules will be taught)");
 });
 
 test("experienceRequired: some uses EXP label", () => {
   const [chip] = getActiveFilters({ experienceRequired: "some" });
-  expect(chip.label).toBe("Some");
+  expect(chip.label).toBe("Some (You've played it a bit and understand the basics)");
 });
 
 test("experienceRequired: expert uses EXP label", () => {
   const [chip] = getActiveFilters({ experienceRequired: "expert" });
-  expect(chip.label).toBe("Expert");
+  expect(chip.label).toBe("Expert (You play it regularly and know all the rules)");
 });
 
 test("attendeeRegistration: open uses REGISTRATION enum for label", () => {

@@ -37,9 +37,9 @@ export const AGE_VALUE_MAP: Record<string, string> = {
 };
 
 export const EXP: Record<string, string> = {
-  none: "None",
-  some: "Some",
-  expert: "Expert",
+  none: "None (You've never played before - rules will be taught)",
+  some: "Some (You've played it a bit and understand the basics)",
+  expert: "Expert (You play it regularly and know all the rules)",
 };
 
 export const EXP_VALUE_MAP: Record<string, string> = {
