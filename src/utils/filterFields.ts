@@ -114,8 +114,8 @@ export const FILTER_FIELDS = {
   totalRounds: { type: "range", label: "Total rounds" },
   minimumPlayTime: { type: "range", label: "Min play time", icon: Hourglass },
   attendeeRegistration: {
-    type: "enum",
-    label: "Registration",
+    type: "multi",
+    prefix: "attendeeRegistration",
     options: REGISTRATION,
     icon: Ticket,
   },

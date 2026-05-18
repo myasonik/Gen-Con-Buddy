@@ -103,34 +103,40 @@ test("experienceRequired: expert uses EXP label", () => {
   expect(chip.label).toBe("Expert (You play it regularly and know all the rules)");
 });
 
-test("attendeeRegistration: open uses REGISTRATION enum for label", () => {
+test("attendeeRegistration: open produces multi chip with mapped label", () => {
   const [chip] = getActiveFilters({ attendeeRegistration: "open" });
-  expect(chip.label).toBe("Registration: Open (ticket required)");
+  expect(chip.id).toBe("attendeeRegistration:open");
+  expect(chip.label).toBe("Open (ticket required)");
 });
 
-test("attendeeRegistration: free uses REGISTRATION enum for label", () => {
+test("attendeeRegistration: free produces multi chip with mapped label", () => {
   const [chip] = getActiveFilters({ attendeeRegistration: "free" });
-  expect(chip.label).toBe("Registration: Free (no ticket needed)");
+  expect(chip.id).toBe("attendeeRegistration:free");
+  expect(chip.label).toBe("Free (no ticket needed)");
 });
 
-test("attendeeRegistration: vig uses REGISTRATION enum for label", () => {
+test("attendeeRegistration: vig produces multi chip with mapped label", () => {
   const [chip] = getActiveFilters({ attendeeRegistration: "vig" });
-  expect(chip.label).toBe("Registration: VIG only");
+  expect(chip.id).toBe("attendeeRegistration:vig");
+  expect(chip.label).toBe("VIG only");
 });
 
-test("attendeeRegistration: invite uses REGISTRATION enum for label", () => {
+test("attendeeRegistration: invite produces multi chip with mapped label", () => {
   const [chip] = getActiveFilters({ attendeeRegistration: "invite" });
-  expect(chip.label).toBe("Registration: Invite only");
+  expect(chip.id).toBe("attendeeRegistration:invite");
+  expect(chip.label).toBe("Invite only");
 });
 
-test("attendeeRegistration: generic uses REGISTRATION enum for label", () => {
+test("attendeeRegistration: generic produces multi chip with mapped label", () => {
   const [chip] = getActiveFilters({ attendeeRegistration: "generic" });
-  expect(chip.label).toBe("Registration: Generic ticket");
+  expect(chip.id).toBe("attendeeRegistration:generic");
+  expect(chip.label).toBe("Generic ticket");
 });
 
-test("attendeeRegistration: tradeDay uses REGISTRATION enum for label", () => {
+test("attendeeRegistration: tradeDay produces multi chip with mapped label", () => {
   const [chip] = getActiveFilters({ attendeeRegistration: "tradeDay" });
-  expect(chip.label).toBe("Registration: Trade Day only");
+  expect(chip.id).toBe("attendeeRegistration:tradeDay");
+  expect(chip.label).toBe("Trade Day only");
 });
 
 test("specialCategory: none produces multi chip with mapped label", () => {

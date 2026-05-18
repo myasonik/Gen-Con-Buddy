@@ -9,7 +9,6 @@ import { Button } from "../../ui/Button/Button";
 import { Drawer } from "../../ui/Drawer/Drawer";
 import { EventTypeSelect } from "../EventTypeSelect/EventTypeSelect";
 import { FacetMultiSelect } from "../FacetMultiSelect/FacetMultiSelect";
-import { FacetSelect } from "../FacetSelect/FacetSelect";
 import {
   AGE_GROUPS,
   AGE_VALUE_MAP,
@@ -343,7 +342,7 @@ export function SearchForm({
                         <Input type="number" min="0" {...register("ticketsAvailableMin")} />
                         <Input type="number" min="0" {...register("ticketsAvailableMax")} />
                       </RangeField>
-                      <FacetSelect
+                      <FacetMultiSelect
                         field="attendeeRegistration"
                         label="Attendee Registration"
                         labelMap={REGISTRATION}
