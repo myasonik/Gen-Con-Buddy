@@ -1,0 +1,7 @@
+.label {
+  composes: eyebrow from "../../styles/eyebrow.module.css";
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  line-height: 1;
+}
