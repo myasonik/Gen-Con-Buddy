@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Meeple } from "./Meeple";
 import { Meeple3D } from "./Meeple3D";
-import { MeepleGroup } from "./MeepleGroup";
-import { MeepleArmy } from "./MeepleArmy";
 
 const meta = {
   title: "UI/Icons",
@@ -40,38 +38,6 @@ export const Meeple3DSizes: Story = {
     <div style={{ display: "flex", alignItems: "flex-end", gap: 16 }}>
       {[16, 24, 48, 64].map((px) => (
         <Meeple3D key={px} size={px} />
-      ))}
-    </div>
-  ),
-};
-
-export const MeepleGroupIcon: Story = {
-  name: "MeepleGroup",
-  render: () => <MeepleGroup size={48} />,
-};
-
-export const MeepleGroupSizes: Story = {
-  name: "MeepleGroup – sizes",
-  render: () => (
-    <div style={{ display: "flex", alignItems: "flex-end", gap: 16 }}>
-      {[16, 24, 48, 64].map((px) => (
-        <MeepleGroup key={px} size={px} />
-      ))}
-    </div>
-  ),
-};
-
-export const MeepleArmyIcon: Story = {
-  name: "MeepleArmy",
-  render: () => <MeepleArmy size={48} />,
-};
-
-export const MeepleArmySizes: Story = {
-  name: "MeepleArmy – sizes",
-  render: () => (
-    <div style={{ display: "flex", alignItems: "flex-end", gap: 16 }}>
-      {[16, 24, 48, 64].map((px) => (
-        <MeepleArmy key={px} size={px} />
       ))}
     </div>
   ),
