@@ -8,7 +8,9 @@ import { enumOptions } from "../../utils/filterFields";
 import { Button } from "../../ui/Button/Button";
 import { Drawer } from "../../ui/Drawer/Drawer";
 import { EventTypeSelect } from "../EventTypeSelect/EventTypeSelect";
-import { GameSystemSelect } from "../GameSystemSelect/GameSystemSelect";
+import { FacetMultiSelect } from "../FacetMultiSelect/FacetMultiSelect";
+import { FacetSelect } from "../FacetSelect/FacetSelect";
+import { AGE_GROUPS, CATEGORY, EXP, REGISTRATION } from "../../utils/enums";
 import { Select } from "../../ui/Select/Select";
 import { Field, RangeField } from "../../ui/Field/Field";
 import { Input } from "../../ui/Input/Input";
@@ -283,30 +285,44 @@ export function SearchForm({
                         <Input type="number" min="0" {...register("maxPlayersMin")} />
                         <Input type="number" min="0" {...register("maxPlayersMax")} />
                       </RangeField>
-                      <label className={styles.label}>
-                        Age Required
-                        <Select
-                          value={watch("ageRequired") ?? ""}
-                          onValueChange={(v) => setValue("ageRequired", v)}
-                          options={enumOptions("ageRequired")}
-                        />
-                      </label>
-                      <label className={styles.label}>
-                        Experience Required
-                        <Select
-                          value={watch("experienceRequired") ?? ""}
-                          onValueChange={(v) => setValue("experienceRequired", v)}
-                          options={enumOptions("experienceRequired")}
-                        />
-                      </label>
+                      <FacetSelect
+                        field="ageRequired"
+                        label="Age Required"
+                        labelMap={AGE_GROUPS}
+                        value={watch("ageRequired") ?? ""}
+                        onValueChange={(v) => setValue("ageRequired", v)}
+                      />
+                      <FacetSelect
+                        field="experienceRequired"
+                        label="Experience Required"
+                        labelMap={EXP}
+                        value={watch("experienceRequired") ?? ""}
+                        onValueChange={(v) => setValue("experienceRequired", v)}
+                      />
                     </div>
                   </div>
 
                   <div className={styles.section}>
                     <h3 className={styles.sectionHeading}>Logistics</h3>
                     <div className={styles.fieldsetBody}>
-                      <Field label="Location" inputProps={register("location")} />
-                      <Field label="Room Name" inputProps={register("roomName")} />
+                      <FacetMultiSelect
+                        field="group"
+                        label="Group"
+                        value={watch("group") ?? ""}
+                        onValueChange={(v) => setValue("group", v)}
+                      />
+                      <FacetMultiSelect
+                        field="location"
+                        label="Location"
+                        value={watch("location") ?? ""}
+                        onValueChange={(v) => setValue("location", v)}
+                      />
+                      <FacetMultiSelect
+                        field="roomName"
+                        label="Room Name"
+                        value={watch("roomName") ?? ""}
+                        onValueChange={(v) => setValue("roomName", v)}
+                      />
                       <Field label="Table" inputProps={register("tableNumber")} />
                       <RangeField label="Cost">
                         <Input type="number" min="0" {...register("costMin")} />
@@ -316,33 +332,33 @@ export function SearchForm({
                         <Input type="number" min="0" {...register("ticketsAvailableMin")} />
                         <Input type="number" min="0" {...register("ticketsAvailableMax")} />
                       </RangeField>
-                      <label className={styles.label}>
-                        Attendee Registration
-                        <Select
-                          value={watch("attendeeRegistration") ?? ""}
-                          onValueChange={(v) => setValue("attendeeRegistration", v)}
-                          options={enumOptions("attendeeRegistration")}
-                        />
-                      </label>
+                      <FacetSelect
+                        field="attendeeRegistration"
+                        label="Attendee Registration"
+                        labelMap={REGISTRATION}
+                        value={watch("attendeeRegistration") ?? ""}
+                        onValueChange={(v) => setValue("attendeeRegistration", v)}
+                      />
                     </div>
                   </div>
 
                   <div className={styles.section}>
                     <h3 className={styles.sectionHeading}>Game</h3>
                     <div className={styles.fieldsetBody}>
-                      <GameSystemSelect
+                      <FacetMultiSelect
+                        field="gameSystem"
+                        label="Game System"
                         value={watch("gameSystem") ?? ""}
                         onValueChange={(v) => setValue("gameSystem", v)}
                       />
                       <Field label="Rules Edition" inputProps={register("rulesEdition")} />
-                      <label className={styles.label}>
-                        Special Category
-                        <Select
-                          value={watch("specialCategory") ?? ""}
-                          onValueChange={(v) => setValue("specialCategory", v)}
-                          options={enumOptions("specialCategory")}
-                        />
-                      </label>
+                      <FacetSelect
+                        field="specialCategory"
+                        label="Special Category"
+                        labelMap={CATEGORY}
+                        value={watch("specialCategory") ?? ""}
+                        onValueChange={(v) => setValue("specialCategory", v)}
+                      />
                       <Field
                         label="Materials Provided"
                         inputProps={register("materialsProvided")}
@@ -385,7 +401,6 @@ export function SearchForm({
                     <div className={styles.fieldsetBody}>
                       <Field label="Game ID" inputProps={register("gameId")} />
                       <Field label="Title" inputProps={register("title")} />
-                      <Field label="Group" inputProps={register("group")} />
                       <Field label="Short Description" inputProps={register("shortDescription")} />
                       <Field label="Long Description" inputProps={register("longDescription")} />
                       <Field label="Game Masters" inputProps={register("gmNames")} />

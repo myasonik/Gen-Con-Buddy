@@ -58,8 +58,31 @@ test("renders advanced filter fields in the form", async () => {
   await user.click(screen.getByRole("button", { name: "Filters" }));
   expect(screen.getByRole("textbox", { name: "Title" })).toBeInTheDocument();
   expect(screen.getByRole("textbox", { name: "Game ID" })).toBeInTheDocument();
-  expect(screen.getByRole("textbox", { name: "Location" })).toBeInTheDocument();
+  expect(screen.getByRole("combobox", { name: "Location" })).toBeInTheDocument();
   expect(screen.getByRole("textbox", { name: "Materials Required Details" })).toBeInTheDocument();
+});
+
+test("renders Group, Location, Room Name as facet comboboxes in Logistics", async () => {
+  const user = userEvent.setup();
+  renderSearchForm();
+  await user.click(screen.getByRole("button", { name: "Filters" }));
+  await waitFor(() => {
+    expect(screen.getByRole("combobox", { name: "Group" })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Location" })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Room Name" })).toBeInTheDocument();
+  });
+});
+
+test("renders Age Required, Experience Required, Attendee Registration, Special Category as facet selects", async () => {
+  const user = userEvent.setup();
+  renderSearchForm();
+  await user.click(screen.getByRole("button", { name: "Filters" }));
+  await waitFor(() => {
+    expect(screen.getByRole("combobox", { name: "Age Required" })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Experience Required" })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Attendee Registration" })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Special Category" })).toBeInTheDocument();
+  });
 });
 
 test("Tournament and Materials Required render as select dropdowns", async () => {
