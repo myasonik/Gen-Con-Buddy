@@ -9,6 +9,8 @@ import type {
   ChangelogSummary,
   GameSystemFacet,
   GameSystemFacetsResponse,
+  FacetValue,
+  FacetResponse,
 } from "./types";
 
 export async function fetchEvents(params: SearchParams): Promise<EventSearchResponse> {
@@ -93,6 +95,19 @@ export async function fetchGameSystemFacets(): Promise<GameSystemFacet[]> {
     throw new Error(`HTTP ${res.status}`);
   }
   const data = (await res.json()) as GameSystemFacetsResponse;
+  if (data.error) {
+    throw new Error(data.error);
+  }
+  return data.values ?? [];
+}
+
+export async function fetchFacets(field: string): Promise<FacetValue[]> {
+  const url = new URL(`/api/events/facets/${field}`, window.location.origin);
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  const data = (await res.json()) as FacetResponse;
   if (data.error) {
     throw new Error(data.error);
   }

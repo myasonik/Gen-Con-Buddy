@@ -1,12 +1,19 @@
 import { expect, test } from "vitest";
 import { http, HttpResponse } from "msw";
 import { server } from "../test/msw/server";
-import { fetchEvents, fetchChangelogList, fetchChangelogEntry, fetchGameSystemFacets } from "./api";
+import {
+  fetchEvents,
+  fetchChangelogList,
+  fetchChangelogEntry,
+  fetchGameSystemFacets,
+  fetchFacets,
+} from "./api";
 import type {
   EventSearchResponse,
   ListChangelogsResponse,
   FetchChangelogResponse,
   GameSystemFacetsResponse,
+  FacetResponse,
 } from "./types";
 import { makeChangelogSummary, makeChangelogEntry } from "../test/msw/factory";
 
@@ -190,5 +197,47 @@ test("fetchGameSystemFacets returns empty array when values is absent from respo
     ),
   );
   const result = await fetchGameSystemFacets();
+  expect(result).toStrictEqual([]);
+});
+
+// fetchFacets
+
+test("fetchFacets returns values for a given field on success", async () => {
+  server.use(
+    http.get("/api/events/facets/location", () =>
+      HttpResponse.json<FacetResponse>({
+        values: [
+          { value: "ICC", count: 312 },
+          { value: "Marriott Ballroom", count: 87 },
+        ],
+      }),
+    ),
+  );
+  const result = await fetchFacets("location");
+  expect(result).toStrictEqual([
+    { value: "ICC", count: 312 },
+    { value: "Marriott Ballroom", count: 87 },
+  ]);
+});
+
+test("fetchFacets throws on HTTP error", async () => {
+  server.use(
+    http.get("/api/events/facets/location", () => new HttpResponse(null, { status: 500 })),
+  );
+  await expect(fetchFacets("location")).rejects.toThrow("HTTP 500");
+});
+
+test("fetchFacets throws when response contains error field", async () => {
+  server.use(
+    http.get("/api/events/facets/location", () =>
+      HttpResponse.json<FacetResponse>({ error: "unavailable" }),
+    ),
+  );
+  await expect(fetchFacets("location")).rejects.toThrow("unavailable");
+});
+
+test("fetchFacets returns empty array when values is absent from response", async () => {
+  server.use(http.get("/api/events/facets/location", () => HttpResponse.json<FacetResponse>({})));
+  const result = await fetchFacets("location");
   expect(result).toStrictEqual([]);
 });

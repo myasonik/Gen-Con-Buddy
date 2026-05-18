@@ -94,6 +94,16 @@ export interface GameSystemFacetsResponse {
   values?: GameSystemFacet[];
 }
 
+export interface FacetValue {
+  value: string;
+  count: number;
+}
+
+export interface FacetResponse {
+  error?: string;
+  values?: FacetValue[];
+}
+
 export interface SortState {
   field: string;
   dir: "asc" | "desc";
