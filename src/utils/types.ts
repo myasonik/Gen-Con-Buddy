@@ -84,16 +84,6 @@ export interface FetchChangelogResponse {
   entry?: ChangelogEntry;
 }
 
-export interface GameSystemFacet {
-  value: string;
-  count: number;
-}
-
-export interface GameSystemFacetsResponse {
-  error?: string;
-  values?: GameSystemFacet[];
-}
-
 export interface FacetValue {
   value: string;
   count: number;
