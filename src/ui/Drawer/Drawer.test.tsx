@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import { Drawer } from "./Drawer";
 
 test("renders trigger button", () => {
@@ -103,4 +103,31 @@ test("omits footer element when footer prop not provided", async () => {
   await user.click(screen.getByRole("button", { name: "Open" }));
   // The scrollable content area is present but no footer container
   expect(screen.queryByTestId("drawer-footer")).not.toBeInTheDocument();
+});
+
+test("opens when open prop is true and closes when changed to false", async () => {
+  const onOpenChange = vi.fn<(open: boolean) => void>();
+  const { rerender } = render(
+    <Drawer
+      trigger={<button type="button">Open</button>}
+      title="Test"
+      open
+      onOpenChange={onOpenChange}
+    >
+      Content
+    </Drawer>,
+  );
+  expect(screen.getByRole("dialog", { name: "Test" })).toBeInTheDocument();
+
+  rerender(
+    <Drawer
+      trigger={<button type="button">Open</button>}
+      title="Test"
+      open={false}
+      onOpenChange={onOpenChange}
+    >
+      Content
+    </Drawer>,
+  );
+  expect(screen.queryByRole("dialog", { name: "Test" })).not.toBeInTheDocument();
 });

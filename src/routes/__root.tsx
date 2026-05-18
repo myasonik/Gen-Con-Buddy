@@ -52,6 +52,7 @@ function AppShell(): React.JSX.Element {
             to="/changelog"
             search={{
               open: [],
+              sort: undefined,
               eventType: undefined,
               days: undefined,
               timeStart: undefined,

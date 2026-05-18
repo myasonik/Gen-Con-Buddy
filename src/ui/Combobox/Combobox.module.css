@@ -1,0 +1,109 @@
+.root {
+  position: relative;
+}
+
+.label {
+  composes: eyebrow from "../../styles/eyebrow.module.css";
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+.inputGroup {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-2);
+  cursor: text;
+  height: 2rem;
+  border: var(--border-width) solid var(--color-ink-border);
+  border-radius: var(--radius-subtle);
+  background: var(--color-surface-page);
+  transition: border-color var(--motion-hover);
+}
+
+.inputGroup:focus-within {
+  outline: var(--focus-ring);
+  outline-color: var(--color-accent);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: var(--text-base);
+}
+
+.input:focus {
+  outline: none;
+}
+
+.trigger {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0 var(--space-1);
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-ink-faint);
+}
+
+.positioner {
+  z-index: var(--z-popover);
+  width: var(--anchor-width);
+}
+
+.popup {
+  composes: surface from "../../styles/popup.module.css";
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.list {
+  padding: var(--space-1) 0;
+  max-height: 15rem;
+  overflow-y: scroll;
+}
+
+.groupLabel {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-ink-muted);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  cursor: pointer;
+  font-size: var(--text-base);
+  transition: background-color var(--motion-hover);
+}
+
+.item:hover,
+.item[data-highlighted] {
+  background: var(--color-surface-hover);
+}
+
+.itemName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-base);
+  color: var(--color-ink-muted);
+}
+
+@media (width <= 60rem) {
+  .inputGroup {
+    height: 2.75rem;
+  }
+}

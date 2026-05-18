@@ -12,17 +12,16 @@ describe("parseOpenParam", () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it("4-segment value parses as open with sort", () => {
+  it("4-segment value parses as open with group, sort silently ignored", () => {
     const result = parseOpenParam(["2.updated.title.asc"]);
-    const expected: OpenMap = new Map([
-      [2, new Map([["updated", { field: "title", dir: "asc" as const }]])],
-    ]);
+    const expected: OpenMap = new Map([[2, new Map([["updated", undefined]])]]);
     expect(result).toStrictEqual(expected);
   });
 
-  it("parses desc direction", () => {
+  it("parses desc direction as open with group, sort silently ignored", () => {
     const result = parseOpenParam(["1.deleted.startDateTime.desc"]);
-    expect(result.get(1)?.get("deleted")).toStrictEqual({ field: "startDateTime", dir: "desc" });
+    const expected: OpenMap = new Map([[1, new Map([["deleted", undefined]])]]);
+    expect(result).toStrictEqual(expected);
   });
 
   it("multiple values for same position merge into one inner map", () => {
@@ -30,7 +29,8 @@ describe("parseOpenParam", () => {
     const pos1 = result.get(1);
     expect(pos1?.get("created")).toBeUndefined();
     expect(pos1?.has("created")).toBe(true);
-    expect(pos1?.get("updated")).toStrictEqual({ field: "title", dir: "asc" });
+    expect(pos1?.get("updated")).toBeUndefined();
+    expect(pos1?.has("updated")).toBe(true);
   });
 
   it("values for different positions produce separate entries", () => {
@@ -96,31 +96,29 @@ describe("serializeOpenParam", () => {
     expect(serializeOpenParam(map)).toStrictEqual(["1.created"]);
   });
 
-  it("open with sort serializes as 4 segments", () => {
-    const map: OpenMap = new Map([
-      [2, new Map([["updated", { field: "title", dir: "asc" as const }]])],
-    ]);
-    expect(serializeOpenParam(map)).toStrictEqual(["2.updated.title.asc"]);
+  it("open serializes as 2 segments (sort not written)", () => {
+    const map: OpenMap = new Map([[2, new Map([["updated", undefined]])]]);
+    expect(serializeOpenParam(map)).toStrictEqual(["2.updated"]);
   });
 
   it("multiple groups at same position produce one value per group", () => {
     const map: OpenMap = new Map([
       [
         1,
-        new Map<string, { field: string; dir: "asc" | "desc" } | undefined>([
+        new Map([
           ["created", undefined],
-          ["updated", { field: "title", dir: "asc" }],
+          ["updated", undefined],
         ]),
       ],
     ]);
-    expect(serializeOpenParam(map)).toStrictEqual(["1.created", "1.updated.title.asc"]);
+    expect(serializeOpenParam(map)).toStrictEqual(["1.created", "1.updated"]);
   });
 
   it("groups within a position are sorted alphabetically", () => {
     const map: OpenMap = new Map([
       [
         1,
-        new Map<string, { field: string; dir: "asc" | "desc" } | undefined>([
+        new Map([
           ["updated", undefined],
           ["created", undefined],
         ]),
@@ -139,8 +137,12 @@ describe("serializeOpenParam", () => {
 });
 
 describe("round-trip", () => {
-  it("parse then serialize returns original values (sorted)", () => {
+  it("parse then serialize drops sort from old-format values", () => {
     const values = ["1.created", "1.updated.title.asc", "3.deleted.startDateTime.desc"];
-    expect(serializeOpenParam(parseOpenParam(values))).toStrictEqual(values);
+    expect(serializeOpenParam(parseOpenParam(values))).toStrictEqual([
+      "1.created",
+      "1.updated",
+      "3.deleted",
+    ]);
   });
 });

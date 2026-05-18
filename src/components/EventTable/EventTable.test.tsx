@@ -12,7 +12,7 @@ import {
 import { makeEvent } from "../../test/msw/factory";
 import { EventTable } from "./EventTable";
 import type { DayFormat, SharedColumnState, TimeFormat, TimeZone, TypeDisplay } from "./types";
-import type { Event } from "../../utils/types";
+import type { Event, SortState } from "../../utils/types";
 import { useColumnVisibility } from "../../hooks/useColumnVisibility";
 import { useColumnSizing } from "../../hooks/useColumnSizing";
 import { useTypeDisplay } from "../../hooks/useTypeDisplay";
@@ -92,14 +92,27 @@ function EventTableWithHooks({ events }: { events: Event[] }): React.JSX.Element
   return <EventTable events={events} sharedColumnState={sharedColumnState} />;
 }
 
+interface SortProps {
+  activeSort?: SortState[];
+  onSort?: (sorts: SortState[]) => void;
+  onOpenSortDrawer?: () => void;
+}
+
 async function renderEventTable(
   events: Event[] = [makeEvent()],
   sharedColumnState?: SharedColumnState,
+  sortProps?: SortProps,
 ): Promise<ReturnType<typeof render>> {
   const rootRoute = createRootRoute({
     component: () =>
       sharedColumnState !== undefined ? (
-        <EventTable events={events} sharedColumnState={sharedColumnState} onSort={() => {}} />
+        <EventTable
+          events={events}
+          sharedColumnState={sharedColumnState}
+          activeSort={sortProps?.activeSort}
+          onSort={sortProps?.onSort}
+          onOpenSortDrawer={sortProps?.onOpenSortDrawer}
+        />
       ) : (
         <EventTableWithHooks events={events} />
       ),
@@ -293,152 +306,73 @@ test("non-staff-pick row does not have data-staff-pick attribute", async () => {
   expect(row).not.toHaveAttribute("data-staff-pick");
 });
 
-// ── Sort behavior ──────────────────────────────────────────────────────────
+// -- Sort behavior tests --
 
-async function renderWithSort({
-  onSort = () => {},
-  activeSortField,
-  activeSortDir,
-}: {
-  onSort?: (sort: string | undefined) => void;
-  activeSortField?: string;
-  activeSortDir?: "asc" | "desc";
-} = {}): Promise<ReturnType<typeof render>> {
-  const sharedColumnState = makeSharedColumnState();
-  const rootRoute = createRootRoute({
-    component: () => (
-      <EventTable
-        events={[makeEvent()]}
-        sharedColumnState={sharedColumnState}
-        onSort={onSort}
-        activeSortField={activeSortField}
-        activeSortDir={activeSortDir}
-      />
-    ),
+test("clicking a column header with 0 active sorts calls onSort adding that field as asc", async () => {
+  const user = userEvent.setup();
+  const onSort = vi.fn<(sorts: SortState[]) => void>();
+  await renderEventTable([makeEvent()], makeSharedColumnState(), {
+    activeSort: [],
+    onSort,
   });
-  const eventRoute = createRoute({
-    getParentRoute: () => rootRoute,
-    path: "/event/$id",
-    component: () => null,
+  const titleHeader = screen.getByRole("columnheader", { name: /Title/ });
+  await user.click(within(titleHeader).getByRole("button", { name: /Title/ }));
+  expect(onSort).toHaveBeenCalledWith([{ field: "title", dir: "asc" }]);
+});
+
+test("clicking a sorted column header with 1 active sort on same field toggles to desc", async () => {
+  const user = userEvent.setup();
+  const onSort = vi.fn<(sorts: SortState[]) => void>();
+  await renderEventTable([makeEvent()], makeSharedColumnState(), {
+    activeSort: [{ field: "title", dir: "asc" }],
+    onSort,
   });
-  const router = createRouter({
-    routeTree: rootRoute.addChildren([eventRoute]),
-    history: createMemoryHistory({ initialEntries: ["/"] }),
+  const titleHeader = screen.getByRole("columnheader", { name: /Title/ });
+  await user.click(within(titleHeader).getByRole("button", { name: /Title/ }));
+  expect(onSort).toHaveBeenCalledWith([{ field: "title", dir: "desc" }]);
+});
+
+test("clicking a sorted column header with 1 active sort on same field desc clears that sort", async () => {
+  const user = userEvent.setup();
+  const onSort = vi.fn<(sorts: SortState[]) => void>();
+  await renderEventTable([makeEvent()], makeSharedColumnState(), {
+    activeSort: [{ field: "title", dir: "desc" }],
+    onSort,
   });
-  await router.load();
-  let result: ReturnType<typeof render> | null = null;
-  await act(async () => {
-    result = render(<RouterProvider router={router} />);
+  const titleHeader = screen.getByRole("columnheader", { name: /Title/ });
+  await user.click(within(titleHeader).getByRole("button", { name: /Title/ }));
+  expect(onSort).toHaveBeenCalledWith([]);
+});
+
+test("clicking a different column header with 1 active sort adds that field", async () => {
+  const user = userEvent.setup();
+  const onSort = vi.fn<(sorts: SortState[]) => void>();
+  await renderEventTable([makeEvent()], makeSharedColumnState(), {
+    activeSort: [{ field: "title", dir: "asc" }],
+    onSort,
   });
-  return result as unknown as ReturnType<typeof render>;
-}
+  const costHeader = screen.getByRole("columnheader", { name: /Cost/ });
+  await user.click(within(costHeader).getByRole("button", { name: /Cost/ }));
+  expect(onSort).toHaveBeenCalledWith([
+    { field: "title", dir: "asc" },
+    { field: "cost", dir: "asc" },
+  ]);
+});
 
-test("clicking an unsorted column header calls onSort with ascending direction", async () => {
-  const onSort = vi.fn<(sort: string | undefined) => void>();
+test("clicking any column header with 2+ active sorts calls onOpenSortDrawer", async () => {
   const user = userEvent.setup();
-  await renderWithSort({ onSort });
-
+  const onSort = vi.fn<(sorts: SortState[]) => void>();
+  const onOpenSortDrawer = vi.fn<() => void>();
+  await renderEventTable([makeEvent()], makeSharedColumnState(), {
+    activeSort: [
+      { field: "title", dir: "asc" },
+      { field: "cost", dir: "asc" },
+    ],
+    onSort,
+    onOpenSortDrawer,
+  });
   const titleHeader = screen.getByRole("columnheader", { name: /Title/ });
-  await user.click(within(titleHeader).getByRole("button", { name: "Title" }));
-
-  expect(onSort).toHaveBeenCalledWith("title.asc");
-});
-
-test("clicking the active ascending column header calls onSort with descending direction", async () => {
-  const onSort = vi.fn<(sort: string | undefined) => void>();
-  const user = userEvent.setup();
-  await renderWithSort({ onSort, activeSortField: "title", activeSortDir: "asc" });
-
-  const titleHeader = screen.getByRole("columnheader", { name: /Title/ });
-  await user.click(within(titleHeader).getByRole("button", { name: "Title" }));
-
-  expect(onSort).toHaveBeenCalledWith("title.desc");
-});
-
-test("clicking the active descending column header calls onSort with undefined to clear", async () => {
-  const onSort = vi.fn<(sort: string | undefined) => void>();
-  const user = userEvent.setup();
-  await renderWithSort({ onSort, activeSortField: "title", activeSortDir: "desc" });
-
-  const titleHeader = screen.getByRole("columnheader", { name: /Title/ });
-  await user.click(within(titleHeader).getByRole("button", { name: "Title" }));
-
-  expect(onSort).toHaveBeenCalledWith(undefined);
-});
-
-test("non-active sortable column header has aria-sort of none", async () => {
-  await renderWithSort({ onSort: vi.fn() });
-
-  const titleHeader = screen.getByRole("columnheader", { name: /Title/ });
-  expect(titleHeader).toHaveAttribute("aria-sort", "none");
-});
-
-test("active ascending column header has aria-sort of ascending", async () => {
-  await renderWithSort({ onSort: vi.fn(), activeSortField: "title", activeSortDir: "asc" });
-
-  const titleHeader = screen.getByRole("columnheader", { name: /Title/ });
-  expect(titleHeader).toHaveAttribute("aria-sort", "ascending");
-});
-
-test("active descending column header has aria-sort of descending", async () => {
-  await renderWithSort({ onSort: vi.fn(), activeSortField: "title", activeSortDir: "desc" });
-
-  const titleHeader = screen.getByRole("columnheader", { name: /Title/ });
-  expect(titleHeader).toHaveAttribute("aria-sort", "descending");
-});
-
-test("clicking Sort ascending in column popover calls onSort with ascending sort string", async () => {
-  const onSort = vi.fn<(sort: string | undefined) => void>();
-  const user = userEvent.setup();
-  await renderWithSort({ onSort });
-
-  const titleHeader = screen.getByRole("columnheader", { name: /Title/ });
-  await user.click(within(titleHeader).getByRole("button", { name: "Column actions" }));
-  await user.click(screen.getByRole("button", { name: "Sort ascending" }));
-
-  expect(onSort).toHaveBeenCalledWith("title.asc");
-});
-
-test("clicking Sort descending in column popover calls onSort with descending sort string", async () => {
-  const onSort = vi.fn<(sort: string | undefined) => void>();
-  const user = userEvent.setup();
-  await renderWithSort({ onSort });
-
-  const titleHeader = screen.getByRole("columnheader", { name: /Title/ });
-  await user.click(within(titleHeader).getByRole("button", { name: "Column actions" }));
-  await user.click(screen.getByRole("button", { name: "Sort descending" }));
-
-  expect(onSort).toHaveBeenCalledWith("title.desc");
-});
-
-test("clicking Sort ascending in popover when already ascending calls onSort with undefined", async () => {
-  const onSort = vi.fn<(sort: string | undefined) => void>();
-  const user = userEvent.setup();
-  await renderWithSort({ onSort, activeSortField: "title", activeSortDir: "asc" });
-
-  const titleHeader = screen.getByRole("columnheader", { name: /Title/ });
-  await user.click(within(titleHeader).getByRole("button", { name: "Column actions" }));
-  await user.click(screen.getByRole("button", { name: "Sort ascending" }));
-
-  expect(onSort).toHaveBeenCalledWith(undefined);
-});
-
-// ── No-sort mode (onSort absent) ──────────────────────────────────────────
-
-test("column headers are non-interactive spans when onSort is absent", async () => {
-  await renderEventTable([makeEvent()]);
-
-  const titleHeader = screen.getByRole("columnheader", { name: /Title/ });
-  expect(within(titleHeader).queryByRole("button", { name: "Title" })).toBeNull();
-});
-
-test("column actions popover has no sort buttons when onSort is absent", async () => {
-  const user = userEvent.setup();
-  await renderEventTable([makeEvent()]);
-
-  const titleHeader = screen.getByRole("columnheader", { name: /Title/ });
-  await user.click(within(titleHeader).getByRole("button", { name: "Column actions" }));
-
-  expect(screen.queryByRole("button", { name: "Sort ascending" })).toBeNull();
-  expect(screen.queryByRole("button", { name: "Sort descending" })).toBeNull();
+  await user.click(within(titleHeader).getByRole("button", { name: /Title/ }));
+  expect(onOpenSortDrawer).toHaveBeenCalledWith();
+  expect(onSort).not.toHaveBeenCalled();
 });

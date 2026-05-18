@@ -81,6 +81,14 @@
       "rules": {
         "new-cap": "off"
       }
+    },
+    {
+      "files": ["src/components/ChangelogPage/openParam.ts"],
+      "rules": {
+        "no-continue": "off",
+        "curly": "off",
+        "prefer-destructuring": "off"
+      }
     }
   ]
 }

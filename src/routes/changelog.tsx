@@ -40,6 +40,7 @@ export const Route = createFileRoute("/changelog")({
   }),
   validateSearch: (search: Record<string, unknown>) => ({
     open: coerceStringArray(search.open),
+    sort: coerceOptionalString(search.sort),
     eventType: coerceOptionalString(search.eventType),
     days: coerceOptionalString(search.days),
     timeStart: coerceOptionalString(search.timeStart),
@@ -69,12 +70,13 @@ export const Route = createFileRoute("/changelog")({
 });
 
 function ChangelogPageRoute(): React.JSX.Element {
-  const { open, eventType, days, timeStart, timeEnd } = Route.useSearch();
+  const { open, sort, eventType, days, timeStart, timeEnd } = Route.useSearch();
   const navigate = Route.useNavigate();
   return (
     <ChangelogPage
       openParam={open}
       navigate={navigate}
+      sort={sort}
       activeFilter={{
         eventType: eventType ?? "",
         days: days ?? "",

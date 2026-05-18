@@ -3,8 +3,6 @@ import React, { startTransition, useMemo } from "react";
 import { Collapsible } from "../../ui/Collapsible/Collapsible";
 import { Chip } from "../../ui/Chip/Chip";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
-import { parseSortString } from "../../utils/parseSortString";
-import { sortEvents } from "../../utils/sortEvents";
 import { filterChangelogEvents } from "../../utils/filterChangelogEvents";
 import type { SearchFormValues } from "../../utils/searchParamSchema";
 import type { ChangelogEntry, Event, SortState } from "../../utils/types";
@@ -13,6 +11,7 @@ import { EventTable } from "../EventTable/EventTable";
 import type { SharedColumnState } from "../EventTable/types";
 import styles from "./ChangelogEntryPanel.module.css";
 import { parseOpenParam, serializeOpenParam } from "./openParam";
+import { sortEventsMulti } from "../../utils/sortEventsMulti";
 
 type EntryValue = ChangelogEntry | "loading" | "error" | undefined;
 
@@ -23,6 +22,9 @@ interface ChangelogEntryPanelProps {
   position?: number;
   navigate?: NavigateFn;
   activeFilter?: SearchFormValues;
+  activeSort?: SortState[];
+  onSort?: (sorts: SortState[]) => void;
+  onOpenSortDrawer?: () => void;
 }
 
 const CHANGELOG_LINK_STATE = { from: "changelog" } as const;
@@ -30,15 +32,15 @@ const CHANGELOG_LINK_STATE = { from: "changelog" } as const;
 function EventGroup({
   events,
   sharedColumnState,
+  activeSort,
   onSort,
-  activeSortField,
-  activeSortDir,
+  onOpenSortDrawer,
 }: {
   events: Event[];
   sharedColumnState: SharedColumnState;
-  onSort: (sort: string | undefined) => void;
-  activeSortField?: string;
-  activeSortDir?: "asc" | "desc";
+  activeSort?: SortState[];
+  onSort?: (sorts: SortState[]) => void;
+  onOpenSortDrawer?: () => void;
 }): React.JSX.Element {
   return (
     <>
@@ -47,9 +49,9 @@ function EventGroup({
           events={events}
           sharedColumnState={sharedColumnState}
           linkState={CHANGELOG_LINK_STATE}
+          activeSort={activeSort ?? []}
           onSort={onSort}
-          activeSortField={activeSortField}
-          activeSortDir={activeSortDir}
+          onOpenSortDrawer={onOpenSortDrawer}
         />
       </div>
       <div className={styles.mobileView}>
@@ -72,39 +74,17 @@ export function ChangelogEntryPanel({
   position,
   navigate,
   activeFilter,
+  activeSort,
+  onSort,
+  onOpenSortDrawer,
 }: ChangelogEntryPanelProps): React.JSX.Element {
   const openForPosition = useMemo(
     () =>
       position !== undefined
-        ? (parseOpenParam(openParam).get(position) ?? new Map<string, SortState | undefined>())
-        : new Map<string, SortState | undefined>(),
+        ? (parseOpenParam(openParam).get(position) ?? new Map<string, undefined>())
+        : new Map<string, undefined>(),
     [openParam, position],
   );
-
-  function syncGroupSortToUrl(group: string, sort: SortState | undefined): void {
-    if (!navigate || position === undefined) {
-      return;
-    }
-    startTransition(() => {
-      void navigate({
-        to: ".",
-        search: (prev) => {
-          const openMap = new Map(parseOpenParam(prev.open ?? []));
-          // If the entry's position is absent from the map, the outer row was just closed;
-          // don't write back to the URL.
-          if (!openMap.has(position)) {
-            return prev;
-          }
-          const groupMap = new Map(openMap.get(position) ?? []);
-          groupMap.set(group, sort);
-          openMap.set(position, groupMap);
-          return { ...prev, open: serializeOpenParam(openMap) };
-        },
-        replace: true,
-        resetScroll: false,
-      });
-    });
-  }
 
   function syncGroupToUrl(group: string, nowOpen: boolean): void {
     if (!navigate || position === undefined) {
@@ -133,19 +113,6 @@ export function ChangelogEntryPanel({
         resetScroll: false,
       });
     });
-  }
-
-  function makeOnSort(group: string): (s: string | undefined) => void {
-    return (s) => {
-      if (s === undefined) {
-        syncGroupSortToUrl(group, undefined);
-      } else {
-        const parsed = parseSortString(s);
-        if (parsed) {
-          syncGroupSortToUrl(group, parsed);
-        }
-      }
-    };
   }
 
   if (entry === undefined || entry === "loading") {
@@ -213,7 +180,6 @@ export function ChangelogEntryPanel({
         if (events.length === 0) {
           return null;
         }
-        const sort = openForPosition.get(key);
         return (
           <Collapsible
             key={key}
@@ -231,11 +197,11 @@ export function ChangelogEntryPanel({
             }
           >
             <EventGroup
-              events={sort ? sortEvents(events, sort.field, sort.dir) : events}
+              events={sortEventsMulti(events, activeSort ?? [])}
               sharedColumnState={sharedColumnState}
-              onSort={makeOnSort(key)}
-              activeSortField={sort?.field}
-              activeSortDir={sort?.dir}
+              activeSort={activeSort ?? []}
+              onSort={onSort}
+              onOpenSortDrawer={onOpenSortDrawer}
             />
           </Collapsible>
         );

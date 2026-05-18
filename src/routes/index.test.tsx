@@ -340,7 +340,7 @@ describe("analytics events", () => {
     await screen.findByRole("navigation", { name: "Pagination, top" });
     expect(captureFn).toHaveBeenCalledWith(
       "results_sorted",
-      expect.objectContaining({ sort_field: "startDateTime", sort_direction: "asc" }),
+      expect.objectContaining({ sort_fields: ["startDateTime"], sort_count: 1 }),
     );
   });
 });

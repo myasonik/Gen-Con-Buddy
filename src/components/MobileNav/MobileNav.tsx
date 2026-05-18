@@ -50,6 +50,7 @@ export function MobileNav({ theme, setTheme }: MobileNavProps): React.JSX.Elemen
               className={styles.link}
               search={{
                 open: [],
+                sort: undefined,
                 eventType: undefined,
                 days: undefined,
                 timeStart: undefined,

@@ -2,29 +2,39 @@ import React from "react";
 import { EllipsisVertical } from "lucide-react";
 import { Popover } from "@base-ui/react/popover";
 import { Button } from "../../ui/Button/Button";
+import { addSort, removeSort, setSortDir } from "../../utils/sortManipulation";
+import type { SortState } from "../../utils/types";
 import styles from "./ColumnActionsPopover.module.css";
 
 interface ColumnActionsPopoverProps {
   sortField: string | undefined;
-  activeSortField: string | undefined;
-  activeSortDir: "asc" | "desc" | undefined;
-  onSort: (sort: string | undefined) => void;
+  activeSort: SortState[];
+  onSort: (sorts: SortState[]) => void;
+  onOpenSortDrawer: () => void;
   onOpenResize: () => void;
   formatControls?: React.ReactNode;
 }
 
 export function ColumnActionsPopover({
   sortField,
-  activeSortField,
-  activeSortDir,
+  activeSort,
   onSort,
+  onOpenSortDrawer,
   onOpenResize,
   formatControls,
 }: ColumnActionsPopoverProps): React.JSX.Element {
-  const isSortedAsc =
-    Boolean(sortField) && activeSortField === sortField && activeSortDir === "asc";
-  const isSortedDesc =
-    Boolean(sortField) && activeSortField === sortField && activeSortDir === "desc";
+  const sortEntry = sortField ? activeSort.find((s) => s.field === sortField) : undefined;
+  const isInSort = sortEntry !== undefined;
+  const showDrawerButton = Boolean(sortField) && !isInSort && activeSort.length >= 2;
+
+  function handleSortDir(dir: "asc" | "desc", field: string): void {
+    const isSortedThisDir = sortEntry?.dir === dir;
+    if (isInSort) {
+      onSort(isSortedThisDir ? removeSort(activeSort, field) : setSortDir(activeSort, field, dir));
+    } else {
+      onSort(addSort(activeSort, field, dir));
+    }
+  }
 
   return (
     <Popover.Root>
@@ -39,20 +49,39 @@ export function ColumnActionsPopover({
           <Popover.Popup className={styles.popup}>
             {sortField && (
               <>
-                <Popover.Close
-                  render={<Button variant="ghost" className={styles.menuItem} />}
-                  aria-pressed={isSortedAsc}
-                  onClick={() => onSort(isSortedAsc ? undefined : `${sortField}.asc`)}
-                >
-                  Sort ascending
-                </Popover.Close>
-                <Popover.Close
-                  render={<Button variant="ghost" className={styles.menuItem} />}
-                  aria-pressed={isSortedDesc}
-                  onClick={() => onSort(isSortedDesc ? undefined : `${sortField}.desc`)}
-                >
-                  Sort descending
-                </Popover.Close>
+                {showDrawerButton ? (
+                  <Popover.Close
+                    render={<Button variant="ghost" className={styles.menuItem} />}
+                    onClick={() => onOpenSortDrawer()}
+                  >
+                    Sort by this field…
+                  </Popover.Close>
+                ) : (
+                  <>
+                    <Popover.Close
+                      render={<Button variant="ghost" className={styles.menuItem} />}
+                      aria-pressed={sortEntry?.dir === "asc"}
+                      onClick={() => handleSortDir("asc", sortField)}
+                    >
+                      Sort ascending
+                    </Popover.Close>
+                    <Popover.Close
+                      render={<Button variant="ghost" className={styles.menuItem} />}
+                      aria-pressed={sortEntry?.dir === "desc"}
+                      onClick={() => handleSortDir("desc", sortField)}
+                    >
+                      Sort descending
+                    </Popover.Close>
+                    {isInSort && (
+                      <Popover.Close
+                        render={<Button variant="ghost" className={styles.menuItem} />}
+                        onClick={() => onSort(removeSort(activeSort, sortField))}
+                      >
+                        Remove sort
+                      </Popover.Close>
+                    )}
+                  </>
+                )}
               </>
             )}
             <Popover.Close

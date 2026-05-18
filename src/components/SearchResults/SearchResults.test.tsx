@@ -14,7 +14,7 @@ import { http, HttpResponse } from "msw";
 import { server } from "../../test/msw/server";
 import { makeEvent } from "../../test/msw/factory";
 import { SearchResults } from "./SearchResults";
-import type { EventSearchResponse } from "../../utils/types";
+import type { EventSearchResponse, SortState } from "../../utils/types";
 import type { SearchParams } from "../../utils/searchParamSchema";
 import { WILDHAVENS_GAME_IDS } from "../../utils/staffPicks";
 import { __reset } from "../../lib/announce";
@@ -45,7 +45,7 @@ beforeEach(() => {
 function renderSearchResults(
   searchParams: SearchParams = {},
   onNavigate = vi.fn<(page: number, limit: number) => void>(),
-  onSort = vi.fn<(sort: string | undefined) => void>(),
+  onSort = vi.fn<(sorts: SortState[]) => void>(),
 ): ReturnType<typeof render> {
   const rootRoute = createRootRoute({
     component: () => (
@@ -351,6 +351,26 @@ test("sends sort param to API when provided in searchParams", async () => {
   expect(capturedUrl!.searchParams.get("sort")).toBe("startDateTime.asc");
 });
 
+test("sends multi-field sort as comma-separated string to API", async () => {
+  let capturedUrl: URL | null = null;
+  server.use(
+    http.get("/api/events/search", ({ request }) => {
+      capturedUrl = new URL(request.url);
+      const response: EventSearchResponse = {
+        data: [makeEvent()],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }),
+  );
+  renderSearchResults({ sort: "startDateTime.asc,title.desc" });
+  await screen.findAllByRole("row");
+  // oxlint-disable-next-line typescript/no-non-null-assertion
+  expect(capturedUrl!.searchParams.get("sort")).toBe("startDateTime.asc,title.desc");
+});
+
 test("omits sort param from API when not in searchParams", async () => {
   let capturedUrl: URL | null = null;
   server.use(
@@ -391,16 +411,16 @@ test('active descending column has aria-sort="descending"', async () => {
 
 test("clicking unsorted column calls onSort with field.asc", async () => {
   const user = userEvent.setup();
-  const onSort = vi.fn<(sort: string | undefined) => void>();
+  const onSort = vi.fn<(sorts: SortState[]) => void>();
   renderSearchResults({}, vi.fn<(page: number, limit: number) => void>(), onSort);
   await screen.findAllByRole("row");
   await user.click(screen.getByRole("button", { name: "Title" }));
-  expect(onSort).toHaveBeenCalledWith("title.asc");
+  expect(onSort).toHaveBeenCalledWith([{ field: "title", dir: "asc" }]);
 });
 
 test("clicking ascending column calls onSort with field.desc", async () => {
   const user = userEvent.setup();
-  const onSort = vi.fn<(sort: string | undefined) => void>();
+  const onSort = vi.fn<(sorts: SortState[]) => void>();
   renderSearchResults(
     { sort: "title.asc" },
     vi.fn<(page: number, limit: number) => void>(),
@@ -408,12 +428,12 @@ test("clicking ascending column calls onSort with field.desc", async () => {
   );
   await screen.findAllByRole("row");
   await user.click(screen.getByRole("button", { name: "Title" }));
-  expect(onSort).toHaveBeenCalledWith("title.desc");
+  expect(onSort).toHaveBeenCalledWith([{ field: "title", dir: "desc" }]);
 });
 
-test("clicking descending column calls onSort with undefined (clears sort)", async () => {
+test("clicking descending column calls onSort with empty array (clears sort)", async () => {
   const user = userEvent.setup();
-  const onSort = vi.fn<(sort: string | undefined) => void>();
+  const onSort = vi.fn<(sorts: SortState[]) => void>();
   renderSearchResults(
     { sort: "title.desc" },
     vi.fn<(page: number, limit: number) => void>(),
@@ -421,7 +441,7 @@ test("clicking descending column calls onSort with undefined (clears sort)", asy
   );
   await screen.findAllByRole("row");
   await user.click(screen.getByRole("button", { name: "Title" }));
-  expect(onSort).toHaveBeenCalledWith(undefined);
+  expect(onSort).toHaveBeenCalledWith([]);
 });
 
 test('day column has aria-sort="ascending" when sorted by startDateTime ascending', async () => {
@@ -430,50 +450,52 @@ test('day column has aria-sort="ascending" when sorted by startDateTime ascendin
   expect(th).toHaveAttribute("aria-sort", "ascending");
 });
 
-test('announces "Sorted by Title, ascending" when clicking unsorted column', async () => {
+test('announces "Added Title to sort, ascending" when clicking unsorted column', async () => {
   const user = userEvent.setup();
   const cleanup = setupLiveRegions();
   renderSearchResults(
     {},
     vi.fn<(page: number, limit: number) => void>(),
-    vi.fn<(sort: string | undefined) => void>(),
+    vi.fn<(sorts: SortState[]) => void>(),
   );
   await screen.findAllByRole("row");
   await user.click(screen.getByRole("button", { name: "Title" }));
   await waitFor(() => {
-    expect(document.getElementById("live-polite")?.textContent).toBe("Sorted by Title, ascending");
+    expect(document.getElementById("live-polite")?.textContent).toBe(
+      "Added Title to sort, ascending",
+    );
   });
   cleanup();
 });
 
-test('announces "Sorted by Title, descending" when clicking ascending column', async () => {
+test('announces "Title sorted descending" when clicking ascending column', async () => {
   const user = userEvent.setup();
   const cleanup = setupLiveRegions();
   renderSearchResults(
     { sort: "title.asc" },
     vi.fn<(page: number, limit: number) => void>(),
-    vi.fn<(sort: string | undefined) => void>(),
+    vi.fn<(sorts: SortState[]) => void>(),
   );
   await screen.findAllByRole("row");
   await user.click(screen.getByRole("button", { name: "Title" }));
   await waitFor(() => {
-    expect(document.getElementById("live-polite")?.textContent).toBe("Sorted by Title, descending");
+    expect(document.getElementById("live-polite")?.textContent).toBe("Title sorted descending");
   });
   cleanup();
 });
 
-test('announces "Sort cleared" when clicking descending column', async () => {
+test('announces "Title removed from sort" when clicking descending column', async () => {
   const user = userEvent.setup();
   const cleanup = setupLiveRegions();
   renderSearchResults(
     { sort: "title.desc" },
     vi.fn<(page: number, limit: number) => void>(),
-    vi.fn<(sort: string | undefined) => void>(),
+    vi.fn<(sorts: SortState[]) => void>(),
   );
   await screen.findAllByRole("row");
   await user.click(screen.getByRole("button", { name: "Title" }));
   await waitFor(() => {
-    expect(document.getElementById("live-polite")?.textContent).toBe("Sort cleared");
+    expect(document.getElementById("live-polite")?.textContent).toBe("Title removed from sort");
   });
   cleanup();
 });

@@ -31,7 +31,13 @@ export function StaffPickCallout(): React.JSX.Element | null {
       <h2 className={styles.heading}>Staff Picks</h2>
       <p className={styles.preamble}>{STAFF_PICK_PREAMBLE}</p>
       <p className={styles.preambleDetail}>{STAFF_PICK_PREAMBLE_DETAIL}</p>
-      <ColumnControlsPanel columnState={sharedColumnState} />
+      <ColumnControlsPanel
+        columnState={sharedColumnState}
+        activeSort={[]}
+        onSort={() => {}}
+        sortDrawerOpen={false}
+        onSortDrawerOpenChange={() => {}}
+      />
       {!isMobile ? (
         <div className={styles.tableView}>
           <EventTable events={data.data} sharedColumnState={sharedColumnState} />

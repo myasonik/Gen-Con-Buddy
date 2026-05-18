@@ -100,68 +100,73 @@ export function getActiveFilters(params: SearchParams): ActiveFilter[] {
     });
   }
 
-  for (const [key, def] of Object.entries(FILTER_FIELDS) as [keyof SearchParams, FieldDescriptor][]) {
-    if (def.type === "combined") continue;
-
-    const val = params[key];
-    if (!val) continue;
-
-    if (def.type === "plain") {
-      filters.push({
-        id: key,
-        label: `${def.label}: ${val}`,
-        icon: def.icon,
-        remove: removeKey(key),
-      });
-    } else if (def.type === "enum") {
-      const display = def.options[val as string] ?? (val as string);
-      filters.push({
-        id: key,
-        label: `${def.label}: ${display}`,
-        icon: def.icon,
-        remove: removeKey(key),
-      });
-    } else if (def.type === "range") {
-      filters.push({
-        id: key,
-        label: fmtRange(val as string, `${def.label}: `, def.suffix),
-        icon: def.icon,
-        remove: removeKey(key),
-      });
-    } else if (def.type === "dateRange") {
-      filters.push({
-        id: key,
-        label: fmtDateRange(val as string, `${def.label}: `),
-        icon: def.icon,
-        remove: removeKey(key),
-      });
-    } else if (def.type === "cost") {
-      filters.push({
-        id: key,
-        label: fmtCostRange(val as string),
-        icon: def.icon,
-        remove: removeKey(key),
-      });
-    } else if (def.type === "multi") {
-      for (const code of parseCSV(val as string)) {
-        const label = def.options?.[code] ?? code;
-        const chipIcon = def.iconMap ? def.iconMap[code] : def.icon;
-        filters.push({
-          id: `${def.prefix}:${code}`,
-          label,
-          icon: chipIcon,
-          remove: (prev) => {
-            const remaining = ((prev[key] ?? "") as string)
-              .split(",")
-              .filter((c) => c !== code)
-              .join(",");
-            if (!remaining) {
-              const { [key]: _r, ...rest } = prev;
-              return rest;
-            }
-            return { ...prev, [key]: remaining };
-          },
-        });
+  for (const [key, def] of Object.entries(FILTER_FIELDS) as [
+    keyof SearchParams,
+    FieldDescriptor,
+  ][]) {
+    if (def.type === "combined") {
+      // handled above as a combined timeRange chip
+    } else {
+      const val = params[key];
+      if (val) {
+        if (def.type === "plain") {
+          filters.push({
+            id: key,
+            label: `${def.label}: ${val}`,
+            icon: def.icon,
+            remove: removeKey(key),
+          });
+        } else if (def.type === "enum") {
+          const display = def.options[val as string] ?? (val as string);
+          filters.push({
+            id: key,
+            label: `${def.label}: ${display}`,
+            icon: def.icon,
+            remove: removeKey(key),
+          });
+        } else if (def.type === "range") {
+          filters.push({
+            id: key,
+            label: fmtRange(val as string, `${def.label}: `, def.suffix),
+            icon: def.icon,
+            remove: removeKey(key),
+          });
+        } else if (def.type === "dateRange") {
+          filters.push({
+            id: key,
+            label: fmtDateRange(val as string, `${def.label}: `),
+            icon: def.icon,
+            remove: removeKey(key),
+          });
+        } else if (def.type === "cost") {
+          filters.push({
+            id: key,
+            label: fmtCostRange(val as string),
+            icon: def.icon,
+            remove: removeKey(key),
+          });
+        } else if (def.type === "multi") {
+          for (const code of parseCSV(val as string)) {
+            const label = def.options?.[code] ?? code;
+            const chipIcon = def.iconMap ? def.iconMap[code] : def.icon;
+            filters.push({
+              id: `${def.prefix}:${code}`,
+              label,
+              icon: chipIcon,
+              remove: (prev) => {
+                const remaining = ((prev[key] ?? "") as string)
+                  .split(",")
+                  .filter((c) => c !== code)
+                  .join(",");
+                if (!remaining) {
+                  const { [key]: _r, ...rest } = prev;
+                  return rest;
+                }
+                return { ...prev, [key]: remaining };
+              },
+            });
+          }
+        }
       }
     }
   }

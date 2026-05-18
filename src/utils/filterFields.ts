@@ -18,50 +18,50 @@ import type { FilterableKey } from "./searchParamSchema";
 
 type IconComponent = React.ComponentType<{ size?: number | string }>;
 
-type PlainDescriptor = {
+interface PlainDescriptor {
   type: "plain";
   label: string;
   icon?: IconComponent;
-};
+}
 
-type EnumDescriptor = {
+interface EnumDescriptor {
   type: "enum";
   label: string;
   options: Record<string, string>;
   icon?: IconComponent;
-};
+}
 
-type RangeDescriptor = {
+interface RangeDescriptor {
   type: "range";
   label: string;
   suffix?: string;
   icon?: IconComponent;
-};
+}
 
-type DateRangeDescriptor = {
+interface DateRangeDescriptor {
   type: "dateRange";
   label: string;
   icon?: IconComponent;
-};
+}
 
-type CostDescriptor = {
+interface CostDescriptor {
   type: "cost";
   icon?: IconComponent;
-};
+}
 
-type MultiDescriptor = {
+interface MultiDescriptor {
   type: "multi";
   options?: Record<string, string>;
   prefix: string;
   icon?: IconComponent;
   iconMap?: Record<string, IconComponent>;
-};
+}
 
-type CombinedDescriptor = {
+interface CombinedDescriptor {
   type: "combined";
   group: string;
   icon?: IconComponent;
-};
+}
 
 export type FieldDescriptor =
   | PlainDescriptor
@@ -84,7 +84,12 @@ export const FILTER_FIELDS = {
   filter: { type: "plain", label: "Search", icon: MagnifyingGlass },
   gameId: { type: "plain", label: "Game ID" },
   title: { type: "plain", label: "Title" },
-  eventType: { type: "multi", options: EVENT_TYPES, prefix: "eventType", iconMap: EVENT_TYPE_ICONS },
+  eventType: {
+    type: "multi",
+    options: EVENT_TYPES,
+    prefix: "eventType",
+    iconMap: EVENT_TYPE_ICONS,
+  },
   group: { type: "plain", label: "Group" },
   shortDescription: { type: "plain", label: "Short desc" },
   longDescription: { type: "plain", label: "Long desc" },
@@ -124,8 +129,10 @@ export const FILTER_FIELDS = {
 } as const satisfies Record<FilterableKey, FieldDescriptor>;
 
 /** Returns select-ready options for an enum field. */
-export function enumOptions(key: FilterableKey): Array<{ value: string; label: string }> {
+export function enumOptions(key: FilterableKey): { value: string; label: string }[] {
   const d = FILTER_FIELDS[key];
-  if (d.type !== "enum") return [];
+  if (d.type !== "enum") {
+    return [];
+  }
   return Object.entries(d.options).map(([value, label]) => ({ value, label }));
 }

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEvents } from "../../utils/api";
-import { parseSortString } from "../../utils/parseSortString";
+import { parseSorts } from "../../utils/parseSorts";
 import { Pagination } from "../Pagination/Pagination";
 import type { SearchParams } from "../../utils/searchParamSchema";
+import type { SortState } from "../../utils/types";
 import { EmptyState } from "../../ui/EmptyState/EmptyState";
 import { EventTable } from "../EventTable/EventTable";
 import { EventListMobile } from "../EventTable/EventListMobile";
@@ -16,7 +17,7 @@ import styles from "./SearchResults.module.css";
 interface SearchResultsProps {
   searchParams: SearchParams;
   onNavigate: (page: number, limit: number) => void;
-  onSort: (sort: string | undefined) => void;
+  onSort: (sorts: SortState[]) => void;
 }
 
 export function SearchResults({
@@ -33,9 +34,8 @@ export function SearchResults({
     queryFn: () => fetchEvents(searchParams),
   });
 
-  const activeSortState = searchParams.sort ? parseSortString(searchParams.sort) : null;
-  const activeSortField = activeSortState?.field;
-  const activeSortDir = activeSortState?.dir;
+  const activeSort = useMemo(() => parseSorts(searchParams.sort ?? ""), [searchParams.sort]);
+  const [sortDrawerOpen, setSortDrawerOpen] = useState(false);
 
   return (
     <section>
@@ -60,9 +60,13 @@ export function SearchResults({
       {data && data.data.length > 0 && (
         <>
           <div className={styles.controlsBar}>
-            <div className={styles.tableControls}>
-              <ColumnControlsPanel columnState={sharedColumnState} allowSort />
-            </div>
+            <ColumnControlsPanel
+              columnState={sharedColumnState}
+              activeSort={activeSort}
+              onSort={onSort}
+              sortDrawerOpen={sortDrawerOpen}
+              onSortDrawerOpenChange={setSortDrawerOpen}
+            />
             <Pagination
               page={page}
               limit={limit}
@@ -76,16 +80,22 @@ export function SearchResults({
             <div className={styles.tableView}>
               <EventTable
                 events={data.data}
-                activeSortField={activeSortField}
-                activeSortDir={activeSortDir}
+                activeSort={activeSort}
                 onSort={onSort}
+                onOpenSortDrawer={() => setSortDrawerOpen(true)}
                 sharedColumnState={sharedColumnState}
               />
             </div>
           ) : (
             <div className={styles.mobileView}>
               <div className={styles.mobileControls}>
-                <ColumnControlsPanel columnState={sharedColumnState} allowSort />
+                <ColumnControlsPanel
+                  columnState={sharedColumnState}
+                  activeSort={activeSort}
+                  onSort={onSort}
+                  sortDrawerOpen={sortDrawerOpen}
+                  onSortDrawerOpenChange={setSortDrawerOpen}
+                />
               </div>
               <EventListMobile events={data.data} columnState={sharedColumnState} />
             </div>

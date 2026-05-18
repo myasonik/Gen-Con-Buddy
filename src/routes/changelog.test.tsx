@@ -547,6 +547,7 @@ test("undefined filter params are not serialized to URL when navigating", async 
       to: "/changelog",
       search: {
         open: [],
+        sort: undefined,
         eventType: undefined,
         days: undefined,
         timeStart: undefined,
@@ -558,7 +559,7 @@ test("undefined filter params are not serialized to URL when navigating", async 
   expect(href).not.toMatch(/[?&](eventType|days|timeStart|timeEnd)=/);
 });
 
-test("clicking a column header in a changelog group writes sort to URL", async () => {
+test("clicking a column header in a changelog group keeps group open in URL", async () => {
   server.use(
     http.get("/api/changelog/list", () =>
       HttpResponse.json<ListChangelogsResponse>({
@@ -593,10 +594,11 @@ test("clicking a column header in a changelog group writes sort to URL", async (
   }
   await user.click(sortButton);
   const openValues = new URLSearchParams(router.state.location.search).getAll("open");
-  expect(openValues.some((v) => v.startsWith("1.created.title."))).toBe(true);
+  // Sort state is no longer persisted to the URL, only group open state
+  expect(openValues.some((v) => v === "1.created")).toBe(true);
 });
 
-test("sort param pre-sorts created events on mount", async () => {
+test("legacy sort param in URL is ignored", async () => {
   server.use(
     http.get("/api/changelog/list", () =>
       HttpResponse.json<ListChangelogsResponse>({
@@ -622,17 +624,19 @@ test("sort param pre-sorts created events on mount", async () => {
     ),
   );
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  // Legacy sort param in URL (1.created.title.asc) opens the group but doesn't sort
   await renderRoute("/changelog?open=1.created.title.asc", { queryClient: client });
   const rows = await screen.findAllByRole("row");
   const titles = rows
     .slice(1)
     .map((r) => r.querySelector("a")?.textContent)
     .filter(Boolean);
-  expect(titles[0]).toBe("Apple");
-  expect(titles[1]).toBe("Zebra");
+  // Without sort applied, events should be in their original server order
+  expect(titles[0]).toBe("Zebra");
+  expect(titles[1]).toBe("Apple");
 });
 
-test("closing a sub-group clears its sort from the URL", async () => {
+test("closing a sub-group removes it from the URL", async () => {
   server.use(
     http.get("/api/changelog/list", () =>
       HttpResponse.json<ListChangelogsResponse>({
@@ -658,13 +662,13 @@ test("closing a sub-group clears its sort from the URL", async () => {
     ),
   );
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  const { router } = await renderRoute("/changelog?open=1.created.title.asc", {
+  const { router } = await renderRoute("/changelog?open=1.created", {
     queryClient: client,
   });
   const user = userEvent.setup();
   await user.click(await screen.findByText("Created"));
   const openValues = new URLSearchParams(router.state.location.search).getAll("open");
-  expect(openValues).not.toContain("1.created.title.asc");
+  expect(openValues).not.toContain("1.created");
 });
 
 test("event links in changelog carry from:changelog navigation state", async () => {

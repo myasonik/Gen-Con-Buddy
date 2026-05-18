@@ -1,8 +1,8 @@
-import React, { startTransition, useState } from "react";
+import React, { startTransition, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import type { SearchFormValues } from "../../utils/searchParamSchema";
-import type { ChangelogSummary } from "../../utils/types";
+import type { ChangelogSummary, SortState } from "../../utils/types";
 import { fetchChangelogEntry } from "../../utils/api";
 import { ChangelogEntryPanel } from "./ChangelogEntryPanel";
 import type { SharedColumnState } from "../EventTable/types";
@@ -21,6 +21,9 @@ interface ChangelogRowProps {
   onOpen: () => void;
   sharedColumnState: SharedColumnState;
   activeFilter?: SearchFormValues;
+  activeSort?: SortState[];
+  onSort?: (sorts: SortState[]) => void;
+  onOpenSortDrawer?: () => void;
 }
 
 export function ChangelogRow({
@@ -31,8 +34,11 @@ export function ChangelogRow({
   onOpen,
   sharedColumnState,
   activeFilter,
+  activeSort,
+  onSort,
+  onOpenSortDrawer,
 }: ChangelogRowProps): React.JSX.Element {
-  const openMap = parseOpenParam(openParam);
+  const openMap = useMemo(() => parseOpenParam(openParam), [openParam]);
   const [isOpen, setIsOpen] = useState(() => position !== undefined && openMap.has(position));
   const { data: entry, isError } = useQuery({
     queryKey: ["changelog", "entry", summary.id],
@@ -117,6 +123,9 @@ export function ChangelogRow({
           position={position}
           navigate={navigate}
           activeFilter={activeFilter}
+          activeSort={activeSort}
+          onSort={onSort}
+          onOpenSortDrawer={onOpenSortDrawer}
         />
       </Collapsible>
     </div>
