@@ -7,6 +7,8 @@ import styles from "./MultiCombobox.module.css";
 export interface MultiComboboxOption {
   value: string;
   label: string;
+  /** Compact label shown in the chip when the combobox is closed. Falls back to `label` if omitted. */
+  shortLabel?: string;
 }
 
 export interface MultiComboboxProps {
@@ -22,6 +24,10 @@ export interface MultiComboboxProps {
   renderRemoveLabel?: (option: MultiComboboxOption) => string;
   renderOptionContent?: (option: MultiComboboxOption) => React.ReactNode;
   isLoading?: boolean;
+}
+
+function chipText(option: MultiComboboxOption, hasFocus: boolean): string {
+  return hasFocus ? option.label : (option.shortLabel ?? option.label);
 }
 
 function getPlaceholder(isLoading: boolean, hasValues: boolean, label: string): string {
@@ -110,7 +116,7 @@ export function MultiCombobox({
                       </span>
                     )}
                     <span className={styles.chipLabel}>
-                      {renderChipContent ? renderChipContent(option) : option.label}
+                      {renderChipContent ? renderChipContent(option) : chipText(option, hasFocus)}
                       {hasFocus && expandedChipContent ? expandedChipContent(option) : null}
                     </span>
                     <Combobox.ChipRemove

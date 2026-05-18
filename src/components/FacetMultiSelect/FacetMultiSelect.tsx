@@ -35,7 +35,10 @@ export function FacetMultiSelect({
     () =>
       (facets ?? []).map((f) => {
         const key = valueMap?.[f.value] ?? f.value;
-        return { value: key, label: labelMap?.[key] ?? key, count: f.count };
+        const optionLabel = labelMap?.[key] ?? key;
+        const stripped = optionLabel.replace(/\s+\([^)]*\)$/, "");
+        const shortLabel = stripped !== optionLabel ? stripped : undefined;
+        return { value: key, label: optionLabel, shortLabel, count: f.count };
       }),
     [facets, valueMap, labelMap],
   );

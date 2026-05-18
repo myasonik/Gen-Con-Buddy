@@ -1,5 +1,5 @@
 import { expect, test, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { MultiCombobox, type MultiComboboxOption } from "./MultiCombobox";
@@ -178,6 +178,32 @@ test("custom renderChipContent is called with option", () => {
   expect(renderChipContent).toHaveBeenCalledWith(
     expect.objectContaining({ value: "alpha", label: "Alpha Option" }),
   );
+});
+
+test("chip shows shortLabel when combobox is not focused", () => {
+  const opts: MultiComboboxOption[] = [
+    { value: "expert", label: "Expert (full description)", shortLabel: "Expert" },
+  ];
+  render(
+    <MultiCombobox label="Test Field" value="expert" onValueChange={() => {}} options={opts} />,
+  );
+  const row = screen.getByTestId("chip-input-row");
+  expect(within(row).getByText("Expert")).toBeInTheDocument();
+  expect(within(row).queryByText("Expert (full description)")).not.toBeInTheDocument();
+});
+
+test("chip shows full label when combobox is focused", async () => {
+  const user = userEvent.setup();
+  const opts: MultiComboboxOption[] = [
+    { value: "expert", label: "Expert (full description)", shortLabel: "Expert" },
+  ];
+  render(
+    <MultiCombobox label="Test Field" value="expert" onValueChange={() => {}} options={opts} />,
+  );
+  await user.click(screen.getByRole("combobox", { name: "Test Field" }));
+  const row = screen.getByTestId("chip-input-row");
+  expect(within(row).getByText("Expert (full description)")).toBeInTheDocument();
+  expect(within(row).queryByText("Expert")).not.toBeInTheDocument();
 });
 
 test("expandedChipContent renders only when dropdown is open", async () => {
