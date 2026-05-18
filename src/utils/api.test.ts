@@ -241,3 +241,16 @@ test("fetchFacets returns empty array when values is absent from response", asyn
   const result = await fetchFacets("location");
   expect(result).toStrictEqual([]);
 });
+
+test("fetchFacets hits the correct URL for the given field", async () => {
+  let capturedUrl: URL | null = null;
+  server.use(
+    http.get("/api/events/facets/eventType", ({ request }) => {
+      capturedUrl = new URL(request.url);
+      return HttpResponse.json<FacetResponse>({ values: [] });
+    }),
+  );
+  await fetchFacets("eventType");
+  // oxlint-disable-next-line typescript/no-non-null-assertion
+  expect(capturedUrl!.pathname).toBe("/api/events/facets/eventType");
+});
