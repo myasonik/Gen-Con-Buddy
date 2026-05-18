@@ -85,8 +85,21 @@ test("shows only placeholder while loading", () => {
   expect(screen.getByRole("option", { name: "Any" })).toBeInTheDocument();
 });
 
+test("select is disabled while loading", () => {
+  renderFacetSelect();
+  expect(screen.getByRole("combobox", { name: "Age Required" })).toBeDisabled();
+});
+
 test("renders null when the API returns a network error", async () => {
   server.use(http.get("/api/events/facets/ageRequired", () => HttpResponse.error()));
+  const { container } = renderFacetSelect();
+  await waitFor(() => expect(container).toBeEmptyDOMElement());
+});
+
+test("renders null when the API returns an HTTP error", async () => {
+  server.use(
+    http.get("/api/events/facets/ageRequired", () => new HttpResponse(null, { status: 500 })),
+  );
   const { container } = renderFacetSelect();
   await waitFor(() => expect(container).toBeEmptyDOMElement());
 });

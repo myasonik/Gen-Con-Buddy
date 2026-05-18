@@ -13,6 +13,7 @@ interface SelectProps {
   options: SelectOption[];
   placeholder?: string;
   className?: string;
+  disabled?: boolean;
   "aria-label"?: string;
 }
 
@@ -22,6 +23,7 @@ export function Select({
   options,
   placeholder = "Any",
   className,
+  disabled,
   "aria-label": ariaLabel,
 }: SelectProps): React.JSX.Element {
   return (
@@ -29,6 +31,7 @@ export function Select({
       value={value}
       onChange={(e) => onValueChange(e.target.value)}
       className={clsx(styles.select, className)}
+      disabled={disabled}
       aria-label={ariaLabel}
     >
       <option value="">{placeholder}</option>

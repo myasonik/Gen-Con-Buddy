@@ -121,6 +121,14 @@ test("renders null when the API returns a network error", async () => {
   await waitFor(() => expect(container).toBeEmptyDOMElement());
 });
 
+test("renders null when the API returns an HTTP error", async () => {
+  server.use(
+    http.get("/api/events/facets/location", () => new HttpResponse(null, { status: 500 })),
+  );
+  const { container } = renderFacetMultiSelect();
+  await waitFor(() => expect(container).toBeEmptyDOMElement());
+});
+
 test("renders null when API returns 200 with error field", async () => {
   server.use(
     http.get("/api/events/facets/location", () =>

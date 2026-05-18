@@ -19,7 +19,11 @@ export function FacetSelect({
   value,
   onValueChange,
 }: FacetSelectProps): React.JSX.Element | null {
-  const { data: facets, isError } = useQuery({
+  const {
+    data: facets,
+    isError,
+    isLoading,
+  } = useQuery({
     queryKey: ["facets", field],
     queryFn: () => fetchFacets(field),
     staleTime: Infinity,
@@ -37,7 +41,7 @@ export function FacetSelect({
   return (
     <label className={styles.label}>
       {label}
-      <Select value={value} onValueChange={onValueChange} options={options} />
+      <Select value={value} onValueChange={onValueChange} options={options} disabled={isLoading} />
     </label>
   );
 }
