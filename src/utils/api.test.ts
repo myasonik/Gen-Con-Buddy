@@ -1,18 +1,11 @@
 import { expect, test } from "vitest";
 import { http, HttpResponse } from "msw";
 import { server } from "../test/msw/server";
-import {
-  fetchEvents,
-  fetchChangelogList,
-  fetchChangelogEntry,
-  fetchGameSystemFacets,
-  fetchFacets,
-} from "./api";
+import { fetchEvents, fetchChangelogList, fetchChangelogEntry, fetchFacets } from "./api";
 import type {
   EventSearchResponse,
   ListChangelogsResponse,
   FetchChangelogResponse,
-  GameSystemFacetsResponse,
   FacetResponse,
 } from "./types";
 import { makeChangelogSummary, makeChangelogEntry } from "../test/msw/factory";
@@ -139,31 +132,15 @@ test("fetchChangelogEntry throws when entry is missing from response", async () 
   await expect(fetchChangelogEntry("entry-1")).rejects.toThrow("Missing entry");
 });
 
-// fetchGameSystemFacets
+// fetchFacets via default handler
 
-test("fetchGameSystemFacets returns facets on success", async () => {
-  const result = await fetchGameSystemFacets();
+test("fetchFacets returns gameSystem values from default handler", async () => {
+  const result = await fetchFacets("gameSystem");
   expect(result).toStrictEqual([
     { value: "Dungeons & Dragons 5E", count: 142 },
     { value: "Pathfinder 2E", count: 87 },
     { value: "Call of Cthulhu", count: 45 },
   ]);
-});
-
-test("fetchGameSystemFacets throws on HTTP error", async () => {
-  server.use(
-    http.get("/api/events/facets/gameSystem", () => new HttpResponse(null, { status: 500 })),
-  );
-  await expect(fetchGameSystemFacets()).rejects.toThrow("HTTP 500");
-});
-
-test("fetchGameSystemFacets throws when response contains error field", async () => {
-  server.use(
-    http.get("/api/events/facets/gameSystem", () =>
-      HttpResponse.json<GameSystemFacetsResponse>({ error: "unavailable" }),
-    ),
-  );
-  await expect(fetchGameSystemFacets()).rejects.toThrow("unavailable");
 });
 
 // covers params.days ?? "wed,thu,fri,sat,sun" right-side branch
@@ -186,17 +163,6 @@ test("fetchEvents with invalid days and timeStart omits startDateTime", async ()
 test("fetchChangelogList returns empty array when entries is absent from response", async () => {
   server.use(http.get("/api/changelog/list", () => HttpResponse.json<ListChangelogsResponse>({})));
   const result = await fetchChangelogList();
-  expect(result).toStrictEqual([]);
-});
-
-// covers data.values ?? [] right-side branch
-test("fetchGameSystemFacets returns empty array when values is absent from response", async () => {
-  server.use(
-    http.get("/api/events/facets/gameSystem", () =>
-      HttpResponse.json<GameSystemFacetsResponse>({}),
-    ),
-  );
-  const result = await fetchGameSystemFacets();
   expect(result).toStrictEqual([]);
 });
 
