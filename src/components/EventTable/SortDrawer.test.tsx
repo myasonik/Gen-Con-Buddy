@@ -29,7 +29,7 @@ test("renders Sort trigger button", () => {
   expect(screen.getByRole("button", { name: "Sort" })).toBeInTheDocument();
 });
 
-test("shows trigger badge count when active sorts exist", () => {
+test("shows count inline in trigger when active sorts exist", () => {
   render(
     makeDrawer({
       activeSort: [
@@ -38,7 +38,7 @@ test("shows trigger badge count when active sorts exist", () => {
       ],
     }),
   );
-  expect(screen.getByRole("button", { name: /Sort/ })).toHaveTextContent("Sort · 2");
+  expect(screen.getByRole("button", { name: "Sort · 2" })).toBeInTheDocument();
 });
 
 describe("drawer content (open=true)", () => {
@@ -219,6 +219,26 @@ describe("drawer content (open=true)", () => {
   it("clear sorting button is not shown when activeSort is empty", () => {
     render(makeDrawer({ open: true }));
     expect(screen.queryByRole("button", { name: "Clear sorting" })).not.toBeInTheDocument();
+  });
+
+  it("shows 'Unsaved changes' indicator when staged sort differs from active sort", async () => {
+    const user = userEvent.setup();
+    render(makeDrawer({ open: true }));
+    await user.click(screen.getByRole("combobox"));
+    await user.click(screen.getByRole("option", { name: "Title" }));
+    expect(screen.getByText("Unsaved changes")).toBeInTheDocument();
+  });
+
+  it("does not show 'Unsaved changes' when staged and active sort match", () => {
+    render(makeDrawer({ activeSort: [{ field: "title", dir: "asc" }], open: true }));
+    expect(screen.queryByText("Unsaved changes")).not.toBeInTheDocument();
+  });
+
+  it("drag handle aria-label includes keyboard reorder hint", () => {
+    render(makeDrawer({ activeSort: [{ field: "title", dir: "asc" }], open: true }));
+    expect(
+      screen.getByRole("button", { name: "Reorder Title: drag, or use the up/down buttons" }),
+    ).toBeInTheDocument();
   });
 
   it("combobox shows Visible columns and Other fields groups when some columns are hidden", async () => {

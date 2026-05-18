@@ -1,4 +1,4 @@
-import React, { useState, useId } from "react";
+import React, { useState, useId, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Combobox as BaseCombobox } from "@base-ui/react/combobox";
 import styles from "./Combobox.module.css";
@@ -31,6 +31,11 @@ export function Combobox({
   const [filterText, setFilterText] = useState("");
   const filter = BaseCombobox.useFilter();
   const labelId = useId();
+  // Prevents the focus handler from reopening the dropdown immediately after selection.
+  const suppressFocusOpenRef = useRef(false);
+  // Suppresses the onInputValueChange fired by Base UI after it fills the input
+  // with the selected item's value string (fires after onValueChange).
+  const suppressNextInputChangeRef = useRef(false);
 
   const filteredGroups = groups
     .map((g) => ({
@@ -48,18 +53,35 @@ export function Combobox({
   const totalOptions = filteredGroups.reduce((sum, g) => sum + g.options.length, 0);
 
   return (
-    <div className={styles.root}>
+    <div
+      className={styles.root}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+          setOpen(false);
+          setFilterText("");
+        }
+      }}
+    >
       <BaseCombobox.Root
         value={value}
+        inputValue={filterText}
         open={open}
         onOpenChange={setOpen}
-        onInputValueChange={(text) => setFilterText(text)}
+        onInputValueChange={(text) => {
+          if (suppressNextInputChangeRef.current) {
+            suppressNextInputChangeRef.current = false;
+            return;
+          }
+          setFilterText(text);
+        }}
         onValueChange={(newValue) => {
           if (newValue) {
+            suppressNextInputChangeRef.current = true;
             onSelect(newValue);
             setValue(null);
             setFilterText("");
             setOpen(false);
+            suppressFocusOpenRef.current = true;
           }
         }}
       >
@@ -71,7 +93,12 @@ export function Combobox({
             aria-labelledby={labelId}
             className={styles.input}
             placeholder={placeholder}
-            onFocus={() => setOpen(true)}
+            onFocus={() => {
+              if (!suppressFocusOpenRef.current) {
+                setOpen(true);
+              }
+              suppressFocusOpenRef.current = false;
+            }}
           />
           <BaseCombobox.Trigger
             tabIndex={-1}

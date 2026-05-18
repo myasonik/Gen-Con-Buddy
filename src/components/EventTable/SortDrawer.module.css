@@ -1,6 +1,17 @@
+.sortButtonActive {
+  background: var(--color-accent-surface);
+  border-color: var(--color-accent-border);
+  color: var(--color-accent-deep);
+}
+
+.sortButtonActive:hover:not(:disabled) {
+  background: var(--color-accent-surface);
+  border-color: var(--color-accent-deep);
+}
+
 .emptyState {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
+  color: var(--color-ink-muted);
+  font-size: var(--text-sm);
   margin: 0;
 }
 
@@ -22,12 +33,16 @@
 
 .fieldName {
   flex: 1;
-  font-size: var(--font-size-sm);
+  font-size: var(--text-sm);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .dragHandle {
   cursor: grab;
-  color: var(--color-text-muted);
+  color: var(--color-ink-muted);
   display: flex;
   align-items: center;
   background: none;
@@ -37,6 +52,12 @@
 
 .dragHandle:active {
   cursor: grabbing;
+}
+
+.dragHandle:focus-visible {
+  outline: var(--focus-ring) var(--color-accent);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-subtle);
 }
 
 .drawerBody {
@@ -52,16 +73,22 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: var(--color-text);
-  border-radius: var(--radius-sm);
+  color: var(--color-ink);
+  border-radius: var(--radius-subtle);
 }
 
 .iconButton:hover {
   background: var(--color-surface-hover);
 }
 
+.iconButton:focus-visible {
+  outline: var(--focus-ring) var(--color-accent);
+  outline-offset: var(--focus-ring-offset);
+}
+
 .iconButton:disabled {
-  color: var(--color-text-muted);
+  color: var(--color-ink-muted);
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
@@ -70,4 +97,9 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+}
+
+.footerActions > * {
+  width: auto;
+  justify-content: center;
 }

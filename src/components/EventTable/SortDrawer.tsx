@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { GripVertical, ChevronUp, ChevronDown, X } from "lucide-react";
+import { GripVertical, ChevronUp, ChevronDown, X, ArrowUp, ArrowDown } from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -73,7 +73,7 @@ function SortableItem({
       <button
         type="button"
         className={styles.dragHandle}
-        aria-label={`Drag ${label}`}
+        aria-label={`Reorder ${label}: drag, or use the up/down buttons`}
         {...attributes}
         {...listeners}
       >
@@ -104,7 +104,11 @@ function SortableItem({
         onClick={onToggleDir}
         aria-label={`${label}: ${sort.dir === "asc" ? "ascending" : "descending"}, click to toggle`}
       >
-        {sort.dir === "asc" ? "Asc" : "Desc"}
+        {sort.dir === "asc" ? (
+          <ArrowUp size={14} aria-hidden="true" />
+        ) : (
+          <ArrowDown size={14} aria-hidden="true" />
+        )}
       </button>
       <button
         type="button"
@@ -190,16 +194,19 @@ export function SortDrawer({
     onOpenChange(false);
   }
 
-  const triggerLabel = activeSort.length > 0 ? `Sort · ${activeSort.length}` : "Sort";
-
   return (
     <Drawer
       trigger={
-        <Button type="button" variant="secondary">
-          {triggerLabel}
+        <Button
+          type="button"
+          variant="secondary"
+          className={activeSort.length > 0 ? styles.sortButtonActive : undefined}
+        >
+          Sort{activeSort.length > 0 && ` · ${activeSort.length}`}
         </Button>
       }
       title="Sort"
+      subtitle={hasPendingChanges ? "Unsaved changes" : undefined}
       open={open}
       onOpenChange={onOpenChange}
       disablePointerDismissal={hasPendingChanges}

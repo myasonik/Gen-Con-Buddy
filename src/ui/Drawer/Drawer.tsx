@@ -7,6 +7,7 @@ import styles from "./Drawer.module.css";
 interface DrawerProps {
   trigger: React.ReactNode;
   title: string;
+  subtitle?: React.ReactNode;
   footer?: React.ReactNode;
   side?: "left" | "right";
   children: React.ReactNode;
@@ -18,6 +19,7 @@ interface DrawerProps {
 export function Drawer({
   trigger,
   title,
+  subtitle,
   footer,
   side = "left",
   children,
@@ -36,7 +38,10 @@ export function Drawer({
         <Dialog.Backdrop className={styles.backdrop} />
         <Dialog.Popup className={styles.drawer} data-side={side}>
           <div className={styles.drawerHeader}>
-            <Dialog.Title className={styles.drawerTitle}>{title}</Dialog.Title>
+            <div className={styles.drawerTitleGroup}>
+              <Dialog.Title className={styles.drawerTitle}>{title}</Dialog.Title>
+              {subtitle !== undefined && <p className={styles.drawerSubtitle}>{subtitle}</p>}
+            </div>
             <Dialog.Close
               render={
                 <Button type="button" variant="ghost" icon aria-label="Close">

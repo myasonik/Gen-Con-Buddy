@@ -64,6 +64,26 @@ test("calls onSelect with the value when an option is clicked", async () => {
   expect(onSelect).toHaveBeenCalledWith("title");
 });
 
+test("input is cleared after selection", async () => {
+  const user = userEvent.setup();
+  render(
+    <Combobox label="Sort by" groups={ALL_VISIBLE} onSelect={vi.fn<(value: string) => void>()} />,
+  );
+  await user.click(screen.getByRole("combobox"));
+  await user.click(screen.getByRole("option", { name: "Title" }));
+  expect(screen.getByRole("combobox")).toHaveValue("");
+});
+
+test("dropdown does not reopen after selection", async () => {
+  const user = userEvent.setup();
+  render(
+    <Combobox label="Sort by" groups={ALL_VISIBLE} onSelect={vi.fn<(value: string) => void>()} />,
+  );
+  await user.click(screen.getByRole("combobox"));
+  await user.click(screen.getByRole("option", { name: "Title" }));
+  expect(screen.queryByRole("option", { name: "Cost" })).not.toBeInTheDocument();
+});
+
 test("shows No results when filter matches nothing", async () => {
   const user = userEvent.setup();
   render(
@@ -103,4 +123,15 @@ test("does not show group labels when only one group is passed", async () => {
   );
   await user.click(screen.getByRole("combobox"));
   expect(screen.queryByText("Group A")).not.toBeInTheDocument();
+});
+
+test("closes dropdown when focus moves away (tab out)", async () => {
+  const user = userEvent.setup();
+  render(
+    <Combobox label="Sort by" groups={ALL_VISIBLE} onSelect={vi.fn<(value: string) => void>()} />,
+  );
+  await user.click(screen.getByRole("combobox"));
+  expect(screen.getByRole("option", { name: "Title" })).toBeInTheDocument();
+  await user.tab();
+  expect(screen.queryByRole("option", { name: "Title" })).not.toBeInTheDocument();
 });
