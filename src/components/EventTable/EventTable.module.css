@@ -87,8 +87,19 @@
   background: transparent;
 }
 
+.row[data-sold-out] {
+  color: var(--color-ink-muted);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0,
+    transparent 0.5625rem,
+    oklch(from var(--color-ink-divider) l c h / 0.45) 0.5625rem,
+    oklch(from var(--color-ink-divider) l c h / 0.45) 0.625rem
+  );
+}
+
 .cell {
-  padding: var(--space-1) var(--space-3);
+  padding: var(--space-2) var(--space-3);
   border: var(--border-width) solid var(--color-ink-divider);
   font-size: var(--text-md);
 }

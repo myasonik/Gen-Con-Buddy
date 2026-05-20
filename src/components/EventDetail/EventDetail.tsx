@@ -16,6 +16,7 @@ import { useTimeZone } from "../../hooks/useTimeZone";
 import { useTimeFormat } from "../../hooks/useTimeFormat";
 import { formatDay, formatTime, toDisplayDate } from "../../utils/formatDay";
 import { STAFF_PICK_IDS } from "../../utils/staffPicks";
+import { isSoldOut } from "../../utils/isSoldOut";
 import { normalizeUrl } from "./normalizeUrl";
 import { normalizeEmail } from "./normalizeEmail";
 import styles from "./EventDetail.module.css";
@@ -211,7 +212,7 @@ export function EventDetail({ gameId }: EventDetailProps): React.JSX.Element {
             <DescriptionItem term="Cost">${a.cost.toFixed(2)}</DescriptionItem>
             <DescriptionItem term="Attendee Registration">{a.attendeeRegistration}</DescriptionItem>
             <DescriptionItem term="Tickets Available">
-              {a.ticketsAvailable === 0 ? (
+              {isSoldOut(a.ticketsAvailable) ? (
                 <Chip tone="error" size="sm">
                   Sold out
                 </Chip>

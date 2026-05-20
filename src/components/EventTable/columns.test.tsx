@@ -47,8 +47,9 @@ function makeSharedColumnState(overrides: Partial<SharedColumnState> = {}): Shar
 
 async function renderEventTable(
   events: ReturnType<typeof makeEvent>[],
+  columnStateOverrides: Partial<SharedColumnState> = {},
 ): Promise<ReturnType<typeof render>> {
-  const sharedColumnState = makeSharedColumnState();
+  const sharedColumnState = makeSharedColumnState(columnStateOverrides);
   const rootRoute = createRootRoute({
     component: () => <EventTable events={events} sharedColumnState={sharedColumnState} />,
   });
@@ -77,4 +78,45 @@ test("title cell shows 'Staff Pick' badge for staff pick event", async () => {
 test("title cell shows no badge for non-staff-pick event", async () => {
   await renderEventTable([makeEvent({ gameId: "NOTASTAFFPICK001", title: "Regular Game" })]);
   expect(screen.queryByText("Staff Pick")).not.toBeInTheDocument();
+});
+
+test("title cell shows 'Sold out' chip when ticketsAvailable is 0", async () => {
+  await renderEventTable([makeEvent({ ticketsAvailable: 0, title: "Sold Out Game" })]);
+  const titleCell = screen.getByText("Sold Out Game").closest("td");
+  expect(titleCell).not.toBeNull();
+  expect(titleCell).toHaveTextContent("Sold out");
+});
+
+test("title cell does not show 'Sold out' chip when ticketsAvailable is greater than 0", async () => {
+  await renderEventTable([makeEvent({ ticketsAvailable: 3, title: "Available Game" })]);
+  const titleCell = screen.getByText("Available Game").closest("td");
+  expect(titleCell).not.toBeNull();
+  expect(titleCell).not.toHaveTextContent("Sold out");
+});
+
+test("ticketsAvailable cell shows 'Sold out' chip when ticketsAvailable is negative", async () => {
+  await renderEventTable([makeEvent({ ticketsAvailable: -5, title: "Neg Tickets Game" })], {
+    visibility: { ticketsAvailable: true },
+  });
+  const ticketsCell = screen
+    .getAllByRole("cell")
+    .find((cell) => cell.getAttribute("data-col-id") === "ticketsAvailable");
+  expect(ticketsCell).toBeDefined();
+  expect(ticketsCell).toHaveTextContent("Sold out");
+});
+
+test("title cell shows 'Sold out' chip when ticketsAvailable is negative", async () => {
+  await renderEventTable([makeEvent({ ticketsAvailable: -3, title: "Negative Tickets Game" })]);
+  const titleCell = screen.getByText("Negative Tickets Game").closest("td");
+  expect(titleCell).not.toBeNull();
+  expect(titleCell).toHaveTextContent("Sold out");
+});
+
+test("title cell shows 'Sold out' chip even when ticketsAvailable column is hidden", async () => {
+  await renderEventTable([makeEvent({ ticketsAvailable: 0, title: "Hidden Column Game" })], {
+    visibility: { ticketsAvailable: false },
+  });
+  const titleCell = screen.getByText("Hidden Column Game").closest("td");
+  expect(titleCell).not.toBeNull();
+  expect(titleCell).toHaveTextContent("Sold out");
 });

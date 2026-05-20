@@ -17,6 +17,7 @@ import type { Event, SortState } from "../../utils/types";
 import { addSort, removeSort, setSortDir } from "../../utils/sortManipulation";
 import { COLUMNS, SORT_FIELD_BY_COL_ID, COL_ID_BY_SORT_FIELD } from "./columns";
 import { STAFF_PICK_IDS } from "../../utils/staffPicks";
+import { isSoldOut } from "../../utils/isSoldOut";
 import type { SharedColumnState } from "./types";
 import styles from "./EventTable.module.css";
 
@@ -277,6 +278,7 @@ export function EventTable({
                   key={row.id}
                   className={styles.row}
                   data-staff-pick={STAFF_PICK_IDS.has(row.original.attributes.gameId) || undefined}
+                  data-sold-out={isSoldOut(row.original.attributes.ticketsAvailable) || undefined}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className={styles.cell} data-col-id={cell.column.id}>

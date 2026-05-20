@@ -286,7 +286,7 @@ test("injects JSON-LD structured data script tag after event loads", async () =>
   expect(data["@type"]).toBe("Event");
   expect(data.name).toBe("Dragon Hunt");
   expect(data.url).toBe("https://gcb.quest/event/RPG24000042");
-  expect(data.offers.availability).toBe("https://schema.org/SoldOut"); // ticketsAvailable === 0
+  expect(data.offers.availability).toBe("https://schema.org/SoldOut"); // ticketsAvailable <= 0
   expect(data.organizer.name).toBe("Jane Smith");
 });
 

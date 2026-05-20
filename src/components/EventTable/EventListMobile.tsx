@@ -8,6 +8,7 @@ import { DescriptionItem, DescriptionList } from "../../ui/DescriptionList/Descr
 import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
 import { Chip } from "../../ui/Chip/Chip";
 import { STAFF_PICK_IDS } from "../../utils/staffPicks";
+import { isSoldOut } from "../../utils/isSoldOut";
 import { COLUMNS, COLUMN_GROUPS } from "./columns";
 import styles from "./EventListMobile.module.css";
 import typeCellStyles from "./typeCell.module.css";
@@ -214,9 +215,15 @@ export function EventListMobile({
         }
 
         const isStaffPick = STAFF_PICK_IDS.has(a.gameId);
+        const soldOut = isSoldOut(a.ticketsAvailable);
 
         return (
-          <li key={event.id} className={styles.item} data-staff-pick={isStaffPick || undefined}>
+          <li
+            key={event.id}
+            className={styles.item}
+            data-staff-pick={isStaffPick || undefined}
+            data-sold-out={soldOut || undefined}
+          >
             <Link
               to="/event/$id"
               params={{ id: a.gameId }}
@@ -224,11 +231,14 @@ export function EventListMobile({
               className={styles.row}
             >
               {isStaffPick && (
-                <span className={styles.staffPickBadge}>
-                  <Chip tone="accent" size="sm">
-                    Staff Pick
-                  </Chip>
-                </span>
+                <Chip tone="accent" size="sm" className={styles.badge}>
+                  Staff Pick
+                </Chip>
+              )}
+              {soldOut && (
+                <Chip tone="error" size="sm" className={styles.badge}>
+                  Sold out
+                </Chip>
               )}
               {isVisible("title") && <span className={styles.title}>{a.title}</span>}
               {showMeta && (
@@ -258,7 +268,7 @@ export function EventListMobile({
                   )}
                   {playersText !== null && <span>{playersText}</span>}
                   {isVisible("ticketsAvailable") &&
-                    (a.ticketsAvailable === 0 ? (
+                    (soldOut ? (
                       <Chip tone="error" size="sm">
                         Sold out
                       </Chip>

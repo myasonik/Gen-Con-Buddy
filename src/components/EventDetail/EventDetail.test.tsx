@@ -256,6 +256,24 @@ test("event type icon is aria-hidden so assistive tech relies on the text label"
   expect(svg).toHaveAttribute("aria-hidden", "true");
 });
 
+test("shows sold-out badge when tickets available is negative", async () => {
+  server.use(
+    http.get("/api/events/search", () => {
+      const response: EventSearchResponse = {
+        data: [makeEvent({ gameId: "RPG24000001", ticketsAvailable: -3 })],
+        meta: { total: 1 },
+        links: { self: "" },
+        error: null,
+      };
+      return HttpResponse.json(response);
+    }),
+  );
+  renderEventDetail("RPG24000001");
+  await screen.findByText("THE EVENT");
+  expect(screen.getByText("Sold out")).toBeInTheDocument();
+  expect(screen.queryByText("-3")).toBeNull();
+});
+
 test("shows sold-out badge when tickets available is zero", async () => {
   server.use(
     http.get("/api/events/search", () => {

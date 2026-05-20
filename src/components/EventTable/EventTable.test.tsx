@@ -182,7 +182,7 @@ test("type cell renders the board game event type code", async () => {
 
 test("ticketsAvailable column shows 'Sold out' when ticketsAvailable is 0", async () => {
   await renderEventTable([makeEvent({ ticketsAvailable: 0 })]);
-  expect(screen.getByText("Sold out")).toBeInTheDocument();
+  expect(screen.getAllByText("Sold out").length).toBeGreaterThanOrEqual(1);
 });
 
 test("resize handles portal into the table clip wrapper, not document.body", async () => {
@@ -304,6 +304,30 @@ test("non-staff-pick row does not have data-staff-pick attribute", async () => {
   const row = titleCell.closest("tr");
   expect(row).not.toBeNull();
   expect(row).not.toHaveAttribute("data-staff-pick");
+});
+
+test("sold-out row has data-sold-out attribute", async () => {
+  await renderEventTable([makeEvent({ ticketsAvailable: 0, title: "Sold Out Event" })]);
+  const titleCell = screen.getByText("Sold Out Event");
+  const row = titleCell.closest("tr");
+  expect(row).not.toBeNull();
+  expect(row).toHaveAttribute("data-sold-out");
+});
+
+test("non-sold-out row does not have data-sold-out attribute", async () => {
+  await renderEventTable([makeEvent({ ticketsAvailable: 3, title: "Available Event" })]);
+  const titleCell = screen.getByText("Available Event");
+  const row = titleCell.closest("tr");
+  expect(row).not.toBeNull();
+  expect(row).not.toHaveAttribute("data-sold-out");
+});
+
+test("row with negative ticketsAvailable has data-sold-out attribute", async () => {
+  await renderEventTable([makeEvent({ ticketsAvailable: -1, title: "Negative Tickets Event" })]);
+  const titleCell = screen.getByText("Negative Tickets Event");
+  const row = titleCell.closest("tr");
+  expect(row).not.toBeNull();
+  expect(row).toHaveAttribute("data-sold-out");
 });
 
 // -- Sort behavior tests --

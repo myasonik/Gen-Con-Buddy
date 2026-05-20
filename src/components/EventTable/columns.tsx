@@ -4,6 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { EXP } from "../../utils/enums";
 import type { Event } from "../../utils/types";
 import { STAFF_PICK_IDS } from "../../utils/staffPicks";
+import { isSoldOut } from "../../utils/isSoldOut";
 import { EVENT_TYPE_ICONS } from "../../ui/icons/eventTypeIcons";
 import { Chip } from "../../ui/Chip/Chip";
 import styles from "./columns.module.css";
@@ -49,12 +50,17 @@ export const COLUMNS: ColumnDef<Event>[] = [
     header: "Title",
     meta: { sortField: "title" },
     cell: ({ row, linkState }) => {
-      const { gameId, title } = row.original.attributes;
+      const { gameId, title, ticketsAvailable } = row.original.attributes;
       return (
         <span className={styles.titleCell}>
           {STAFF_PICK_IDS.has(gameId) && (
             <Chip tone="accent" size="sm">
               Staff Pick
+            </Chip>
+          )}
+          {isSoldOut(ticketsAvailable) && (
+            <Chip tone="error" size="sm">
+              Sold out
             </Chip>
           )}
           <Link to="/event/$id" params={{ id: gameId }} state={linkState}>
@@ -281,12 +287,12 @@ export const COLUMNS: ColumnDef<Event>[] = [
     meta: { sortField: "ticketsAvailable" },
     cell: ({ row }) => {
       const n = row.original.attributes.ticketsAvailable;
-      return n === 0 ? (
+      return isSoldOut(n) ? (
         <Chip tone="error" size="sm">
           Sold out
         </Chip>
       ) : (
-        <>{n}</>
+        n
       );
     },
   },

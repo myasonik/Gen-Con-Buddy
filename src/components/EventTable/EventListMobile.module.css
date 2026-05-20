@@ -80,7 +80,22 @@
   background-color: transparent;
 }
 
-.staffPickBadge {
+/* Sold-out cards: muted title + diagonal hatching */
+.item[data-sold-out] {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0,
+    transparent 0.5625rem,
+    oklch(from var(--color-ink-divider) l c h / 0.45) 0.5625rem,
+    oklch(from var(--color-ink-divider) l c h / 0.45) 0.625rem
+  );
+}
+
+.item[data-sold-out] .title {
+  color: var(--color-ink-muted);
+}
+
+.badge {
   margin-bottom: var(--space-1);
 }
 

@@ -105,7 +105,7 @@ test("shows singular ticket when only one is available", async () => {
 
 test("shows sold out when ticketsAvailable is 0", async () => {
   await renderList([makeEvent({ ticketsAvailable: 0 })]);
-  expect(screen.getByText("Sold out")).toBeInTheDocument();
+  expect(screen.getAllByText("Sold out").length).toBeGreaterThanOrEqual(1);
 });
 
 test("shows player range when min and max differ", async () => {
@@ -446,6 +446,52 @@ test("non-staff-pick card does not have data-staff-pick attribute", async () => 
   const { container } = await renderList([makeEvent({ gameId: "RPG24000001" })]);
   const li = container.querySelector("li");
   expect(li).not.toHaveAttribute("data-staff-pick");
+});
+
+test("card with negative ticketsAvailable has data-sold-out attribute", async () => {
+  const { container } = await renderList([makeEvent({ ticketsAvailable: -2 })]);
+  const li = container.querySelector("li");
+  expect(li).toHaveAttribute("data-sold-out");
+});
+
+test("card with negative ticketsAvailable shows 'Sold out' chip in title area", async () => {
+  await renderList([makeEvent({ ticketsAvailable: -4, title: "Overbooking Game" })], {
+    ticketsAvailable: false,
+  });
+  const titleEl = screen.getByText("Overbooking Game");
+  expect(titleEl.closest("a")).toHaveTextContent("Sold out");
+});
+
+test("sold-out card shows 'Sold out' chip in title area regardless of ticketsAvailable column visibility", async () => {
+  await renderList([makeEvent({ ticketsAvailable: 0, title: "Gone Game" })], {
+    ticketsAvailable: false,
+  });
+  const titleEl = screen.getByText("Gone Game");
+  const titleArea = titleEl.closest("a");
+  expect(titleArea).not.toBeNull();
+  expect(titleArea).toHaveTextContent("Sold out");
+});
+
+test("available card does not show 'Sold out' chip in title area", async () => {
+  await renderList([makeEvent({ ticketsAvailable: 3, title: "Open Game" })], {
+    ticketsAvailable: false,
+  });
+  const titleEl = screen.getByText("Open Game");
+  const titleArea = titleEl.closest("a");
+  expect(titleArea).not.toBeNull();
+  expect(titleArea).not.toHaveTextContent("Sold out");
+});
+
+test("sold-out card has data-sold-out attribute", async () => {
+  const { container } = await renderList([makeEvent({ ticketsAvailable: 0 })]);
+  const li = container.querySelector("li");
+  expect(li).toHaveAttribute("data-sold-out");
+});
+
+test("non-sold-out card does not have data-sold-out attribute", async () => {
+  const { container } = await renderList([makeEvent({ ticketsAvailable: 3 })]);
+  const li = container.querySelector("li");
+  expect(li).not.toHaveAttribute("data-sold-out");
 });
 
 test("staff pick card shows 'Staff Pick' badge", async () => {
