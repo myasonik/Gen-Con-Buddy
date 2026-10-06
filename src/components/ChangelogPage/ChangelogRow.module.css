@@ -72,7 +72,7 @@
   background: var(--color-surface-panel);
   border: 0.0625rem solid var(--color-ink-divider);
   font-family: var(--font-slab);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   letter-spacing: 0.03rem;
   color: var(--color-ink-muted);
   white-space: nowrap;

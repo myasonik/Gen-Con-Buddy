@@ -21,7 +21,7 @@
   border: 0.0625rem solid var(--color-ink-divider);
   background: var(--color-surface-panel);
   font-family: var(--font-slab);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0.05rem;
   text-transform: uppercase;
@@ -73,7 +73,7 @@
 .tableWrapper table td {
   padding: var(--space-1) var(--space-3);
   border: 0.0625rem solid var(--color-ink-divider);
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
 }
 
 /* Column visibility panel */
@@ -94,7 +94,7 @@
   justify-content: space-between;
   user-select: none;
   font-family: var(--font-slab);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.04rem;
   text-transform: uppercase;
@@ -151,7 +151,7 @@
   margin-bottom: var(--space-2);
   border-bottom: 0.0625rem solid var(--color-ink-divider);
   font-family: var(--font-slab);
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06rem;
@@ -175,7 +175,7 @@
   border-radius: var(--radius-subtle);
   transition: background-color var(--motion-hover);
   font-family: var(--font-slab);
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   font-weight: 400;
   letter-spacing: 0.04rem;
   color: var(--color-ink);

@@ -7,7 +7,7 @@
   line-height: 1;
   text-decoration: none;
   font-family: var(--font-slab);
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.03rem;
   border-radius: var(--radius-subtle);
@@ -60,7 +60,7 @@
 
 .large {
   padding: var(--space-2) var(--space-4);
-  font-size: 1rem;
+  font-size: 1.0625rem;
 }
 
 .icon {
