@@ -29,9 +29,9 @@ export const AGE_GROUPS: Record<string, string> = {
 };
 
 export const EXP: Record<string, string> = {
-  "None (You've never played before - rules will be taught)": "None",
-  "Some (You've played it a bit and understand the basics)": "Some",
-  "Expert (You play it regularly and know all the rules)": "Expert",
+  none: "None",
+  some: "Some",
+  expert: "Expert",
 };
 
 export const REGISTRATION: Record<string, string> = {

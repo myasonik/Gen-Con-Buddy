@@ -1,19 +1,17 @@
 ---
-name: Design token coverage gaps as of 1.0 audit
-description: Token categories that exist in tokens.css vs. token categories where the codebase still hardcodes values (typography, borders, scrim, surface-tone borders).
+name: Design token coverage gaps as of pre-stable audit
+description: Token categories that exist in tokens.css vs. categories where the codebase still hardcodes values (eyebrow tracking variants, display type, hex in storyMatrix).
 type: project
 ---
 
-`src/styles/tokens.css` covers: colors (surfaces, ink, accent + 4 status tones), font _families_, spacing 8px grid (`--space-1` through `--space-6`), radius (subtle/card/pill), motion, focus, z-index, sizes (drawer width, detail-max).
+`src/styles/tokens.css` now covers: colors (surfaces, ink, accent + 4 status tones with -deep/-surface/-border variants), scrim, shadow-overlay, **type scale** (`--text-2xs` through `--text-2xl`), font families, `--tracking-eyebrow` (0.05rem), spacing (`--space-1`–`--space-6`), `--border-width`, radius, motion, focus, z-index, sizes. The major gaps from the 1.0 audit (type scale, border width, scrim, surface borders) are RESOLVED.
 
-**Missing token categories — values are inlined throughout CSS modules:**
+**Remaining gaps as of 2026-05-14:**
 
-- **Type scale** — `font-size: 0.75rem | 0.8125rem | 0.875rem | 0.9375rem | 1rem | 1.0625rem | 1.125rem | 2rem` appears 50+ times across 18 files. No `--text-*` tokens exist.
-- **Font weight / line-height / letter-spacing** — same story. `letter-spacing` drifts between `0.03rem`–`0.06rem` for what is morally the same "uppercase eyebrow" treatment.
-- **Border width / shorthand** — `0.0625rem solid var(--color-...)` repeats 40+ times. No `--border-hairline` or similar.
-- **Surface-tone borders** — `oklch(from var(--color-{tone}-surface) calc(l - 0.07) c h)` is the established pattern (see `ChangelogRow.module.css` jade/cobalt/amber, `ActiveFilters.module.css` accent at -0.08, sold-out hardcoded `oklch(78% 0.07 22deg)` at three sites). Pattern is good, just not tokenized.
-- **Scrim / backdrop overlay** — `oklch(22% 0.03 48deg / 0.4)` appears verbatim in `SearchForm.module.css:11` and `EventTable.module.css:294`. This is `--color-ink` at 0.4 alpha; should be `--color-scrim`.
+- **Eyebrow tracking drift** — `--tracking-eyebrow` exists (0.05rem) but is bypassed. `letter-spacing: 0.03rem` (Button, Chip `.chip`), `0.04rem` (Chip `[data-size=sm]`, SegmentedControl `.option`, MultiCombobox `.chip`, Pagination `.summary`) appear instead. Three near-identical-but-not values for the same morphological role. Either widen the token set (`--tracking-eyebrow`, `--tracking-tight`) or collapse onto one.
+- **Display type scale untokenized** — `font-size: 2rem` (`__root.module.css` `.brandingTitle`), `clamp(2rem,4vw,2.5rem)` (EventDetail `.title`), `clamp(1.75rem,4vw,2.5rem)` (AboutPage `.heading`). DESIGN.md defines a single Display role at `clamp(1.75rem,4vw,2.5rem)`. Three call sites, three different values. Needs `--text-display` + `--text-display-sm` or a shared `.display` composes class.
+- **Letter-spacing -0.01rem** — display tracking repeated at 3 sites (brandingTitle, EventDetail title, AboutPage heading). Tokenize as `--tracking-display`.
+- **Hardcoded hex** — `#666` in `src/ui/storyMatrix.module.css:17` — a literal cool-gray, violates No Pure Black / cool-gray ban (storybook-only but still wrong; use `--color-ink-faint`).
+- **Caret/chevron pseudo-element borders** — `0.125rem solid` repeated in ChangelogRow + ChangelogEntryPanel `::after` carets. Minor; acceptable as one-offs but the two carets are copy-paste duplicates of each other.
 
-**Why it matters:** the inline values aren't _wrong_ — they're consistent enough that the design holds together. But there's no system enforcing the consistency, so the next contributor will type `0.9375rem` from memory or pick a slightly different `letter-spacing` value, and the design will erode invisibly.
-
-**How to apply:** When reviewing new CSS, flag any raw `font-size`, `letter-spacing`, `border: 0.0625rem solid`, or solo `oklch(...)` declaration. After type-scale tokens land, a stylelint rule banning bare rem font-sizes would prevent regression.
+**How to apply:** When reviewing new CSS, flag any raw `font-size`, `letter-spacing` (other than `var(--tracking-eyebrow)`), or hex value. The eyebrow-tracking drift is the highest-value fix — it is the same drift class that caused issue #29.

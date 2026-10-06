@@ -69,10 +69,18 @@ test("ageRequired uses AGE_GROUPS enum for label", () => {
 });
 
 test("experienceRequired uses EXP enum for label", () => {
-  const [chip] = getActiveFilters({
-    experienceRequired: "None (You've never played before - rules will be taught)",
-  });
+  const [chip] = getActiveFilters({ experienceRequired: "none" });
   expect(chip.label).toBe("Exp: None");
+});
+
+test("experienceRequired some uses EXP enum for label", () => {
+  const [chip] = getActiveFilters({ experienceRequired: "some" });
+  expect(chip.label).toBe("Exp: Some");
+});
+
+test("experienceRequired expert uses EXP enum for label", () => {
+  const [chip] = getActiveFilters({ experienceRequired: "expert" });
+  expect(chip.label).toBe("Exp: Expert");
 });
 
 test("attendeeRegistration uses REGISTRATION enum for label", () => {
