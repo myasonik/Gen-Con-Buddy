@@ -4,7 +4,6 @@ import { Button } from "../../ui/Button/Button";
 import { Drawer } from "../../ui/Drawer/Drawer";
 import type { SharedColumnState } from "./types";
 import { AnimatedDetails } from "../../ui/AnimatedDetails/AnimatedDetails";
-import { D6Face } from "../../ui/icons/D6Face";
 import { Targeted } from "../../ui/icons/Targeted";
 import { COLUMNS, COLUMN_GROUPS } from "./columns";
 import { Checkbox } from "../../ui/Checkbox/Checkbox";
@@ -53,7 +52,6 @@ function ColumnCheckboxContent({
                     checked={isChecked}
                     onCheckedChange={() => toggleVisibility(id)}
                     label={typeof col.header === "string" ? col.header : id}
-                    indicator={<D6Face size={16} />}
                   />
                 </li>
               );
@@ -67,7 +65,6 @@ function ColumnCheckboxContent({
           checked={showTypeIcon}
           onCheckedChange={(checked) => setShowTypeIcon(checked)}
           label="Show icon"
-          indicator={<D6Face size={16} />}
         />
         <div className={styles.typeDisplayRadioGroup}>
           <SegmentedControl

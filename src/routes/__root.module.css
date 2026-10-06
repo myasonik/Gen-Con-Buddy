@@ -12,6 +12,23 @@
   flex-shrink: 0;
 }
 
+.brandingTitle svg {
+  transform-origin: bottom center;
+  transition: transform var(--motion-hover);
+}
+
+.brandingTitle:hover svg {
+  animation: meeple-nod 380ms ease-out;
+}
+
+@keyframes meeple-nod {
+  0%   { transform: rotate(0deg); }
+  25%  { transform: rotate(-11deg); }
+  60%  { transform: rotate(7deg); }
+  82%  { transform: rotate(-4deg); }
+  100% { transform: rotate(0deg); }
+}
+
 .tagline {
   font-family: var(--font-mono);
   font-size: var(--text-sm);
@@ -32,17 +49,38 @@
 }
 
 .nav a {
+  position: relative;
   text-decoration: none;
   color: var(--color-ink-muted);
   transition: color var(--motion-hover);
+}
+
+.nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 100%;
+  height: 1px;
+  background: var(--color-ink-muted);
+  transition: right 150ms ease-out;
 }
 
 .nav a:hover {
   color: var(--color-ink);
 }
 
+.nav a:hover::after {
+  right: 0;
+}
+
 .nav a[data-status="active"] {
   color: var(--color-accent);
+}
+
+.nav a[data-status="active"]::after {
+  right: 0;
+  background: var(--color-accent);
 }
 
 .footer {

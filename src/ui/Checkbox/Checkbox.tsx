@@ -1,5 +1,6 @@
 import React from "react";
 import { Checkbox as BaseCheckbox } from "@base-ui/react/checkbox";
+import { D6Face } from "../icons/D6Face";
 import styles from "./Checkbox.module.css";
 
 interface CheckboxProps {
@@ -13,7 +14,7 @@ export function Checkbox({
   checked,
   onCheckedChange,
   label,
-  indicator,
+  indicator = <D6Face size={16} />,
 }: CheckboxProps): React.JSX.Element {
   return (
     <label className={styles.label}>

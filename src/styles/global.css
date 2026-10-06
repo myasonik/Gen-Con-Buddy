@@ -58,6 +58,18 @@ summary {
   outline-offset: var(--focus-ring-offset);
 }
 
+/* ─── Links ──────────────────────────────────────────────────────────────── */
+a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+  transition: color var(--motion-hover);
+}
+
+a:hover {
+  color: var(--color-accent-deep);
+}
+
 /* ─── Form Controls ──────────────────────────────────────────────────────── */
 input,
 select,
