@@ -135,7 +135,7 @@ test("renders all three sections when all groups have events", async () => {
   expect(screen.getByText("Deleted")).toBeInTheDocument();
 });
 
-test("passes typeDisplay mode class to EventListMobile in each event group", async () => {
+test("passes typeDisplay data attribute to EventListMobile in each event group", async () => {
   const entry = makeChangelogEntry({
     createdEvents: [makeEvent()],
     updatedEvents: [],
@@ -146,7 +146,7 @@ test("passes typeDisplay mode class to EventListMobile in each event group", asy
     typeDisplay: "code",
   });
   await screen.findByText("Created");
-  expect(container.querySelector('[class*="typeDisplayCode"]')).not.toBeNull();
+  expect(container.querySelector('[data-type-display="code"]')).not.toBeNull();
 });
 
 test("shows empty state when all event arrays are empty", () => {

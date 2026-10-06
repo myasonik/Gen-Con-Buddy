@@ -11,7 +11,7 @@ body {
   font-family: var(--font-body);
   color: var(--color-ink);
   background-color: var(--color-surface-page);
-  font-size: 1.0625rem;
+  font-size: var(--text-lg);
   line-height: 1.5;
 }
 
@@ -62,7 +62,7 @@ summary {
 input,
 select,
 textarea {
-  border: 0.0625rem solid var(--color-ink-border);
+  border: var(--border-width) solid var(--color-ink-border);
   font-family: inherit;
   color: inherit;
   background-color: var(--color-surface-page);

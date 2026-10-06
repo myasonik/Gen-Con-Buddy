@@ -28,20 +28,20 @@
 }
 
 /* "code" mode — hide separator and name */
-.typeDisplayCode .typeSep,
-.typeDisplayCode .typeName {
+[data-type-display="code"] .typeSep,
+[data-type-display="code"] .typeName {
   display: none;
 }
 
 /* "name" mode — hide code and separator */
-.typeDisplayName .typeCode,
-.typeDisplayName .typeSep {
+[data-type-display="name"] .typeCode,
+[data-type-display="name"] .typeSep {
   display: none;
 }
 
-/* "both" mode — no class needed; raw DOM shows everything */
+/* "both" mode — no attribute needed; raw DOM shows everything */
 
 /* Icon toggle */
-.typeHideIcon .typeIcon {
+[data-show-icon="false"] .typeIcon {
   display: none;
 }

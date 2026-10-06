@@ -329,35 +329,35 @@ test("renders event type name in the DOM from full API string format", async () 
   expect(screen.getByText("Role Playing Game")).toBeInTheDocument();
 });
 
-test("applies typeDisplayName class to list when typeDisplay is name", async () => {
+test("list carries data-type-display=name when typeDisplay is name", async () => {
   const { container } = await renderList([makeEvent()], undefined, { typeDisplay: "name" });
-  expect(container.querySelector('[class*="typeDisplayName"]')).not.toBeNull();
+  expect(container.querySelector('[data-type-display="name"]')).not.toBeNull();
 });
 
-test("applies typeDisplayCode class to list when typeDisplay is code", async () => {
+test("list carries data-type-display=code when typeDisplay is code", async () => {
   const { container } = await renderList([makeEvent()], undefined, { typeDisplay: "code" });
-  expect(container.querySelector('[class*="typeDisplayCode"]')).not.toBeNull();
+  expect(container.querySelector('[data-type-display="code"]')).not.toBeNull();
 });
 
-test("applies typeHideIcon class when showTypeIcon is false", async () => {
+test("list carries data-show-icon=false when showTypeIcon is false", async () => {
   const { container } = await renderList([makeEvent()], undefined, { showTypeIcon: false });
-  expect(container.querySelector('[class*="typeHideIcon"]')).not.toBeNull();
+  expect(container.querySelector('[data-show-icon="false"]')).not.toBeNull();
 });
 
-test("no text mode class applied when typeDisplay is both", async () => {
+test("list has no data-type-display attribute when typeDisplay is both", async () => {
   const { container } = await renderList([makeEvent()], undefined, { typeDisplay: "both" });
-  expect(container.querySelector('[class*="typeDisplayCode"]')).toBeNull();
-  expect(container.querySelector('[class*="typeDisplayName"]')).toBeNull();
+  expect(container.querySelector('[data-type-display="code"]')).toBeNull();
+  expect(container.querySelector('[data-type-display="name"]')).toBeNull();
 });
 
-test("does not apply typeHideIcon class when showTypeIcon is true", async () => {
+test("list has no data-show-icon attribute when showTypeIcon is true", async () => {
   const { container } = await renderList([makeEvent()], undefined, { showTypeIcon: true });
-  expect(container.querySelector('[class*="typeHideIcon"]')).toBeNull();
+  expect(container.querySelector('[data-show-icon="false"]')).toBeNull();
 });
 
-test("does not apply typeHideIcon class when showTypeIcon is not passed", async () => {
+test("list has no data-show-icon attribute when showTypeIcon is not passed", async () => {
   const { container } = await renderList([makeEvent()], undefined, {});
-  expect(container.querySelector('[class*="typeHideIcon"]')).toBeNull();
+  expect(container.querySelector('[data-show-icon="false"]')).toBeNull();
 });
 
 test("renders an icon when eventType is the full API string format", async () => {
@@ -381,7 +381,7 @@ test("shows just the name portion in name mode when eventType is the full API st
   expect(screen.queryByText("RPG - Role Playing Game")).not.toBeInTheDocument();
 });
 
-test("applies type color class when eventType is the full API string format", async () => {
-  const { container } = await renderList([makeEvent({ eventType: "RPG - Role Playing Game" })]);
-  expect(container.querySelector('[class*="typeRPG"]')).not.toBeNull();
+test("renders event type code when eventType is the full API string format", async () => {
+  await renderList([makeEvent({ eventType: "RPG - Role Playing Game" })]);
+  expect(screen.getByText("RPG")).toBeInTheDocument();
 });

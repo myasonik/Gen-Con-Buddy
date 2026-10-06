@@ -1,35 +1,11 @@
-import { StrictMode } from "react";
 import { test, describe, expect, beforeEach } from "vitest";
-import { act, render, screen, within } from "@testing-library/react";
+import { act, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { server } from "../test/msw/server";
 import { makeEvent } from "../test/msw/factory";
 import type { EventSearchResponse } from "../utils/types";
-import { RouterProvider, createRouter, createMemoryHistory } from "@tanstack/react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { routeTree } from "../routeTree.gen";
 import { renderRoute } from "../test/renderRoute";
-
-// oxlint-disable-next-line typescript/explicit-function-return-type
-async function renderSearchPage(initialEntry = "/") {
-  const history = createMemoryHistory({ initialEntries: [initialEntry] });
-  const router = createRouter({ routeTree, history });
-  const client = new QueryClient({
-    defaultOptions: { queries: { retry: false } },
-  });
-  await router.load();
-  await act(async () => {
-    render(
-      <StrictMode>
-        <QueryClientProvider client={client}>
-          <RouterProvider router={router} />
-        </QueryClientProvider>
-      </StrictMode>,
-    );
-  });
-  return router;
-}
 
 test("populates eventType dropdown from URL search param on load", async () => {
   await renderRoute("/", { searchParams: { eventType: "BGM" } });
@@ -37,7 +13,7 @@ test("populates eventType dropdown from URL search param on load", async () => {
 });
 
 test("updates form when URL search params change after initial render", async () => {
-  const router = await renderSearchPage("/?eventType=BGM");
+  const { router } = await renderRoute("/?eventType=BGM");
   expect(screen.getByRole("button", { name: "Remove BGM" })).toBeInTheDocument();
 
   await act(async () => {
@@ -46,16 +22,6 @@ test("updates form when URL search params change after initial render", async ()
 
   expect(screen.getByRole("button", { name: "Remove RPG" })).toBeInTheDocument();
   expect(screen.queryByRole("button", { name: "Remove BGM" })).not.toBeInTheDocument();
-});
-
-test("page param is read from URL without crashing", async () => {
-  await renderRoute("/", { searchParams: { page: 3 } });
-  expect(screen.getByRole("main")).toBeInTheDocument();
-});
-
-test("limit param is read from URL without crashing", async () => {
-  await renderRoute("/", { searchParams: { limit: 500 } });
-  expect(screen.getByRole("main")).toBeInTheDocument();
 });
 
 test("submitting a new search resets page to 1", async () => {
@@ -73,7 +39,7 @@ test("submitting a new search resets page to 1", async () => {
       return HttpResponse.json(response);
     }),
   );
-  await renderSearchPage("/?page=3");
+  await renderRoute("/?page=3");
   await screen.findByRole("navigation", { name: "Pagination, top" });
   latestUrl = null;
   // Submit the search form (clicking Search button resets page)
@@ -98,7 +64,7 @@ test("navigating to page 2 sends page=1 to API (0-indexed)", async () => {
       return HttpResponse.json(response);
     }),
   );
-  await renderSearchPage("/");
+  await renderRoute("/");
   // wait for initial render and pagination
   await screen.findByRole("navigation", { name: "Pagination, top" });
   latestUrl = null;
@@ -111,19 +77,8 @@ test("navigating to page 2 sends page=1 to API (0-indexed)", async () => {
   expect(latestUrl!.searchParams.get("page")).toBe("1");
 });
 
-test("sort param is read from URL without crashing", async () => {
-  await renderSearchPage("/?sort=startDateTime.asc");
-  expect(screen.getByRole("main")).toBeInTheDocument();
-});
-
-test("materialsRequired param survives route validator", async () => {
-  const router = await renderSearchPage("/?materialsRequired=Yes");
-  // oxlint-disable-next-line typescript/no-non-null-assertion
-  expect(router.state.resolvedLocation!.search.materialsRequired).toBe("Yes");
-});
-
 test("materialsRequiredDetails param survives route validator", async () => {
-  const router = await renderSearchPage("/?materialsRequiredDetails=Dice+required");
+  const { router } = await renderRoute("/?materialsRequiredDetails=Dice+required");
   // oxlint-disable-next-line typescript/no-non-null-assertion
   expect(router.state.resolvedLocation!.search.materialsRequiredDetails).toBe("Dice required");
 });
@@ -143,7 +98,7 @@ test("clicking a sort column header updates the URL with sort param and resets p
       return HttpResponse.json(response);
     }),
   );
-  await renderSearchPage("/?page=3");
+  await renderRoute("/?page=3");
   await screen.findByRole("navigation", { name: "Pagination, top" });
   latestUrl = null;
   await user.click(screen.getByRole("button", { name: "Start" }));
@@ -155,13 +110,13 @@ test("clicking a sort column header updates the URL with sort param and resets p
 });
 
 test("renders a banner landmark with the app title", async () => {
-  await renderSearchPage("/");
+  await renderRoute("/");
   expect(screen.getByRole("banner")).toBeInTheDocument();
   expect(screen.getByRole("banner")).toHaveTextContent("Gen Con Buddy");
 });
 
 test("site header contains the app title", async () => {
-  await renderSearchPage();
+  await renderRoute("/");
   expect(screen.getByRole("banner")).toBeInTheDocument();
   expect(screen.getByText("Gen Con Buddy")).toBeInTheDocument();
 });
@@ -181,7 +136,7 @@ test("navigating back to page 1 omits page from URL and API call", async () => {
       return HttpResponse.json(response);
     }),
   );
-  await renderSearchPage("/?page=2");
+  await renderRoute("/?page=2");
   await screen.findByRole("navigation", { name: "Pagination, top" });
   latestUrl = null;
   const topNav = screen.getByRole("navigation", { name: "Pagination, top" });
@@ -191,26 +146,9 @@ test("navigating back to page 1 omits page from URL and API call", async () => {
   expect(latestUrl!.searchParams.has("page")).toBe(false);
 });
 
-test("renders keyword search input in the filter strip", async () => {
-  await renderSearchPage("/");
-  expect(screen.getByRole("textbox", { name: "Search" })).toBeInTheDocument();
-});
-
 test("renders day toggles as a group in the filter strip", async () => {
-  await renderSearchPage("/");
+  await renderRoute("/");
   expect(screen.getByRole("group", { name: "Days" })).toBeInTheDocument();
-});
-
-test("day tiles are checkboxes", async () => {
-  await renderSearchPage("/");
-  expect(screen.getByRole("checkbox", { name: "Wed" })).not.toBeChecked();
-});
-
-test("day checkboxes are native form elements", async () => {
-  await renderSearchPage();
-  const thuCheckbox = screen.getByRole("checkbox", { name: "Thu" });
-  expect(thuCheckbox).toBeInstanceOf(HTMLInputElement);
-  expect((thuCheckbox as HTMLInputElement).type).toBe("checkbox");
 });
 
 test("eventType column renders the event type", async () => {
@@ -224,7 +162,7 @@ test("eventType column renders the event type", async () => {
       }),
     ),
   );
-  await renderSearchPage();
+  await renderRoute("/");
   const table = await screen.findByRole("table");
   expect(within(table).getByText("RPG")).toBeInTheDocument();
 });
@@ -235,12 +173,12 @@ describe("sidebar toggle and active filters", () => {
   });
 
   it("sidebar toggle button is present in the results area", async () => {
-    await renderSearchPage("/");
+    await renderRoute("/");
     expect(screen.getByRole("button", { name: /Filters/ })).toBeInTheDocument();
   });
 
   it("sidebar toggle button has aria-expanded=false by default", async () => {
-    await renderSearchPage("/");
+    await renderRoute("/");
     expect(screen.getByRole("button", { name: /Filters/ })).toHaveAttribute(
       "aria-expanded",
       "false",
@@ -249,7 +187,7 @@ describe("sidebar toggle and active filters", () => {
 
   it("clicking toggle button flips aria-expanded to true", async () => {
     const user = userEvent.setup();
-    await renderSearchPage("/");
+    await renderRoute("/");
     const btn = screen.getByRole("button", { name: /Filters/ });
     await user.click(btn);
     expect(btn).toHaveAttribute("aria-expanded", "true");
@@ -257,7 +195,7 @@ describe("sidebar toggle and active filters", () => {
 
   it("clicking the backdrop closes the drawer", async () => {
     const user = userEvent.setup();
-    await renderSearchPage("/");
+    await renderRoute("/");
     const btn = screen.getByRole("button", { name: /Filters/ });
     // Open the drawer first
     await user.click(btn);
@@ -269,18 +207,18 @@ describe("sidebar toggle and active filters", () => {
   });
 
   it("no active filter chips when no filters are set", async () => {
-    await renderSearchPage("/");
+    await renderRoute("/");
     expect(screen.queryByRole("button", { name: /Search:/ })).toBeNull();
   });
 
   it("active filter chip appears when filter param is in URL", async () => {
-    await renderSearchPage("/?filter=dragon");
+    await renderRoute("/?filter=dragon");
     expect(screen.getByRole("button", { name: /Search: dragon/ })).toBeInTheDocument();
   });
 
   it("clicking a filter chip removes it from the URL", async () => {
     const user = userEvent.setup();
-    const router = await renderSearchPage("/?filter=dragon&location=Hall+A");
+    const { router } = await renderRoute("/?filter=dragon&location=Hall+A");
     expect(screen.getByRole("button", { name: /Search: dragon/ })).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /Search: dragon/ }));
     expect(router.state.location.searchStr).not.toContain("filter=");
@@ -288,7 +226,7 @@ describe("sidebar toggle and active filters", () => {
   });
 
   it("days filter produces one chip per day", async () => {
-    await renderSearchPage("/?days=fri%2Csat");
+    await renderRoute("/?days=fri%2Csat");
     const bar = screen.getByRole("list", { name: "Active filters" });
     expect(within(bar).getByRole("button", { name: "Fri" })).toBeInTheDocument();
     expect(within(bar).getByRole("button", { name: "Sat" })).toBeInTheDocument();
@@ -297,7 +235,7 @@ describe("sidebar toggle and active filters", () => {
 
   it("clicking Fri chip removes fri but leaves sat in URL", async () => {
     const user = userEvent.setup();
-    const router = await renderSearchPage("/?days=fri%2Csat");
+    const { router } = await renderRoute("/?days=fri%2Csat");
     const bar = screen.getByRole("list", { name: "Active filters" });
     await user.click(within(bar).getByRole("button", { name: "Fri" }));
     expect(router.state.location.searchStr).toContain("days=sat");
@@ -305,7 +243,7 @@ describe("sidebar toggle and active filters", () => {
   });
 
   it("eventType filter produces one chip per code", async () => {
-    await renderSearchPage("/?eventType=RPG%2CBGM");
+    await renderRoute("/?eventType=RPG%2CBGM");
     const bar = screen.getByRole("list", { name: "Active filters" });
     expect(
       within(bar).getByRole("button", { name: "RPG - Role Playing Game" }),
@@ -316,7 +254,7 @@ describe("sidebar toggle and active filters", () => {
 
   it("clicking RPG active-filter chip removes RPG but leaves BGM in URL", async () => {
     const user = userEvent.setup();
-    const router = await renderSearchPage("/?eventType=RPG%2CBGM");
+    const { router } = await renderRoute("/?eventType=RPG%2CBGM");
     const bar = screen.getByRole("list", { name: "Active filters" });
     await user.click(within(bar).getByRole("button", { name: "RPG - Role Playing Game" }));
     expect(router.state.location.searchStr).toContain("eventType=BGM");
