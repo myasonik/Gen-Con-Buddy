@@ -52,7 +52,7 @@ test("selecting Yes for Tournament submits correct value", async () => {
 
   await user.click(screen.getByRole("button", { name: "Filters" }));
   await user.selectOptions(screen.getByRole("combobox", { name: "Tournament" }), "Yes");
-  await user.click(screen.getByRole("button", { name: "Close advanced filters" }));
+  await user.click(screen.getByRole("button", { name: "Close" }));
   await user.click(screen.getByRole("button", { name: "Search" }));
 
   expect(handleSearch.mock.calls[0][0].tournament).toBe("Yes");
@@ -65,7 +65,7 @@ test("selecting Yes for Materials Required submits correct value", async () => {
 
   await user.click(screen.getByRole("button", { name: "Filters" }));
   await user.selectOptions(screen.getByRole("combobox", { name: "Materials Required" }), "Yes");
-  await user.click(screen.getByRole("button", { name: "Close advanced filters" }));
+  await user.click(screen.getByRole("button", { name: "Close" }));
   await user.click(screen.getByRole("button", { name: "Search" }));
 
   expect(handleSearch.mock.calls[0][0].materialsRequired).toBe("Yes");
@@ -85,7 +85,7 @@ test("submits with the title value passed to onSearch", async () => {
 
   await user.click(screen.getByRole("button", { name: "Filters" }));
   await user.type(screen.getByRole("textbox", { name: "Title" }), "Dragons");
-  await user.click(screen.getByRole("button", { name: "Close advanced filters" }));
+  await user.click(screen.getByRole("button", { name: "Close" }));
   await user.click(screen.getByRole("button", { name: "Search" }));
 
   expect(handleSearch).toHaveBeenCalledTimes(1);
@@ -249,12 +249,12 @@ test("Escape key closes the filters dialog", async () => {
   expect(screen.queryByRole("dialog", { name: "Advanced Filters" })).not.toBeInTheDocument();
 });
 
-test("clicking the backdrop closes the filters dialog", async () => {
+test("clicking outside the dialog closes the filters dialog", async () => {
   const user = userEvent.setup();
   render(<SearchForm values={{}} onSearch={noop} />);
   await user.click(screen.getByRole("button", { name: "Filters" }));
   expect(screen.getByRole("dialog", { name: "Advanced Filters" })).toBeInTheDocument();
-  await user.click(screen.getByTestId("drawer-backdrop"));
+  await user.click(document.body);
   expect(screen.queryByRole("dialog", { name: "Advanced Filters" })).not.toBeInTheDocument();
 });
 
@@ -263,7 +263,7 @@ test("clicking the close button closes the filters dialog", async () => {
   render(<SearchForm values={{}} onSearch={noop} />);
   await user.click(screen.getByRole("button", { name: "Filters" }));
   expect(screen.getByRole("dialog", { name: "Advanced Filters" })).toBeInTheDocument();
-  await user.click(screen.getByRole("button", { name: "Close advanced filters" }));
+  await user.click(screen.getByRole("button", { name: "Close" }));
   expect(screen.queryByRole("dialog", { name: "Advanced Filters" })).not.toBeInTheDocument();
 });
 
