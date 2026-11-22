@@ -1,6 +1,6 @@
 # useStoredState Version-Change Fix Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use the skill executing-plans (with subagents when available) to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Fix `useStoredState` so that a mid-lifecycle version change resets state to the correct default value instead of writing stale data under the new version key.
 

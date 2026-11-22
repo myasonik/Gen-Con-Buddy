@@ -1,6 +1,6 @@
 # Multisort Frontend Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use the skill executing-plans (with subagents when available) to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add multisort to the search and changelog pages via a new `SortDrawer` UI, drag-and-drop reordering, and updated column-header sort behavior.
 

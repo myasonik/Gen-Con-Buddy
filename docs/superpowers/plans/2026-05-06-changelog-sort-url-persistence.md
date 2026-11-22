@@ -1,6 +1,6 @@
 # Changelog Sort URL Persistence Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use the skill executing-plans (with subagents when available) to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Fix non-functional changelog event table sort and persist sort state in the URL as `?sort={pos}.{group}.{field}.{dir}`.
 

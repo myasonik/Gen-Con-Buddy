@@ -1,6 +1,6 @@
 # Mobile Hamburger Nav Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use the skill executing-plans (with subagents when available) to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** On mobile (≤60rem), replace the horizontal nav bar with a hamburger button that opens a dropdown popover containing nav links and an inline theme radio group.
 

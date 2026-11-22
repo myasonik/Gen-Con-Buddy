@@ -1,6 +1,6 @@
 # Day Format Display Setting Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use the skill executing-plans (with subagents when available) to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add a user-controlled day format setting (`"day"` / `"numeric"` / `"long"`) that renders consistently across the event table, mobile list, and event detail page — and simultaneously fix the event type column's min-width bug by switching from CSS show/hide to conditional JSX rendering.
 

@@ -1,6 +1,6 @@
 # useQuery Error-Branch Test Helper Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use the skill executing-plans (with subagents when available) to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add a narrow MSW helper for error-branch tests, document the requirement in AGENTS.md, and fix the one remaining gap in ChangelogPage.
 

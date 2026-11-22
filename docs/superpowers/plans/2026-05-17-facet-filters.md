@@ -1,6 +1,6 @@
 # Facet-backed Filter Controls Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use the skill executing-plans (with subagents when available) to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Replace static/plain filter controls with live facet-backed components for 7 new fields, and generalize the existing `GameSystemSelect` pattern into reusable `FacetMultiSelect` and `FacetSelect` components.
 

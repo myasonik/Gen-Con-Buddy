@@ -1,6 +1,6 @@
 # parseCSV Utility and Trailing-Comma Hardening Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use the skill executing-plans (with subagents when available) to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Introduce a `parseCSV` utility that always filters empty strings from comma-separated values, fix the two sites missing this guard, and add tests that would catch a regression.
 

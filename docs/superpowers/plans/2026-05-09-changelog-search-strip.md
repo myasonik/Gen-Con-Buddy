@@ -1,6 +1,6 @@
 # Changelog Search Strip Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use the skill executing-plans (with subagents when available) to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add a client-side filter strip (event type, days, time) to the changelog page that filters events within expanded entries and dims/marks entry rows by match state.
 
@@ -1571,4 +1571,4 @@ Expected: all pass.
 
 - [ ] **Step 7d — Merge or open PR**
 
-Use `superpowers:finishing-a-development-branch` to decide how to integrate.
+Use `finishing-a-development-branch` to decide how to integrate.

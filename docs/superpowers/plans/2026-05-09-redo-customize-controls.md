@@ -1,8 +1,8 @@
 # Redo Customize Controls Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use the skill executing-plans (with subagents when available) to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 >
-> **Worktree:** REQUIRED — use `superpowers:using-git-worktrees` at execution time. Do NOT commit to main.
+> **Worktree:** REQUIRED — work in a T3 worktree at execution time. Do NOT commit to main.
 
 **Goal:** Reorganize the event table toolbar into named Visibility, Format, and Sort drawers, move the filters drawer to the right, and expose format controls inline in column action popovers.
 
